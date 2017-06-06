@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/com.ibm.js.team.workitem.commandline/src/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-update /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph id=150  custom.item.list:add=&quot;ProjectArea:JKE Banking (Change Management),Category:JKE/BRM,User:ralph,Iteration:Main Development/Release 1.0/Sprint 3,ProcessArea:JKE Banking (Change Management)/Business Recovery Matters,TeamArea:JKE Banking (Change Management)/Release Engineering,SCMComponent:Build,WorkItem:20&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
+</launchConfiguration>

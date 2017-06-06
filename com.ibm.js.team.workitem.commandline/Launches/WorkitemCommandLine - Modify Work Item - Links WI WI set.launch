@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/com.ibm.js.team.workitem.commandline/src/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-update /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph id=150  @link_copied:set=10 @link_copied_from:set=11 @link_successor:set=12|13 @link_blocks:set=20|21 @link_resolves:set=25 @link_mentions:set=26 @link_predecessor:set=27 @link_parent:set=28 @link_duplicate_of:set=50 @link_duplicate:set=60 @link_related:set=31 @link_depends_on:set=32 @link_child:set=130|131 @link_resolved_by:set=118"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
+</launchConfiguration>

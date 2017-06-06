@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/com.ibm.js.team.workitem.commandline/src/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-update /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph id=150 SUMMARY=&quot;changed&quot; FOUND_IN=&quot;Sprint 2 Development&quot; owner=ralph target=&quot;Main Development/Release 1.0/Sprint 3&quot; internalSeverity=Major foundIn=&quot;Sprint 2 Development&quot; internalPriority=High @attachFile=&quot;./Test.txt:Some Description:text/plain:UTF-8&quot; internalApprovals=&quot;approval:Please Approve:ralph,deb&quot; internalSubscriptions=al,ralph,deb internalState=&quot;In Progress&quot; internalTags=&quot;test1,test2&quot; custom.duration=1800000 custom.boolean=true custom.contributor=al custom.contributor.list=al,deb,tanuj custom.decimal=1500200 custom.integer=234 custom.long=567 custom.tag=tag1,tag2 custom.timestamp=&quot;2014/12/31 12:30:00 GMT+01:00&quot; custom.wiki=&quot;My Wiki&quot; custom.projectarea.list=&quot;JKE Banking (Change Management)&quot; custom.project.area=&quot;JKE Banking (Change Management)&quot; custom.teamarea.list=&quot;JKE Banking (Change Management)/Business Recovery Matters,JKE Banking (Change Management)/Release Engineering&quot; custom.team.area=&quot;JKE Banking (Change Management)/Release Engineering&quot; custom.process.area=&quot;JKE Banking (Change Management)/Release Engineering&quot; custom.processarea.list=&quot;JKE Banking (Change Management)/Business Recovery Matters,JKE Banking (Change Management)/Release Engineering&quot; custom.workitem=3 custom.workitem.list=9,20,7 custom.string.list1=&quot;Added 1&quot;,&quot;Added2&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
+</launchConfiguration>

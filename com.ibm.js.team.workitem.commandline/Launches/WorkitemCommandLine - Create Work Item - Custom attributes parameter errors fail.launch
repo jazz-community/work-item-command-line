@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/com.ibm.js.team.workitem.commandline/src/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-create repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph projectArea=&quot;JKE Banking (Change Management)&quot; workItemType=task summary=&quot;New Item&quot; category=J_KE owner=ral_ph target=&quot;Main Develo_pment/Release 1.0/Sprint 3&quot; internalSeverity=M_ajor foundIn=&quot;Sprint 2 Dev_elopment&quot; internalPriority=High creator=myadmin  custom.enumeration.list=$,$$,$$$$,Unassigned custom.contributor.list=al,deb,tanuj,ghost custom.contributor=deb custom.projectarea.list=&quot;JKE Ban king (Change Management)&quot; custom.project.area=&quot;JKE Banking (Change Management)&quot; custom.teamarea.list=&quot;JKE Banking (Change Management)/Business Recovery Matters,JKE Banking (Change Management)/Release En gineering&quot; custom.team.area=&quot;JKE Banking (Change Management)/Rel ease Engineering&quot; custom.process.area=&quot;JKE Ban king (Change Management)/Release Engineering&quot; custom.proc essarea.list=&quot;JKE Banking (Change Management)/Business Reco very Matters,JKE Banking (Change Management)/Release Engineering&quot; custom.workitem=300 custom.workitem.list=900,20,7"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
+</launchConfiguration>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/com.ibm.js.team.workitem.commandline/src/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-exportworkitems /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph projectArea=&quot;JKE Banking (Change Management)&quot; exportFile=&quot;c:\aaTemp\ExportLinks\TestLinks.csv&quot; query=&quot;First&quot; columns=&quot;Type,Id,Planned For,Filed Against,Description,Found In,Children,Contributes To,Copied From,Copies,Depends On,Duplicated By,Duplicate Of,Included in Builds,Parent,Predecessor,Related,Related Artifacts,Related Test Case,Related Test Execution Record,Related Test Plan,Related Test Script,Related Test Suite,Reported Against Builds,Resolved By,Resolves,Successor,Tested By Test Case,Tracks,Tracks Requirement&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
+</launchConfiguration>

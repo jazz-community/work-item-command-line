@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><jardesc>
+    <jar path="C:/temp/WCL/wcl.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/com.ibm.js.team.workitem.commandline/build/wcl.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" mainClassHandleIdentifier="=com.ibm.js.team.workitem.commandline/src&lt;com.ibm.js.team.workitem.commandline{WorkitemCommandLine.java[WorkitemCommandLine" manifestLocation="/com.ibm.js.rtcext.serversetup/META-INF/MANIFEST.MF" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="true">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
+        <file path="/com.ibm.js.team.workitem.commandline/.classpath"/>
+        <file path="/com.ibm.js.team.workitem.commandline/LICENSE.txt"/>
+        <file path="/com.ibm.js.team.workitem.commandline/lib/ReadMe.txt"/>
+        <javaElement handleIdentifier="=com.ibm.js.team.workitem.commandline/src"/>
+        <file path="/com.ibm.js.team.workitem.commandline/.project"/>
+        <file path="/com.ibm.js.team.workitem.commandline/build.properties"/>
+    </selectedElements>
+</jardesc>

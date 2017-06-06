@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/com.ibm.js.team.workitem.commandline/src/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-exportworkitems /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph projectArea=&quot;JKE Banking (Change Management)&quot; exportFile=&quot;C:\aaTemp\Export\Test.csv&quot; query=&quot;Item33&quot; columns=&quot;category,workItemType,id,internalState,internalPriority,internalSeverity,summary,owner,creator,com.ibm.team.apt.attribute.acceptance,businessvalue,risk,com.ibm.team.rtc.attribute.affectedTeams,internalApprovals,archived,internalComments,correctedEstimate,creationDate,custom.boolean,custom.contributor,custom.contributor.list,custom.decimal,custom.duration,custom.enumeration.list,custom.integer,custom.item,custom.item.list,custom.long,custom.process.area,custom.processarea.list,custom.project.area,custom.projectarea.list,custom.tag,custom.team.area,custom.teamarea.list,custom.timestamp,custom.wiki,custom.workitem,custom.workitem.list,description,dueDate,duration,category,foundIn,com.ibm.team.rtc.attribute.impact,modifiedBy,modified,target,projectArea,internalResolution,resolutionDate,resolver,contextId,startDate,category,com.ibm.team.apt.attribute.complexity,internalSubscriptions,internalTags,timeSpent,custom.string.list&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
+</launchConfiguration>
