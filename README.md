@@ -280,7 +280,7 @@ where the user list is optional and can contain one or more users ID's
 ### Work Item State:
 Parameter `"internalState"` can be used to change the work item state. State change only supports the modes `default` and `set`. 
 
-####Format
+#### Format
 
 `internalState=StateName` to find a one step workflow action to change the state, and execute the action, or
 `internalState=forceState:StateName` to force the state change to the target state even if no workflow action exists
