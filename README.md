@@ -546,52 +546,52 @@ Example:
 
 Available mappings:
 
-  From                                                To
-  --------------------------------------------------- --------------------
-  com.ibm.team.workitem.attribute.version             foundIn
-  SUMMARY                                             summary
-  RESOLVER                                            resolver
-  MODIFIED                                            modified
-  CREATOR                                             creator
-  MODIFIED\_BY                                        modifiedBy
-  CREATION\_DATE                                      creationDate
-  PLANNED\_FOR                                        target
-  com.ibm.team.workitem.attribute.severity            internalSeverity
-  com.ibm.team.workitem.attribute.category            category
-  com.ibm.team.workitem.attribute.duedate             dueDate
-  OWNER                                               owner
-  PROJECT\_AREA                                       projectArea
-  com.ibm.team.workitem.attribute.summary             summary
-  com.ibm.team.workitem.attribute.projectarea         projectArea
-  com.ibm.team.workitem.attribute.resolver            resolver
-  TAGS                                                internalTags
-  com.ibm.team.workitem.attribute.creator             creator
-  com.ibm.team.workitem.attribute.modified            modified
-  ID                                                  id
-  DESCRIPTION                                         description
-  TIME\_SPENT                                         timeSpent
-  com.ibm.team.workitem.attribute.correctedestimate   correctedEstimate
-  com.ibm.team.workitem.attribute.creationdate        creationDate
-  com.ibm.team.workitem.attribute.owner               owner
-  RESOLUTION\_DATE                                    resolutionDate
-  FOUND\_IN                                           foundIn
-  com.ibm.team.workitem.attribute.target              target
-  PRIORITY                                            internalPriority
-  com.ibm.team.workitem.attribute.duration            duration
-  ESTIMATE                                            duration
-  com.ibm.team.workitem.attribute.description         description
-  FILED\_AGAINST                                      category
-  com.ibm.team.workitem.attribute.tags                internalTags
-  com.ibm.team.workitem.attribute.resolutiondate      resolutionDate
-  RESOLUTION                                          internalResolution
-  com.ibm.team.workitem.attribute.id                  id
-  com.ibm.team.workitem.attribute.timespent           timeSpent
-  com.ibm.team.workitem.attribute.workitemtype        workItemType
-  STATE                                               internalState
-  com.ibm.team.workitem.attribute.modifiedby          modifiedBy
-  com.ibm.team.workitem.attribute.priority            internalPriority
-  DUE\_DATE                                           dueDate
-  TYPE                                                workItemType
-  SEVERITY                                            internalSeverity
-  CORRECTED\_ESTIMATE                                 correctedEstimate
-  com.ibm.team.workitem.attribute.state               internalState
+| From                                              | To                    |
+| ------------------------------------------------  | --------------------- |
+| com.ibm.team.workitem.attribute.version           | foundIn               |
+| SUMMARY                                           | summary               |
+| RESOLVER                                          | resolver              |
+| MODIFIED                                          | modified              |
+| CREATOR                                           | creator               |
+| MODIFIED_BY                                       | modifiedBy            |
+| CREATION_DATE                                     | creationDate          |
+| PLANNED_FOR                                       | target                |
+| com.ibm.team.workitem.attribute.severity          | internalSeverity      |
+| com.ibm.team.workitem.attribute.category          | category              |
+| com.ibm.team.workitem.attribute.duedate           | dueDate               |
+| OWNER                                             | owner                 |
+| PROJECT_AREA                                      | projectArea           |
+| com.ibm.team.workitem.attribute.summary           | summary               |
+| com.ibm.team.workitem.attribute.projectarea       | projectArea           |
+| com.ibm.team.workitem.attribute.resolver          | resolver              |
+| TAGS                                              | internalTags          |
+| com.ibm.team.workitem.attribute.creator           | creator               |
+| com.ibm.team.workitem.attribute.modified          | modified              |
+| ID                                                | id                    |
+| DESCRIPTION                                       | description           |
+| TIME_SPENT                                        | timeSpent             |
+| com.ibm.team.workitem.attribute.correctedestimate | correctedEstimate     |
+| com.ibm.team.workitem.attribute.creationdate      | creationDate          |
+| com.ibm.team.workitem.attribute.owner             | owner                 |
+| RESOLUTION_DATE                                   | resolutionDate        |
+| FOUND_IN                                          | foundIn               |
+| com.ibm.team.workitem.attribute.target            | target                |
+| PRIORITY                                          | internalPriority      |
+| com.ibm.team.workitem.attribute.duration          | duration              |
+| ESTIMATE                                          | duration              |
+| com.ibm.team.workitem.attribute.description       | description           |
+| FILED_AGAINST                                     | category              |
+| com.ibm.team.workitem.attribute.tags              | internalTags          |
+| com.ibm.team.workitem.attribute.resolutiondate    | resolutionDate        |
+| RESOLUTION                                        | internalResolution    |
+| com.ibm.team.workitem.attribute.id                | id                    |
+| com.ibm.team.workitem.attribute.timespent         | timeSpent             |
+| com.ibm.team.workitem.attribute.workitemtype      | workItemType          |
+| STATE                                             | internalState         |
+| com.ibm.team.workitem.attribute.modifiedby        | modifiedBy            |
+| com.ibm.team.workitem.attribute.priority          | internalPriority      |
+| DUE_DATE                                          | dueDate               |
+| TYPE                                              | workItemType          |
+| SEVERITY                                          | internalSeverity      |
+| CORRECTED_ESTIMATE                                | correctedEstimate     |
+| com.ibm.team.workitem.attribute.state             | internalState         |
