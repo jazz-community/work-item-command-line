@@ -228,163 +228,178 @@ Modes allow different types of changes to attributes such as add values, append 
 Supported modes are `default` (no mode specified), `add`, `set`, `remove`.
 If no mode is specified, the default mode for the parameter is used.
 
-- Example for default mode: `summary="This is a summary."`.
-- Example for add mode: `summary:add=" Add this to the summary."`.
-- Example for set mode: `summary:set="Overwite the existing summary with this."`.
-- Example for remove mode: `custom.enumeration.list:remove=$,Unassigned`.
+- Example for `default` mode: `summary="This is a summary."`.
+- Example for `add` mode: `summary:add=" Add this to the summary."`.
+- Example for `set` mode: `summary:set="Overwite the existing summary with this."`.
+- Example for `remove` mode: `custom.enumeration.list:remove=$,Unassigned`.
 
-Which modes are supported and their behavior depends on attribute type. Single value attributes typically support default and set mode, but not add and remove mode. Multiple value attributes typically support default, add, set and remove mode. Default mode for single value attributes sets the value. Default mode for multiple value attributes adds the value(s). Set mode for multiple value attributes removes the old values and then adds the new value(s). Remove mode for multiple value attributes removes the old values specified, that can be found.
+Which modes are supported and their behavior depends on attribute type. Single value attributes typically support `default` and `set` mode, but not `add` and `remove` mode. Multiple value attributes typically support `default` , `add` , `set` and `remove` mode. `Default` mode for single value attributes sets the value. `Default` mode for multiple value attributes adds the value(s). `Set` mode for multiple value attributes removes the old values and then adds the new value(s). `Remove` mode for multiple value attributes removes the old values specified, that can be found.
 
-String values such as HTML, Summary, Wiki type attributes support default (same behavior as set mode), set and add mode.
+String values such as HTML, Summary, Wiki type attributes support `default` (same behavior as `set` mode), `set` and `add` mode.
 
 ### Special Properties
-	Work Item ID: Parameter "id" can not be changed.
-	Project Area: 
-	Parameter "projectArea" can only be specified when creating the work item. It can not be set to a different value later.
+**Work Item ID:** Parameter `"id"` can not be changed.
+
+**Project Area:** Parameter `"projectArea"` can only be specified when creating the work item. It can not be set to a different value later.
 
 ### Comments
-    Parameter "internalComments" can be used to add a comment.
-	This attribute only supports the default and add mode. Comments can not be removed.
-	Example: internalComments="This is a comment"
+Parameter `"internalComments"` can be used to add a comment. This attribute only supports the default and add mode. Comments can not be removed.
+
+Example: `internalComments="This is a comment"`
 
 ### Subscriptions 
-	Parameter "internalSubscriptions" can be used to subscribe a list of users using their user ID's.
-	This attribute supports the modes default (same as) add, set and remove mode.
-	Example set specific users: internalSubscriptions:set=al,tammy
-	Example add users: internalSubscriptions:add=deb,tanuj,bob
-	Example remove users: internalSubscriptions:remove=sally,bob
+Parameter `"internalSubscriptions"` can be used to subscribe a list of users using their user ID's. This attribute supports the modes default (same as) `add`, `set` and `remove` mode.
+
+- Example set specific users: `internalSubscriptions:set=al,tammy`
+- Example add users: `internalSubscriptions:add=deb,tanuj,bob`
+- Example remove users: `internalSubscriptions:remove=sally,bob`
 
 ### Tags
-    Parameter "internalTags" can be used to add a list of tags.
-	This attribute supports the modes default (same as) add, set and remove mode.
-	Example: internalTags=Tag1,..,TagN
+Parameter `"internalTags"` can be used to add a list of tags. This attribute supports the modes default (same as) `add`, `set` and `remove` mode.
 
-### Approvals:
-	Parameter "internalApprovals" can be used to add approvals and approvers using their user ID's.
-	Approvals only support the modes default (same as) add, set and remove. 
-	Set and remove only affects approvals of the same type. 
-Format is:
-	internalApprovals[<ID>][:<mode>]="approval:Approval Name as string:userID1,..,userIDn"
-	Where <ID> can be left out if only one approval is specified or needs to be unique if multiple approvals are specified. Where <mode> can be left out and defaults to add.
-	Available modes are:set add (set as default mode) and remove.
-	 Modes set and remove only remove approvals of the same type and must be enabled using the switch enableDeleteApprovals.
-	Example internalApprovals="review:Please Review:deb,tanuj"
-	Example internalApprovals="verification:Please verify:sally,al"
-	where the user list is optional and can contain one or more users ID's
+Example: `internalTags=Tag1,..,TagN`
 
-Work Item State: 
-	Parameter "internalState"  can be used to change the work item state.
-	State change only supports the modes default and set. 
-Format is: 
-	internalState=StateName to find a one step workflow action to change the state, and execute the action, or
-	internalState=forceState:StateName to force the state change to the target state even if no workflow action exists
+### Approvals
+Parameter `"internalApprovals"` can be used to add approvals and approvers using their user ID's. Approvals only support the modes `default` (same as) `add`, `set` and `remove`. Set and remove only affects approvals of the same type. 
 
-WorkFlow Action: 
-	A pseudo parameter "@workflowAction" can be used to set a workflow action to change the work item state when saving.
-	This attribute supports only the modes default and set. 
-	Example: @workflowAction="Stop working"
+#### Format
+    internalApprovals[<ID>][:<mode>]="approval:Approval Name as string:userID1,..,userIDn"
 
-Attachments: 
-	A pseudo parameter @attachFile can be used to upload attachments.
-	This attribute supports the modes default (same as) add, set and remove. 
-	Set removes all attachments, remove only removes attachments with the specified file path and description. 
-Format is: 
-	@attachFile[<IDString>]="SomeFilePath,Some Description,ContentTypeID,EncodingID"
+Where `<ID>` can be left out if only one approval is specified or needs to be unique if multiple approvals are specified. Where `<mode>` can be left out and defaults to `add`.
 
-	Where:
-		<IDString> must be unique for multiple attachments in one command. If only one attachment is uploaded, the IDString can be left empty.
-		ContentTypeID is text/plain or application/unknown or application/xml
-		EncodingID is UTF-8 or UTF-16LE or UTF-16BE or us-ascii.
+Available modes are: `set` `add` (set as default mode) and `remove`.
 
-	The file must be accessible and in the correct encoding.
+Modes `set` and `remove` only remove approvals of the same type and must be enabled using the switch `enableDeleteApprovals`.
 
-	Examples:
-		@attachFile="C:/temp/test.txt:Some Attachment:text/plain:UTF-8"
-		@attachFile_1="./test1.txt:Some Attachment 1:text/plain:UTF-8" @attachFile_2="./test2.txt:Some Attachment 2:text/plain:UTF-8"
+Example: `internalApprovals="review:Please Review:deb,tanuj"`
 
-Links: 
-	 A pseudo parameter @link_ can be used to link the current work item to other objects.
-	Links support the modes default (same as) add, set and remove. 
-	Set removes all links of the specified type before creating the new links. 
+Example: `internalApprovals="verification:Please verify:sally,al"`
 
-Work Item Links - links between this work item and another work item within the same repository:
-Format is:
-	@link_linktype=value
+where the user list is optional and can contain one or more users ID's
 
-	The parameter value is a list of one or more work items specified by their ID. The separator is:|
+### Work Item State:
+Parameter `"internalState"` can be used to change the work item state. State change only supports the modes `default` and `set`. 
 
-	@link_copied=id1|id2|...
-	@link_copied_from=id1|id2|...
-	@link_successor=id1|id2|...
-	@link_blocks=id1|id2|...
-	@link_resolves=id1|id2|...
-	@link_mentions=id1|id2|...
-	@link_predecessor=id1|id2|...
-	@link_parent=id1|id2|...
-	@link_duplicate_of=id1|id2|...
-	@link_duplicate=id1|id2|...
-	@link_related=id1|id2|...
-	@link_depends_on=id1|id2|...
-	@link_child=id1|id2|...
-	@link_resolved_by=id1|id2|...
+####Format
 
-	Example:
-		@link_related=123|80
+`internalState=StateName` to find a one step workflow action to change the state, and execute the action, or
+`internalState=forceState:StateName` to force the state change to the target state even if no workflow action exists
 
-CLM Work Item Links - CLM links between this work item and another work item within the same or acoross repositories
-Format is:
-	@link_linktype=value
+### WorkFlow Action 
+A pseudo parameter `"@workflowAction"` can be used to set a workflow action to change the work item state when saving. This attribute supports only the modes `default` and `set`. 
 
-	The parameter value is a list of one or more work items specified by their ID (if they are in the same repository) or by the Item URI. The separator is:|
+Example: `@workflowAction="Stop working"`
 
-	@link_affects_plan_item=id1|id2|URI2|...
-	@link_tracks_workitem=id1|id2|URI2|...
-	@link_related_change_management=id1|id2|URI2|...
-	@link_affected_by_defect=id1|id2|URI2|...
+### Attachments
+A pseudo parameter `@attachFile` can be used to upload attachments. This attribute supports the modes `default` (same as) `add`, `set` and `remove`. `Set` removes all attachments, `remove` only removes attachments with the specified file path and description. 
 
-	Example:
-		@link_tracks_workitem="https://clm.example.com:9443/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/80|120|150"
+#### Format
+    @attachFile[<IDString>]="SomeFilePath,Some Description,ContentTypeID,EncodingID"
 
-CLM URI Links - CLM links between this work item and another item, described by a valid URI, in a different repository
-Format is:
-	@link_linktype=value
+Where:
+`<IDString>` must be unique for multiple attachments in one command. If only one attachment is uploaded, the `IDString` can be left empty. `ContentTypeID` is `text/plain` or `application/unknown` or `application/xml`
 
-	The parameter value is a list of one or more CLM URI's for elements that support this link type. The separator is:|
+`EncodingID` is `UTF-8` or `UTF-16LE` or `UTF-16BE` or `us-ascii`.
 
-	@link_related_test_plan=uri1|uri2|...
-	@link_affects_requirement=uri1|uri2|...
-	@link_tested_by_test_case=uri1|uri2|...
-	@link_blocks_test_execution=uri1|uri2|...
-	@link_implements_requirement=uri1|uri2|...
-	@link_affects_execution_result=uri1|uri2|...
-	@link_related_artifact=uri1|uri2|...
-	@link_related_test_case=uri1|uri2|...
-	@link_tracks_requirement=uri1|uri2|...
-	@link_scm_tracks_scm_changes=uri1|uri2|...
-	@link_related_execution_record=uri1|uri2|...
+The file must be accessible and in the correct encoding.
 
-	Example:
-		@link_affects_requirement=https://clm.example.com:9443/rm/resources/_848a30e315524069854f55e1d35a402d|https://clm.example.com:9443/rm/resources/_6c96bedb0e9a490494273eefc6e1f7c5
+Examples:
 
-	Please note that the link "Associate Work Item" between a change set and the work item can only be created by the SCM component.
-	The link created here is the looser CLM link. Create the work item change set link using the SCM command line.
+    @attachFile="C:/temp/test.txt:Some Attachment:text/plain:UTF-8"
 
-Build result Links - Links from a work item to a build result in the same repository.
-Format is:
-	@link_reportAgainstBuild=buildResult1|buildResult2|...
+    @attachFile_1="./test1.txt:Some Attachment 1:text/plain:UTF-8" @attachFile_2="./test2.txt:Some Attachment 2:text/plain:UTF-8"
 
-	The parameter value is a list of one or more Buildresults specified by their ID or their label. Prefix the build labels @. The separator is:|
+### Links
+A pseudo parameter `@link_ can` be used to link the current work item to other objects. Links support the modes default (same as) `add`, `set` and `remove`. `Set` removes all links of the specified type before creating the new links. 
 
-	@link_reportAgainstBuild=id1|@BuildLabel2|...
-	@link_includedInBuild=id1|@BuildLabel2|...
+#### Work Item Links
+links between this work item and another work item within the same repository
+
+##### Format
+    @link_linktype=value
+
+The parameter value is a list of one or more work items specified by their ID. The separator is:`|`
+
+    @link_copied=id1|id2|...
+    @link_copied_from=id1|id2|...
+    @link_successor=id1|id2|...
+    @link_blocks=id1|id2|...
+    @link_resolves=id1|id2|...
+    @link_mentions=id1|id2|...
+    @link_predecessor=id1|id2|...
+    @link_parent=id1|id2|...
+    @link_duplicate_of=id1|id2|...
+    @link_duplicate=id1|id2|...
+    @link_related=id1|id2|...
+    @link_depends_on=id1|id2|...
+    @link_child=id1|id2|...
+    @link_resolved_by=id1|id2|...
+
+Example:
+
+    @link_related=123|80
+
+#### CLM Work Item Links 
+CLM links between this work item and another work item within the same or acoross repositories
+
+##### Format
+    @link_linktype=value
+
+The parameter value is a list of one or more work items specified by their ID (if they are in the same repository) or by the Item URI. The separator is:`|`
+
+    @link_affects_plan_item=id1|id2|URI2|...
+    @link_tracks_workitem=id1|id2|URI2|...
+    @link_related_change_management=id1|id2|URI2|...
+    @link_affected_by_defect=id1|id2|URI2|...
+
+Example:
+
+    @link_tracks_workitem="https://clm.example.com:9443/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/80|120|150"
+
+#### CLM URI Links 
+CLM links between this work item and another item, described by a valid URI, in a different repository
+
+##### Format
+    @link_linktype=value
+
+The parameter value is a list of one or more CLM URI's for elements that support this link type. The separator is:`|`
+
+    @link_related_test_plan=uri1|uri2|...
+    @link_affects_requirement=uri1|uri2|...
+    @link_tested_by_test_case=uri1|uri2|...
+    @link_blocks_test_execution=uri1|uri2|...
+    @link_implements_requirement=uri1|uri2|...
+    @link_affects_execution_result=uri1|uri2|...
+    @link_related_artifact=uri1|uri2|...
+    @link_related_test_case=uri1|uri2|...
+    @link_tracks_requirement=uri1|uri2|...
+    @link_scm_tracks_scm_changes=uri1|uri2|...
+    @link_related_execution_record=uri1|uri2|...
+
+Example:
+
+    @link_affects_requirement=https://clm.example.com:9443/rm/resources/_848a30e315524069854f55e1d35a402d|https://clm.example.com:9443/rm/resources/_6c96bedb0e9a490494273eefc6e1f7c5
+
+Please note that the link "Associate Work Item" between a change set and the work item can only be created by the SCM component. The link created here is the looser CLM link. Create the work item change set link using the SCM command line.
+
+#### Build result Links 
+Links from a work item to a build result in the same repository.
+
+##### Format
+    @link_reportAgainstBuild=buildResult1|buildResult2|...
+
+The parameter value is a list of one or more Buildresults specified by their ID or their label. Prefix the build labels @. The separator is:`|`
+
+    @link_reportAgainstBuild=id1|@BuildLabel2|...
+    @link_includedInBuild=id1|@BuildLabel2|...
 
 
-	Example:
+Example:
 
-		@link_reportAgainstBuild=@_IjluoH-oEeSHhcw_WFU6CQ|P20141208-1713
+    @link_reportAgainstBuild=@_IjluoH-oEeSHhcw_WFU6CQ|P20141208-1713
 
 
-### Aliases for attribute ID's
+##### Aliases for attribute ID's
 
 Available mappings:
 
