@@ -23,7 +23,7 @@ public class SimpleDateFormatUtil {
 
 	public static final String DURATION_HOURS = "hours";
 	public static final String DURATION_MINUTES = "minutes";
-	public static final String SIMPLE_DATE_FORMAT_PATTERN_YYYY_MM_DD_HH_MM_SS_Z = "yyyy/MM/dd hh:mm:ss z";
+	public static final String SIMPLE_DATE_FORMAT_PATTERN_YYYY_MM_DD_HH_MM_SS_Z = "yyyy/MM/dd HH:mm:ss z";
 	public static final String SIMPLE_DATE_FORMAT_PATTERN_YYYY_MM_DD = "yyyy/MM/dd";
 
 	/**
