@@ -127,7 +127,7 @@ Available commands:
 ```
 
 ## Start in RMI server mode
-Use the switch `/rmiServer` to start an instance as RMI server. In this mode, the process will not terminate, but wait for RMI requests to perform commands. It will service commands requested by other client instances that are started with the additional switch `/rmiClient`. It is not necessary to provide a command or any other input values, when starting the server as they will be ignored. Since the TeamPlatform needs to be initilized only once in this mode, the performance is considerably increased for multiple subsequent client calls.
+Use the switch `/rmiServer` to start an instance as RMI server. In this mode, the process will not terminate, but wait for RMI requests to perform commands. It will service commands requested by other client instances that are started with the additional switch `/rmiClient`. It is not necessary to provide a command or any other input values, when starting the server as they will be ignored. Since the TeamPlatform needs to be initialized only once in this mode, the performance is considerably increased for multiple subsequent client calls.
 
 By default, the RMI server uses the name `//localhost/RemoteWorkitemCommandLineServer` on port `1099`.
 It is possible to specify a different name and port by providing a value to the switch.
@@ -358,7 +358,7 @@ Example:
     @link_related=123|80
 
 #### CLM Work Item Links 
-CLM links between this work item and another work item within the same or acoross repositories
+CLM links between this work item and another work item within the same or across repositories
 
 ##### Format
     @link_linktype=value
@@ -406,7 +406,7 @@ Links from a work item to a build result in the same repository.
 ##### Format
     @link_reportAgainstBuild=buildResult1|buildResult2|...
 
-The parameter value is a list of one or more Buildresults specified by their ID or their label. Prefix the build labels @. The separator is:`|`
+The parameter value is a list of one or more Build results specified by their ID or their label. Prefix the build labels @. The separator is:`|`
 
     @link_reportAgainstBuild=id1|@BuildLabel2|...
     @link_includedInBuild=id1|@BuildLabel2|...
