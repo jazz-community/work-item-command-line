@@ -13,7 +13,7 @@ package com.ibm.js.team.workitem.commandline;
  */
 public interface IWorkItemCommandLineConstants {
 
-	public static final String VERSIONINFO = "V4.0";
+	public static final String VERSIONINFO = "V4.0.1";
 
 	// Commands available
 	public static final String COMMAND_CREATE = "create";
@@ -23,7 +23,7 @@ public interface IWorkItemCommandLineConstants {
 	public static final String COMMAND_EXPORT_WORKITEMS = "exportworkitems";
 
 	// Switch to ignore single errors and trying to perform operation even if
-	// some parameters and values are not recognisable
+	// some parameters and values are not recognizable
 	public static final String SWITCH_IGNOREERRORS = "ignoreErrors";
 
 	// Switches to enable deletion of information

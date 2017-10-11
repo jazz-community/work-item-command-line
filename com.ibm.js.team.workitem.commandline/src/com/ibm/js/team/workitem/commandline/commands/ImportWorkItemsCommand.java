@@ -66,7 +66,6 @@ import com.opencsv.CSVReader;
  * The API from com.ibm.team.workitem.rcp.core.jar is internal API.
  * 
  */
-@SuppressWarnings("restriction")
 public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand {
 
 	private static final String HTML_PATH_SLASH = "/";
@@ -412,6 +411,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 						throw e;
 					}
 					e.printStackTrace();
+				} finally {
+					reader.close();
 				}
 			}
 			debug("Imported");

@@ -306,7 +306,7 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 	}
 
 	/**
-	 * Operation to prepare and run the work item commandline as RMI server.
+	 * Operation to prepare and run the work item command line as RMI server.
 	 * This sets us in server mode, so the command will not terminate
 	 * 
 	 * @param rmiInfo
@@ -325,7 +325,7 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 			}
 			// Create and install a security manager
 			if (System.getSecurityManager() == null) {
-				System.setSecurityManager(new RMISecurityManager());
+				System.setSecurityManager(new SecurityManager()); // Oracle security patches
 				result.appendResultString("Security manager installed...");
 			} else {
 				result.appendResultString("Security manager already exists...");
