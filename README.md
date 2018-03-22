@@ -1,5 +1,5 @@
 # RTC Work Item Command Line
-WorkItemCommandLine Version V4.0
+WorkItemCommandLine Version V4.1
 
 **Note:**
 All of the following examples use bash multiline syntax for legibility. Leave them out when using single line commands, or replace them with a backtick (`) if you are using powershell.
@@ -115,6 +115,14 @@ Available commands:
     /ignoreErrors \
     workItemType="value" \
     {parameter[:mode]=value}
+```
+
+```bash
+-printtypes \
+    projectArea="value" \
+    repository="value" \
+    password="value" \
+    user="value"   
 ```
 
 ```bash
