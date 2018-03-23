@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2017 IBM Corporation
+ * Copyright (c) 2015-2018 IBM Corporation
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -25,6 +25,7 @@ import com.ibm.js.team.workitem.commandline.commands.ExportWorkItemsCommand;
 import com.ibm.js.team.workitem.commandline.commands.ImportWorkItemsCommand;
 import com.ibm.js.team.workitem.commandline.commands.MigrateWorkItemAttributeCommand;
 import com.ibm.js.team.workitem.commandline.commands.PrintTypeAttributesCommand;
+import com.ibm.js.team.workitem.commandline.commands.PrintTypesCommand;
 import com.ibm.js.team.workitem.commandline.commands.UpdateWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.framework.IWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.framework.WorkItemCommandLineException;
@@ -91,6 +92,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 	 * @param parameterManager
 	 */
 	private void addSupportedCommands(ParameterManager parameterManager) {
+		addSupportedCommand(new PrintTypesCommand(
+				new ParameterManager(parameterManager.getArguments())));
 		addSupportedCommand(new PrintTypeAttributesCommand(
 				new ParameterManager(parameterManager.getArguments())));
 		addSupportedCommand(new CreateWorkItemCommand(new ParameterManager(
@@ -496,3 +499,4 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 		return usage;
 	}
 }
+

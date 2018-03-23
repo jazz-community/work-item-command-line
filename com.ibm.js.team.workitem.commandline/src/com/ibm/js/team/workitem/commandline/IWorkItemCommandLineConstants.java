@@ -13,11 +13,12 @@ package com.ibm.js.team.workitem.commandline;
  */
 public interface IWorkItemCommandLineConstants {
 
-	public static final String VERSIONINFO = "V4.0.1";
+	public static final String VERSIONINFO = "V4.1";
 
 	// Commands available
 	public static final String COMMAND_CREATE = "create";
 	public static final String COMMAND_UPDATE = "update";
+	public static final String COMMAND_PRINT_TYPES = "printtypes";
 	public static final String COMMAND_PRINT_TYPE_ATTRIBUTES = "printtypeattributes";
 	public static final String COMMAND_IMPORT_WORKITEMS = "importworkitems";
 	public static final String COMMAND_EXPORT_WORKITEMS = "exportworkitems";
@@ -108,3 +109,4 @@ public interface IWorkItemCommandLineConstants {
 	public static final String SWITCH_SUPPRESS_MAIL_NOTIFICATION = "skipEmailNotification";
 	
 }
+

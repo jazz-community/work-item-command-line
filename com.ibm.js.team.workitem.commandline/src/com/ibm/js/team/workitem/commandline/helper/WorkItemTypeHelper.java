@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2017 IBM Corporation
+ * Copyright (c) 2015-2018 IBM Corporation
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -56,10 +56,45 @@ public class WorkItemTypeHelper {
 		return workItemClient;
 	}
 
+	/**
+	 * We need this client library to get the work item types
+	 * 
+	 * @return
+	 */
+	private IWorkItemClient getWorkItemClient() {
+		return (IWorkItemClient) getTeamRepository().getClientLibrary(
+				IWorkItemClient.class);
+	}
+
+	/**
+	 * @return
+	 */
 	private ITeamRepository getTeamRepository() {
 		return fTeamRepository;
 	}
 
+	/**
+	 * Prints the work item types available for the project area.
+	 * 
+	 * @param projectArea
+	 * @param monitor
+	 * @return
+	 * @throws TeamRepositoryException
+	 */
+	public OperationResult printWorkItemTypes(IProjectArea projectArea, IProgressMonitor monitor) throws TeamRepositoryException {
+		
+		OperationResult result = new OperationResult();
+		List<IWorkItemType> workItemTypes= getWorkItemClient().findWorkItemTypes(projectArea, monitor);
+		for (IWorkItemType workItemType : workItemTypes) {
+			result.appendResultString("Work Item type: " + workItemType.getDisplayName());
+			result.appendResultString("Type ID: " + workItemType.getIdentifier());
+			result.appendResultString("Type Category: " + workItemType.getCategory());
+			result.appendResultString("");			
+		}
+		result.setSuccess();
+		return result;
+	}
+	
 	/**
 	 * Prints the built in and the custom attributes of this work item type.
 	 * 
@@ -221,3 +256,4 @@ public class WorkItemTypeHelper {
 				+ workItemTypeID);
 	}
 }
+
