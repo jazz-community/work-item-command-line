@@ -266,7 +266,7 @@ Which modes are supported and their behavior depends on attribute type. Single v
 
 String values such as HTML, Summary, Wiki type attributes support `default` (same behavior as `set` mode), `set` and `add` mode.
 
-### Special Properties
+## Special Properties
 **Work Item ID:** Parameter `"id"` can not be changed.
 
 **Project Area:** Parameter `"projectArea"` can only be specified when creating the work item. It can not be set to a different value later.
