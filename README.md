@@ -26,7 +26,7 @@ All of the following examples use bash multiline syntax for legibility. Leave th
         -   [WorkFlow Action](#workflow-action)
         -   [Attachments](#attachments)
         -   [Links](#links)
--   [Attribute ID Aliases](#attribute-id-aliases)
+    -   [Attribute ID Aliases](#attribute-id-aliases)
  
 ## Usage 
 `-command {switch} {parameter[:mode]=value}`
