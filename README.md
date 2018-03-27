@@ -43,17 +43,35 @@ The switch /ignoreErrors ignores errors such as attributes or values not availab
 Available commands:
 
 ```bash
- -migrateattribute \
-    targetAttributeID="value" \ 
+-printtypes \
     projectArea="value" \
-    /skipEmailNotification \ 
-    repository="value" \ 
-    password="value" \ 
-    user="value" \
-    sourceAttributeID="value" \
-    /ignoreErrors workItemType="value"  
+    repository="value" \
+    password="value" \
+    user="value"   
 ```
 
+```bash
+-printtypeattributes \
+    projectArea="value" \
+    repository="value" \
+    password="value" \
+    user="value" \
+    workItemType="value"  
+```
+
+```bash
+-create \
+    /enableDeleteAttachment \
+    /enableDeleteApprovals \
+    projectArea="value" \
+    repository="value" \
+    /enforceSizeLimits \
+    password="value" \
+    user="value" \
+    /ignoreErrors \
+    workItemType="value" \
+    {parameter[:mode]=value}
+```
 
 ```bash
 -update \
@@ -108,35 +126,17 @@ Available commands:
 ```
 
 ```bash
--create \
-    /enableDeleteAttachment \
-    /enableDeleteApprovals \
+ -migrateattribute \
+    targetAttributeID="value" \ 
     projectArea="value" \
-    repository="value" \
-    /enforceSizeLimits \
-    password="value" \
+    /skipEmailNotification \ 
+    repository="value" \ 
+    password="value" \ 
     user="value" \
-    /ignoreErrors \
-    workItemType="value" \
-    {parameter[:mode]=value}
+    sourceAttributeID="value" \
+    /ignoreErrors workItemType="value"  
 ```
 
-```bash
--printtypes \
-    projectArea="value" \
-    repository="value" \
-    password="value" \
-    user="value"   
-```
-
-```bash
--printtypeattributes \
-    projectArea="value" \
-    repository="value" \
-    password="value" \
-    user="value" \
-    workItemType="value"  
-```
 
 ## Start in RMI server mode
 Use the switch `/rmiServer` to start an instance as RMI server. In this mode, the process will not terminate, but wait for RMI requests to perform commands. It will service commands requested by other client instances that are started with the additional switch `/rmiClient`. It is not necessary to provide a command or any other input values, when starting the server as they will be ignored. Since the TeamPlatform needs to be initialized only once in this mode, the performance is considerably increased for multiple subsequent client calls.
