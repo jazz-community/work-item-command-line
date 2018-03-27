@@ -17,7 +17,7 @@ All of the following examples use bash multiline syntax for legibility. Leave th
         -   [Values](#values)
         -   [Examples](#examples)
     -   [Modes](#modes)
-        -   [Special Properties](#special-properties)
+    -   [Special Properties](#special-properties)
         -   [Comments](#comments)
         -   [Subscriptions](#subscriptions)
         -   [Tags](#tags)
