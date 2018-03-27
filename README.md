@@ -43,97 +43,97 @@ The switch /ignoreErrors ignores errors such as attributes or values not availab
 Available commands:
 
 ```bash
--printtypes \
-    projectArea="value" \
-    repository="value" \
-    password="value" \
+-printtypes 
+    projectArea="value" 
+    repository="value" 
+    password="value" 
     user="value"   
 ```
 
 ```bash
--printtypeattributes \
-    projectArea="value" \
-    repository="value" \
-    password="value" \
-    user="value" \
+-printtypeattributes 
+    projectArea="value" 
+    repository="value" 
+    password="value" 
+    user="value" 
     workItemType="value"  
 ```
 
 ```bash
--create \
-    /enableDeleteAttachment \
-    /enableDeleteApprovals \
-    projectArea="value" \
-    repository="value" \
-    /enforceSizeLimits \
-    password="value" \
-    user="value" \
-    /ignoreErrors \
-    workItemType="value" \
+-create 
+    /enableDeleteAttachment 
+    /enableDeleteApprovals 
+    projectArea="value" 
+    repository="value" 
+    /enforceSizeLimits 
+    password="value" 
+    user="value" 
+    /ignoreErrors 
+    workItemType="value" 
     {parameter[:mode]=value}
 ```
 
 ```bash
--update \
-    /enableDeleteAttachment \
-    /enableDeleteApprovals \
-    /skipEmailNotification \
-    repository="value" \
-    /enforceSizeLimits \
-    id="value" \
-    password="value" \
-    user="value" \
-    /ignoreErrors \
+-update 
+    /enableDeleteAttachment 
+    /enableDeleteApprovals 
+    /skipEmailNotification 
+    repository="value" 
+    /enforceSizeLimits 
+    id="value" 
+    password="value" 
+    user="value" 
+    /ignoreErrors 
     {parameter[:mode]=value}
 ```
 
 ```bash
--importworkitems \
-    importFile="value" \
-    /forcelinkcreation \
-    /importmultipass \
-    projectArea="value" \
-    /skipEmailNotification \
-    repository="value" \
-    /enforceSizeLimits \
-    password="value" \
-    user="value" \
-    /ignoreErrors \
-    /importdebug \
-    [mappingFile="C:\temp\mapping.xml"] \
-    [encoding="UTF_16LE"] \
-    [timestampFormat="TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A"] \
+-importworkitems 
+    importFile="value" 
+    /forcelinkcreation 
+    /importmultipass 
+    projectArea="value" 
+    /skipEmailNotification 
+    repository="value" 
+    /enforceSizeLimits 
+    password="value" 
+    user="value" 
+    /ignoreErrors 
+    /importdebug 
+    [mappingFile="C:\temp\mapping.xml"] 
+    [encoding="UTF_16LE"] 
+    [timestampFormat="TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A"] 
     [delimiter=","]
 ```
 
 ```bash
--exportworkitems \
-    exportFile="value" \
-    projectArea="value" \
-    /asrtceclipse \
-    query="value" \
-    repository="value" \
-    /suppressAttributeExceptions \
-    /headerIDs \
-    password="value" \
-    user="value" \
-    /ignoreErrors \
-    [encoding="UTF_16LE"] \
-    [delimiter=","] \
-    [columns="Type,Id,Planned For,Filed Against,Description,Found In"] \
-    [querysource="JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters"] \
+-exportworkitems 
+    exportFile="value" 
+    projectArea="value" 
+    /asrtceclipse 
+    query="value" 
+    repository="value" 
+    /suppressAttributeExceptions 
+    /headerIDs 
+    password="value" 
+    user="value" 
+    /ignoreErrors 
+    [encoding="UTF_16LE"] 
+    [delimiter=","] 
+    [columns="Type,Id,Planned For,Filed Against,Description,Found In"] 
+    [querysource="JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters"] 
     [timestampFormat="TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A"]
 ```
 
 ```bash
- -migrateattribute \
-    targetAttributeID="value" \ 
-    projectArea="value" \
-    /skipEmailNotification \ 
-    repository="value" \ 
-    password="value" \ 
-    user="value" \
-    sourceAttributeID="value" \
+ -migrateattribute 
+    targetAttributeID="value" 
+    projectArea="value" 
+    /skipEmailNotification 
+    repository="value"  
+    password="value"  
+    user="value" 
+    sourceAttributeID="value" 
     /ignoreErrors workItemType="value"  
 ```
 
