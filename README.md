@@ -1,6 +1,9 @@
 # RTC Work Item Command Line
 WorkItemCommandLine Version V4.1
 
+See [Work Item Command Line 4.1](https://rsjazz.wordpress.com/2018/03/26/work-item-command-line-4-1/) for a instructions how to setup and install install WCL:
+
+
 **Note:**
 All of the following examples use bash multiline syntax for legibility. Leave them out when using single line commands, or replace them with a backtick (`) if you are using powershell.
 
