@@ -26,6 +26,7 @@ All of the following examples use bash multiline syntax for legibility. Leave th
         -   [WorkFlow Action](#workflow-action)
         -   [Attachments](#attachments)
         -   [Links](#links)
+-   [Attribute ID Aliases](#attribute-id-aliases)
  
 ## Usage 
 `-command {switch} {parameter[:mode]=value}`
@@ -428,7 +429,7 @@ Example:
     @link_reportAgainstBuild=@_IjluoH-oEeSHhcw_WFU6CQ|P20141208-1713
 
 
-##### Aliases for attribute ID's
+## Attribute ID Aliases
 
 Available mappings:
 
