@@ -377,10 +377,10 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 					getQuoteChar());
 		} catch (UnsupportedEncodingException e) {
 			throw new WorkItemCommandLineException(
-					"Exception creating output writer!", e);
+					"Exception creating CSV output writer: " + filepath , e);
 		} catch (FileNotFoundException e) {
 			throw new WorkItemCommandLineException(
-					"Exception creating output writer!", e);
+					"Exception creating CSV output writer: " + filepath , e);
 		}
 		return writer;
 	}
