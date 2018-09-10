@@ -369,18 +369,18 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	private CSVWriter createWriter(String filePath)
 			throws WorkItemCommandLineException {
 		CSVWriter writer = null;
-		fOutputFile = new File(filePath);
 		try {
+			fOutputFile = new File(filePath);
 			// @see http://opencsv.sourceforge.net/
 			writer = new CSVWriter(new OutputStreamWriter(new FileOutputStream(
 					fOutputFile), getFileEncoding()), getDelimiter(),
 					getQuoteChar());
 		} catch (UnsupportedEncodingException e) {
 			throw new WorkItemCommandLineException(
-					"Exception creating CSV output writer: " + filepath , e);
+					"Exception creating CSV output writer: " + filePath , e);
 		} catch (FileNotFoundException e) {
 			throw new WorkItemCommandLineException(
-					"Exception creating CSV output writer: " + filepath , e);
+					"Exception creating CSV output writer: " + filePath , e);
 		}
 		return writer;
 	}
