@@ -13,7 +13,7 @@ package com.ibm.js.team.workitem.commandline;
  */
 public interface IWorkItemCommandLineConstants {
 
-	public static final String VERSIONINFO = "V4.1";
+	public static final String VERSIONINFO = "V4.2";
 
 	// Commands available
 	public static final String COMMAND_CREATE = "create";
@@ -22,6 +22,7 @@ public interface IWorkItemCommandLineConstants {
 	public static final String COMMAND_PRINT_TYPE_ATTRIBUTES = "printtypeattributes";
 	public static final String COMMAND_IMPORT_WORKITEMS = "importworkitems";
 	public static final String COMMAND_EXPORT_WORKITEMS = "exportworkitems";
+	public static final String COMMAND_VALIDATE_OSLC_LINKS = "validateoslclinks";
 
 	// Switch to ignore single errors and trying to perform operation even if
 	// some parameters and values are not recognizable
@@ -61,14 +62,13 @@ public interface IWorkItemCommandLineConstants {
 	// The work item type
 	public static final String PARAMETER_WORKITEM_TYPE_PROPERTY = "workItemType";
 	public static final String PARAMETER_WORKITEM_TYPE_PROPERTY_EXAMPLE = "defect";
-	
+
 	// The format for exporting and importing dates
 	public static final String TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A = "MMM d, yyyy hh:mm a";
-	
+
 	// the mapping file
 	public static final String PARAMETER_TIMESTAMP_ENCODING = "timestampFormat";
 	public static final String PARAMETER_TIMESTAMP_ENCODING_EXAMPLE = "\"TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A\"";
-
 
 	// Parsing
 	public static final String INFIX_PARAMETER_VALUE_SEPARATOR = "=";
@@ -82,7 +82,7 @@ public interface IWorkItemCommandLineConstants {
 	// Switches for RMI
 	public static final String SWITCH_RMISERVER = "rmiServer";
 	public static final String SWITCH_RMICLIENT = "rmiClient";
-	
+
 	// Import, Export constants
 
 	// Prefix to create a legal URI
@@ -107,6 +107,5 @@ public interface IWorkItemCommandLineConstants {
 
 	public static final String SWITCH_EXPORT_SUPPRESS_ATTRIBUTE_EXCEPTIONS = "suppressAttributeExceptions";
 	public static final String SWITCH_SUPPRESS_MAIL_NOTIFICATION = "skipEmailNotification";
-	
-}
 
+}

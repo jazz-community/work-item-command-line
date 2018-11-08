@@ -14,9 +14,14 @@ import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
@@ -27,6 +32,7 @@ import com.ibm.js.team.workitem.commandline.commands.MigrateWorkItemAttributeCom
 import com.ibm.js.team.workitem.commandline.commands.PrintTypeAttributesCommand;
 import com.ibm.js.team.workitem.commandline.commands.PrintTypesCommand;
 import com.ibm.js.team.workitem.commandline.commands.UpdateWorkItemCommand;
+import com.ibm.js.team.workitem.commandline.commands.ValidateOSLCLinksCommand;
 import com.ibm.js.team.workitem.commandline.framework.IWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.framework.WorkItemCommandLineException;
 import com.ibm.js.team.workitem.commandline.helper.WorkItemUpdateHelper;
@@ -39,8 +45,8 @@ import com.ibm.team.repository.client.TeamPlatform;
 import com.ibm.team.repository.common.TeamRepositoryException;
 
 /**
- * The Launcher Class. This class coordinates all the work It also provides the
- * method for the RMI remote interface
+ * The Launcher Class. This class coordinates all the work It also provides the method for the RMI
+ * remote interface
  * 
  */
 public class WorkitemCommandLine extends UnicastRemoteObject implements
@@ -92,16 +98,18 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 	 * @param parameterManager
 	 */
 	private void addSupportedCommands(ParameterManager parameterManager) {
-		addSupportedCommand(new PrintTypesCommand(
-				new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new PrintTypeAttributesCommand(
-				new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new ValidateOSLCLinksCommand(new ParameterManager(
+				parameterManager.getArguments())));
+		addSupportedCommand(new PrintTypesCommand(new ParameterManager(
+				parameterManager.getArguments())));
+		addSupportedCommand(new PrintTypeAttributesCommand(new ParameterManager(
+				parameterManager.getArguments())));
 		addSupportedCommand(new CreateWorkItemCommand(new ParameterManager(
 				parameterManager.getArguments())));
 		addSupportedCommand(new UpdateWorkItemCommand(new ParameterManager(
 				parameterManager.getArguments())));
-		addSupportedCommand(new MigrateWorkItemAttributeCommand(
-				new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new MigrateWorkItemAttributeCommand(new ParameterManager(
+				parameterManager.getArguments())));
 		addSupportedCommand(new ImportWorkItemsCommand(new ParameterManager(
 				parameterManager.getArguments())));
 		addSupportedCommand(new ExportWorkItemsCommand(new ParameterManager(
@@ -167,6 +175,11 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 	 * @throws RemoteException
 	 */
 	public static void main(String[] args) {
+		// The next two lines are needed to prevent error message from API
+		BasicConfigurator.configure();
+		Logger.getRootLogger().setLevel(Level.FATAL);
+
+		System.out.println("StartTime: " + DateFormat.getDateTimeInstance().format(new Date()));
 
 		OperationResult result = new OperationResult();
 		System.out.println("WorkItemCommandLine Version "
@@ -183,6 +196,7 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 		if (TeamPlatform.isStarted()) {
 			TeamPlatform.shutdown();
 		}
+		System.out.println("EndTime: " + DateFormat.getDateTimeInstance().format(new Date()));
 		if (!isServer()) {
 			// If I am not in server mode, I need to exit and return success or
 			// failure
@@ -195,12 +209,10 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 	}
 
 	/**
-	 * This method is the first not static and coordinates to run the work item
-	 * commandline.
+	 * This method is the first not static and coordinates to run the work item commandline.
 	 * 
-	 * It determines if we are called as RMI server or RMI client and if so,
-	 * prepares the related workflow by calling the methods to setup and run the
-	 * RMI server or client
+	 * It determines if we are called as RMI server or RMI client and if so, prepares the related
+	 * workflow by calling the methods to setup and run the RMI server or client
 	 * 
 	 * If we are not running in RMI mode, the code to run this locally is used
 	 * 
@@ -210,14 +222,12 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 	private OperationResult run(String[] args) {
 		ParameterManager parameterManager = new ParameterManager(
 				ParameterParser.parseParameters(args));
-		if (parameterManager
-				.hasSwitch(IWorkItemCommandLineConstants.SWITCH_RMISERVER)) {
+		if (parameterManager.hasSwitch(IWorkItemCommandLineConstants.SWITCH_RMISERVER)) {
 			// Started as RMI server
 			Parameter rmiInfo = parameterManager.getArguments().getParameter(
 					IWorkItemCommandLineConstants.SWITCH_RMISERVER);
 			return startRMIServer(rmiInfo);
-		} else if (parameterManager
-				.hasSwitch(IWorkItemCommandLineConstants.SWITCH_RMICLIENT)) {
+		} else if (parameterManager.hasSwitch(IWorkItemCommandLineConstants.SWITCH_RMICLIENT)) {
 			// Started as RMI client
 			Parameter rmiInfo = parameterManager.getArguments().getParameter(
 					IWorkItemCommandLineConstants.SWITCH_RMICLIENT);
@@ -228,28 +238,26 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 	}
 
 	/**
-	 * The interface if I am running in RMI Server mode. The client calls this
-	 * method and passes all the arguments. The operation returns an @see
-	 * {@link OperationResult} that contains the commandline output, as well as
-	 * if the operation succeeded.
+	 * The interface if I am running in RMI Server mode. The client calls this method and passes all
+	 * the arguments. The operation returns an @see {@link OperationResult} that contains the
+	 * commandline output, as well as if the operation succeeded.
 	 * 
 	 * (non-Javadoc)
 	 * 
 	 * @see com.ibm.js.team.workitem.commandline.remote.IRemoteWorkItemOperationCall#runOperation(java.lang.String[])
 	 */
 	@Override
-	public OperationResult runOperation(String[] args)
-			throws TeamRepositoryException, RemoteException {
+	public OperationResult runOperation(String[] args) throws TeamRepositoryException,
+			RemoteException {
 		ParameterManager parameterManager = new ParameterManager(
 				ParameterParser.parseParameters(args));
 		return runCommands(parameterManager);
 	}
 
 	/**
-	 * This method sets up the commands to be called. It tries to find a
-	 * matching command for the input parameters If it does, it tries to
-	 * validate if parameters required by that command are available. In case of
-	 * problems, it prints the help message.
+	 * This method sets up the commands to be called. It tries to find a matching command for the
+	 * input parameters If it does, it tries to validate if parameters required by that command are
+	 * available. In case of problems, it prints the help message.
 	 * 
 	 * If there are no issues, try to run the operation and return the result.
 	 * 
@@ -273,8 +281,7 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 		// Try to get the command to be run
 		IWorkItemCommand toRun = getSupportedCommand(command);
 		if (toRun == null) {
-			result.appendResultString("Error: Command not supported: "
-					+ command);
+			result.appendResultString("Error: Command not supported: " + command);
 			result.appendResultString(IWorkItemCommandLineConstants.RESULT_FAILED);
 			result.appendResultString(this.helpGeneralUsage(null));
 			return result;
@@ -309,8 +316,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 	}
 
 	/**
-	 * Operation to prepare and run the work item command line as RMI server.
-	 * This sets us in server mode, so the command will not terminate
+	 * Operation to prepare and run the work item command line as RMI server. This sets us in server
+	 * mode, so the command will not terminate
 	 * 
 	 * @param rmiInfo
 	 * @return
@@ -355,13 +362,12 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 				setServer(true);
 				return result;
 			} catch (Exception e) {
-				result.appendResultString("RMI server exception: "
-						+ e.getMessage());
+				result.appendResultString("RMI server exception: " + e.getMessage());
 				result.appendResultString(e.getStackTrace().toString());
 			}
 		} catch (URISyntaxException e) {
-			result.appendResultString("Error converting to URI: "
-					+ rmiInfo.getValue() + "\n" + e.getMessage());
+			result.appendResultString("Error converting to URI: " + rmiInfo.getValue() + "\n"
+					+ e.getMessage());
 		}
 		// If we get there, something went wrong
 		result.setFailed();
@@ -396,14 +402,13 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 				// run the operation
 				return operation.runOperation(args);
 			} catch (Exception e) {
-				result.appendResultString("RmiOperationClient exception: "
-						+ e.getMessage());
+				result.appendResultString("RmiOperationClient exception: " + e.getMessage());
 				e.printStackTrace();
 				return result;
 			}
 		} catch (URISyntaxException e) {
-			result.appendResultString("Error converting to URL: "
-					+ rmiInfo.getValue() + "\n" + e.getMessage());
+			result.appendResultString("Error converting to URL: " + rmiInfo.getValue() + "\n"
+					+ e.getMessage());
 		}
 		// If we get here, something went wrong
 		result.setFailed();
@@ -411,9 +416,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 	}
 
 	/**
-	 * Compose a new URI for the RMI connection info. We have to fake it with a
-	 * http protocol to make it work, but after that it is easy to work with the
-	 * result.
+	 * Compose a new URI for the RMI connection info. We have to fake it with a http protocol to
+	 * make it work, but after that it is easy to work with the result.
 	 * 
 	 * @param rmiInfo
 	 * @return
@@ -425,8 +429,7 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 			rmiName = IWorkItemCommandLineConstants.HTTP_PROTOCOL_PREFIX
 					+ IRemoteWorkItemOperationCall.LOCALHOST_REMOTE_WORKITEM_COMMANDLINE_SERVER;
 		}
-		return new URI(IWorkItemCommandLineConstants.HTTP_PROTOCOL_PREFIX
-				+ rmiName);
+		return new URI(IWorkItemCommandLineConstants.HTTP_PROTOCOL_PREFIX + rmiName);
 	}
 
 	/**
@@ -444,8 +447,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 		String usage = "\n";
 		usage += "\n\nUsage (See http://wp.me/p2DlHq-s9 for a more complete description) :";
 		usage += "\n";
-		usage += IWorkItemCommandLineConstants.PREFIX_COMMAND + commandName
-				+ " {switch}" + " {parameter[:mode]=value}";
+		usage += IWorkItemCommandLineConstants.PREFIX_COMMAND + commandName + " {switch}"
+				+ " {parameter[:mode]=value}";
 		usage += "\n";
 		usage += "\nMultiple parameter/value pairs and switches can be provided separated by spaces.";
 		usage += "\nCommands might require specific parameters to be mandatory.";
@@ -462,14 +465,12 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 					+ aCommand.getCommandName() + " " + aCommand.helpUsage();
 		}
 		usage += "\n\nStart in RMI server mode:";
-		usage += "\n\tUse the switch "
-				+ IWorkItemCommandLineConstants.PREFIX_SWITCH
+		usage += "\n\tUse the switch " + IWorkItemCommandLineConstants.PREFIX_SWITCH
 				+ IWorkItemCommandLineConstants.SWITCH_RMISERVER
 				+ " to start an instance as RMI server.";
 		usage += "\n\tIn this mode, the process will not terminate, but wait for RMI requests to perform commands. ";
 		usage += "\n\tIt will service commands requested by other client instances that are started with the ";
-		usage += "\n\tadditional switch "
-				+ IWorkItemCommandLineConstants.PREFIX_SWITCH
+		usage += "\n\tadditional switch " + IWorkItemCommandLineConstants.PREFIX_SWITCH
 				+ IWorkItemCommandLineConstants.SWITCH_RMICLIENT + " .";
 		usage += "\n\tIt is not necessary to provide a command or any other input values, when starting the server ";
 		usage += "\n\tas they will be ignored.";
@@ -477,12 +478,10 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 		usage += "\n\tis considerably increased for multiple subsequent client calls.";
 		usage += "\n\tBy default, the RMI server uses the name "
 				+ IRemoteWorkItemOperationCall.LOCALHOST_REMOTE_WORKITEM_COMMANDLINE_SERVER
-				+ " on port " + IRemoteWorkItemOperationCall.RMI_REGISTRY_PORT
-				+ ".";
+				+ " on port " + IRemoteWorkItemOperationCall.RMI_REGISTRY_PORT + ".";
 		usage += "\n\tIt is possible to specify a different name and port by providing a value to the switch.";
 		usage += "\n\tThe client command must be started with the same name and port as the server using the corresponding client switch";
-		usage += "\n\tExample server: "
-				+ IWorkItemCommandLineConstants.PREFIX_SWITCH
+		usage += "\n\tExample server: " + IWorkItemCommandLineConstants.PREFIX_SWITCH
 				+ IWorkItemCommandLineConstants.SWITCH_RMISERVER
 				+ "=//clm.example.com:1199/WorkItemCommandLine";
 		usage += "\n\tExample client: -create "
@@ -499,4 +498,3 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 		return usage;
 	}
 }
-

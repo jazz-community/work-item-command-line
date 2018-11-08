@@ -47,18 +47,15 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	 */
 	@Override
 	public void setRequiredParameters() {
-		getParameterManager()
-				.syntaxAddRequiredParameter(
-						IWorkItemCommandLineConstants.PARAMETER_REPOSITORY_URL_PROPERTY,
-						IWorkItemCommandLineConstants.PARAMETER_REPOSITORY_URL_PROPERTY_EXAMPLE);
-		getParameterManager()
-				.syntaxAddRequiredParameter(
-						IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY,
-						IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY_EXAMPLE);
-		getParameterManager()
-				.syntaxAddRequiredParameter(
-						IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY,
-						IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY_EXAMPLE);
+		getParameterManager().syntaxAddRequiredParameter(
+				IWorkItemCommandLineConstants.PARAMETER_REPOSITORY_URL_PROPERTY,
+				IWorkItemCommandLineConstants.PARAMETER_REPOSITORY_URL_PROPERTY_EXAMPLE);
+		getParameterManager().syntaxAddRequiredParameter(
+				IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY,
+				IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY_EXAMPLE);
+		getParameterManager().syntaxAddRequiredParameter(
+				IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY,
+				IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY_EXAMPLE);
 	}
 
 	@Override
@@ -73,8 +70,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	}
 
 	@Override
-	public OperationResult execute(IProgressMonitor monitor)
-			throws TeamRepositoryException {
+	public OperationResult execute(IProgressMonitor monitor) throws TeamRepositoryException {
 
 		try {
 			// Login to the repository
@@ -114,8 +110,8 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	 * @return the IWorkItemCommon
 	 */
 	protected IWorkItemCommon getWorkItemCommon() {
-		IWorkItemCommon workItemClient = (IWorkItemCommon) getTeamRepository()
-				.getClientLibrary(IWorkItemCommon.class);
+		IWorkItemCommon workItemClient = (IWorkItemCommon) getTeamRepository().getClientLibrary(
+				IWorkItemCommon.class);
 		return workItemClient;
 	}
 
@@ -123,8 +119,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	 * @return the IAuditableCommon
 	 */
 	protected IAuditableCommon getAuditableCommon() {
-		return (IAuditableCommon) getTeamRepository().getClientLibrary(
-				IAuditableCommon.class);
+		return (IAuditableCommon) getTeamRepository().getClientLibrary(IAuditableCommon.class);
 	}
 
 	/**
@@ -135,16 +130,35 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	 * @throws TeamRepositoryException
 	 */
 	private ITeamRepository login() throws TeamRepositoryException {
-		String repository = getParameterManager()
-				.consumeParameter(
-						IWorkItemCommandLineConstants.PARAMETER_REPOSITORY_URL_PROPERTY);
+		String repository = getParameterManager().consumeParameter(
+				IWorkItemCommandLineConstants.PARAMETER_REPOSITORY_URL_PROPERTY);
 		String user = getParameterManager().consumeParameter(
 				IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY);
 		String password = getParameterManager().consumeParameter(
 				IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY);
 
-		ITeamRepository teamRepository = TeamPlatform
-				.getTeamRepositoryService().getTeamRepository(repository);
+		ITeamRepository teamRepository = TeamPlatform.getTeamRepositoryService().getTeamRepository(
+				repository);
+		teamRepository.registerLoginHandler(new LoginHandler(user, password));
+		teamRepository.login(getMonitor());
+		return teamRepository;
+	}
+
+	/**
+	 * Log into the teamrepository. Get the parameters from the parameter
+	 * managers list and use the values.
+	 * 
+	 * @return
+	 * @throws TeamRepositoryException
+	 */
+	protected ITeamRepository login(String repository) throws TeamRepositoryException {
+		String user = getParameterManager().consumeParameter(
+				IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY);
+		String password = getParameterManager().consumeParameter(
+				IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY);
+
+		ITeamRepository teamRepository = TeamPlatform.getTeamRepositoryService().getTeamRepository(
+				repository);
 		teamRepository.registerLoginHandler(new LoginHandler(user, password));
 		teamRepository.login(getMonitor());
 		return teamRepository;
