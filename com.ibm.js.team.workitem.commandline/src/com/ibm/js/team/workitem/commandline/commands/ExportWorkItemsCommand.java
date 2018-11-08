@@ -91,19 +91,18 @@ import com.ibm.team.workitem.common.model.WorkItemApprovals;
 import com.ibm.team.workitem.common.query.IQueryDescriptor;
 import com.ibm.team.workitem.common.query.IQueryResult;
 import com.ibm.team.workitem.common.query.IResult;
+import com.ibm.team.workitem.common.query.ResultSize;
 import com.ibm.team.workitem.common.workflow.IWorkflowInfo;
 import com.opencsv.CSVWriter;
 
 /**
- * Command to export a set of work items to a CSV file set the provided values
- * and save it.
+ * Command to export a set of work items to a CSV file set the provided values and save it.
  * 
- * The command supports an RTC compatible mode as well as a special mode that
- * exports IItem values in a way that is uniquely identifying the item and
- * allows to reconstruct the item in the import.
+ * The command supports an RTC compatible mode as well as a special mode that exports IItem values
+ * in a way that is uniquely identifying the item and allows to reconstruct the item in the import.
  * 
- * This command uses opencsv-2.3jar @see http://opencsv.sourceforge.net/ as
- * external library to read the CSV file.
+ * This command uses opencsv-2.3jar @see http://opencsv.sourceforge.net/ as external library to read
+ * the CSV file.
  * 
  */
 public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
@@ -156,10 +155,10 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	// The output file
 	private File fOutputFile = null;
 	// The pattern to export time stamps
-	private String fSimpleDateTimeFormatPattern=IWorkItemCommandLineConstants.TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A;
+	private String fSimpleDateTimeFormatPattern = IWorkItemCommandLineConstants.TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A;
 	// Suppress Attribute Not found Exception
 	private boolean fSuppressAttributeErrors = false;
-	
+
 	/**
 	 * The constructor
 	 * 
@@ -172,8 +171,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.js.team.workitem.commandline.framework.IWorkItemCommand#
-	 * getCommandName()
+	 * @see com.ibm.js.team.workitem.commandline.framework.IWorkItemCommand# getCommandName()
 	 */
 	@Override
 	public String getCommandName() {
@@ -183,99 +181,86 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ibm.js.team.workitem.commandline.framework.AbstractTeamRepositoryCommand
+	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractTeamRepositoryCommand
 	 * #setRequiredParameters()
 	 */
 	@Override
 	public void setRequiredParameters() {
 		super.setRequiredParameters();
 		// Add the parameters required to perform the operation
-		getParameterManager()
-				.syntaxAddRequiredParameter(
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
+		getParameterManager().syntaxAddRequiredParameter(
+				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
+				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
 		getParameterManager().syntaxAddRequiredParameter(PARAMETER_EXPORT_FILE,
 				PARAMETER_EXPORT_FILE_EXAMPLE);
 		getParameterManager().syntaxAddRequiredParameter(PARAMETER_QUERY_NAME,
 				PARAMETER_QUERY_NAME_EXAMPLE);
-		getParameterManager().syntaxAddSwitch(
-				IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
 		getParameterManager().syntaxAddSwitch(SWITCH_HEADER_AS_ID);
 		getParameterManager().syntaxAddSwitch(SWITCH_RTC_ECLIPSE_EXPORT);
-		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_EXPORT_SUPPRESS_ATTRIBUTE_EXCEPTIONS);
+		getParameterManager().syntaxAddSwitch(
+				IWorkItemCommandLineConstants.SWITCH_EXPORT_SUPPRESS_ATTRIBUTE_EXCEPTIONS);
 
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractCommand#
-	 * helpSpecificUsage()
+	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractCommand# helpSpecificUsage()
 	 */
 	@Override
 	public String helpSpecificUsage() {
 		return " [" + IWorkItemCommandLineConstants.PARAMETER_ENCODING
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
-				+ IWorkItemCommandLineConstants.PARAMETER_ENCODING_EXAMPLE + "]" 
-				+ " [" + IWorkItemCommandLineConstants.PARAMETER_DELIMITER
+				+ IWorkItemCommandLineConstants.PARAMETER_ENCODING_EXAMPLE + "]" + " ["
+				+ IWorkItemCommandLineConstants.PARAMETER_DELIMITER
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
-				+ IWorkItemCommandLineConstants.PARAMETER_DELIMITER_EXAMPLE	+ "]" 
-				+ " [" + PARAMETER_EXPORT_COLUMNS
+				+ IWorkItemCommandLineConstants.PARAMETER_DELIMITER_EXAMPLE + "]" + " ["
+				+ PARAMETER_EXPORT_COLUMNS
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
-				+ PARAMETER_EXPORT_COLUMNS_EXAMPLE1 + "]" 
-				+ " [" + PARAMETER_SHARING_TARGETS
+				+ PARAMETER_EXPORT_COLUMNS_EXAMPLE1 + "]" + " [" + PARAMETER_SHARING_TARGETS
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
-				+ PARAMETER_SHARING_TARGETS_EXAMPLE + "]"
-				+ "[" + IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING
+				+ PARAMETER_SHARING_TARGETS_EXAMPLE + "]" + "["
+				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
-				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING_EXAMPLE + "]" 
-;
+				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING_EXAMPLE + "]";
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ibm.js.team.workitem.commandline.framework.AbstractCommand#process()
+	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractCommand#process()
 	 */
 	@Override
 	public OperationResult process() throws TeamRepositoryException {
 		setIgnoreErrors(getParameterManager().hasSwitch(
 				IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS));
-		setRTCEclipseExport(getParameterManager().hasSwitch(
-				SWITCH_RTC_ECLIPSE_EXPORT));
+		setRTCEclipseExport(getParameterManager().hasSwitch(SWITCH_RTC_ECLIPSE_EXPORT));
 		setHeaderAsIDs(getParameterManager().hasSwitch(SWITCH_HEADER_AS_ID));
-		setSuppressAttributeErrors(getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_EXPORT_SUPPRESS_ATTRIBUTE_EXCEPTIONS));
-		
-		String projectAreaName = getParameterManager()
-				.consumeParameter(
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY)
-				.trim();
-		// Find the project area
-		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(
-				projectAreaName, getProcessClientService(), getMonitor());
-		if (projectArea == null) {
-			throw new WorkItemCommandLineException("Project Area not found: "
-					+ projectAreaName);
-		}
-		ColumnHeaderMappingHelper columnHeaderMapping = new ColumnHeaderMappingHelper(
-				projectArea, getWorkItemCommon(), getMonitor());
+		setSuppressAttributeErrors(getParameterManager().hasSwitch(
+				IWorkItemCommandLineConstants.SWITCH_EXPORT_SUPPRESS_ATTRIBUTE_EXCEPTIONS));
 
-		String queryName = getParameterManager().consumeParameter(
-				PARAMETER_QUERY_NAME);
+		String projectAreaName = getParameterManager().consumeParameter(
+				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY).trim();
+		// Find the project area
+		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(projectAreaName,
+				getProcessClientService(), getMonitor());
+		if (projectArea == null) {
+			throw new WorkItemCommandLineException("Project Area not found: " + projectAreaName);
+		}
+		ColumnHeaderMappingHelper columnHeaderMapping = new ColumnHeaderMappingHelper(projectArea,
+				getWorkItemCommon(), getMonitor());
+
+		String queryName = getParameterManager().consumeParameter(PARAMETER_QUERY_NAME);
 		if (queryName == null) {
-			throw new WorkItemCommandLineException(
-					"Query name must not be provided.");
+			throw new WorkItemCommandLineException("Query name must not be provided.");
 		}
 		String sharingTargetNames = getParameterManager().consumeParameter(
 				PARAMETER_SHARING_TARGETS);
 
-		String filePath = getParameterManager().consumeParameter(
-				PARAMETER_EXPORT_FILE);
+		String filePath = getParameterManager().consumeParameter(PARAMETER_EXPORT_FILE);
 		if (filePath == null) {
-			throw new WorkItemCommandLineException(
-					"Export file path must be provided.");
+			throw new WorkItemCommandLineException("Export file path must be provided.");
 		}
 
 		// Read if there is a special encoding provided
@@ -298,56 +283,60 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		if (delimiter != null) {
 			setDelimiter(delimiter);
 		}
-		
+
 		// get the columns to export
-		String columns = getParameterManager().consumeParameter(
-				PARAMETER_EXPORT_COLUMNS);
+		String columns = getParameterManager().consumeParameter(PARAMETER_EXPORT_COLUMNS);
 		if (columns != null) {
 			columnHeaderMapping.setColumns(columns);
 		}
 
 		// Create the writer
 		CSVWriter writer = createWriter(filePath);
-		List<String> headerNames = columnHeaderMapping
-				.analyzeColumnHeader(getHeaderAsIDs());
+		List<String> headerNames = columnHeaderMapping.analyzeColumnHeader(getHeaderAsIDs());
 		writer.writeNext(headerNames.toArray(new String[headerNames.size()]));
 
 		// Get the query
 		IQueryDescriptor query = null;
 		if (sharingTargetNames == null) {
 			// If there is no sharing target try to find a personal query
-			query = QueryUtil.findPersonalQuery(queryName, projectArea,
-					getTeamRepository().loggedInContributor(), getMonitor());
+			query = QueryUtil.findPersonalQuery(queryName, projectArea, getTeamRepository()
+					.loggedInContributor(), getMonitor());
 		} else {
-			List<IAuditableHandle> sharingTargets = QueryUtil
-					.findSharingTargets(sharingTargetNames,
-							getProcessClientService(), getMonitor());
+			List<IAuditableHandle> sharingTargets = QueryUtil.findSharingTargets(
+					sharingTargetNames, getProcessClientService(), getMonitor());
 			if (sharingTargets == null) {
 				throw new WorkItemCommandLineException(
-						"ProcessArea that shares the query not found "
-								+ sharingTargetNames);
+						"ProcessArea that shares the query not found " + sharingTargetNames);
 			}
-			query = QueryUtil.findSharedQuery(queryName, projectArea,
-					sharingTargets, getMonitor());
+			query = QueryUtil.findSharedQuery(queryName, projectArea, sharingTargets, getMonitor());
 
 		}
 		if (query == null) {
-			throw new WorkItemCommandLineException("Query not found "
-					+ queryName);
+			throw new WorkItemCommandLineException("Query not found " + queryName);
 		}
 
 		// Query the work items
-		IQueryResult<IResult> results = QueryUtil.getUnresolvedQueryResult(
-				query, isOverrideQueryResultSizeLimit());
-
+		IQueryResult<IResult> results = QueryUtil.getUnresolvedQueryResult(query,
+				isOverrideQueryResultSizeLimit());
+		ResultSize resultSize = results.getResultSize(getMonitor());
+		List<IWorkItemHandle> workItems = new ArrayList<IWorkItemHandle>(resultSize.getTotal());
 		while (results.hasNext(null)) {
 			IResult result = results.next(null);
-			IWorkItem workItem = WorkItemUtil.resolveWorkItem(
-					(IWorkItemHandle) result.getItem(), IWorkItem.FULL_PROFILE,
+			workItems.add((IWorkItemHandle) result.getItem());
+		}
+
+		for (IWorkItemHandle handle : workItems) {
+			IWorkItem workItem = WorkItemUtil.resolveWorkItem(handle, IWorkItem.FULL_PROFILE,
 					getWorkItemCommon(), getMonitor());
-			ArrayList<String> row = getRow(workItem,
-					columnHeaderMapping.getParameters());
-			writer.writeNext(row.toArray(new String[row.size()]));
+			if (workItem != null) {
+				ArrayList<String> row = getRow(workItem, columnHeaderMapping.getParameters());
+				writer.writeNext(row.toArray(new String[row.size()]));
+				try {
+					writer.flush();
+				} catch (IOException e) {
+					throw new WorkItemCommandLineException(e);
+				}
+			}
 		}
 		try {
 			writer.flush();
@@ -366,21 +355,19 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws WorkItemCommandLineException
 	 */
-	private CSVWriter createWriter(String filePath)
-			throws WorkItemCommandLineException {
+	private CSVWriter createWriter(String filePath) throws WorkItemCommandLineException {
 		CSVWriter writer = null;
 		try {
 			fOutputFile = new File(filePath);
 			// @see http://opencsv.sourceforge.net/
-			writer = new CSVWriter(new OutputStreamWriter(new FileOutputStream(
-					fOutputFile), getFileEncoding()), getDelimiter(),
-					getQuoteChar());
+			writer = new CSVWriter(new OutputStreamWriter(new FileOutputStream(fOutputFile),
+					getFileEncoding()), getDelimiter(), getQuoteChar());
 		} catch (UnsupportedEncodingException e) {
-			throw new WorkItemCommandLineException(
-					"Exception creating CSV output writer: " + filePath , e);
+			throw new WorkItemCommandLineException("Exception creating CSV output writer: "
+					+ filePath, e);
 		} catch (FileNotFoundException e) {
-			throw new WorkItemCommandLineException(
-					"Exception creating CSV output writer: " + filePath , e);
+			throw new WorkItemCommandLineException("Exception creating CSV output writer: "
+					+ filePath, e);
 		}
 		return writer;
 	}
@@ -394,23 +381,20 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @throws WorkItemCommandLineException
 	 * @throws TeamRepositoryException
 	 */
-	private ArrayList<String> getRow(IWorkItem workItem,
-			List<ParameterValue> columns) throws WorkItemCommandLineException,
-			TeamRepositoryException {
+	private ArrayList<String> getRow(IWorkItem workItem, List<ParameterValue> columns)
+			throws WorkItemCommandLineException, TeamRepositoryException {
 		ArrayList<String> row = new ArrayList<String>(columns.size());
-		getResult().appendResultString(
-				"Exporting work item " + workItem.getId());
+		getResult().appendResultString("Exporting work item " + workItem.getId());
 		for (int i = 0; i < columns.size(); i++) {
 			ParameterValue column = columns.get(i);
 			String value = "";
 			try {
 				value = getStringRepresentation(workItem, column);
 			} catch (WorkItemCommandLineException e) {
-				String message = "Exception exporting work item "
-						+ workItem.getId() + " column " + i + " attribute "
-						+ column.getAttributeID() + " : " + e.getMessage();
+				String message = "Exception exporting work item " + workItem.getId() + " column "
+						+ i + " attribute " + column.getAttributeID() + " : " + e.getMessage();
 				if (isIgnoreErrors()) {
-					if(!isSuppressAttributeErrors()){
+					if (!isSuppressAttributeErrors()) {
 						this.getResult().appendResultString(message + " Ignored!");
 					}
 				} else {
@@ -423,11 +407,10 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	}
 
 	/**
-	 * This method tries to get the matching representation of the value to be
-	 * set for a work item attribute. It basically goes through a list of
-	 * properties an attribute can have and locates the target type. Based on
-	 * that type it tries to create a matching value. The value is returned if
-	 * it was possible to create it.
+	 * This method tries to get the matching representation of the value to be set for a work item
+	 * attribute. It basically goes through a list of properties an attribute can have and locates
+	 * the target type. Based on that type it tries to create a matching value. The value is
+	 * returned if it was possible to create it.
 	 * 
 	 * @param column
 	 *            - the IAttribute to find the representation for
@@ -438,17 +421,15 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 */
-	private String getStringRepresentation(IWorkItem workItem,
-			ParameterValue column) throws TeamRepositoryException,
-			WorkItemCommandLineException {
+	private String getStringRepresentation(IWorkItem workItem, ParameterValue column)
+			throws TeamRepositoryException, WorkItemCommandLineException {
 		if (column == null) {
 			return CONSTANT_NO_VALUE;
 		}
 
 		String attributeID = column.getAttributeID();
 		if (attributeID == null) {
-			throw new WorkItemCommandLineException(
-					"AttributeID can not be null");
+			throw new WorkItemCommandLineException("AttributeID can not be null");
 		}
 		IAttribute attribute = column.getIAttribute();
 		if (attribute == null) {
@@ -457,16 +438,13 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 			if (ReferenceUtil.isLinkType(attributeID)) {
 				return calculateLinkAsString(workItem, attributeID);
 			}
-			if (attributeID
-					.trim()
-					.toLowerCase()
-					.equals(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS
-							.toLowerCase())) {
+			if (attributeID.trim().toLowerCase()
+					.equals(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS.toLowerCase())) {
 				return calculateAttachmentsAsString(workItem);
 			}
-			
+
 			throw new WorkItemCommandLineException("Attribute not found ID: " + attributeID);
-			
+
 		}
 		if (!workItem.hasAttribute(attribute)) {
 			return CONSTANT_NO_VALUE;
@@ -497,8 +475,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 				// Item List Types that are supported
 				if (attribType.equals(AttributeTypes.CONTRIBUTOR_LIST)) {
 					// A list of contributors
-					return calculateContributorListAsString(value,
-							SEPERATOR_NEWLINE);
+					return calculateContributorListAsString(value, SEPERATOR_NEWLINE);
 				}
 				if (attribType.equals(AttributeTypes.PROCESS_AREA_LIST)) {
 					// A list of process areas (ProjectArea/TeamArea)
@@ -533,9 +510,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 				// Handle all Enumeration List Types
 				return calculateEnumerationLiteralListAsString(value, attribute);
 			}
-			throw new WorkItemCommandLineException(
-					"Type not recognized - type not yet supported: "
-							+ attribType + " ID " + attribute.getIdentifier());
+			throw new WorkItemCommandLineException("Type not recognized - type not yet supported: "
+					+ attribType + " ID " + attribute.getIdentifier());
 		} else {
 			// Handle non list types - the simple ones first.
 
@@ -552,9 +528,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 				if (value instanceof Boolean) {
 					return ((Boolean) value).toString();
 				}
-				throw new WorkItemCommandLineException(
-						"Type not expected - expected boolean: " + attribType
-								+ " ID " + attribute.getIdentifier());
+				throw new WorkItemCommandLineException("Type not expected - expected boolean: "
+						+ attribType + " ID " + attribute.getIdentifier());
 			}
 			if (AttributeTypes.NUMBER_TYPES.contains(attribType)) {
 				// different number types
@@ -566,8 +541,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 					return calculateNumberAsString(value, attribType);
 				} catch (NumberFormatException e) {
 					throw new WorkItemCommandLineException(
-							"Attribute Value not valid - Number format exception: "
-									+ value, e);
+							"Attribute Value not valid - Number format exception: " + value, e);
 				}
 			}
 			if (attribType.equals(AttributeTypes.DELIVERABLE)) {
@@ -625,9 +599,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 			}
 
 			// In case we forgot something or a new type gets implemented
-			throw new WorkItemCommandLineException(
-					"AttributeType not yet supported: " + attribType + " ID "
-							+ attribute.getIdentifier());
+			throw new WorkItemCommandLineException("AttributeType not yet supported: " + attribType
+					+ " ID " + attribute.getIdentifier());
 		}
 	}
 
@@ -636,27 +609,24 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateAttachmentsAsString(IWorkItem workItem)
-			throws TeamRepositoryException {
+	private String calculateAttachmentsAsString(IWorkItem workItem) throws TeamRepositoryException {
 		String rootFoldeName = fOutputFile.getParentFile().getAbsolutePath();
-		String relativePath = ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS
-				+ File.separator + workItem.getId();
+		String relativePath = ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS + File.separator
+				+ workItem.getId();
 		String outputFolderName = rootFoldeName + File.separator + relativePath;
 		List<String> resultList = new ArrayList<String>();
-		List<IAttachment> attachments = AttachmentUtil.saveAttachmentsToDisk(
-				new File(outputFolderName), workItem, getWorkItemCommon(),
-				getMonitor());
+		List<IAttachment> attachments = AttachmentUtil.saveAttachmentsToDisk(new File(
+				outputFolderName), workItem, getWorkItemCommon(), getMonitor());
 		for (IAttachment attachment : attachments) {
 			String result = "";
 			if (isRTCEclipseExport()) {
 				result = attachment.getName();
 			} else {
-				String fileName = "." + File.separator + relativePath
-						+ File.separator + attachment.getName();
+				String fileName = "." + File.separator + relativePath + File.separator
+						+ attachment.getName();
 				fileName = fileName.replace("\\", "/");
 				result = fileName + WorkItemUpdateHelper.ATTACHMENT_SEPARATOR
-						+ attachment.getDescription()
-						+ WorkItemUpdateHelper.ATTACHMENT_SEPARATOR
+						+ attachment.getDescription() + WorkItemUpdateHelper.ATTACHMENT_SEPARATOR
 						+ attachment.getContent().getContentType()
 						+ WorkItemUpdateHelper.ATTACHMENT_SEPARATOR
 						+ attachment.getContent().getCharacterEncoding();
@@ -678,13 +648,11 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 			throws TeamRepositoryException {
 		String linkType = ReferenceUtil.getReferenceType(linkTypeID);
 		if (linkType == null) {
-			throw new WorkItemCommandLineException(
-					"Linktype not yet supported: ID " + linkTypeID);
+			throw new WorkItemCommandLineException("Linktype not yet supported: ID " + linkTypeID);
 		}
-		IEndPointDescriptor endpoint = ReferenceUtil
-				.getReferenceEndpointDescriptor(linkTypeID);
-		IWorkItemReferences wiReferences = getWorkItemCommon()
-				.resolveWorkItemReferences(workItem, getMonitor());
+		IEndPointDescriptor endpoint = ReferenceUtil.getReferenceEndpointDescriptor(linkTypeID);
+		IWorkItemReferences wiReferences = getWorkItemCommon().resolveWorkItemReferences(workItem,
+				getMonitor());
 		List<String> referenceRepresentations = new ArrayList<String>();
 		List<IReference> references = wiReferences.getReferences(endpoint);
 		for (IReference aReference : references) {
@@ -692,46 +660,38 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 			if (linkType.equals(ReferenceUtil.CATEGORY_LINKTYPE_WORK_ITEM)) {
 				// get the reference and calculate the value.
 				if (aReference.isItemReference()) {
-					IItemHandle referencedItem = ((IItemReference) aReference)
-							.getReferencedItem();
+					IItemHandle referencedItem = ((IItemReference) aReference).getReferencedItem();
 					if (referencedItem instanceof IWorkItemHandle) {
 						IWorkItem item = WorkItemUtil.resolveWorkItem(
-								(IWorkItemHandle) referencedItem,
-								IWorkItem.SMALL_PROFILE, getWorkItemCommon(),
-								getMonitor());
+								(IWorkItemHandle) referencedItem, IWorkItem.SMALL_PROFILE,
+								getWorkItemCommon(), getMonitor());
 						referenceRepresentations.add(PREFIX_EXISTINGWORKITEM
 								+ Integer.toString(item.getId()));
 					}
 				} else {
 					throw new WorkItemCommandLineException(
-							"Unexpected reference type ItemReference expected: "
-									+ linkTypeID);
+							"Unexpected reference type ItemReference expected: " + linkTypeID);
 				}
-			} else if (linkType
-					.equals(ReferenceUtil.CATEGORY_LINKTYPE_CLM_WORKITEM)) {
-				referenceRepresentations.add(getURIReferenceAsString(
-						aReference, linkTypeID));
+			} else if (linkType.equals(ReferenceUtil.CATEGORY_LINKTYPE_CLM_WORKITEM)) {
+				referenceRepresentations.add(getURIReferenceAsString(aReference, linkTypeID));
 			} else if (linkType.equals(ReferenceUtil.CATEGORY_LINKTYPE_CLM_URI)) {
-				referenceRepresentations.add(getURIReferenceAsString(
-						aReference, linkTypeID));
+				referenceRepresentations.add(getURIReferenceAsString(aReference, linkTypeID));
 			} else if (linkType.equals(ReferenceUtil.CATEGORY_LINKTYPE_BULD)) {
-				referenceRepresentations.add(getItemReferenceAsString(
-						aReference, linkTypeID));
+				referenceRepresentations.add(getItemReferenceAsString(aReference, linkTypeID));
 			}
 		}
 		return calculateStringListAsString(referenceRepresentations);
 	}
 
 	/**
-	 * Create the presentation for a URI Reference such as tracks links and
-	 * other items in other applications
+	 * Create the presentation for a URI Reference such as tracks links and other items in other
+	 * applications
 	 * 
 	 * @param uriReference
 	 * @param linkTypeID
 	 * @return
 	 */
-	private String getURIReferenceAsString(IReference uriReference,
-			String linkTypeID) {
+	private String getURIReferenceAsString(IReference uriReference, String linkTypeID) {
 		if (uriReference.isURIReference()) {
 			IURIReference reference = ((IURIReference) uriReference);
 
@@ -742,14 +702,12 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 			}
 		} else {
 			throw new WorkItemCommandLineException(
-					"Unexpected reference type URIReference expected: "
-							+ linkTypeID);
+					"Unexpected reference type URIReference expected: " + linkTypeID);
 		}
 	}
 
 	/**
-	 * Create the presentation for an item reference - Work Item and build
-	 * result
+	 * Create the presentation for an item reference - Work Item and build result
 	 * 
 	 * @param reference
 	 * @param linkTypeID
@@ -757,39 +715,30 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @throws WorkItemCommandLineException
 	 * @throws TeamRepositoryException
 	 */
-	private String getItemReferenceAsString(IReference reference,
-			String linkTypeID) throws WorkItemCommandLineException,
-			TeamRepositoryException {
+	private String getItemReferenceAsString(IReference reference, String linkTypeID)
+			throws WorkItemCommandLineException, TeamRepositoryException {
 		// get the reference and calculate the value.
 		if (reference.isItemReference()) {
-			IItemHandle referencedItem = ((IItemReference) reference)
-					.getReferencedItem();
+			IItemHandle referencedItem = ((IItemReference) reference).getReferencedItem();
 			if (referencedItem instanceof IBuildResultHandle) {
 				IBuildResult buildResult = BuildUtil.resolveBuildResult(
-						(IBuildResultHandle) referencedItem,
-						getTeamRepository(), getMonitor());
+						(IBuildResultHandle) referencedItem, getTeamRepository(), getMonitor());
 				if (isRTCEclipseExport()) {
-					IBuildDefinition buildDefinition = BuildUtil
-							.resolveBuildDefinition(
-									buildResult.getBuildDefinition(),
-									getTeamRepository(), getMonitor());
-					return buildDefinition.getId() + " "
-							+ buildResult.getLabel();
+					IBuildDefinition buildDefinition = BuildUtil.resolveBuildDefinition(
+							buildResult.getBuildDefinition(), getTeamRepository(), getMonitor());
+					return buildDefinition.getId() + " " + buildResult.getLabel();
 				} else {
 					return buildResult.getLabel();
 				}
 			}
 			if (referencedItem instanceof IWorkItemHandle) {
-				IWorkItem item = WorkItemUtil.resolveWorkItem(
-						(IWorkItemHandle) referencedItem,
-						IWorkItem.SMALL_PROFILE, getWorkItemCommon(),
-						getMonitor());
+				IWorkItem item = WorkItemUtil.resolveWorkItem((IWorkItemHandle) referencedItem,
+						IWorkItem.SMALL_PROFILE, getWorkItemCommon(), getMonitor());
 				return PREFIX_EXISTINGWORKITEM + Integer.toString(item.getId());
 			}
 		}
-		throw new WorkItemCommandLineException(
-				"Unexpected reference type ItemReference expected: "
-						+ linkTypeID);
+		throw new WorkItemCommandLineException("Unexpected reference type ItemReference expected: "
+				+ linkTypeID);
 	}
 
 	/**
@@ -799,11 +748,9 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateStateAsString(IWorkItem workItem)
-			throws TeamRepositoryException {
+	private String calculateStateAsString(IWorkItem workItem) throws TeamRepositoryException {
 		Identifier<IState> state = workItem.getState2();
-		IWorkflowInfo wfInfo = getWorkItemCommon().findWorkflowInfo(workItem,
-				getMonitor());
+		IWorkflowInfo wfInfo = getWorkItemCommon().findWorkflowInfo(workItem, getMonitor());
 		String stateName = wfInfo.getStateName(state);
 		if (stateName == null) {
 			return "";
@@ -827,8 +774,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	}
 
 	/**
-	 * Get the name of the object described by the UUID as a string
-	 * representation
+	 * Get the name of the object described by the UUID as a string representation
 	 * 
 	 * @param value
 	 * @param attribute
@@ -849,21 +795,19 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	}
 
 	/**
-	 * For a given value from the restricted access attribute, compute the name
-	 * of the object. First try if this is a project area, then try a team area,
-	 * finally search through the groups.
+	 * For a given value from the restricted access attribute, compute the name of the object. First
+	 * try if this is a project area, then try a team area, finally search through the groups.
 	 * 
 	 * @param uuid
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String getAccessContextFromUUID(UUID uuid)
-			throws TeamRepositoryException {
+	private String getAccessContextFromUUID(UUID uuid) throws TeamRepositoryException {
 		if (uuid != null && IContext.PUBLIC.equals(uuid)) {
 			return AccessContextUtil.PUBLIC_ACCESS;
 		}
-		Object context = AccessContextUtil.getAccessContextFromUUID(uuid,
-				getTeamRepository(), getAuditableCommon(), getMonitor());
+		Object context = AccessContextUtil.getAccessContextFromUUID(uuid, getTeamRepository(),
+				getAuditableCommon(), getMonitor());
 		if (context == null) {
 			return CONSTANT_NO_VALUE;
 		}
@@ -888,8 +832,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateCommentsAsString(IWorkItem workItem)
-			throws TeamRepositoryException {
+	private String calculateCommentsAsString(IWorkItem workItem) throws TeamRepositoryException {
 
 		IComments comments = workItem.getComments();
 		IComment[] theComments = comments.getContents();
@@ -912,11 +855,9 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String getCommentAsString(IComment aComment)
-			throws TeamRepositoryException {
+	private String getCommentAsString(IComment aComment) throws TeamRepositoryException {
 		String creator = calculateContributorAsString(aComment.getCreator());
-		String creationDate = calculateTimestampAsString(aComment
-				.getCreationDate());
+		String creationDate = calculateTimestampAsString(aComment.getCreationDate());
 		return creator + " - " + creationDate + SEPERATOR_NEWLINE
 				+ aComment.getHTMLContent().getPlainText();
 	}
@@ -971,8 +912,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		String approvalAsText = "";
 		approvalAsText += approvalDescriptor.getName() + ": ";
 		// colon as separator
-		IApprovalState approvalOverAllState = WorkItemApprovals
-				.getState(approvalDescriptor.getCumulativeStateIdentifier());
+		IApprovalState approvalOverAllState = WorkItemApprovals.getState(approvalDescriptor
+				.getCumulativeStateIdentifier());
 		approvalAsText += approvalOverAllState.getDisplayName();
 		int approvalStateCount = 0;
 		int approverCount = 0;
@@ -983,8 +924,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 				approvalStateCount++;
 			}
 		}
-		approvalAsText += " (" + approvalStateCount + " of " + approverCount
-				+ ")";
+		approvalAsText += " (" + approvalStateCount + " of " + approverCount + ")";
 		return approvalAsText;
 	}
 
@@ -996,8 +936,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateEnumerationLiteralListAsString(Object value,
-			IAttribute attribute) throws TeamRepositoryException {
+	private String calculateEnumerationLiteralListAsString(Object value, IAttribute attribute)
+			throws TeamRepositoryException {
 		if (value == null) {
 			return CONSTANT_NO_VALUE;
 		}
@@ -1007,8 +947,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		}
 		List<?> valueList = (List<?>) value;
 		for (Object object : valueList) {
-			resultList.add(calculateEnumerationLiteralAsString(object,
-					attribute));
+			resultList.add(calculateEnumerationLiteralAsString(object, attribute));
 		}
 		return StringUtil.listToString(resultList, SEPERATOR_NEWLINE);
 	}
@@ -1021,21 +960,20 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateEnumerationLiteralAsString(Object value,
-			IAttribute attribute) throws TeamRepositoryException {
+	private String calculateEnumerationLiteralAsString(Object value, IAttribute attribute)
+			throws TeamRepositoryException {
 		if (value == null) {
 			return CONSTANT_NO_VALUE;
 		}
 		if (!(value instanceof Identifier<?>)) {
 			return "Value not an enumeration literal";
 		}
-		IEnumeration<? extends ILiteral> enumeration = getWorkItemCommon()
-				.resolveEnumeration(attribute, getMonitor());
+		IEnumeration<? extends ILiteral> enumeration = getWorkItemCommon().resolveEnumeration(
+				attribute, getMonitor());
 
 		@SuppressWarnings("unchecked")
 		Identifier<? extends ILiteral> currentIdentifier = (Identifier<? extends ILiteral>) value;
-		ILiteral literal = enumeration
-				.findEnumerationLiteral(currentIdentifier);
+		ILiteral literal = enumeration.findEnumerationLiteral(currentIdentifier);
 		return literal.getName();
 	}
 
@@ -1047,8 +985,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateWorkItemTypeAsString(IWorkItem workItem,
-			Object value) throws TeamRepositoryException {
+	private String calculateWorkItemTypeAsString(IWorkItem workItem, Object value)
+			throws TeamRepositoryException {
 		// I get the ID
 		if (!(value instanceof String)) {
 			return "Value not a String";
@@ -1066,8 +1004,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateItemAsString(Object value)
-			throws TeamRepositoryException {
+	private String calculateItemAsString(Object value) throws TeamRepositoryException {
 		String prefix = "";
 		if (value == null) {
 			return CONSTANT_NO_VALUE;
@@ -1077,8 +1014,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		}
 		IItemHandle handle = (IItemHandle) value;
 		// Resolve handle
-		IItem item = getTeamRepository().itemManager().fetchCompleteItem(
-				handle, IItemManager.DEFAULT, getMonitor());
+		IItem item = getTeamRepository().itemManager().fetchCompleteItem(handle,
+				IItemManager.DEFAULT, getMonitor());
 		if (item instanceof IProcessArea) {
 			return calculateProcessAreaAsString(value, true);
 		}
@@ -1127,20 +1064,17 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateWorkItemAsString(Object value)
-			throws TeamRepositoryException {
+	private String calculateWorkItemAsString(Object value) throws TeamRepositoryException {
 		if (value == null) {
 			return CONSTANT_NO_VALUE;
 		}
 		if (!(value instanceof IWorkItemHandle)) {
 			throw new WorkItemCommandLineException(
-					"Calculate work item - Incompatible Type Exception: "
-							+ value.toString());
+					"Calculate work item - Incompatible Type Exception: " + value.toString());
 		}
 		// Resolve handle
-		IWorkItem workItem = (IWorkItem) getTeamRepository().itemManager()
-				.fetchCompleteItem((IWorkItemHandle) value,
-						IItemManager.DEFAULT, getMonitor());
+		IWorkItem workItem = (IWorkItem) getTeamRepository().itemManager().fetchCompleteItem(
+				(IWorkItemHandle) value, IItemManager.DEFAULT, getMonitor());
 		if (isRTCEclipseExport()) {
 			return PREFIX_EXISTINGWORKITEM + workItem.getId();
 		}
@@ -1162,16 +1096,14 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		}
 		if (!(value instanceof IProcessAreaHandle)) {
 			throw new WorkItemCommandLineException(
-					"Convert process area - Incompatible Type Exception: "
-							+ value.toString());
+					"Convert process area - Incompatible Type Exception: " + value.toString());
 		}
 		if (isRTCEclipseExport()) {
-			return ProcessAreaUtil.getName((IProcessAreaHandle) value,
-					getMonitor());
+			return ProcessAreaUtil.getName((IProcessAreaHandle) value, getMonitor());
 		}
 		String prefix = "";
-		IProcessArea area = ProcessAreaUtil.resolveProcessArea(
-				(IProcessAreaHandle) value, getMonitor());
+		IProcessArea area = ProcessAreaUtil.resolveProcessArea((IProcessAreaHandle) value,
+				getMonitor());
 		if (asItem) {
 			if (area instanceof IProjectArea) {
 				prefix = WorkItemUpdateHelper.TYPE_PROJECT_AREA
@@ -1184,8 +1116,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 						+ WorkItemUpdateHelper.ITEMTYPE_SEPARATOR;
 			}
 		}
-		return prefix
-				+ ProcessAreaUtil.getFullQualifiedName(area, getMonitor());
+		return prefix + ProcessAreaUtil.getFullQualifiedName(area, getMonitor());
 	}
 
 	/**
@@ -1199,12 +1130,10 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		if (value != null) {
 			if (value instanceof Timestamp) {
 				Timestamp timestamp = (Timestamp) value;
-				return SimpleDateFormatUtil.getDate(timestamp,
-						getSimpleDateTimeFormatPattern());
+				return SimpleDateFormatUtil.getDate(timestamp, getSimpleDateTimeFormatPattern());
 			}
 			throw new WorkItemCommandLineException(
-					"Convert timestamp - Incompatible Type Exception: "
-							+ value.toString());
+					"Convert timestamp - Incompatible Type Exception: " + value.toString());
 		}
 		return CONSTANT_NO_VALUE;
 	}
@@ -1216,38 +1145,33 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateContributorAsString(Object value)
-			throws TeamRepositoryException {
+	private String calculateContributorAsString(Object value) throws TeamRepositoryException {
 		if (value == null) {
 			return CONSTANT_NO_VALUE;
 		}
 		if ((value instanceof IContributorHandle)) {
-			IContributor contributor = (IContributor) getTeamRepository()
-					.itemManager().fetchCompleteItem(
-							(IContributorHandle) value, IItemManager.DEFAULT,
+			IContributor contributor = (IContributor) getTeamRepository().itemManager()
+					.fetchCompleteItem((IContributorHandle) value, IItemManager.DEFAULT,
 							getMonitor());
 			return contributor.getName();
 		}
 		throw new WorkItemCommandLineException(
-				"Convert Contributor - Incompatible Type Exception: "
-						+ value.toString());
+				"Convert Contributor - Incompatible Type Exception: " + value.toString());
 	}
 
 	/**
-	 * For a given iteration, calculate the value to export. Two modes are
-	 * supported, - one exports only the label of the iteration - one exports
-	 * the full path including the timeline
+	 * For a given iteration, calculate the value to export. Two modes are supported, - one exports
+	 * only the label of the iteration - one exports the full path including the timeline
 	 * 
 	 * @param value
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateIterationAsString(Object value)
-			throws TeamRepositoryException {
+	private String calculateIterationAsString(Object value) throws TeamRepositoryException {
 		if (value != null) {
 			if (value instanceof IIterationHandle) {
-				DevelopmentLineHelper dh = new DevelopmentLineHelper(
-						getTeamRepository(), getMonitor());
+				DevelopmentLineHelper dh = new DevelopmentLineHelper(getTeamRepository(),
+						getMonitor());
 				if (isRTCEclipseExport()) {
 					// RTC Eclipose export only exports the Label of the
 					// iteration e.g. "Sprint 1"
@@ -1261,8 +1185,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 				}
 			}
 			throw new WorkItemCommandLineException(
-					"Convert iteration - Incompatible Type Exception: "
-							+ value.toString());
+					"Convert iteration - Incompatible Type Exception: " + value.toString());
 		}
 		return CONSTANT_NO_VALUE;
 	}
@@ -1274,16 +1197,14 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateCategoryAsString(Object value)
-			throws TeamRepositoryException {
+	private String calculateCategoryAsString(Object value) throws TeamRepositoryException {
 		if (value != null) {
 			if (value instanceof ICategoryHandle) {
-				return getWorkItemCommon().resolveHierarchicalName(
-						(ICategoryHandle) value, getMonitor());
+				return getWorkItemCommon().resolveHierarchicalName((ICategoryHandle) value,
+						getMonitor());
 			}
 			throw new WorkItemCommandLineException(
-					"Convert Category - Incompatible Type Exception: "
-							+ value.toString());
+					"Convert Category - Incompatible Type Exception: " + value.toString());
 		}
 		return CONSTANT_NO_VALUE;
 	}
@@ -1295,19 +1216,16 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateDeliverableAsString(Object value)
-			throws TeamRepositoryException {
+	private String calculateDeliverableAsString(Object value) throws TeamRepositoryException {
 		if (value != null) {
 			if (value instanceof IDeliverableHandle) {
-				IDeliverable deliverable = (IDeliverable) getTeamRepository()
-						.itemManager().fetchCompleteItem(
-								(IDeliverableHandle) value,
-								IItemManager.DEFAULT, getMonitor());
+				IDeliverable deliverable = (IDeliverable) getTeamRepository().itemManager()
+						.fetchCompleteItem((IDeliverableHandle) value, IItemManager.DEFAULT,
+								getMonitor());
 				return deliverable.getName();
 			}
 			throw new WorkItemCommandLineException(
-					"Calculate deliverable - Incompatible Type Exception: "
-							+ value.toString());
+					"Calculate deliverable - Incompatible Type Exception: " + value.toString());
 		}
 		return CONSTANT_NO_VALUE;
 	}
@@ -1335,9 +1253,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		if (value instanceof BigDecimal) {
 			return ((BigDecimal) value).toString();
 		}
-		throw new WorkItemCommandLineException(
-				"Calculate number - Incompatible Type Exception: "
-						+ value.toString());
+		throw new WorkItemCommandLineException("Calculate number - Incompatible Type Exception: "
+				+ value.toString());
 	}
 
 	/**
@@ -1354,8 +1271,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 				return SimpleDateFormatUtil.convertToTimeSpent(milliseconds);
 			}
 			throw new WorkItemCommandLineException(
-					"Calculate Duration - Incompatible Type Exception: "
-							+ value.toString());
+					"Calculate Duration - Incompatible Type Exception: " + value.toString());
 		}
 		return CONSTANT_NO_VALUE;
 	}
@@ -1371,9 +1287,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 			if (value instanceof String) {
 				return (String) value;
 			}
-			throw new WorkItemCommandLineException(
-					"Convert string - Incompatible Type Exception: "
-							+ value.toString());
+			throw new WorkItemCommandLineException("Convert string - Incompatible Type Exception: "
+					+ value.toString());
 		}
 		return CONSTANT_NO_VALUE;
 	}
@@ -1425,8 +1340,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateItemListAsString(Object value)
-			throws TeamRepositoryException {
+	private String calculateItemListAsString(Object value) throws TeamRepositoryException {
 		if (value == null) {
 			return CONSTANT_NO_VALUE;
 		}
@@ -1447,8 +1361,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateWorkItemListAsString(Object value)
-			throws TeamRepositoryException {
+	private String calculateWorkItemListAsString(Object value) throws TeamRepositoryException {
 		if (value == null) {
 			return CONSTANT_NO_VALUE;
 		}
@@ -1493,8 +1406,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateContributorListAsString(Object value,
-			String seperator) throws TeamRepositoryException {
+	private String calculateContributorListAsString(Object value, String seperator)
+			throws TeamRepositoryException {
 		if (value == null) {
 			return CONSTANT_NO_VALUE;
 		}
@@ -1553,8 +1466,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	private void setDelimiter(String delimiter) {
 		if (delimiter.length() != 1) {
 			throw new WorkItemCommandLineException(
-					"Can not convert delimiter. Delimiter must have size 1 >"
-							+ delimiter + "<");
+					"Can not convert delimiter. Delimiter must have size 1 >" + delimiter + "<");
 		}
 		fDelimiter = delimiter.charAt(0);
 	}
