@@ -4,7 +4,8 @@ To run the the work item exporter and importer
 
 1. Download opencsv from 
 http://sourceforge.net/projects/opencsv/files/opencsv/3.7/ 
-and place the library opencsv-3.7.jar into the folder lib in the WCL folder.
+and place the library opencsv-3.7.jar into the folder lib in the WCL folder. 
+Rename the file to opencsv.jar In case you have a different version of opencsv hopefully everything runs as expected.
 
 2. Copy the Eclipse plugins from RTC Eclipse into the lib folder
 

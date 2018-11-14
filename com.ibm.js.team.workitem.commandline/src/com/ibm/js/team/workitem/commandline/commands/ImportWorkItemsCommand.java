@@ -41,14 +41,14 @@ import com.ibm.js.team.workitem.commandline.utils.WorkItemUtil;
 import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.process.common.advice.TeamOperationCanceledException;
 import com.ibm.team.repository.common.TeamRepositoryException;
+import com.ibm.team.workitem.common.internal.importer.bugzilla.mappers.BugzillaMapping;
+import com.ibm.team.workitem.common.internal.importer.bugzilla.mappers.BugzillaMapping.AttributeMapping;
+import com.ibm.team.workitem.common.internal.importer.bugzilla.mappers.BugzillaMapping.ValueMapping;
 import com.ibm.team.workitem.common.model.AttributeTypes;
 import com.ibm.team.workitem.common.model.IAttribute;
 import com.ibm.team.workitem.common.model.IWorkItem;
 import com.ibm.team.workitem.common.model.IWorkItemHandle;
 import com.ibm.team.workitem.common.model.IWorkItemType;
-import com.ibm.team.workitem.rcp.core.internal.bugzilla.mappers.BugzillaMapping;
-import com.ibm.team.workitem.rcp.core.internal.bugzilla.mappers.BugzillaMapping.AttributeMapping;
-import com.ibm.team.workitem.rcp.core.internal.bugzilla.mappers.BugzillaMapping.ValueMapping;
 import com.opencsv.CSVReader;
 
 /**
@@ -66,6 +66,7 @@ import com.opencsv.CSVReader;
  * The API from com.ibm.team.workitem.rcp.core.jar is internal API.
  * 
  */
+@SuppressWarnings("restriction")
 public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand {
 
 	private static final String HTML_PATH_SLASH = "/";

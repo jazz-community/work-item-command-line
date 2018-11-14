@@ -1,0 +1,3 @@
+
+*.class
+com.ibm.js.team.workitem.commandline/lib/opencsv.jar

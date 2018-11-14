@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PlainJavaApi"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenCSV"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/rtcmapping"/>
-	<classpathentry kind="lib" path="C:/RTC502Dev/workspace/Dev8 - WCL/WS/com.ibm.js.team.workitem.commandline/lib/opencsv-3.7.jar"/>
-	<classpathentry kind="lib" path="C:/RTC502Dev/workspace/Dev8 - WCL/WS/com.ibm.js.team.workitem.commandline/lib/com.ibm.team.workitem.rcp.core_3.1.1100.v20150903_1924.jar"/>
+	<classpathentry kind="lib" path="lib/opencsv.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
