@@ -71,6 +71,8 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	// Parameter to specify the query
 	private static final String PARAMETER_QUERY_NAME = "query";
 	private static final String PARAMETER_QUERY_NAME_EXAMPLE = "\"All WorkItems\"";
+	private static final String SWITCH_TRACE = "trace";
+	private static final String SWITCH_DEBUG = "debug";
 
 	@SuppressWarnings("serial")
 	private static Map<String, String> OSLC_TYPE_MAP = new HashMap<String, String>() {
@@ -141,7 +143,6 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	 */
 	public ValidateOSLCLinksCommand(ParameterManager parameterManager) {
 		super(parameterManager);
-		logger.setLevel(Level.WARN);
 	}
 
 	@Override
@@ -163,6 +164,8 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
 		getParameterManager().syntaxAddRequiredParameter(PARAMETER_QUERY_NAME,
 				PARAMETER_QUERY_NAME_EXAMPLE);
+		getParameterManager().syntaxAddSwitch(SWITCH_TRACE);
+		getParameterManager().syntaxAddSwitch(SWITCH_DEBUG);
 	}
 
 	/*
@@ -172,7 +175,12 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	 */
 	@Override
 	public OperationResult process() throws TeamRepositoryException {
-		// Get the parameters such as project area name and Attribute Type and
+		if (getParameterManager().hasSwitch(SWITCH_DEBUG))
+			logger.setLevel(Level.DEBUG);
+		if (getParameterManager().hasSwitch(SWITCH_TRACE))
+			logger.setLevel(Level.TRACE);
+
+		// Get the parameters such as project area name and
 		// run the operation
 		String projectAreaName = getParameterManager().consumeParameter(
 				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY).trim();
