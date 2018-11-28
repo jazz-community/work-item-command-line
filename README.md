@@ -138,6 +138,16 @@ Available commands:
     /ignoreErrors workItemType="value"  
 ```
 
+```bash
+-validateoslclinks
+    /trace
+    /debug
+    repository="value"
+    projectArea="value"
+    password="value"
+    user="value"
+    query="value"
+```
 
 ## Start in RMI server mode
 Use the switch `/rmiServer` to start an instance as RMI server. In this mode, the process will not terminate, but wait for RMI requests to perform commands. It will service commands requested by other client instances that are started with the additional switch `/rmiClient`. It is not necessary to provide a command or any other input values, when starting the server as they will be ignored. Since the TeamPlatform needs to be initialized only once in this mode, the performance is considerably increased for multiple subsequent client calls.
