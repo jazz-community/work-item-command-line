@@ -47,6 +47,7 @@ import com.ibm.team.repository.common.json.JSONObject;
 import com.ibm.team.repository.common.transport.HttpUtil;
 import com.ibm.team.repository.common.transport.HttpUtil.CharsetEncoding;
 import com.ibm.team.repository.common.transport.HttpUtil.MediaType;
+import com.ibm.team.repository.common.transport.TeamServiceException;
 import com.ibm.team.repository.common.util.NLS;
 import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient;
 import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient.IRawRestClientConnection;
@@ -200,6 +201,7 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	 */
 	@Override
 	public OperationResult process() throws TeamRepositoryException {
+		logger.setLevel(Level.WARN);
 		if (getParameterManager().hasSwitch(SWITCH_DEBUG))
 			logger.setLevel(Level.DEBUG);
 		if (getParameterManager().hasSwitch(SWITCH_TRACE))
@@ -418,8 +420,8 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	 * @throws URISyntaxException
 	 */
 	private boolean validGCTargetURL(String targetURL, String gcUriString,
-			SystemType targetSystemType) throws UnsupportedEncodingException,
-			TeamRepositoryException, URISyntaxException {
+			SystemType targetSystemType) throws UnsupportedEncodingException, URISyntaxException,
+			TeamRepositoryException {
 		if (targetURL != null && !targetURL.isEmpty()) {
 			String urlString = targetURL;
 			if (targetSystemType == SystemType.RM) {
@@ -437,9 +439,14 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 			}
 
 			logger.trace("validGCTargetURL URL: " + urlString);
-			IRawRestClientConnection.Response response = connection.doGet();
-			if (response.getStatusCode() == 200)
-				return true;
+			IRawRestClientConnection.Response response;
+			try {
+				response = connection.doGet();
+				if (response.getStatusCode() == 200)
+					return true;
+			} catch (TeamServiceException e) {
+				logger.debug(e.getMessage());
+			}
 		}
 		return false;
 	}
