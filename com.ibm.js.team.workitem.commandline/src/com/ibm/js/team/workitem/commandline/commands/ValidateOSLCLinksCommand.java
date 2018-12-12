@@ -11,6 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -73,36 +74,60 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	private static final String PARAMETER_QUERY_NAME_EXAMPLE = "\"All WorkItems\"";
 	private static final String SWITCH_TRACE = "trace";
 	private static final String SWITCH_DEBUG = "debug";
+	private static final String OSLC_HEADER = "OSLC-Core-Version";
+	private static final String OSLC_VERSION = "2.0";
+	private static final String ACCEPT_TYPE = "application/xml";
+	private static final String RM_CONFIG_CONTEXT = "oslc_config.context";
+
+	private static enum SystemType {
+		CCM, QM, RM
+	}
+
+	private static class OSLC_TYPE {
+		String linkType;
+		SystemType targetSystemType;
+
+		OSLC_TYPE(String linkT, SystemType sys) {
+			linkType = linkT;
+			targetSystemType = sys;
+		}
+	}
 
 	@SuppressWarnings("serial")
-	private static Map<String, String> OSLC_TYPE_MAP = new HashMap<String, String>() {
+	private static Map<String, OSLC_TYPE> OSLC_TYPE_MAP = new HashMap<String, OSLC_TYPE>() {
 		{
 			// OSLC types are defined at:
 			// http://docs.oasis-open.org/oslc-domains/cm/v3.0/cm-v3.0-part2-change-mgt-vocab.html
 			put(WorkItemLinkTypes.RELATED_REQUIREMENT /* "com.ibm.team.workitem.linktype.rm.relatedRequirement" */,
-					"http://open-services.net/ns/cm#affectsRequirement");
+					new OSLC_TYPE("http://open-services.net/ns/cm#affectsRequirement",
+							SystemType.RM));
 			put(WorkItemLinkTypes.AFFECTS_EXECUTION_RESULT /* "com.ibm.team.workitem.linktype.affectsExecutionResult" */,
-					"http://open-services.net/ns/cm#affectsTestResult");
+					new OSLC_TYPE("http://open-services.net/ns/cm#affectsTestResult", SystemType.QM));
 			put(WorkItemLinkTypes.BLOCKS_EXECUTION_RECORD /* "com.ibm.team.workitem.linktype.blocksTestExecutionRecord" */,
-					"http://open-services.net/ns/cm#blocksTestExecutionRecord");
+					new OSLC_TYPE("http://open-services.net/ns/cm#blocksTestExecutionRecord",
+							SystemType.QM));
 			put(WorkItemLinkTypes.IMPLEMENTS_REQUIREMENT /* "com.ibm.team.workitem.linktype.implementsRequirement" */,
-					"http://open-services.net/ns/cm#implementsRequirement");
+					new OSLC_TYPE("http://open-services.net/ns/cm#implementsRequirement",
+							SystemType.RM));
 			put(WorkItemLinkTypes.RELATED_WORK_ITEM /* "com.ibm.team.workitem.linktype.relatedworkitem.related" */,
-					"http://open-services.net/ns/cm#relatedChangeRequest");
+					new OSLC_TYPE("http://open-services.net/ns/cm#relatedChangeRequest",
+							SystemType.RM));
 			put(WorkItemLinkTypes.RELATED_TEST_CASE /* "com.ibm.team.workitem.linktype.qm.relatedTestCase" */,
-					"http://open-services.net/ns/cm#relatedTestCase");
+					new OSLC_TYPE("http://open-services.net/ns/cm#relatedTestCase", SystemType.QM));
 			put(WorkItemLinkTypes.RELATED_EXECUTION_RECORD /* "com.ibm.team.workitem.linktype.qm.relatedExecutionRecord" */,
-					"http://open-services.net/ns/cm#relatedTestExecutionRecord");
+					new OSLC_TYPE("http://open-services.net/ns/cm#relatedTestExecutionRecord",
+							SystemType.QM));
 			put(WorkItemLinkTypes.RELATED_TEST_PLAN /* "com.ibm.team.workitem.linktype.qm.relatedTestPlan" */,
-					"http://open-services.net/ns/cm#relatedTestPlan");
+					new OSLC_TYPE("http://open-services.net/ns/cm#relatedTestPlan", SystemType.QM));
 			put(WorkItemLinkTypes.TESTED_BY_TEST_CASE /* "com.ibm.team.workitem.linktype.testedByTestCase" */,
-					"http://open-services.net/ns/cm#testedByTestCase");
+					new OSLC_TYPE("http://open-services.net/ns/cm#testedByTestCase", SystemType.QM));
 			put(WorkItemLinkTypes.TRACKS_REQUIREMENT /* "com.ibm.team.workitem.linktype.rm.tracksRequirement" */,
-					"http://open-services.net/ns/cm#tracksRequirement");
+					new OSLC_TYPE("http://open-services.net/ns/cm#tracksRequirement", SystemType.RM));
 
 			// RELATED_TEST_SCRIPT does not return the backlink
 			put(WorkItemLinkTypes.RELATED_TEST_SCRIPT /* "com.ibm.team.workitem.linktype.qm.relatedTestScript" */,
-					"http://open-services.net/ns/cm#relatedChangeRequest");
+					new OSLC_TYPE("http://open-services.net/ns/cm#relatedChangeRequest",
+							SystemType.QM));
 			/*
 			 * CCM to CCM links are not checked because they don't use link index
 			 */
@@ -198,7 +223,7 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 				IWorkItemClient.class);
 		try {
 			validateOslcLinksFromQuery(projectArea, queryName);
-		} catch (IOException e) {
+		} catch (IOException | URISyntaxException e) {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}
@@ -214,9 +239,10 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	 * @return
 	 * @throws TeamRepositoryException
 	 * @throws IOException
+	 * @throws URISyntaxException
 	 */
 	private void validateOslcLinksFromQuery(IProjectArea projectArea, String queryName)
-			throws TeamRepositoryException, IOException {
+			throws TeamRepositoryException, IOException, URISyntaxException {
 
 		// OperationResult opResult = new OperationResult();
 		appendResultString("ProjectArea: " + projectArea.getName());
@@ -243,7 +269,7 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	}
 
 	private void validateOslcLinks(IWorkItemHandle workItemHandle) throws TeamRepositoryException,
-			IOException {
+			IOException, URISyntaxException {
 		IWorkItem workItem = WorkItemUtil.resolveWorkItem(workItemHandle, IWorkItem.FULL_PROFILE,
 				getWorkItemCommon(), getMonitor());
 		IWorkItemReferences wiReferences = getWorkItemCommon().resolveWorkItemReferences(
@@ -294,72 +320,10 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 						}
 
 						if (gcUriString != null && !gcUriString.isEmpty()) {
-							URI gcUri = null;
-							try {
-								gcUri = new URI(gcUriString);
-							} catch (URISyntaxException e) {
-								gcUri = null;
-								e.printStackTrace();
-							}
-							String targetLinkType = OSLC_TYPE_MAP.get(reference.getLink()
-									.getLinkTypeId());
-							JSONArray ldxBacklinks = getLDXBackLinkViaRest(reference.getLink()
-									.getTargetRef().createURI(),
-									gcUri == null ? "" : gcUri.getPath(), targetLinkType);
-							GetRDFResourceParams oslcResource = new GetRDFResourceParams();
-							oslcResource.oslcCoreVersion = "2.0";
-							oslcResource.resourceURL = reference.getLink().getTargetRef()
-									.createURI().toString();
-							oslcResource.oslcResourceID = reference.getLink().getTargetRef()
-									.createURI().toString();
-							boolean wasFound = false;
-							for (int i = 0; i < ldxBacklinks.size(); i++) {
-								JSONObject triple = (JSONObject) ldxBacklinks.get(i);
-								wasFound = isLinkInTripleEqual(triple,
-										currentWorkItemURI.toString(), targetLinkType,
-										oslcResource.resourceURL); // TODO:
-																	// Check
-																	// link
-																	// parameters?
-								if (wasFound) {
-									logger.trace("\n> Found LDX (REST) link. Work item: "
-											+ workItem.getId() + " |source: "
-											+ triple.get("sourceURL") + " |linkType: "
-											+ triple.get("linkType") + " |Target:"
-											+ triple.get("targetURL"));
-									break;
-								} else {
-									logger.trace("\n... Skipping LDX link with source: "
-											+ triple.get("sourceURL") + " |linkType: "
-											+ triple.get("linkType") + " |Target:"
-											+ triple.get("targetURL"));
-								}
-							}
-							if (!wasFound) {
-								switch (reference.getLink().getLinkTypeId()) {
-								case WorkItemLinkTypes.RELATED_TEST_SCRIPT:
-									System.out
-											.println("\n*** Warning *** Backlink validation not supported for linkType: "
-													+ reference.getLink().getLinkTypeId()
-													+ " workitem: " + workItem.getId());
-									break;
-								default:
-									System.out
-											.println("\n*** Warning *** Backlink not found for workitem: "
-													+ workItem.getId()
-													+ " linkType: "
-													+ reference.getLink().getLinkTypeId()
-													+ " |target: "
-													+ reference.getLink().getTargetRef()
-															.createURI().toString()
-													+ "|gc : "
-													+ gcUri.getPath());
-									System.out
-											.println("\tIf link was just created wait a few minutes for the link to propagate.");
-									break;
-								}
-							}
+							validateGCLink(gcUriString, workItem.getId(), currentWorkItemURI,
+									reference);
 						} else {
+							// TODO validateLink(workItem, currentWorkItemURI, endPoint, reference);
 							logger.warn("No GlobalConfiguration for work item: " + workItem.getId()
 									+ " link type: " + linkType.getLinkTypeId());
 						}
@@ -367,6 +331,117 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 				}
 			}
 		}
+	}
+
+	/**
+	 * Validate that the GC link is known by the target server and that the artifact exists.
+	 * 
+	 * @param gcUriString
+	 * @param workItemId
+	 * @param currentWorkItemURI
+	 * @param reference
+	 * @throws NotLoggedInException
+	 * @throws IOException
+	 * @throws TeamRepositoryException
+	 * @throws URISyntaxException
+	 */
+	private void validateGCLink(String gcUriString, int workItemId, URI currentWorkItemURI,
+			IReference reference) throws NotLoggedInException, IOException,
+			TeamRepositoryException, URISyntaxException {
+		URI gcUri = null;
+		try {
+			gcUri = new URI(gcUriString);
+		} catch (URISyntaxException e) {
+			gcUri = null;
+			e.printStackTrace();
+		}
+		String targetLinkType = OSLC_TYPE_MAP.get(reference.getLink().getLinkTypeId()).linkType;
+		JSONArray ldxBacklinks = getLDXBackLinkViaRest(reference.getLink().getTargetRef()
+				.createURI(), gcUri == null ? "" : gcUri.getPath(), targetLinkType);
+		GetRDFResourceParams oslcResource = new GetRDFResourceParams();
+		oslcResource.oslcCoreVersion = "2.0";
+		oslcResource.resourceURL = reference.getLink().getTargetRef().createURI().toString();
+		oslcResource.oslcResourceID = reference.getLink().getTargetRef().createURI().toString();
+		boolean wasFound = false;
+		String targetURL = null;
+		for (int i = 0; i < ldxBacklinks.size(); i++) {
+			JSONObject triple = (JSONObject) ldxBacklinks.get(i);
+			wasFound = isLinkInTripleEqual(triple, currentWorkItemURI.toString(), targetLinkType,
+					oslcResource.resourceURL); // TODO: Check link parameters?
+			if (wasFound) {
+				logger.trace("\n> Found LDX (REST) link. Work item: " + workItemId + " |source: "
+						+ triple.get("sourceURL") + " |linkType: " + triple.get("linkType")
+						+ " |Target:" + triple.get("targetURL"));
+				targetURL = (String) triple.get("targetURL");
+				break;
+			} else {
+				logger.trace("\n... Skipping LDX link with source: " + triple.get("sourceURL")
+						+ " |linkType: " + triple.get("linkType") + " |Target:"
+						+ triple.get("targetURL"));
+			}
+		}
+		if (!wasFound) {
+			switch (reference.getLink().getLinkTypeId()) {
+			case WorkItemLinkTypes.RELATED_TEST_SCRIPT:
+				System.out
+						.println("\n*** Warning *** Backlink validation not supported for linkType: "
+								+ reference.getLink().getLinkTypeId() + " workitem: " + workItemId);
+				break;
+			default:
+				System.out.println("\n### Warning ### Backlink not found for workitem: "
+						+ workItemId + " linkType: " + reference.getLink().getLinkTypeId()
+						+ " |target: " + reference.getLink().getTargetRef().createURI().toString()
+						+ "|gc : " + gcUri.getPath());
+				System.out
+						.println("\tIf link was just created wait a few minutes for the link to propagate.");
+				break;
+			}
+		} else if (!validGCTargetURL(targetURL, gcUriString,
+				OSLC_TYPE_MAP.get(reference.getLink().getLinkTypeId()).targetSystemType)) {
+			System.out.println("\n### Warning ### Broken link for workitem: " + workItemId
+					+ " linkType: " + reference.getLink().getLinkTypeId() + " | target: "
+					+ reference.getLink().getTargetRef().createURI().toString() + " | gc : "
+					+ gcUri.getPath());
+
+		}
+	}
+
+	/**
+	 * Validate that the target URL exists. Checks for broken links.
+	 * 
+	 * @param targetURL
+	 * @param gcUriString
+	 * @param targetSystemType
+	 * @return true if the target URL returns HTTP status 200
+	 * @throws UnsupportedEncodingException
+	 * @throws TeamRepositoryException
+	 * @throws URISyntaxException
+	 */
+	private boolean validGCTargetURL(String targetURL, String gcUriString,
+			SystemType targetSystemType) throws UnsupportedEncodingException,
+			TeamRepositoryException, URISyntaxException {
+		if (targetURL != null && !targetURL.isEmpty()) {
+			String urlString = targetURL;
+			if (targetSystemType == SystemType.RM) {
+				logger.trace("validGCTargetURL gcUriString: " + gcUriString);
+				urlString += "?" + RM_CONFIG_CONTEXT + "=" + gcUriString;
+			}
+			ITeamRawRestServiceClient restClient = getRestClient(new URI(targetURL));
+			IRawRestClientConnection connection = restClient.getConnection(new URI(urlString));
+			HttpHeaders headers = new HttpHeaders();
+			headers.addHeader(HttpUtil.ACCEPT, ACCEPT_TYPE);
+			headers.addHeader(OSLC_HEADER, OSLC_VERSION);
+
+			for (Map.Entry<String, String> header : headers.getEntries()) {
+				connection.addRequestHeader(header.getKey(), header.getValue());
+			}
+
+			logger.trace("validGCTargetURL URL: " + urlString);
+			IRawRestClientConnection.Response response = connection.doGet();
+			if (response.getStatusCode() == 200)
+				return true;
+		}
+		return false;
 	}
 
 	private static final String QUERY_JSON = "\"targetURLs\": [ \"{0}\" ],\"linkTypes\":  [ \"{1}\"  ],\"gcURL\": \"{2}\""; // Do
@@ -389,16 +464,16 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 			headers.addHeader(HttpUtil.ACCEPT, /* MediaType.JSON.toString() */"text/json");
 			headers.addHeader(HttpUtil.PRAGMA, HttpUtil.NO_CACHE);
 
+			for (Map.Entry<String, String> header : headers.getEntries()) {
+				connection.addRequestHeader(header.getKey(), header.getValue());
+			}
+			String encoding = CharsetEncoding.UTF8.name();
 			String content = "{" + NLS.bind(QUERY_JSON, targetUri.toString(), linkType, gcUrl)
 					+ "}"; // add braces
 			logger.debug("\n... LDX (REST) POST: " + ldxUri + " content:\n" + content
 					+ "\n Accept: " + headers.getValue(HttpUtil.ACCEPT) + " encoding: "
 					+ MediaType.JSON.toString());
 
-			for (Map.Entry<String, String> header : headers.getEntries()) {
-				connection.addRequestHeader(header.getKey(), header.getValue());
-			}
-			String encoding = CharsetEncoding.UTF8.name();
 			byte[] bytes = content.getBytes(encoding);
 			ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
 			IResponse response = createResponse(connection.doPost(stream, bytes.length,
