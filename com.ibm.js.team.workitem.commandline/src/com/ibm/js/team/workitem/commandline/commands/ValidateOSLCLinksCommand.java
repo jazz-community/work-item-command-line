@@ -127,8 +127,8 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 
 			// RELATED_TEST_SCRIPT does not return the backlink
 			put(WorkItemLinkTypes.RELATED_TEST_SCRIPT /* "com.ibm.team.workitem.linktype.qm.relatedTestScript" */,
-					new OSLC_TYPE("http://open-services.net/ns/cm#relatedChangeRequest",
-							SystemType.QM));
+					new OSLC_TYPE("http://open-services.net/ns/cm#relatedTestScript", SystemType.QM));
+
 			/*
 			 * CCM to CCM links are not checked because they don't use link index
 			 */
@@ -360,16 +360,13 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 		String targetLinkType = OSLC_TYPE_MAP.get(reference.getLink().getLinkTypeId()).linkType;
 		JSONArray ldxBacklinks = getLDXBackLinkViaRest(reference.getLink().getTargetRef()
 				.createURI(), gcUri == null ? "" : gcUri.getPath(), targetLinkType);
-		GetRDFResourceParams oslcResource = new GetRDFResourceParams();
-		oslcResource.oslcCoreVersion = "2.0";
-		oslcResource.resourceURL = reference.getLink().getTargetRef().createURI().toString();
-		oslcResource.oslcResourceID = reference.getLink().getTargetRef().createURI().toString();
+		String resourceURL = reference.getLink().getTargetRef().createURI().toString();
 		boolean wasFound = false;
 		String targetURL = null;
 		for (int i = 0; i < ldxBacklinks.size(); i++) {
 			JSONObject triple = (JSONObject) ldxBacklinks.get(i);
 			wasFound = isLinkInTripleEqual(triple, currentWorkItemURI.toString(), targetLinkType,
-					oslcResource.resourceURL); // TODO: Check link parameters?
+					resourceURL); // TODO: Check link parameters?
 			if (wasFound) {
 				logger.trace("\n> Found LDX (REST) link. Work item: " + workItemId + " |source: "
 						+ triple.get("sourceURL") + " |linkType: " + triple.get("linkType")
@@ -383,21 +380,12 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 			}
 		}
 		if (!wasFound) {
-			switch (reference.getLink().getLinkTypeId()) {
-			case WorkItemLinkTypes.RELATED_TEST_SCRIPT:
-				System.out
-						.println("\n*** Warning *** Backlink validation not supported for linkType: "
-								+ reference.getLink().getLinkTypeId() + " workitem: " + workItemId);
-				break;
-			default:
-				System.out.println("\n### Warning ### Backlink not found for workitem: "
-						+ workItemId + " linkType: " + reference.getLink().getLinkTypeId()
-						+ " |target: " + reference.getLink().getTargetRef().createURI().toString()
-						+ "|gc : " + gcUri.getPath());
-				System.out
-						.println("\tIf link was just created wait a few minutes for the link to propagate.");
-				break;
-			}
+			System.out.println("\n### Warning ### Backlink not found for workitem: " + workItemId
+					+ " linkType: " + reference.getLink().getLinkTypeId() + " |target: "
+					+ reference.getLink().getTargetRef().createURI().toString() + "|gc : "
+					+ gcUri.getPath());
+			System.out
+					.println("\tIf link was just created wait a few minutes for the link to propagate.");
 		} else if (!validGCTargetURL(targetURL, gcUriString,
 				OSLC_TYPE_MAP.get(reference.getLink().getLinkTypeId()).targetSystemType)) {
 			System.out.println("\n### Warning ### Broken link for workitem: " + workItemId
