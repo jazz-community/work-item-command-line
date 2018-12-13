@@ -124,8 +124,6 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 					new OSLC_TYPE("http://open-services.net/ns/cm#testedByTestCase", SystemType.QM));
 			put(WorkItemLinkTypes.TRACKS_REQUIREMENT /* "com.ibm.team.workitem.linktype.rm.tracksRequirement" */,
 					new OSLC_TYPE("http://open-services.net/ns/cm#tracksRequirement", SystemType.RM));
-
-			// RELATED_TEST_SCRIPT does not return the backlink
 			put(WorkItemLinkTypes.RELATED_TEST_SCRIPT /* "com.ibm.team.workitem.linktype.qm.relatedTestScript" */,
 					new OSLC_TYPE("http://open-services.net/ns/cm#relatedTestScript", SystemType.QM));
 
