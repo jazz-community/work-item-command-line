@@ -318,6 +318,7 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 									projectArea.getItemId().getUuidValue(), workItem.getItemId()
 											.getUuidValue(), linkTypeId, getMonitor());
 						}
+						logger.trace("gcUriString: " + gcUriString);
 
 						if (gcUriString != null && !gcUriString.isEmpty()) {
 							validateGCLink(gcUriString, workItem.getId(), currentWorkItemURI,
@@ -411,10 +412,7 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 		boolean status = false;
 		if (targetURL != null && !targetURL.isEmpty()) {
 			String urlString = targetURL;
-			if (targetSystemType == SystemType.RM) {
-				logger.trace("validGCTargetURL gcUriString: " + gcUriString);
-				urlString += "?" + RM_CONFIG_CONTEXT + "=" + gcUriString;
-			}
+			urlString += "?" + RM_CONFIG_CONTEXT + "=" + gcUriString;
 			ITeamRawRestServiceClient restClient = getRestClient(new URI(targetURL));
 			IRawRestClientConnection connection = restClient.getConnection(new URI(urlString));
 			HttpHeaders headers = new HttpHeaders();
