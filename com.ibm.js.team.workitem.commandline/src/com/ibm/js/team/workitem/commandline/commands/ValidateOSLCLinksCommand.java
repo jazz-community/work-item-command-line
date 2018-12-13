@@ -422,6 +422,7 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	private boolean validGCTargetURL(String targetURL, String gcUriString,
 			SystemType targetSystemType) throws UnsupportedEncodingException, URISyntaxException,
 			TeamRepositoryException {
+		boolean status = false;
 		if (targetURL != null && !targetURL.isEmpty()) {
 			String urlString = targetURL;
 			if (targetSystemType == SystemType.RM) {
@@ -442,13 +443,13 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 			IRawRestClientConnection.Response response;
 			try {
 				response = connection.doGet();
-				if (response.getStatusCode() == 200)
-					return true;
+				status = response.getStatusCode() == 200;
 			} catch (TeamServiceException e) {
 				logger.debug(e.getMessage());
 			}
+			connection.release();
 		}
-		return false;
+		return status;
 	}
 
 	private static final String QUERY_JSON = "\"targetURLs\": [ \"{0}\" ],\"linkTypes\":  [ \"{1}\"  ],\"gcURL\": \"{2}\""; // Do
