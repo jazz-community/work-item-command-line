@@ -22,6 +22,7 @@ public interface IWorkItemCommandLineConstants {
 	public static final String COMMAND_PRINT_TYPE_ATTRIBUTES = "printtypeattributes";
 	public static final String COMMAND_IMPORT_WORKITEMS = "importworkitems";
 	public static final String COMMAND_EXPORT_WORKITEMS = "exportworkitems";
+	public static final String COMMAND_PRINT_WORKITEM = "printworkitem";
 	public static final String COMMAND_VALIDATE_OSLC_LINKS = "validateoslclinks";
 
 	// Switch to ignore single errors and trying to perform operation even if

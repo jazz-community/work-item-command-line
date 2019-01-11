@@ -108,32 +108,64 @@ public class WorkItemTypeHelper {
 			IWorkItemType workItemType, IProgressMonitor monitor)
 			throws TeamRepositoryException {
 		OperationResult result = new OperationResult();
+
+		result.appendResultString("Attributes of Work Item type: "
+				+ workItemType.getDisplayName() + " Type ID: "
+				+ workItemType.getIdentifier());
+		
+		result.appendResultString("  Built In Attributes");
+		result.appendResultString(printAttributesAndTypes(
+				getBuiltInAttributesOfType(projectArea, workItemType, monitor), monitor));
+		
+		result.appendResultString("  Custom Attributes");
+		result.appendResultString(printAttributesAndTypes(
+				getCustomAttributesOfType(projectArea, workItemType, monitor), monitor));
+		result.setSuccess();
+		return result;
+	}
+	
+	/**
+	 * Prints the built in and the custom attributes of this work item type.
+	 * 
+	 * @param projectArea
+	 * @param workItemTypeID
+	 * @param monitor
+	 * @return
+	 * @throws TeamRepositoryException
+	 */
+	public List<?> getBuiltInAttributesOfType(IProjectArea projectArea,
+			IWorkItemType workItemType, IProgressMonitor monitor)
+			throws TeamRepositoryException {
 		List<IAttributeHandle> builtInAttributeHandles = getWorkItemCommon()
 				.findBuiltInAttributes(projectArea, monitor);
 		IFetchResult builtIn = fTeamRepository.itemManager()
 				.fetchCompleteItemsPermissionAware(builtInAttributeHandles,
 						IItemManager.REFRESH, monitor);
-
+		return builtIn.getRetrievedItems();
+	}
+	
+	/**
+	 * Prints the built in and the custom attributes of this work item type.
+	 * 
+	 * @param projectArea
+	 * @param workItemTypeID
+	 * @param monitor
+	 * @return
+	 * @throws TeamRepositoryException
+	 */
+	public List<?> getCustomAttributesOfType(IProjectArea projectArea,
+			IWorkItemType workItemType, IProgressMonitor monitor)
+			throws TeamRepositoryException {
 		List<IAttributeHandle> custAttributeHandles = workItemType
 				.getCustomAttributes();
 
 		IFetchResult custom = fTeamRepository.itemManager()
 				.fetchCompleteItemsPermissionAware(custAttributeHandles,
 						IItemManager.REFRESH, monitor);
-
-		result.appendResultString("Attributes of Work Item type: "
-				+ workItemType.getDisplayName() + " Type ID: "
-				+ workItemType.getIdentifier());
-		result.appendResultString("  Built In Attributes");
-		result.appendResultString(printAttributesAndTypes(
-				builtIn.getRetrievedItems(), monitor));
-		result.appendResultString("  Custom Attributes");
-		result.appendResultString(printAttributesAndTypes(
-				custom.getRetrievedItems(), monitor));
-		result.setSuccess();
-		return result;
+		return custom.getRetrievedItems();
 	}
 
+	
 	/**
 	 * Print the attributes and their type information from IAttributeTypes from
 	 * a list of attributes.

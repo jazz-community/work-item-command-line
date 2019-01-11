@@ -31,6 +31,7 @@ import com.ibm.js.team.workitem.commandline.commands.ImportWorkItemsCommand;
 import com.ibm.js.team.workitem.commandline.commands.MigrateWorkItemAttributeCommand;
 import com.ibm.js.team.workitem.commandline.commands.PrintTypeAttributesCommand;
 import com.ibm.js.team.workitem.commandline.commands.PrintTypesCommand;
+import com.ibm.js.team.workitem.commandline.commands.PrintWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.commands.UpdateWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.commands.ValidateOSLCLinksCommand;
 import com.ibm.js.team.workitem.commandline.framework.IWorkItemCommand;
@@ -98,6 +99,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 	 * @param parameterManager
 	 */
 	private void addSupportedCommands(ParameterManager parameterManager) {
+		addSupportedCommand(new PrintWorkItemCommand(new ParameterManager(
+				parameterManager.getArguments())));
 		addSupportedCommand(new ValidateOSLCLinksCommand(new ParameterManager(
 				parameterManager.getArguments())));
 		addSupportedCommand(new PrintTypesCommand(new ParameterManager(
