@@ -11,10 +11,10 @@
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
         <file path="/com.ibm.js.team.workitem.commandline/.classpath"/>
-        <file path="/com.ibm.js.team.workitem.commandline/LICENSE.txt"/>
-        <file path="/com.ibm.js.team.workitem.commandline/lib/ReadMe.txt"/>
         <javaElement handleIdentifier="=com.ibm.js.team.workitem.commandline/src"/>
-        <file path="/com.ibm.js.team.workitem.commandline/.project"/>
         <file path="/com.ibm.js.team.workitem.commandline/build.properties"/>
+        <file path="/com.ibm.js.team.workitem.commandline/lib/ReadMe.txt"/>
+        <file path="/com.ibm.js.team.workitem.commandline/.project"/>
+        <file path="/com.ibm.js.team.workitem.commandline/LICENSE.txt"/>
     </selectedElements>
 </jardesc>

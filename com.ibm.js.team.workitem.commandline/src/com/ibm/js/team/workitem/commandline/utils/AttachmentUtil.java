@@ -36,7 +36,7 @@ public class AttachmentUtil {
 	 * @param workItem
 	 *            - the work item
 	 * @param folder
-	 *            - the folder name to save to
+	 *            - the folder to save to
 	 * @return
 	 * @throws TeamRepositoryException
 	 */

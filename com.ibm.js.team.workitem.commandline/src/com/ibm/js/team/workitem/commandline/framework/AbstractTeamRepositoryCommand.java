@@ -110,9 +110,9 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	 * @return the IWorkItemCommon
 	 */
 	protected IWorkItemCommon getWorkItemCommon() {
-		IWorkItemCommon workItemClient = (IWorkItemCommon) getTeamRepository().getClientLibrary(
+		IWorkItemCommon workItemCommon = (IWorkItemCommon) getTeamRepository().getClientLibrary(
 				IWorkItemCommon.class);
-		return workItemClient;
+		return workItemCommon;
 	}
 
 	/**
