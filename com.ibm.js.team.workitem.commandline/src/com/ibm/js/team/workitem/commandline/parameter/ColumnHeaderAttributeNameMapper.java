@@ -7,6 +7,8 @@
  *******************************************************************************/
 package com.ibm.js.team.workitem.commandline.parameter;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -15,10 +17,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.js.team.workitem.commandline.utils.ReferenceUtil;
 import com.ibm.team.links.common.registry.IEndPointDescriptor;
+import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.process.common.IProjectAreaHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.IWorkItemCommon;
 import com.ibm.team.workitem.common.model.IAttribute;
+import com.ibm.team.workitem.common.model.IWorkItem;
 
 /**
  * Class to map between internal representations and display values of work item
@@ -179,5 +183,38 @@ public class ColumnHeaderAttributeNameMapper {
 		return linkMap;
 	}
 
+	/**
+	 * Get all the available attributes and supported links in a sorted way.
+	 * 
+	 * @param projectArea
+	 * @return
+	 * @throws TeamRepositoryException
+	 */
+	public String[] getAllColumnsPreSorted() throws TeamRepositoryException {
+
+		HashMap<String, IAttribute> attributeMap = getAttributeMap(); 
+
+		ArrayList<String> sortedAttribs = new ArrayList<String>();
+		sortedAttribs.add(IWorkItem.ID_PROPERTY);
+		sortedAttribs.add(IWorkItem.TYPE_PROPERTY);
+		sortedAttribs.add(IWorkItem.SUMMARY_PROPERTY);
+
+		attributeMap.remove(IWorkItem.ID_PROPERTY);
+		attributeMap.remove(IWorkItem.TYPE_PROPERTY);
+		attributeMap.remove(IWorkItem.SUMMARY_PROPERTY);
+		ArrayList<String> allAttribs = new ArrayList<String>(attributeMap.keySet().size());
+		allAttribs.addAll(attributeMap.keySet());
+		Collections.sort(allAttribs);
+
+		HashMap<String, IEndPointDescriptor> linkMap = getLinkMap();
+		ArrayList<String> sortedLinks = new ArrayList<String>(linkMap.keySet().size());
+		sortedLinks.addAll(linkMap.keySet());
+		Collections.sort(sortedLinks); 
+
+		sortedAttribs.addAll(allAttribs);
+		sortedAttribs.add(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS); // This is not a property add the artificial one
+		sortedAttribs.addAll(sortedLinks);
+		return sortedAttribs.toArray(new String[sortedAttribs.size()]);
+	}
 
 }
