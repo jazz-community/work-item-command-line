@@ -230,30 +230,22 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 			}
 		}
 		
-//		WorkItemTypeHelper typeHelper = new WorkItemTypeHelper(projectArea , getMonitor());
-//		IWorkItemType workItemType = typeHelper.findWorkItemType2(workItem.getWorkItemType(), projectArea, getWorkItemCommon(), getMonitor());
-//		
-//		List<?> builtIn = typeHelper.getBuiltInAttributesOfType(projectArea, workItemType, getMonitor());
-//		getResult().appendResultString("\nBuilt In Attributes:");
-//		getStringRepresentation(workItem, builtIn);
-//		List<?> custom = typeHelper.getCustomAttributesOfType(projectArea, workItemType, getMonitor());
-//		getResult().appendResultString("\nCustom Attributes:");
-		List<String> headerNames = columnHeaderMapping.analyzeColumnHeader(getHeaderAsIDs());
-		getStringRepresentation(workItem, columnHeaderMapping.getParameters());
+		getStringRepresentation(workItem, columnHeaderMapping);
 		setSuccess();
 		return getResult();
 	}
 
-	private void getStringRepresentation(IWorkItem workItem, List<ParameterValue> columns )
+	private void getStringRepresentation(IWorkItem workItem, ColumnHeaderMappingHelper columnHeaderMapping)
 			throws WorkItemCommandLineException, TeamRepositoryException {
-//		ArrayList<String> row = new ArrayList<String>(columns.size());
+		List<String> headerNames = columnHeaderMapping.analyzeColumnHeader(getHeaderAsIDs());
+		List<ParameterValue> columns = columnHeaderMapping.getParameters();
 		getResult().appendResultString("Printing work item " + workItem.getId());
 		for (int i = 0; i < columns.size(); i++) {
 			ParameterValue column = columns.get(i);
 			String value = "";
 			try {
 				value = getStringRepresentation(workItem, column);
-				getResult().appendResultString(column.getDisplayName() + " : " + value);
+				getResult().appendResultString(headerNames.get(i) + " : " + value);
 			} catch (WorkItemCommandLineException e) {
 				String message = "Exception exporting work item " + workItem.getId() + " column " + i + " attribute "
 						+ column.getAttributeID() + " : " + e.getMessage();
@@ -267,129 +259,6 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 			}
 		}
 	}
-
-//	private void getStringRepre_sentation(IWorkItem workItem, List<?> attributes) throws TeamRepositoryException {
-//		for (Object attribute : attributes) {
-//			if (attribute instanceof IAttribute) {
-//				IAttribute iAttribute = (IAttribute) attribute;
-//				String value = "";
-//				try {
-//					value = getWorkItemExportHelper().getStringrepresentation(workItem, iAttribute.getIdentifier(), iAttribute);
-//				} catch (WorkItemCommandLineException e) {
-//					String message = "Exception exporting work item " + workItem.getId() + " attribute "
-//							+ iAttribute.getIdentifier() + " : " + e.getMessage();
-//					if (isIgnoreErrors()) {
-//						if (!isSuppressAttributeErrors()) {
-//							this.getResult().appendResultString(message + " Ignored!");
-//						}
-//					} else {
-//						throw new WorkItemCommandLineException(message, e);
-//					}
-//				}
-//				getResult().appendResultString(iAttribute.getDisplayName() + " : " + value);			
-//			}
-//		}
-//	}
-//
-//	/**
-//	 * Create a CSV file writer to write the CSV file with the specific encoding
-//	 * 
-//	 * @param filePath
-//	 * @return
-//	 * @throws WorkItemCommandLineException
-//	 */
-//	private CSVWriter createWriter(String filePath) throws WorkItemCommandLineException {
-//		CSVWriter writer = null;
-//		try {
-//			// Create the file
-//			File outputFile = new File(filePath);
-//			// enable saving attachments
-//			if (getParameterManager().hasSwitch(SWITCH_DISABLE_ATTACHMENT_EXPORT)) {
-//				getWorkItemExportHelper().disableSaveAttachments();
-//			} else {
-//				getWorkItemExportHelper().enableSaveAttachments(outputFile.getParentFile().getAbsolutePath());
-//			}
-//			// @see http://opencsv.sourceforge.net/
-//			writer = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputFile), getFileEncoding()),
-//					getDelimiter(), getQuoteChar());
-//		} catch (UnsupportedEncodingException e) {
-//			throw new WorkItemCommandLineException("Exception creating CSV output writer: " + filePath, e);
-//		} catch (FileNotFoundException e) {
-//			throw new WorkItemCommandLineException("Exception creating CSV output writer: " + filePath, e);
-//		}
-//		return writer;
-//	}
-//
-//	/**
-//	 * Perform the export
-//	 * 
-//	 * @param columnHeaderMapping
-//	 * @param query
-//	 * @param writer
-//	 * @throws TeamRepositoryException
-//	 */
-//	private void exportAllData(ColumnHeaderMappingHelper columnHeaderMapping, IQueryDescriptor query, CSVWriter writer)
-//			throws TeamRepositoryException {
-//
-//		List<String> headerNames = columnHeaderMapping.analyzeColumnHeader(getHeaderAsIDs());
-//		writer.writeNext(headerNames.toArray(new String[headerNames.size()]));
-//		// Query the work items
-//		IQueryResult<IResult> results = QueryUtil.getUnresolvedQueryResult(query, isOverrideQueryResultSizeLimit());
-//		ResultSize resultSize = results.getResultSize(getMonitor());
-//		List<IWorkItemHandle> workItems = new ArrayList<IWorkItemHandle>(resultSize.getTotal());
-//		while (results.hasNext(null)) {
-//			IResult result = results.next(null);
-//			workItems.add((IWorkItemHandle) result.getItem());
-//		}
-//
-//		for (IWorkItemHandle handle : workItems) {
-//			IWorkItem workItem = WorkItemUtil.resolveWorkItem(handle, IWorkItem.FULL_PROFILE, getWorkItemCommon(),
-//					getMonitor());
-//			if (workItem != null) {
-//				ArrayList<String> row = getRow(workItem, columnHeaderMapping.getParameters());
-//				writer.writeNext(row.toArray(new String[row.size()]));
-//				try {
-//					writer.flush();
-//				} catch (IOException e) {
-//					throw new WorkItemCommandLineException(e);
-//				}
-//			}
-//		}
-//	}
-//
-//	/**
-//	 * Get the values for a row from the work items attributes.
-//	 * 
-//	 * @param workItem
-//	 * @param columns
-//	 * @return
-//	 * @throws WorkItemCommandLineException
-//	 * @throws TeamRepositoryException
-//	 */
-//	private ArrayList<String> getRow(IWorkItem workItem, List<ParameterValue> columns)
-//			throws WorkItemCommandLineException, TeamRepositoryException {
-//		ArrayList<String> row = new ArrayList<String>(columns.size());
-//		getResult().appendResultString("Exporting work item " + workItem.getId());
-//		for (int i = 0; i < columns.size(); i++) {
-//			ParameterValue column = columns.get(i);
-//			String value = "";
-//			try {
-//				value = getStringRepresentation(workItem, column);
-//			} catch (WorkItemCommandLineException e) {
-//				String message = "Exception exporting work item " + workItem.getId() + " column " + i + " attribute "
-//						+ column.getAttributeID() + " : " + e.getMessage();
-//				if (isIgnoreErrors()) {
-//					if (!isSuppressAttributeErrors()) {
-//						this.getResult().appendResultString(message + " Ignored!");
-//					}
-//				} else {
-//					throw new WorkItemCommandLineException(message, e);
-//				}
-//			}
-//			row.add(i, value);
-//		}
-//		return row;
-//	}
 
 	/**
 	 * This method tries to get the matching representation of the value to be set
