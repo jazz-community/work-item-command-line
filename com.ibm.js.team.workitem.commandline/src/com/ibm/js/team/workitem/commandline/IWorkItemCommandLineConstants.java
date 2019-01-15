@@ -109,4 +109,6 @@ public interface IWorkItemCommandLineConstants {
 	public static final String SWITCH_EXPORT_SUPPRESS_ATTRIBUTE_EXCEPTIONS = "suppressAttributeExceptions";
 	public static final String SWITCH_SUPPRESS_MAIL_NOTIFICATION = "skipEmailNotification";
 
+	public static final String COMMAND_EXPORT = "export";
+
 }

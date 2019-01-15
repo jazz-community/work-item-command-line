@@ -164,5 +164,20 @@ public class ColumnHeaderAttributeNameMapper {
 	public boolean isLinkType(String linkID) {
 		return linkMap.containsKey(linkID);
 	}
+	
+	/**
+	 * @return
+	 */
+	public HashMap<String, IAttribute> getAttributeMap() {
+		return attributeMap;
+	}
+
+	/**
+	 * @return
+	 */
+	public HashMap<String, IEndPointDescriptor> getLinkMap() {
+		return linkMap;
+	}
+
 
 }

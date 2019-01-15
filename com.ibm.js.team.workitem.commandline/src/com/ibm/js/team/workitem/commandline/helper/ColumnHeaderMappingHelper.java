@@ -52,7 +52,8 @@ public class ColumnHeaderMappingHelper {
 	}
 
 	/**
-	 * @param projectArea
+	 * @param getIDs
+	 * @return
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 */

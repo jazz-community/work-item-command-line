@@ -40,6 +40,7 @@ import com.ibm.js.team.workitem.commandline.utils.StringUtil;
 import com.ibm.js.team.workitem.commandline.utils.WorkItemUtil;
 import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.process.common.advice.TeamOperationCanceledException;
+import com.ibm.team.repository.common.IContent;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.internal.importer.bugzilla.mappers.BugzillaMapping;
 import com.ibm.team.workitem.common.internal.importer.bugzilla.mappers.BugzillaMapping.AttributeMapping;
@@ -1026,7 +1027,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		String fileName = "";
 		String description = "";
 		String contentType = "application/unknown";
-		String encoding = "";
+		String encoding = IContent.ENCODING_UTF_8;
 
 		if (attachmentData.size() > 0) {
 			fileName = attachmentData.get(0);
@@ -1052,9 +1053,9 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				+ WorkItemUpdateHelper.ATTACHMENT_SEPARATOR + contentType
 				+ WorkItemUpdateHelper.ATTACHMENT_SEPARATOR + encoding;
 
-		parameters.addParameterValue(
-				WorkItemUpdateHelper.PSEUDO_ATTRIBUTE_ATTACHFILE + "_"
-						+ getUniqueID().toString(), attachmentvalue.trim());
+		String parameterValue = WorkItemUpdateHelper.PSEUDO_ATTRIBUTE_ATTACHFILE + "_"
+				+ getUniqueID().toString();
+		parameters.addParameterValue( parameterValue, attachmentvalue.trim());
 	}
 
 	/**

@@ -101,7 +101,7 @@ public class WorkItemExportHelper {
 	private String fSimpleDateTimeFormatPattern = IWorkItemCommandLineConstants.TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A;;
 	private boolean fSaveAttachments = false;
 	private String fOutputFolder = null;
-	private boolean fRTCEclipseCompatible = true;
+	private boolean fRTCEclipseCompatible = false;
 
 	public WorkItemExportHelper(ITeamRepository fTeamRepository, IProgressMonitor fMonitor) {
 		super();

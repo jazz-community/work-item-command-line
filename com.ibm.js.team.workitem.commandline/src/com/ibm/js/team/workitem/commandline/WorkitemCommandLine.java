@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 import com.ibm.js.team.workitem.commandline.commands.CreateWorkItemCommand;
+import com.ibm.js.team.workitem.commandline.commands.ExportCommand;
 import com.ibm.js.team.workitem.commandline.commands.ExportWorkItemsCommand;
 import com.ibm.js.team.workitem.commandline.commands.ImportWorkItemsCommand;
 import com.ibm.js.team.workitem.commandline.commands.MigrateWorkItemAttributeCommand;
@@ -99,6 +100,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 	 * @param parameterManager
 	 */
 	private void addSupportedCommands(ParameterManager parameterManager) {
+		addSupportedCommand(new ExportCommand(new ParameterManager(
+				parameterManager.getArguments())));
 		addSupportedCommand(new PrintWorkItemCommand(new ParameterManager(
 				parameterManager.getArguments())));
 		addSupportedCommand(new ValidateOSLCLinksCommand(new ParameterManager(

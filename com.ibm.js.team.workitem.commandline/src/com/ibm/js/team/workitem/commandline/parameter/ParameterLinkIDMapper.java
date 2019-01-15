@@ -7,6 +7,7 @@
  *******************************************************************************/
 package com.ibm.js.team.workitem.commandline.parameter;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -94,7 +95,14 @@ public class ParameterLinkIDMapper {
 	 * putMap("key", "Value");
 	 */
 	protected void setMappings() {
-		// TOD: ReferenceUtil.LINKTYPE_RELATED_CHANGE_MANAGEMENT
+		// TODO: ReferenceUtil.LINKTYPE_RELATED_CHANGE_MANAGEMENT
+		putMap(LINKNAME_PARENT, ReferenceUtil.LINKTYPE_PARENT);
+		putMap(LINKNAME_CHILDREN, ReferenceUtil.LINKTYPE_CHILD);
+		putMap(LINKNAME_PREDECESSOR,
+				ReferenceUtil.LINKTYPE_PREDECESSOR_WORKITEM);
+		putMap(LINKNAME_SUCCESSOR, ReferenceUtil.LINKTYPE_SUCCESSOR_WORKITEM);
+		putMap(LINKNAME_TRACKS, ReferenceUtil.LINKTYPE_TRACKS_WORK_ITEM);
+		//putMap(LINKNAME_CONTRIBUTES_TO, ReferenceUtil.LINKTYPE_CONTRIBUTES_TO_WORK_ITEM);
 		putMap(LINKNAME_AFFECTED_BY_DEFECT,
 				ReferenceUtil.LINKTYPE_AFFECTED_BY_DEFECT);
 		putMap(LINKNAME_AFFECTS_TEST_RESULT,
@@ -106,7 +114,6 @@ public class ParameterLinkIDMapper {
 		putMap(LINKNAME_BLOCKS_TEST_EXECUTION,
 				ReferenceUtil.LINKTYPE_BLOCKS_TEST_EXECUTION);
 		putMap(LINKNAME_BLOCKS, ReferenceUtil.LINKTYPE_BLOCKS_WORKITEM);
-		putMap(LINKNAME_CHILDREN, ReferenceUtil.LINKTYPE_CHILD);
 		putMap(LINKNAME_COPIED_FROM,
 				ReferenceUtil.LINKTYPE_COPIED_FROM_WORKITEM);
 		putMap(LINKNAME_COPIES, ReferenceUtil.LINKTYPE_COPIED_WORKITEM);
@@ -119,9 +126,6 @@ public class ParameterLinkIDMapper {
 				ReferenceUtil.LINKTYPE_IMPLEMENTS_REQUIREMENT);
 		putMap(LINKNAME_INCLUDED_IN_BUILDS,
 				ReferenceUtil.LINKTYPE_INCLUDEDINBUILD);
-		putMap(LINKNAME_PARENT, ReferenceUtil.LINKTYPE_PARENT);
-		putMap(LINKNAME_PREDECESSOR,
-				ReferenceUtil.LINKTYPE_PREDECESSOR_WORKITEM);
 		// putMap(, ReferenceUtil.LINKTYPE_RELATED_CHANGE_MANAGEMENT);
 		putMap(LINKNAME_RELATED_ARTIFACTS,
 				ReferenceUtil.LINKTYPE_RELATED_ARTIFACT);
@@ -137,13 +141,11 @@ public class ParameterLinkIDMapper {
 		putMap(LINKNAME_RESOLVED_BY,
 				ReferenceUtil.LINKTYPE_RESOLVED_BY_WORKITEM);
 		putMap(LINKNAME_RESOLVES, ReferenceUtil.LINKTYPE_RESOLVES_WORKITEM);
-		putMap(LINKNAME_SUCCESSOR, ReferenceUtil.LINKTYPE_SUCCESSOR_WORKITEM);
 		putMap(LINKNAME_TESTED_BY_TEST_CASE,
 				ReferenceUtil.LINKTYPE_TESTED_BY_TEST_CASE);
 		// putMap(LINKNAME_TRACKS, ReferenceUtil.LINKTYPE_TRACKS_CHANGES);
 		putMap(LINKNAME_TRACKS_REQUIREMENT,
 				ReferenceUtil.LINKTYPE_TRACKS_REQUIREMENT);
-		putMap(LINKNAME_TRACKS, ReferenceUtil.LINKTYPE_TRACKS_WORK_ITEM);
 		// putMap(, ReferenceUtil.);
 	}
 
@@ -236,4 +238,14 @@ public class ParameterLinkIDMapper {
 	public static Set<String> getLinkNames() {
 		return getMapper().getMap().keySet();
 	}
+
+	/**
+	 * Get all the external link names (alias)
+	 * 
+	 * @return
+	 */
+	public static Collection<String> getLinkIDs() {
+		return getMapper().getMap().values();
+	}
+
 }

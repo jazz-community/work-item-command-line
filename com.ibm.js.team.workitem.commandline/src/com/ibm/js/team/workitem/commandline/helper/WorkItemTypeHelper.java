@@ -120,6 +120,7 @@ public class WorkItemTypeHelper {
 		result.appendResultString("  Custom Attributes");
 		result.appendResultString(printAttributesAndTypes(
 				getCustomAttributesOfType(projectArea, workItemType, monitor), monitor));
+
 		result.setSuccess();
 		return result;
 	}

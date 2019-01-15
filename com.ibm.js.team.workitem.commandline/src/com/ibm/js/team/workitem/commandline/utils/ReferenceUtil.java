@@ -67,6 +67,7 @@ public class ReferenceUtil {
 	public static final String LINKTYPE_AFFECTED_BY_DEFECT = "affected_by_defect";
 	public static final String LINKTYPE_RELATED_CHANGE_MANAGEMENT = "related_change_management";
 	public static final String LINKTYPE_TRACKS_WORK_ITEM = "tracks_workitem";
+//	public static final String LINKTYPE_CONTRIBUTES_TO_WORK_ITEM = "contributes_to_workitem";
 	// SCM change set link, can only be set by the SCM component
 	// public static final String LINKTYPE_CHANGESET = "scm_changeset";
 	// Designmanager

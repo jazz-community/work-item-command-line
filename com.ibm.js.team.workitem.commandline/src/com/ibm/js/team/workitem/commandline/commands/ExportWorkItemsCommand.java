@@ -14,7 +14,13 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.ibm.js.team.workitem.commandline.IWorkItemCommandLineConstants;
 import com.ibm.js.team.workitem.commandline.OperationResult;
@@ -23,6 +29,9 @@ import com.ibm.js.team.workitem.commandline.framework.ParameterValue;
 import com.ibm.js.team.workitem.commandline.framework.WorkItemCommandLineException;
 import com.ibm.js.team.workitem.commandline.helper.ColumnHeaderMappingHelper;
 import com.ibm.js.team.workitem.commandline.helper.WorkItemExportHelper;
+import com.ibm.js.team.workitem.commandline.parameter.ColumnHeaderAttributeNameMapper;
+import com.ibm.js.team.workitem.commandline.parameter.ParameterIDMapper;
+import com.ibm.js.team.workitem.commandline.parameter.ParameterLinkIDMapper;
 import com.ibm.js.team.workitem.commandline.parameter.ParameterManager;
 import com.ibm.js.team.workitem.commandline.utils.ProcessAreaUtil;
 import com.ibm.js.team.workitem.commandline.utils.QueryUtil;
@@ -59,6 +68,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	public static final String SWITCH_RTC_ECLIPSE_EXPORT = "asrtceclipse";
 	// The header column uses ID's instead of display names
 	public static final String SWITCH_HEADER_AS_ID = "headerIDs";
+	// Try to determine all the supported attributes
+	public static final String SWITCH_ALL_COLUMNS = "allColumns";
 	// NewLine separator for lists in RTC compatible format
 	public static final String SEPERATOR_NEWLINE = "\n";
 	// The default separator for lists such as tags
@@ -95,8 +106,6 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	private boolean fHeaderAsIDs = false;
 	// Ignore minor errors?
 	private boolean fIgnoreErrors = true;
-	// The output file
-//	private File fOutputFile = null;
 	// Suppress Attribute Not found Exception
 	private boolean fSuppressAttributeErrors = false;
 	private WorkItemExportHelper fWorkItemExportHelper;
@@ -141,6 +150,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		getParameterManager().syntaxAddSwitch(SWITCH_HEADER_AS_ID);
 		getParameterManager().syntaxAddSwitch(SWITCH_RTC_ECLIPSE_EXPORT);
 		getParameterManager().syntaxAddSwitch(SWITCH_DISABLE_ATTACHMENT_EXPORT);
+		getParameterManager().syntaxAddSwitch(SWITCH_ALL_COLUMNS);
 		getParameterManager()
 				.syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_EXPORT_SUPPRESS_ATTRIBUTE_EXCEPTIONS);
 
@@ -191,19 +201,6 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		if (projectArea == null) {
 			throw new WorkItemCommandLineException("Project Area not found: " + projectAreaName);
 		}
-		ColumnHeaderMappingHelper columnHeaderMapping = new ColumnHeaderMappingHelper(projectArea, getWorkItemCommon(),
-				getMonitor());
-
-		String queryName = getParameterManager().consumeParameter(PARAMETER_QUERY_NAME);
-		if (queryName == null) {
-			throw new WorkItemCommandLineException("Query name must not be provided.");
-		}
-		String sharingTargetNames = getParameterManager().consumeParameter(PARAMETER_SHARING_TARGETS);
-
-		String filePath = getParameterManager().consumeParameter(PARAMETER_EXPORT_FILE);
-		if (filePath == null) {
-			throw new WorkItemCommandLineException("Export file path must be provided.");
-		}
 
 		// Read if there is a special encoding provided
 		String encoding = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_ENCODING);
@@ -224,12 +221,82 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 			setDelimiter(delimiter);
 		}
 
+		ColumnHeaderMappingHelper columnHeaderMapping = new ColumnHeaderMappingHelper(projectArea, getWorkItemCommon(),
+				getMonitor());
+
 		// get the columns to export
-		String columns = getParameterManager().consumeParameter(PARAMETER_EXPORT_COLUMNS);
-		if (columns != null) {
-			columnHeaderMapping.setColumns(columns);
+		if (getParameterManager().hasSwitch(SWITCH_ALL_COLUMNS)) {
+			String[] allColumns = getAllColumnsPreSorted(projectArea);
+			columnHeaderMapping.setColumns(allColumns);
+		} else {
+			String columns = getParameterManager().consumeParameter(PARAMETER_EXPORT_COLUMNS);
+			if (columns != null) {
+				columnHeaderMapping.setColumns(columns);
+			}
 		}
 
+		String queryName = getParameterManager().consumeParameter(PARAMETER_QUERY_NAME);
+		if (queryName == null) {
+			throw new WorkItemCommandLineException("Query name must be provided.");
+		}
+		String sharingTargetNames = getParameterManager().consumeParameter(PARAMETER_SHARING_TARGETS);
+		
+		IQueryDescriptor query = getWorlkItemQuery(projectArea, queryName, sharingTargetNames);
+
+		String filePath = getParameterManager().consumeParameter(PARAMETER_EXPORT_FILE);
+		if (filePath == null) {
+			throw new WorkItemCommandLineException("Export file path must be provided.");
+		}
+
+		exportCSV(filePath, query, columnHeaderMapping);
+		return getResult();
+	}
+
+	/**
+	 * Get all the available attributes and supported links.
+	 * 
+	 * @param projectArea
+	 * @return
+	 * @throws TeamRepositoryException
+	 */
+	private String[] getAllColumnsPreSorted(IProjectArea projectArea) throws TeamRepositoryException {
+
+		ColumnHeaderAttributeNameMapper columnMapper = new ColumnHeaderAttributeNameMapper(projectArea, getWorkItemCommon(), getMonitor());
+		HashMap<String, IAttribute> attributeMap = columnMapper.getAttributeMap(); 
+
+		ArrayList<String> sortedAttribs = new ArrayList<String>();
+		sortedAttribs.add(IWorkItem.ID_PROPERTY);
+		sortedAttribs.add(IWorkItem.TYPE_PROPERTY);
+		sortedAttribs.add(IWorkItem.SUMMARY_PROPERTY);
+
+		ArrayList<String> allAttribs = new ArrayList<String>();
+		attributeMap.remove(IWorkItem.ID_PROPERTY);
+		attributeMap.remove(IWorkItem.TYPE_PROPERTY);
+		attributeMap.remove(IWorkItem.SUMMARY_PROPERTY);
+		allAttribs.addAll(attributeMap.keySet());
+		Collections.sort(allAttribs);
+
+		ArrayList<String> sortedLinks = new ArrayList<String>(ParameterLinkIDMapper.getLinkIDs());
+		Collections.sort(sortedLinks);
+
+		sortedAttribs.addAll(allAttribs);
+		sortedAttribs.add(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS); // This is not a property add the artificial one
+		sortedAttribs.addAll(sortedLinks);
+		return sortedAttribs.toArray(new String[sortedAttribs.size()]);
+	}
+	
+
+	/**
+	 * Get a work item query to locate the work items
+	 * 
+	 * @param projectArea
+	 * @param queryName
+	 * @param sharingTargetNames
+	 * @return
+	 * @throws TeamRepositoryException
+	 */
+	private IQueryDescriptor getWorlkItemQuery(IProjectArea projectArea, String queryName, String sharingTargetNames)
+			throws TeamRepositoryException {
 		// Get the query
 		IQueryDescriptor query = null;
 		if (sharingTargetNames == null) {
@@ -249,7 +316,20 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		if (query == null) {
 			throw new WorkItemCommandLineException("Query not found " + queryName);
 		}
+		return query;
+	}
 
+	/**
+	 * Export the data to a CSV file
+	 * 
+	 * @param filePath
+	 * @param query
+	 * @param columnHeaderMapping
+	 * @return
+	 * @throws TeamRepositoryException
+	 */
+	private void exportCSV(String filePath, IQueryDescriptor query,
+			ColumnHeaderMappingHelper columnHeaderMapping) throws TeamRepositoryException {
 		CSVWriter writer = null;
 		try {
 			// Create the writer
@@ -266,7 +346,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 			}
 		}
 		setSuccess();
-		return getResult();
+		
 	}
 
 	/**

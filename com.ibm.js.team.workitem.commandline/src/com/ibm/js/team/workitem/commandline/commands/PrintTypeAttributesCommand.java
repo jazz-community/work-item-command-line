@@ -7,14 +7,19 @@
  *******************************************************************************/
 package com.ibm.js.team.workitem.commandline.commands;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import com.ibm.js.team.workitem.commandline.IWorkItemCommandLineConstants;
 import com.ibm.js.team.workitem.commandline.OperationResult;
 import com.ibm.js.team.workitem.commandline.framework.AbstractTeamRepositoryCommand;
 import com.ibm.js.team.workitem.commandline.framework.IWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.framework.WorkItemCommandLineException;
 import com.ibm.js.team.workitem.commandline.helper.WorkItemTypeHelper;
+import com.ibm.js.team.workitem.commandline.parameter.ParameterLinkIDMapper;
 import com.ibm.js.team.workitem.commandline.parameter.ParameterManager;
 import com.ibm.js.team.workitem.commandline.utils.ProcessAreaUtil;
+import com.ibm.js.team.workitem.commandline.utils.ReferenceUtil;
 import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.model.IWorkItemType;
@@ -110,8 +115,17 @@ public class PrintTypeAttributesCommand extends AbstractTeamRepositoryCommand
 		WorkItemTypeHelper workItemTypeHelper = new WorkItemTypeHelper(
 				projectArea, getMonitor());
 
-		return workItemTypeHelper.printAttributesOfType(projectArea,
+		OperationResult result = workItemTypeHelper.printAttributesOfType(projectArea,
 				workItemType, getMonitor());
+
+		result.appendResultString("  Links (supported)");
+		Set<String> linkNames = ParameterLinkIDMapper.getLinkNames();
+		for (String linkName : linkNames) {
+			String linkID = ParameterLinkIDMapper.getinternalID(linkName);
+			result.appendResultString("\t " + linkName + " \tID: " + linkID);			
+		}
+		
+		return result;
 	}
 
 	@Override
