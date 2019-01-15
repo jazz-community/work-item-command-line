@@ -235,6 +235,12 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 		return getResult();
 	}
 
+	/**
+	 * @param workItem
+	 * @param columnHeaderMapping
+	 * @throws WorkItemCommandLineException
+	 * @throws TeamRepositoryException
+	 */
 	private void getStringRepresentation(IWorkItem workItem, ColumnHeaderMappingHelper columnHeaderMapping)
 			throws WorkItemCommandLineException, TeamRepositoryException {
 		List<String> headerNames = columnHeaderMapping.analyzeColumnHeader(getHeaderAsIDs());
