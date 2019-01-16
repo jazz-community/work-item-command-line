@@ -46,16 +46,16 @@ Available commands:
 ```bash
 -printtypes 
     repository="value" 
-    password="value" 
     user="value"   
+    password="value" 
     projectArea="value" 
 ```
 
 ```bash
 -printtypeattributes 
     repository="value" 
-    password="value" 
     user="value" 
+    password="value" 
     projectArea="value" 
     workItemType="value"  
 ```
@@ -94,8 +94,8 @@ Available commands:
 ```bash
 -update 
     repository="value" 
-    password="value" 
     user="value" 
+    password="value" 
     id="value" 
     /enableDeleteAttachment 
     /enableDeleteApprovals 
@@ -108,8 +108,8 @@ Available commands:
 ```bash
 -importworkitems 
     repository="value" 
-    password="value" 
     user="value" 
+    password="value" 
     projectArea="value" 
     importFile="value" 
     /skipEmailNotification 
