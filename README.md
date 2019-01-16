@@ -45,62 +45,62 @@ Available commands:
 
 ```bash
 -printtypes 
-    projectArea="value" 
     repository="value" 
     password="value" 
     user="value"   
+    projectArea="value" 
 ```
 
 ```bash
 -printtypeattributes 
-    projectArea="value" 
     repository="value" 
     password="value" 
     user="value" 
+    projectArea="value" 
     workItemType="value"  
 ```
 
 ```bash
 -create 
+    repository="value" 
+    user="value" 
+    password="value" 
+    projectArea="value" 
+    workItemType="value" 
+    /enforceSizeLimits 
+    /ignoreErrors 
     /enableDeleteAttachment 
     /enableDeleteApprovals 
-    projectArea="value" 
-    repository="value" 
-    /enforceSizeLimits 
-    password="value" 
-    user="value" 
-    /ignoreErrors 
-    workItemType="value" 
     {parameter[:mode]=value}
 ```
 
 ```bash
 -update 
+    repository="value" 
+    password="value" 
+    user="value" 
+    id="value" 
     /enableDeleteAttachment 
     /enableDeleteApprovals 
     /skipEmailNotification 
-    repository="value" 
     /enforceSizeLimits 
-    id="value" 
-    password="value" 
-    user="value" 
     /ignoreErrors 
     {parameter[:mode]=value}
 ```
 
 ```bash
 -importworkitems 
-    importFile="value" 
-    /forcelinkcreation 
-    /importmultipass 
-    projectArea="value" 
-    /skipEmailNotification 
     repository="value" 
-    /enforceSizeLimits 
     password="value" 
     user="value" 
+    projectArea="value" 
+    importFile="value" 
+    /skipEmailNotification 
     /ignoreErrors 
     /importdebug 
+    /forcelinkcreation 
+    /enforceSizeLimits 
+    /importmultipass 
     [mappingFile="C:\temp\mapping.xml"] 
     [encoding="UTF_16LE"] 
     [timestampFormat="TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A"] 
@@ -108,16 +108,16 @@ Available commands:
 ```
 
 ```bash
--exportworkitems 
-    exportFile="value" 
-    projectArea="value" 
-    /asrtceclipse 
-    query="value" 
+-exportworkitems
     repository="value" 
+    user="value" 
+    password="value"
+    projectArea="value" 
+    query="value" 
+    exportFile="value" 
+    /asrtceclipse 
     /suppressAttributeExceptions 
     /headerIDs 
-    password="value" 
-    user="value" 
     /ignoreErrors 
     [encoding="UTF_16LE"] 
     [delimiter=","] 
@@ -127,26 +127,43 @@ Available commands:
 ```
 
 ```bash
- -migrateattribute 
-    targetAttributeID="value" 
-    projectArea="value" 
-    /skipEmailNotification 
-    repository="value"  
-    password="value"  
+-printworkitem
+    repository="value" 
     user="value" 
+    password="value" 
+    id="value"
+    /allColumns 
+    /asrtceclipse
+    /attributeNamesAsIDs	
+    /ignoreErrors 
+    /suppressAttributeExceptions 
+    /ignoreErrors 
+    [attachmentFolder="C:\temp\export"]
+    [timestampFormat="TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A"]
+    [columns="Type,Id,Planned For,Filed Against,Description,Found In"]
+```
+
+```bash
+ -migrateattribute 
+    repository="value"  
+    user="value" 
+    password="value"  
+    projectArea="value"  
+    targetAttributeID="value" 
     sourceAttributeID="value" 
-    /ignoreErrors workItemType="value"  
+    /ignoreErrors workItemType="value"
+    /skipEmailNotification
 ```
 
 ```bash
 -validateoslclinks
+    repository="value"
+    user="value"
+    password="value"
+    projectArea="value"
+    query="value"
     /trace
     /debug
-    repository="value"
-    projectArea="value"
-    password="value"
-    user="value"
-    query="value"
 ```
 
 ## Start in RMI server mode
