@@ -7,13 +7,6 @@
  *******************************************************************************/
 package com.ibm.js.team.workitem.commandline.commands;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.ibm.js.team.workitem.commandline.IWorkItemCommandLineConstants;
@@ -23,24 +16,14 @@ import com.ibm.js.team.workitem.commandline.framework.ParameterValue;
 import com.ibm.js.team.workitem.commandline.framework.WorkItemCommandLineException;
 import com.ibm.js.team.workitem.commandline.helper.ColumnHeaderMappingHelper;
 import com.ibm.js.team.workitem.commandline.helper.WorkItemExportHelper;
-import com.ibm.js.team.workitem.commandline.helper.WorkItemTypeHelper;
 import com.ibm.js.team.workitem.commandline.parameter.ColumnHeaderAttributeNameMapper;
 import com.ibm.js.team.workitem.commandline.parameter.ParameterManager;
 import com.ibm.js.team.workitem.commandline.utils.ProcessAreaUtil;
-import com.ibm.js.team.workitem.commandline.utils.QueryUtil;
 import com.ibm.js.team.workitem.commandline.utils.WorkItemUtil;
 import com.ibm.team.process.common.IProjectArea;
-import com.ibm.team.repository.common.IAuditableHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.model.IAttribute;
 import com.ibm.team.workitem.common.model.IWorkItem;
-import com.ibm.team.workitem.common.model.IWorkItemHandle;
-import com.ibm.team.workitem.common.model.IWorkItemType;
-import com.ibm.team.workitem.common.query.IQueryDescriptor;
-import com.ibm.team.workitem.common.query.IQueryResult;
-import com.ibm.team.workitem.common.query.IResult;
-import com.ibm.team.workitem.common.query.ResultSize;
-import com.opencsv.CSVWriter;
 
 /**
  * Command to export a set of work items to a CSV file set the provided values
@@ -121,9 +104,7 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 	public void setRequiredParameters() {
 		super.setRequiredParameters();
 		// Add the parameters required to perform the operation
-		getParameterManager()
-		.syntaxAddRequiredParameter(
-				IWorkItemCommandLineConstants.PARAMETER_WORKITEM_ID_PROPERTY,
+		getParameterManager().syntaxAddRequiredParameter(IWorkItemCommandLineConstants.PARAMETER_WORKITEM_ID_PROPERTY,
 				IWorkItemCommandLineConstants.PROPERTY_WORKITEM_ID_PROPERTY_EXAMPLE);
 //		getParameterManager().syntaxAddRequiredParameter(
 //				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
@@ -134,8 +115,7 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 		getParameterManager().syntaxAddSwitch(SWITCH_PRINT_ATTRIBUTE_ID);
 		getParameterManager().syntaxAddSwitch(SWITCH_ALL_COLUMNS);
 		getParameterManager().syntaxAddSwitch(SWITCH_RTC_ECLIPSE_EXPORT);
-		
-		
+
 //		getParameterManager().syntaxAddSwitch(SWITCH_DISABLE_ATTACHMENT_EXPORT);
 		getParameterManager()
 				.syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_EXPORT_SUPPRESS_ATTRIBUTE_EXCEPTIONS);
@@ -150,9 +130,9 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 	 */
 	@Override
 	public String helpSpecificUsage() {
-		return "[" + PARAMETER_EXPORT_COLUMNS
-				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR + PARAMETER_EXPORT_COLUMNS_EXAMPLE1
-				+ "]" + " [" + IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING_EXAMPLE + "]";
+		return "[" + PARAMETER_EXPORT_COLUMNS + IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
+				+ PARAMETER_EXPORT_COLUMNS_EXAMPLE1 + "]" + " ["
+				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING_EXAMPLE + "]";
 	}
 
 	/*
@@ -163,7 +143,7 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 	@Override
 	public OperationResult process() throws TeamRepositoryException {
 		setIgnoreErrors(getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS));
-		if(getParameterManager().hasSwitch(SWITCH_RTC_ECLIPSE_EXPORT)) {
+		if (getParameterManager().hasSwitch(SWITCH_RTC_ECLIPSE_EXPORT)) {
 			getWorkItemExportHelper().setRTCEclipseExport();
 		}
 		setAttributeNamesAsIDs(getParameterManager().hasSwitch(SWITCH_PRINT_ATTRIBUTE_ID));
@@ -184,24 +164,24 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 			getWorkItemExportHelper().setSimpleDateTimeFormatPattern(dateTimeFormatPattern.trim());
 		}
 		// Get the parameters such as the work item ID and run the operation
-		String wiID = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_WORKITEM_ID_PROPERTY);
-		IWorkItem workItem = WorkItemUtil.findWorkItemByID(wiID,
-				IWorkItem.SMALL_PROFILE, getWorkItemCommon(), getMonitor());
+		String wiID = getParameterManager()
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_WORKITEM_ID_PROPERTY);
+		IWorkItem workItem = WorkItemUtil.findWorkItemByID(wiID, IWorkItem.SMALL_PROFILE, getWorkItemCommon(),
+				getMonitor());
 		if (workItem == null) {
-			throw new WorkItemCommandLineException(
-					"Work item cannot be found ID: " + wiID);
+			throw new WorkItemCommandLineException("Work item cannot be found ID: " + wiID);
 		}
 		getResult().appendResultString("Exporting work item " + workItem.getId());
 		IProjectArea projectArea = ProcessAreaUtil.resolveProjectArea(workItem.getProjectArea(), getMonitor());
 
 		ColumnHeaderMappingHelper columnHeaderMapping = new ColumnHeaderMappingHelper(projectArea, getWorkItemCommon(),
 				getMonitor());
-		
+
 		// get the columns to export
 		if (getParameterManager().hasSwitch(SWITCH_ALL_COLUMNS)) {
-			ColumnHeaderAttributeNameMapper columnMapper = new ColumnHeaderAttributeNameMapper(projectArea, getWorkItemCommon(), getMonitor());
-			String[] allColumns = columnMapper.getAllColumnsPreSorted();		
+			ColumnHeaderAttributeNameMapper columnMapper = new ColumnHeaderAttributeNameMapper(projectArea,
+					getWorkItemCommon(), getMonitor());
+			String[] allColumns = columnMapper.getAllColumnsPreSorted();
 			columnHeaderMapping.setColumns(allColumns);
 		} else {
 			String columns = getParameterManager().consumeParameter(PARAMETER_EXPORT_COLUMNS);
@@ -209,7 +189,7 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 				columnHeaderMapping.setColumns(columns);
 			}
 		}
-		
+
 		getStringRepresentation(workItem, columnHeaderMapping);
 		setSuccess();
 		return getResult();
@@ -294,7 +274,6 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 	private boolean isOverrideQueryResultSizeLimit() {
 		return true;
 	}
-
 
 	/**
 	 * @param hasSwitch

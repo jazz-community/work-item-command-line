@@ -22,8 +22,7 @@ import com.ibm.team.repository.common.TeamRepositoryException;
  * Command to print the work item types available in a project area.
  * 
  */
-public class PrintTypesCommand extends AbstractTeamRepositoryCommand
-		implements IWorkItemCommand {
+public class PrintTypesCommand extends AbstractTeamRepositoryCommand implements IWorkItemCommand {
 
 	/**
 	 * @param parameterManager
@@ -40,24 +39,21 @@ public class PrintTypesCommand extends AbstractTeamRepositoryCommand
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
+	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
 	 * #setRequiredParameters()
 	 */
 	public void setRequiredParameters() {
 		// Add the parameters required to perform the operation
 		super.setRequiredParameters();
-		getParameterManager()
-				.syntaxAddRequiredParameter(
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
+		getParameterManager().syntaxAddRequiredParameter(
+				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
+				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see 
-	 * com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
+	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
 	 * #process()
 	 */
 	@Override
@@ -65,22 +61,19 @@ public class PrintTypesCommand extends AbstractTeamRepositoryCommand
 		// Get the parameters such as project area name and Attribute Type and
 		// run the operation
 		String projectAreaName = getParameterManager()
-				.consumeParameter(
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY)
-				.trim();
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY).trim();
 
-		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(
-				projectAreaName, getProcessClientService(), getMonitor());
+		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(projectAreaName, getProcessClientService(),
+				getMonitor());
 		if (projectArea == null) {
-			throw new WorkItemCommandLineException("Project Area not found: "
-					+ projectAreaName);
+			throw new WorkItemCommandLineException("Project Area not found: " + projectAreaName);
 		}
 
 		this.addOperationResult(printWorkItemTypes(projectArea));
-		return getResult();	
+		return getResult();
 	}
 
-	/** 
+	/**
 	 * Print the work item types available in a project area
 	 * 
 	 * @param projectArea
@@ -88,9 +81,8 @@ public class PrintTypesCommand extends AbstractTeamRepositoryCommand
 	 * @throws TeamRepositoryException
 	 */
 	private OperationResult printWorkItemTypes(IProjectArea projectArea) throws TeamRepositoryException {
-		
-		WorkItemTypeHelper workItemTypeHelper = new WorkItemTypeHelper(
-				projectArea, getMonitor());
+
+		WorkItemTypeHelper workItemTypeHelper = new WorkItemTypeHelper(projectArea, getMonitor());
 
 		return workItemTypeHelper.printWorkItemTypes(projectArea, getMonitor());
 	}

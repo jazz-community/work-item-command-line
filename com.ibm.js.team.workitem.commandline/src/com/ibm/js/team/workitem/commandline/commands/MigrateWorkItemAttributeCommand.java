@@ -52,8 +52,7 @@ import com.ibm.team.workitem.common.query.IResult;
  * available in RTC 4.x
  * 
  */
-public class MigrateWorkItemAttributeCommand extends
-		AbstractTeamRepositoryCommand {
+public class MigrateWorkItemAttributeCommand extends AbstractTeamRepositoryCommand {
 
 	public static final String COMMAND_MIGRATE_ENUMERATION_LIST_ATTRIBUTE = "migrateattribute";
 	public static final String PARAMETER_SOURCE_ATTRIBUTE_ID = "sourceAttributeID";
@@ -62,14 +61,15 @@ public class MigrateWorkItemAttributeCommand extends
 	public static final String PARAMETER_TARGET_ATTRIBUTE_ID_EXAMPLE = "com.acme.custom.enum.list";
 
 	public static final String SEPARATOR_ENUMERATION_LITERAL_ID_LIST = ",";
-	// Since 6.0 iFix3 there is an additional save parameter to avoid sending 
+	// Since 6.0 iFix3 there is an additional save parameter to avoid sending
 	// E-Mail notification to users (e.g. during automated updates).
 
-	private boolean fSuppressMailNotification=false;
+	private boolean fSuppressMailNotification = false;
 
-	public void setSuppressMailNotification(boolean hasSwitch){
-		fSuppressMailNotification=hasSwitch;
+	public void setSuppressMailNotification(boolean hasSwitch) {
+		fSuppressMailNotification = hasSwitch;
 	}
+
 	private boolean isSuppressMailNotification() {
 		return fSuppressMailNotification;
 	}
@@ -99,23 +99,16 @@ public class MigrateWorkItemAttributeCommand extends
 	public void setRequiredParameters() {
 		super.setRequiredParameters();
 		// Copied from CreateWorkItemCommand
-		getParameterManager()
-				.syntaxAddRequiredParameter(
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
-		getParameterManager()
-				.syntaxAddRequiredParameter(
-						IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY,
-						IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY_EXAMPLE);
-		getParameterManager().syntaxAddSwitch(
-				IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
-        getParameterManager().syntaxAddSwitch(
-                IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION);
 		getParameterManager().syntaxAddRequiredParameter(
-				PARAMETER_SOURCE_ATTRIBUTE_ID,
+				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
+				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
+		getParameterManager().syntaxAddRequiredParameter(IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY,
+				IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY_EXAMPLE);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION);
+		getParameterManager().syntaxAddRequiredParameter(PARAMETER_SOURCE_ATTRIBUTE_ID,
 				PARAMETER_SOURCE_ATTRIBUTE_ID_EXAMPLE);
-		getParameterManager().syntaxAddRequiredParameter(
-				PARAMETER_TARGET_ATTRIBUTE_ID,
+		getParameterManager().syntaxAddRequiredParameter(PARAMETER_TARGET_ATTRIBUTE_ID,
 				PARAMETER_TARGET_ATTRIBUTE_ID_EXAMPLE);
 	}
 
@@ -144,83 +137,62 @@ public class MigrateWorkItemAttributeCommand extends
 		// Get the parameters such as project area name and Attribute Type and
 		// run the operation
 		String projectAreaName = getParameterManager()
-				.consumeParameter(
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY)
-				.trim();
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY).trim();
 		// Find the project area
-		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(
-				projectAreaName, getProcessClientService(), getMonitor());
+		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(projectAreaName, getProcessClientService(),
+				getMonitor());
 		if (projectArea == null) {
-			throw new WorkItemCommandLineException("Project Area not found: "
-					+ projectAreaName);
+			throw new WorkItemCommandLineException("Project Area not found: " + projectAreaName);
 		}
 
-		String workItemTypeID = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY)
-				.trim();
+		String workItemTypeID = getParameterManager()
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY).trim();
 		// Find the work item type
-		IWorkItemType workItemType = WorkItemTypeHelper.findWorkItemType(
-				workItemTypeID, projectArea.getProjectArea(),
+		IWorkItemType workItemType = WorkItemTypeHelper.findWorkItemType(workItemTypeID, projectArea.getProjectArea(),
 				getWorkItemCommon(), getMonitor());
 
 		// Get the parameter values - The source attribute
-		String sourceAttributeID = getParameterManager().consumeParameter(
-				PARAMETER_SOURCE_ATTRIBUTE_ID).trim();
+		String sourceAttributeID = getParameterManager().consumeParameter(PARAMETER_SOURCE_ATTRIBUTE_ID).trim();
 		// check if old attribute ID is string type
-		IAttribute sourceIAttribute = getWorkItemCommon().findAttribute(
-				projectArea, sourceAttributeID, getMonitor());
+		IAttribute sourceIAttribute = getWorkItemCommon().findAttribute(projectArea, sourceAttributeID, getMonitor());
 		if (sourceIAttribute == null) {
-			throw new WorkItemCommandLineException(
-					"Source Attribute not found: " + sourceAttributeID);
+			throw new WorkItemCommandLineException("Source Attribute not found: " + sourceAttributeID);
 		}
-		if (!AttributeTypes.STRING_TYPES.contains(sourceIAttribute
-				.getAttributeType())) {
-			throw new WorkItemCommandLineException(
-					"Source Attribute is not a String type: "
-							+ sourceAttributeID);
+		if (!AttributeTypes.STRING_TYPES.contains(sourceIAttribute.getAttributeType())) {
+			throw new WorkItemCommandLineException("Source Attribute is not a String type: " + sourceAttributeID);
 		}
 
 		// Get the parameter values - The target attribute
-		String targetAttributeID = getParameterManager().consumeParameter(
-				PARAMETER_TARGET_ATTRIBUTE_ID).trim();
+		String targetAttributeID = getParameterManager().consumeParameter(PARAMETER_TARGET_ATTRIBUTE_ID).trim();
 		// check if new attribute ID is EnumerationList
-		IAttribute targetIAttribute = getWorkItemCommon().findAttribute(
-				projectArea, targetAttributeID, getMonitor());
+		IAttribute targetIAttribute = getWorkItemCommon().findAttribute(projectArea, targetAttributeID, getMonitor());
 		if (targetIAttribute == null) {
-			throw new WorkItemCommandLineException(
-					"Target Attribute not found: " + targetAttributeID);
+			throw new WorkItemCommandLineException("Target Attribute not found: " + targetAttributeID);
 		}
-		if (!AttributeTypes.isEnumerationListAttributeType(targetIAttribute
-				.getAttributeType())) {
-			throw new WorkItemCommandLineException(
-					"Target Attribute is not an EnumerationList: "
-							+ targetAttributeID);
+		if (!AttributeTypes.isEnumerationListAttributeType(targetIAttribute.getAttributeType())) {
+			throw new WorkItemCommandLineException("Target Attribute is not an EnumerationList: " + targetAttributeID);
 		}
-		// Since 6.0 iFix3 there is an additional save parameter to avoid sending 
+		// Since 6.0 iFix3 there is an additional save parameter to avoid sending
 		// E-Mail notification to users (e.g. during automated updates).
-		this.setSuppressMailNotification(getParameterManager().hasSwitch(
-				IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION));
+		this.setSuppressMailNotification(
+				getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION));
 
-		if (getParameterManager().hasSwitch(
-				IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS)) {
+		if (getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS)) {
 			setIgnoreErrors();
 		}
-		String wiID = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_WORKITEM_ID_PROPERTY);
+		String wiID = getParameterManager()
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_WORKITEM_ID_PROPERTY);
 		if (wiID != null) {
-			IWorkItem wi = WorkItemUtil.findWorkItemByID(wiID,
-					IWorkItem.SMALL_PROFILE, getWorkItemCommon(), getMonitor());
+			IWorkItem wi = WorkItemUtil.findWorkItemByID(wiID, IWorkItem.SMALL_PROFILE, getWorkItemCommon(),
+					getMonitor());
 			if (!wi.getWorkItemType().equals(workItemType.getIdentifier())) {
-				throw new WorkItemCommandLineException(
-						"Work item type mismatch: "
-								+ workItemType.getIdentifier() + " specified "
-								+ workItemType.getIdentifier());
+				throw new WorkItemCommandLineException("Work item type mismatch: " + workItemType.getIdentifier()
+						+ " specified " + workItemType.getIdentifier());
 			}
 			migrateSingleWorkItem(wi, sourceIAttribute, targetIAttribute);
 		} else {
 			// Update all work items of this type.
-			migrateAllWorkItems(projectArea, workItemType, sourceIAttribute,
-					targetIAttribute);
+			migrateAllWorkItems(projectArea, workItemType, sourceIAttribute, targetIAttribute);
 		}
 		// If we got here, we succeeded
 		getResult().setSuccess();
@@ -235,11 +207,10 @@ public class MigrateWorkItemAttributeCommand extends
 	 * @param targetIAttribute
 	 * @throws TeamRepositoryException
 	 */
-	private void migrateSingleWorkItem(IWorkItem wi,
-			IAttribute sourceIAttribute, IAttribute targetIAttribute)
+	private void migrateSingleWorkItem(IWorkItem wi, IAttribute sourceIAttribute, IAttribute targetIAttribute)
 			throws TeamRepositoryException {
-		MigrateWorkItem operation = new MigrateWorkItem("Migrate",
-				IWorkItem.FULL_PROFILE, sourceIAttribute, targetIAttribute);
+		MigrateWorkItem operation = new MigrateWorkItem("Migrate", IWorkItem.FULL_PROFILE, sourceIAttribute,
+				targetIAttribute);
 		performMigration((IWorkItemHandle) wi.getItemHandle(), operation);
 	}
 
@@ -252,35 +223,28 @@ public class MigrateWorkItemAttributeCommand extends
 	 * @param targetIAttribute
 	 * @throws TeamRepositoryException
 	 */
-	private void migrateAllWorkItems(IProjectArea projectArea,
-			IWorkItemType workItemType, IAttribute sourceIAttribute,
+	private void migrateAllWorkItems(IProjectArea projectArea, IWorkItemType workItemType, IAttribute sourceIAttribute,
 			IAttribute targetIAttribute) throws TeamRepositoryException {
 		// Find all work items of this type.
 		// Create an Expression to find them
-		IQueryableAttribute attribute = QueryableAttributes.getFactory(
-				IWorkItem.ITEM_TYPE).findAttribute(projectArea,
-				IWorkItem.PROJECT_AREA_PROPERTY, getAuditableCommon(),
-				getMonitor());
-		IQueryableAttribute type = QueryableAttributes.getFactory(
-				IWorkItem.ITEM_TYPE).findAttribute(projectArea,
+		IQueryableAttribute attribute = QueryableAttributes.getFactory(IWorkItem.ITEM_TYPE).findAttribute(projectArea,
+				IWorkItem.PROJECT_AREA_PROPERTY, getAuditableCommon(), getMonitor());
+		IQueryableAttribute type = QueryableAttributes.getFactory(IWorkItem.ITEM_TYPE).findAttribute(projectArea,
 				IWorkItem.TYPE_PROPERTY, getAuditableCommon(), getMonitor());
-		Expression inProjectArea = new AttributeExpression(attribute,
-				AttributeOperation.EQUALS, projectArea);
-		Expression isType = new AttributeExpression(type,
-				AttributeOperation.EQUALS, workItemType.getIdentifier());
+		Expression inProjectArea = new AttributeExpression(attribute, AttributeOperation.EQUALS, projectArea);
+		Expression isType = new AttributeExpression(type, AttributeOperation.EQUALS, workItemType.getIdentifier());
 		Term typeinProjectArea = new Term(Term.Operator.AND);
 		typeinProjectArea.add(inProjectArea);
 		typeinProjectArea.add(isType);
 
 		// Run the Expression
 		IQueryClient queryClient = getWorkItemClient().getQueryClient();
-		IQueryResult<IResult> results = queryClient.getExpressionResults(
-				projectArea, typeinProjectArea);
+		IQueryResult<IResult> results = queryClient.getExpressionResults(projectArea, typeinProjectArea);
 		// Override the result set limit so that we get more than 1000 items if
 		// there are more
 		results.setLimit(Integer.MAX_VALUE);
-		MigrateWorkItem operation = new MigrateWorkItem("Migrate",
-				IWorkItem.FULL_PROFILE, sourceIAttribute, targetIAttribute);
+		MigrateWorkItem operation = new MigrateWorkItem("Migrate", IWorkItem.FULL_PROFILE, sourceIAttribute,
+				targetIAttribute);
 		// Run the operation for each result
 		while (results.hasNext(getMonitor())) {
 			IResult result = (IResult) results.next(getMonitor());
@@ -295,29 +259,23 @@ public class MigrateWorkItemAttributeCommand extends
 	 * @param operation
 	 * @throws WorkItemCommandLineException
 	 */
-	private void performMigration(IWorkItemHandle handle,
-			MigrateWorkItem operation) throws WorkItemCommandLineException {
+	private void performMigration(IWorkItemHandle handle, MigrateWorkItem operation)
+			throws WorkItemCommandLineException {
 		String workItemID = "undefined";
 		try {
-			IWorkItem workItem = WorkItemUtil.resolveWorkItem(
-					(IWorkItemHandle) handle, IWorkItem.SMALL_PROFILE,
+			IWorkItem workItem = WorkItemUtil.resolveWorkItem((IWorkItemHandle) handle, IWorkItem.SMALL_PROFILE,
 					getWorkItemCommon(), getMonitor());
 			workItemID = getWorkItemIDString(workItem);
 			operation.run(handle, getMonitor());
-			getResult().appendResultString(
-					"Migrated work item " + workItemID + ".");
+			getResult().appendResultString("Migrated work item " + workItemID + ".");
 		} catch (TeamRepositoryException e) {
-			throw new WorkItemCommandLineException(
-					getResult().getResultString()
-							+ "TeamRepositoryException: Work item "
-							+ workItemID + " attribute not migrated. "
-							+ e.getMessage(), e);
+			throw new WorkItemCommandLineException(getResult().getResultString() + "TeamRepositoryException: Work item "
+					+ workItemID + " attribute not migrated. " + e.getMessage(), e);
 		} catch (WorkItemCommandLineException e) {
-			String message = "WorkItemCommandLineException Work item "
-					+ workItemID + " attribute not migrated. " + e.getMessage();
+			String message = "WorkItemCommandLineException Work item " + workItemID + " attribute not migrated. "
+					+ e.getMessage();
 			if (!isIgnoreErrors()) {
-				throw new WorkItemCommandLineException(getResult()
-						.getResultString() + message, e);
+				throw new WorkItemCommandLineException(getResult().getResultString() + message, e);
 			} else {
 				getResult().appendResultString(message);
 			}
@@ -330,8 +288,7 @@ public class MigrateWorkItemAttributeCommand extends
 	 * @return
 	 */
 	private IWorkItemClient getWorkItemClient() {
-		return (IWorkItemClient) getTeamRepository().getClientLibrary(
-				IWorkItemClient.class);
+		return (IWorkItemClient) getTeamRepository().getClientLibrary(IWorkItemClient.class);
 	}
 
 	/**
@@ -357,15 +314,14 @@ public class MigrateWorkItemAttributeCommand extends
 		/**
 		 * Constructor
 		 * 
-		 * @param The
-		 *            title message for the operation
+		 * @param The             title message for the operation
 		 * @param message
 		 * @param profile
 		 * @param sourceAttribute
 		 * @param targetAttribute
 		 */
-		public MigrateWorkItem(String message, ItemProfile<?> profile,
-				IAttribute sourceAttribute, IAttribute targetAttribute) {
+		public MigrateWorkItem(String message, ItemProfile<?> profile, IAttribute sourceAttribute,
+				IAttribute targetAttribute) {
 			super(message, profile);
 			fsourceAttribute = sourceAttribute;
 			fTargetAttribute = targetAttribute;
@@ -379,12 +335,11 @@ public class MigrateWorkItemAttributeCommand extends
 		 *      org.eclipse.core.runtime.IProgressMonitor)
 		 */
 		@Override
-		protected void execute(WorkItemWorkingCopy workingCopy,
-				IProgressMonitor monitor) throws TeamRepositoryException,
-				RuntimeException {
+		protected void execute(WorkItemWorkingCopy workingCopy, IProgressMonitor monitor)
+				throws TeamRepositoryException, RuntimeException {
 
-			// If desired suppress e-mail notification 
-			if(isSuppressMailNotification()){
+			// If desired suppress e-mail notification
+			if (isSuppressMailNotification()) {
 				workingCopy.getAdditionalSaveParameters().add(AbstractWorkItemModificationCommand.SKIP_MAIL);
 			}
 
@@ -392,16 +347,12 @@ public class MigrateWorkItemAttributeCommand extends
 			String thisItemID = getWorkItemIDString(workItem);
 			if (!workItem.hasAttribute(fsourceAttribute)) {
 				throw new WorkItemCommandLineException(
-						"Work Item "
-								+ thisItemID
-								+ " Source Attribute not available - Synchronize Attributes: "
+						"Work Item " + thisItemID + " Source Attribute not available - Synchronize Attributes: "
 								+ fsourceAttribute.getIdentifier());
 			}
 			if (!workItem.hasAttribute(fTargetAttribute)) {
 				throw new WorkItemCommandLineException(
-						"Work Item "
-								+ thisItemID
-								+ " Target Attribute not available - Synchronize Attributes: "
+						"Work Item " + thisItemID + " Target Attribute not available - Synchronize Attributes: "
 								+ fTargetAttribute.getIdentifier());
 			}
 			// get the old value - a string with literals separated by a comma
@@ -412,10 +363,9 @@ public class MigrateWorkItemAttributeCommand extends
 				sourceValues = (String) ovalue;
 			}
 			if (!sourceValues.equals("")) {
-				String[] values = sourceValues
-						.split(SEPARATOR_ENUMERATION_LITERAL_ID_LIST);
-				IEnumeration<? extends ILiteral> enumeration = getWorkItemCommon()
-						.resolveEnumeration(fTargetAttribute, monitor);
+				String[] values = sourceValues.split(SEPARATOR_ENUMERATION_LITERAL_ID_LIST);
+				IEnumeration<? extends ILiteral> enumeration = getWorkItemCommon().resolveEnumeration(fTargetAttribute,
+						monitor);
 
 				List<Object> results = new ArrayList<Object>();
 				for (String literalID : values) {
@@ -423,14 +373,11 @@ public class MigrateWorkItemAttributeCommand extends
 						// Nothing to do
 						continue;
 					}
-					Identifier<? extends ILiteral> literal = getLiteralEqualsIDString(
-							enumeration, literalID);
+					Identifier<? extends ILiteral> literal = getLiteralEqualsIDString(enumeration, literalID);
 					if (null == literal) {
-						throw new WorkItemCommandLineException("Work Item "
-								+ thisItemID
-								+ " Target literal ID not available: "
-								+ literalID + " Attribute "
-								+ fTargetAttribute.getIdentifier());
+						throw new WorkItemCommandLineException(
+								"Work Item " + thisItemID + " Target literal ID not available: " + literalID
+										+ " Attribute " + fTargetAttribute.getIdentifier());
 					}
 					results.add(literal);
 				}
@@ -441,26 +388,21 @@ public class MigrateWorkItemAttributeCommand extends
 		}
 
 		/**
-		 * Gets an enumeration literal for an attribute that has the specific
-		 * literal ID.
+		 * Gets an enumeration literal for an attribute that has the specific literal
+		 * ID.
 		 * 
-		 * @param enumeration
-		 *            - the enumeration to look for
-		 * @param literalIDString
-		 *            - the literal ID name to look for
+		 * @param enumeration     - the enumeration to look for
+		 * @param literalIDString - the literal ID name to look for
 		 * @return the literal or null
 		 * @throws TeamRepositoryException
 		 */
 		private Identifier<? extends ILiteral> getLiteralEqualsIDString(
-				final IEnumeration<? extends ILiteral> enumeration,
-				String literalIDString) throws TeamRepositoryException {
-			List<? extends ILiteral> literals = enumeration
-					.getEnumerationLiterals();
-			for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator
-					.hasNext();) {
+				final IEnumeration<? extends ILiteral> enumeration, String literalIDString)
+				throws TeamRepositoryException {
+			List<? extends ILiteral> literals = enumeration.getEnumerationLiterals();
+			for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator.hasNext();) {
 				ILiteral iLiteral = (ILiteral) iterator.next();
-				if (iLiteral.getIdentifier2().getStringIdentifier()
-						.equals(literalIDString.trim())) {
+				if (iLiteral.getIdentifier2().getStringIdentifier().equals(literalIDString.trim())) {
 					return iLiteral.getIdentifier2();
 				}
 			}
