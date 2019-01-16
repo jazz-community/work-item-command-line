@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 import com.ibm.js.team.workitem.commandline.commands.CreateWorkItemCommand;
-import com.ibm.js.team.workitem.commandline.commands.ExportCommand;
 import com.ibm.js.team.workitem.commandline.commands.ExportWorkItemsCommand;
 import com.ibm.js.team.workitem.commandline.commands.ImportWorkItemsCommand;
 import com.ibm.js.team.workitem.commandline.commands.MigrateWorkItemAttributeCommand;

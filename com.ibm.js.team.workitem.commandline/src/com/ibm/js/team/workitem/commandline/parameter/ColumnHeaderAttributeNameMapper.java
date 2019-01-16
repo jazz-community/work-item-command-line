@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.js.team.workitem.commandline.utils.ReferenceUtil;
 import com.ibm.team.links.common.registry.IEndPointDescriptor;
-import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.process.common.IProjectAreaHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.IWorkItemCommon;

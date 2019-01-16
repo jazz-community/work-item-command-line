@@ -53,15 +53,6 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 	private static final String PARAMETER_ATTACHMENT_FOLDER = "attachmentFolder";
 	private static final String PARAMETER_ATTACHMENT_FOLDER_EXAMPLE = "\"C:\\temp\\export\"";
 
-	// Parameter to specify the query
-	private static final String PARAMETER_QUERY_NAME = "query";
-	private static final String PARAMETER_QUERY_NAME_EXAMPLE = "\"All WorkItems\"";
-
-	// parameter to specify a sharing target for the query
-	// The sharing target can be the project area or a
-	// team area where the query is shared
-	private static final String PARAMETER_SHAR_ING_TARGETS = "querysource";
-	private static final String PARAMETER_SHARING_TARGETS_EXAMPLE = "\"JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters\"";
 	// parameter to specify which columns are supposed to be exported
 	private static final String PARAMETER_EXPORT_COLUMNS = "columns";
 	private static final String PARAMETER_EXPORT_COLUMNS_EXAMPLE1 = "\"Type,Id,Planned For,Filed Against,Description,Found In\"";
@@ -106,17 +97,10 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 		// Add the parameters required to perform the operation
 		getParameterManager().syntaxAddRequiredParameter(IWorkItemCommandLineConstants.PARAMETER_WORKITEM_ID_PROPERTY,
 				IWorkItemCommandLineConstants.PROPERTY_WORKITEM_ID_PROPERTY_EXAMPLE);
-//		getParameterManager().syntaxAddRequiredParameter(
-//				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
-//				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
-//		getParameterManager().syntaxAddRequiredParameter(PARAMETER_EXPORT_FILE, PARAMETER_EXPORT_FILE_EXAMPLE);
-//		getParameterManager().syntaxAddRequiredParameter(PARAMETER_QUERY_NAME, PARAMETER_QUERY_NAME_EXAMPLE);
 		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
 		getParameterManager().syntaxAddSwitch(SWITCH_PRINT_ATTRIBUTE_ID);
 		getParameterManager().syntaxAddSwitch(SWITCH_ALL_COLUMNS);
 		getParameterManager().syntaxAddSwitch(SWITCH_RTC_ECLIPSE_EXPORT);
-
-//		getParameterManager().syntaxAddSwitch(SWITCH_DISABLE_ATTACHMENT_EXPORT);
 		getParameterManager()
 				.syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_EXPORT_SUPPRESS_ATTRIBUTE_EXCEPTIONS);
 
@@ -132,7 +116,11 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 	public String helpSpecificUsage() {
 		return "[" + PARAMETER_EXPORT_COLUMNS + IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
 				+ PARAMETER_EXPORT_COLUMNS_EXAMPLE1 + "]" + " ["
-				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING_EXAMPLE + "]";
+				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING
+				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
+				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING_EXAMPLE + "]" + " ["
+				+ PARAMETER_ATTACHMENT_FOLDER + IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
+				+ PARAMETER_ATTACHMENT_FOLDER_EXAMPLE + "]";
 	}
 
 	/*
@@ -264,15 +252,6 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 			fWorkItemExportHelper = new WorkItemExportHelper(getTeamRepository(), getMonitor());
 		}
 		return fWorkItemExportHelper;
-	}
-
-	/**
-	 * If we want to override the query result set size limit.
-	 * 
-	 * @return
-	 */
-	private boolean isOverrideQueryResultSizeLimit() {
-		return true;
 	}
 
 	/**

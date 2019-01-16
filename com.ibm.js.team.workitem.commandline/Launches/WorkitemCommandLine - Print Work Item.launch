@@ -6,6 +6,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-printworkitem /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph id=633  /allColumns /suppressAttributeExceptions attachmentFolder=&quot;c:\aaTemp\export&quot; /attributeNamesAsIDs"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-printworkitem /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph id=633  /allColumns /suppressAttributeExceptions attachmentFolder=&quot;c:\aaTemp\export&quot; /attributeNamesAsIDs /asrtceclipse"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
 </launchConfiguration>
