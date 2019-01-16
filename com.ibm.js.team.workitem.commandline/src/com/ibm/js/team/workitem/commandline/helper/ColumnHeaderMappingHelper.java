@@ -52,6 +52,8 @@ public class ColumnHeaderMappingHelper {
 	}
 
 	/**
+	 * This must be run before the parameters collection can be used.
+	 * 
 	 * @param getIDs
 	 * @return
 	 * @throws TeamRepositoryException

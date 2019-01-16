@@ -42,46 +42,36 @@ public class UpdateWorkItemCommand extends AbstractWorkItemModificationCommand {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
+	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
 	 * #setRequiredParameters()
 	 */
 	public void setRequiredParameters() {
 		super.setRequiredParameters();
 		// Add the parameters required to perform the operation
-		getParameterManager()
-				.syntaxAddRequiredParameter(
-						IWorkItemCommandLineConstants.PARAMETER_WORKITEM_ID_PROPERTY,
-						IWorkItemCommandLineConstants.PROPERTY_WORKITEM_ID_PROPERTY_EXAMPLE);
-		getParameterManager().syntaxAddSwitch(
-				IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
-		getParameterManager().syntaxAddSwitch(
-				IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS);
-		getParameterManager().syntaxAddSwitch(
-				IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_APPROVALS);
-		getParameterManager().syntaxAddSwitch(
-				IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS);
-        getParameterManager().syntaxAddSwitch(
-                IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION);
+		getParameterManager().syntaxAddRequiredParameter(IWorkItemCommandLineConstants.PARAMETER_WORKITEM_ID_PROPERTY,
+				IWorkItemCommandLineConstants.PROPERTY_WORKITEM_ID_PROPERTY_EXAMPLE);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_APPROVALS);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
+	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
 	 * #process()
 	 */
 	@Override
 	public OperationResult process() throws TeamRepositoryException {
 		// Get the parameters such as the work item ID and run the operation
-		String wiID = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_WORKITEM_ID_PROPERTY);
-		IWorkItem workItem = WorkItemUtil.findWorkItemByID(wiID,
-				IWorkItem.SMALL_PROFILE, getWorkItemCommon(), getMonitor());
+		String wiID = getParameterManager()
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_WORKITEM_ID_PROPERTY);
+		IWorkItem workItem = WorkItemUtil.findWorkItemByID(wiID, IWorkItem.SMALL_PROFILE, getWorkItemCommon(),
+				getMonitor());
 		if (workItem == null) {
-			throw new WorkItemCommandLineException(
-					"Work item cannot be found ID: " + wiID);
+			throw new WorkItemCommandLineException("Work item cannot be found ID: " + wiID);
 		}
 		// Update the work item
 		updateWorkItem(workItem);
@@ -95,44 +85,33 @@ public class UpdateWorkItemCommand extends AbstractWorkItemModificationCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private boolean updateWorkItem(IWorkItem workItem)
-			throws TeamRepositoryException {
-		this.setIgnoreErrors(getParameterManager().hasSwitch(
-				IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS));
-		this.setSuppressMailNotification(getParameterManager().hasSwitch(
-				IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION));
+	private boolean updateWorkItem(IWorkItem workItem) throws TeamRepositoryException {
+		this.setIgnoreErrors(getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS));
+		this.setSuppressMailNotification(
+				getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION));
 
-		ModifyWorkItem operation = new ModifyWorkItem("Updating work Item",
-				IWorkItem.FULL_PROFILE);
+		ModifyWorkItem operation = new ModifyWorkItem("Updating work Item", IWorkItem.FULL_PROFILE);
 		try {
-			this.appendResultString("Updating work item " + workItem.getId()
-					+ ".");
-			String workItemTypeID = getParameterManager().consumeParameter(
-					IWorkItem.TYPE_PROPERTY);
+			this.appendResultString("Updating work item " + workItem.getId() + ".");
+			String workItemTypeID = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY);
 			if (workItemTypeID != null) {
-				IWorkItemType newType = WorkItemTypeHelper
-						.findWorkItemTypeByIDAndDisplayName(workItemTypeID,
-								workItem.getProjectArea(), getWorkItemCommon(),
-								getMonitor());
+				IWorkItemType newType = WorkItemTypeHelper.findWorkItemTypeByIDAndDisplayName(workItemTypeID,
+						workItem.getProjectArea(), getWorkItemCommon(), getMonitor());
 				if (newType == null) {
 					// If we have no type we can't create the work item
-					throw new WorkItemCommandLineException("Work item type "
-							+ workItemTypeID + " not found in project area. ");
+					throw new WorkItemCommandLineException(
+							"Work item type " + workItemTypeID + " not found in project area. ");
 				}
-				IWorkItemType oldType = WorkItemTypeHelper.findWorkItemType(
-						workItem.getWorkItemType(), workItem.getProjectArea(),
-						getWorkItemCommon(), getMonitor());
-				ChangeType changeTypeOperation = new ChangeType(
-						"Changing work item type", oldType, newType);
+				IWorkItemType oldType = WorkItemTypeHelper.findWorkItemType(workItem.getWorkItemType(),
+						workItem.getProjectArea(), getWorkItemCommon(), getMonitor());
+				ChangeType changeTypeOperation = new ChangeType("Changing work item type", oldType, newType);
 				changeTypeOperation.run(workItem, getMonitor());
 			}
 			operation.run(workItem, getMonitor());
 			this.setSuccess();
-			this.appendResultString("Updated work item " + workItem.getId()
-					+ ".");
+			this.appendResultString("Updated work item " + workItem.getId() + ".");
 		} catch (TeamOperationCanceledException e) {
-			throw new WorkItemCommandLineException("Work item not updated. "
-					+ e.getMessage(), e);
+			throw new WorkItemCommandLineException("Work item not updated. " + e.getMessage(), e);
 		}
 		return true;
 	}

@@ -7,6 +7,8 @@
  *******************************************************************************/
 package com.ibm.js.team.workitem.commandline.parameter;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +21,7 @@ import com.ibm.team.process.common.IProjectAreaHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.IWorkItemCommon;
 import com.ibm.team.workitem.common.model.IAttribute;
+import com.ibm.team.workitem.common.model.IWorkItem;
 
 /**
  * Class to map between internal representations and display values of work item
@@ -33,6 +36,7 @@ public class ColumnHeaderAttributeNameMapper {
 			50);
 	private HashMap<String, IEndPointDescriptor> linkMap = new HashMap<String, IEndPointDescriptor>(
 			50);
+	private HashMap<String, String> attributeIdNameMap = new HashMap<String, String>(50);
 
 	/**
 	 * To get a new mapper
@@ -70,6 +74,7 @@ public class ColumnHeaderAttributeNameMapper {
 			String id = attribute.getIdentifier();
 			nameIDMap.put(displayName, id);
 			idNameMap.put(id, displayName);
+			attributeIdNameMap.put(id, displayName);
 			attributeMap.put(id, attribute);
 		}
 		// Add all the links
@@ -178,6 +183,50 @@ public class ColumnHeaderAttributeNameMapper {
 	public HashMap<String, IEndPointDescriptor> getLinkMap() {
 		return linkMap;
 	}
+	
+	/**
+	 * @return
+	 */
+	private HashMap<String, String> getAttributeIdNameMap() {
+		return attributeIdNameMap;
+	}
 
+	
+	/**
+	 * Get all the available attributes and supported links in a sorted way.
+	 * 
+	 * @param projectArea
+	 * @return
+	 * @throws TeamRepositoryException
+	 */
+	public String[] getAllColumnsPreSorted() throws TeamRepositoryException {
+
+		ArrayList<String> priorityAttributeIDs = new ArrayList<String>(10);
+		priorityAttributeIDs.add(IWorkItem.ID_PROPERTY);
+		priorityAttributeIDs.add(IWorkItem.TYPE_PROPERTY);
+		priorityAttributeIDs.add(IWorkItem.SUMMARY_PROPERTY);
+		
+		HashMap<String, String> attributeNameMap = getAttributeIdNameMap(); 
+		
+		ArrayList<String> sortedAttribs = new ArrayList<String>();
+		for (String id : priorityAttributeIDs) {
+			sortedAttribs.add(attributeNameMap.get(id));
+			attributeNameMap.remove(id);
+		}
+
+		ArrayList<String> allAttribs = new ArrayList<String>(attributeNameMap.values().size());
+		allAttribs.addAll(attributeNameMap.values());
+		Collections.sort(allAttribs);
+		sortedAttribs.addAll(allAttribs);
+		sortedAttribs.add(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS); // This is not a property add the artificial one
+		
+		Set<String> linkNames = ParameterLinkIDMapper.getLinkNames();
+		ArrayList<String> sortedLinks = new ArrayList<String>(linkNames.size());
+		sortedLinks.addAll(linkNames);
+		Collections.sort(sortedLinks); 
+
+		sortedAttribs.addAll(sortedLinks);
+		return sortedAttribs.toArray(new String[sortedAttribs.size()]);
+	}
 
 }

@@ -52,22 +52,15 @@ public class CreateWorkItemCommand extends AbstractWorkItemModificationCommand {
 		super.setRequiredParameters();
 		// Add the parameters required to perform the operation
 		// getParameterManager().syntaxCommand()
-		getParameterManager()
-				.syntaxAddRequiredParameter(
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
-		getParameterManager()
-				.syntaxAddRequiredParameter(
-						IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY,
-						IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY_EXAMPLE);
-		getParameterManager().syntaxAddSwitch(
-				IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
-		getParameterManager().syntaxAddSwitch(
-				IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS);
-		getParameterManager().syntaxAddSwitch(
-				IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_APPROVALS);
-		getParameterManager().syntaxAddSwitch(
-				IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS);
+		getParameterManager().syntaxAddRequiredParameter(
+				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
+				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
+		getParameterManager().syntaxAddRequiredParameter(IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY,
+				IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY_EXAMPLE);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_APPROVALS);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS);
 
 	}
 
@@ -82,23 +75,18 @@ public class CreateWorkItemCommand extends AbstractWorkItemModificationCommand {
 		// Get the parameters such as project area name and Attribute Type and
 		// run the operation
 		String projectAreaName = getParameterManager()
-				.consumeParameter(
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY)
-				.trim();
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY).trim();
 		// Find the project area
-		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(
-				projectAreaName, getProcessClientService(), getMonitor());
+		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(projectAreaName, getProcessClientService(),
+				getMonitor());
 		if (projectArea == null) {
-			throw new WorkItemCommandLineException("Project Area not found: "
-					+ projectAreaName);
+			throw new WorkItemCommandLineException("Project Area not found: " + projectAreaName);
 		}
 
-		String workItemTypeID = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY)
-				.trim();
+		String workItemTypeID = getParameterManager()
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY).trim();
 		// Find the work item type
-		IWorkItemType workItemType = WorkItemTypeHelper.findWorkItemType(
-				workItemTypeID, projectArea.getProjectArea(),
+		IWorkItemType workItemType = WorkItemTypeHelper.findWorkItemType(workItemTypeID, projectArea.getProjectArea(),
 				getWorkItemCommon(), getMonitor());
 		// Create the work item
 		createWorkItem(workItemType);
@@ -112,29 +100,24 @@ public class CreateWorkItemCommand extends AbstractWorkItemModificationCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private boolean createWorkItem(IWorkItemType workItemType)
-			throws TeamRepositoryException {
+	private boolean createWorkItem(IWorkItemType workItemType) throws TeamRepositoryException {
 
 		ModifyWorkItem operation = new ModifyWorkItem("Creating Work Item");
-		this.setIgnoreErrors(getParameterManager().hasSwitch(
-				IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS));
-		this.setSuppressMailNotification(getParameterManager().hasSwitch(
-				IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION));
+		this.setIgnoreErrors(getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS));
+		this.setSuppressMailNotification(
+				getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION));
 		IWorkItemHandle handle;
 		try {
 			handle = operation.run(workItemType, getMonitor());
 		} catch (TeamOperationCanceledException e) {
-			throw new WorkItemCommandLineException("Work item not created. "
-					+ e.getMessage(), e);
+			throw new WorkItemCommandLineException("Work item not created. " + e.getMessage(), e);
 		}
 		if (handle == null) {
-			throw new WorkItemCommandLineException(
-					"Work item not created, cause unknown.");
+			throw new WorkItemCommandLineException("Work item not created, cause unknown.");
 		} else {
-			IWorkItem workItem = WorkItemUtil.resolveWorkItem(handle,
-					IWorkItem.SMALL_PROFILE, getWorkItemCommon(), getMonitor());
-			this.appendResultString("Created work item " + workItem.getId()
-					+ ".");
+			IWorkItem workItem = WorkItemUtil.resolveWorkItem(handle, IWorkItem.SMALL_PROFILE, getWorkItemCommon(),
+					getMonitor());
+			this.appendResultString("Created work item " + workItem.getId() + ".");
 			this.setSuccess();
 		}
 		return true;

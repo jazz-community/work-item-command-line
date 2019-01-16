@@ -7,7 +7,6 @@
  *******************************************************************************/
 package com.ibm.js.team.workitem.commandline.commands;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.js.team.workitem.commandline.IWorkItemCommandLineConstants;
@@ -19,7 +18,6 @@ import com.ibm.js.team.workitem.commandline.helper.WorkItemTypeHelper;
 import com.ibm.js.team.workitem.commandline.parameter.ParameterLinkIDMapper;
 import com.ibm.js.team.workitem.commandline.parameter.ParameterManager;
 import com.ibm.js.team.workitem.commandline.utils.ProcessAreaUtil;
-import com.ibm.js.team.workitem.commandline.utils.ReferenceUtil;
 import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.common.model.IWorkItemType;
@@ -29,8 +27,7 @@ import com.ibm.team.workitem.common.model.IWorkItemType;
  * work item operation here, just login to the repository
  * 
  */
-public class PrintTypeAttributesCommand extends AbstractTeamRepositoryCommand
-		implements IWorkItemCommand {
+public class PrintTypeAttributesCommand extends AbstractTeamRepositoryCommand implements IWorkItemCommand {
 
 	/**
 	 * @param parameterManager
@@ -47,28 +44,23 @@ public class PrintTypeAttributesCommand extends AbstractTeamRepositoryCommand
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
+	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
 	 * #setRequiredParameters()
 	 */
 	public void setRequiredParameters() {
 		// Add the parameters required to perform the operation
 		super.setRequiredParameters();
-		getParameterManager()
-				.syntaxAddRequiredParameter(
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
-		getParameterManager()
-				.syntaxAddRequiredParameter(
-						IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY,
-						IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY_EXAMPLE);
+		getParameterManager().syntaxAddRequiredParameter(
+				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
+				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
+		getParameterManager().syntaxAddRequiredParameter(IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY,
+				IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY_EXAMPLE);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
+	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
 	 * #process()
 	 */
 	@Override
@@ -76,25 +68,19 @@ public class PrintTypeAttributesCommand extends AbstractTeamRepositoryCommand
 		// Get the parameters such as project area name and Attribute Type and
 		// run the operation
 		String projectAreaName = getParameterManager()
-				.consumeParameter(
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY)
-				.trim();
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY).trim();
 
-		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(
-				projectAreaName, getProcessClientService(), getMonitor());
+		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(projectAreaName, getProcessClientService(),
+				getMonitor());
 		if (projectArea == null) {
-			throw new WorkItemCommandLineException("Project Area not found: "
-					+ projectAreaName);
+			throw new WorkItemCommandLineException("Project Area not found: " + projectAreaName);
 		}
 
-		String workItemTypeID = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY)
-				.trim();
-		IWorkItemType workItemType = getWorkItemCommon().findWorkItemType(
-				projectArea, workItemTypeID, getMonitor());
+		String workItemTypeID = getParameterManager()
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_WORKITEM_TYPE_PROPERTY).trim();
+		IWorkItemType workItemType = getWorkItemCommon().findWorkItemType(projectArea, workItemTypeID, getMonitor());
 		if (workItemType == null) {
-			throw new WorkItemCommandLineException("Work item type not found: "
-					+ workItemTypeID);
+			throw new WorkItemCommandLineException("Work item type not found: " + workItemTypeID);
 		}
 		this.addOperationResult(printTypeAttributes(projectArea, workItemType));
 		return getResult();
@@ -109,22 +95,20 @@ public class PrintTypeAttributesCommand extends AbstractTeamRepositoryCommand
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private OperationResult printTypeAttributes(IProjectArea projectArea,
-			IWorkItemType workItemType) throws TeamRepositoryException {
+	private OperationResult printTypeAttributes(IProjectArea projectArea, IWorkItemType workItemType)
+			throws TeamRepositoryException {
 
-		WorkItemTypeHelper workItemTypeHelper = new WorkItemTypeHelper(
-				projectArea, getMonitor());
+		WorkItemTypeHelper workItemTypeHelper = new WorkItemTypeHelper(projectArea, getMonitor());
 
-		OperationResult result = workItemTypeHelper.printAttributesOfType(projectArea,
-				workItemType, getMonitor());
+		OperationResult result = workItemTypeHelper.printAttributesOfType(projectArea, workItemType, getMonitor());
 
 		result.appendResultString("  Links (supported)");
 		Set<String> linkNames = ParameterLinkIDMapper.getLinkNames();
 		for (String linkName : linkNames) {
 			String linkID = ParameterLinkIDMapper.getinternalID(linkName);
-			result.appendResultString("\t " + linkName + " \tID: " + linkID);			
+			result.appendResultString("\t " + linkName + " \tID: " + linkID);
 		}
-		
+
 		return result;
 	}
 

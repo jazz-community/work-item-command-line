@@ -108,8 +108,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	private String fComment = "";
 
 	/**
-	 * The string attributes have a size limit. This flag forces cutting the
-	 * input data down to the limit and truncates the value if necessary
+	 * The string attributes have a size limit. This flag forces cutting the input
+	 * data down to the limit and truncates the value if necessary
 	 */
 	private boolean fEnforceSizeLimits = false;
 	/**
@@ -125,20 +125,19 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * The input File
 	 */
 	private File fInputFile = null;
-	
+
 	// The pattern to export time stamps
-	private String fSimpleDateTimeFormatPattern=IWorkItemCommandLineConstants.TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A;
-	
-	
+	private String fSimpleDateTimeFormatPattern = IWorkItemCommandLineConstants.TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A;
+
 	/**
-	 * A hashMap, to map the original work item ID to a new work item ID in
-	 * order to be able to map work item links
+	 * A hashMap, to map the original work item ID to a new work item ID in order to
+	 * be able to map work item links
 	 */
 	private HashMap<String, String> workItemIDMap = new HashMap<String, String>();
 
 	/**
-	 * A counter to count the passes in multi pass import to allow work item
-	 * link mapping
+	 * A counter to count the passes in multi pass import to allow work item link
+	 * mapping
 	 */
 	private int passCount = 0;
 
@@ -182,27 +181,21 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	public void setRequiredParameters() {
 		super.setRequiredParameters();
 		// Add the parameters required to perform the operation
-		getParameterManager()
-				.syntaxAddRequiredParameter(
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
-		getParameterManager().syntaxAddRequiredParameter(PARAMETER_IMPORT_FILE,
-				PARAMETER_IMPORT_FILE_EXAMPLE);
-		getParameterManager().syntaxAddSwitch(
-				IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
-		getParameterManager().syntaxAddSwitch(
-				IWorkItemCommandLineConstants.SWITCH_IMPORT_DEBUG);
-		getParameterManager().syntaxAddSwitch(
-				IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS);
+		getParameterManager().syntaxAddRequiredParameter(
+				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
+				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
+		getParameterManager().syntaxAddRequiredParameter(PARAMETER_IMPORT_FILE, PARAMETER_IMPORT_FILE_EXAMPLE);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_IMPORT_DEBUG);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS);
 		getParameterManager().syntaxAddSwitch(SWITCH_MULTI_PASS_IMPORT);
 		getParameterManager().syntaxAddSwitch(SWITCH_FORCE_LINK_CREATION);
-        getParameterManager().syntaxAddSwitch(
-                IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION);
 	}
 
 	/**
-	 * A way to add help to a command. This allows for specific parameters e.g.
-	 * not required ones
+	 * A way to add help to a command. This allows for specific parameters e.g. not
+	 * required ones
 	 * 
 	 * (non-Javadoc)
 	 * 
@@ -210,18 +203,16 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 */
 	@Override
 	public String helpSpecificUsage() {
-		return " [" + PARAMETER_CUSTOM_MAPPING_FILE
+		return " [" + PARAMETER_CUSTOM_MAPPING_FILE + IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
+				+ PARAMETER_CUSTOM_MAPPING_FILE_EXAMPLE + "] " + "[" + IWorkItemCommandLineConstants.PARAMETER_ENCODING
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
-				+ PARAMETER_CUSTOM_MAPPING_FILE_EXAMPLE + "] " 
-				+ "[" + IWorkItemCommandLineConstants.PARAMETER_ENCODING
+				+ IWorkItemCommandLineConstants.PARAMETER_ENCODING_EXAMPLE + "]" + "["
+				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
-				+ IWorkItemCommandLineConstants.PARAMETER_ENCODING_EXAMPLE + "]" 
-				+ "[" + IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING
+				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING_EXAMPLE + "]" + " ["
+				+ IWorkItemCommandLineConstants.PARAMETER_DELIMITER
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
-				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING_EXAMPLE + "]" 
-				+ " [" + IWorkItemCommandLineConstants.PARAMETER_DELIMITER
-				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
-				+ IWorkItemCommandLineConstants.PARAMETER_DELIMITER_EXAMPLE	+ "]";
+				+ IWorkItemCommandLineConstants.PARAMETER_DELIMITER_EXAMPLE + "]";
 	}
 
 	/*
@@ -233,58 +224,48 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	@Override
 	public OperationResult process() throws TeamRepositoryException {
 		setMultiPass(getParameterManager().hasSwitch(SWITCH_MULTI_PASS_IMPORT));
-		this.setForceLinkCreation(getParameterManager().hasSwitch(
-				SWITCH_FORCE_LINK_CREATION));
-		this.setEnforceSizeJimits(getParameterManager().hasSwitch(
-				IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS));
-		this.setIgnoreErrors(getParameterManager().hasSwitch(
-				IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS));
-		this.setImportDebug(getParameterManager().hasSwitch(
-				IWorkItemCommandLineConstants.SWITCH_IMPORT_DEBUG));
-		this.setSuppressMailNotification(getParameterManager().hasSwitch(
-				IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION));
+		this.setForceLinkCreation(getParameterManager().hasSwitch(SWITCH_FORCE_LINK_CREATION));
+		this.setEnforceSizeJimits(
+				getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS));
+		this.setIgnoreErrors(getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS));
+		this.setImportDebug(getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_IMPORT_DEBUG));
+		this.setSuppressMailNotification(
+				getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION));
 
 		String projectAreaName = getParameterManager()
-				.consumeParameter(
-						IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY)
-				.trim();
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY).trim();
 		// Find the project area
-		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(
-				projectAreaName, getProcessClientService(), getMonitor());
+		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(projectAreaName, getProcessClientService(),
+				getMonitor());
 		if (projectArea == null) {
-			throw new WorkItemCommandLineException("Project Area not found: "
-					+ projectAreaName);
+			throw new WorkItemCommandLineException("Project Area not found: " + projectAreaName);
 		}
 
 		// Can not "trim() to allow whitespace characters"
-		String delimiter = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_DELIMITER);
+		String delimiter = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_DELIMITER);
 		if (delimiter != null) {
 			setDelimiter(delimiter);
 		}
 
 		// Read if there is a special encoding provided
-		String encoding = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_ENCODING);
+		String encoding = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_ENCODING);
 
 		if (encoding != null) {
 			setFileEncoding(encoding.trim());
 		}
 
 		// Read if there is a special date time format pattern provided
-		String dateTimeFormatPattern = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING);
+		String dateTimeFormatPattern = getParameterManager()
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING);
 		if (dateTimeFormatPattern != null) {
 			setSimpleDateTimeFormatPattern(dateTimeFormatPattern.trim());
 		}
-		
+
 		// Get the required input file to import the data
-		String inputFileName = getParameterManager().consumeParameter(
-				PARAMETER_IMPORT_FILE).trim();
+		String inputFileName = getParameterManager().consumeParameter(PARAMETER_IMPORT_FILE).trim();
 		File input = new File(inputFileName);
 		if (!(input.exists() && input.canRead())) {
-			throw new WorkItemCommandLineException(
-					"Can not access import file " + inputFileName);
+			throw new WorkItemCommandLineException("Can not access import file " + inputFileName);
 		}
 		setImportFile(input);
 
@@ -317,7 +298,6 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		return this.getResult();
 	}
 
-
 	/**
 	 * Try to create a mapping for the input to RTC. Read the items found in the
 	 * input file and try to create (or update) the items.
@@ -327,12 +307,10 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @throws TeamRepositoryException
 	 * @throws InvocationTargetException
 	 */
-	private boolean importItems(IProjectArea projectArea)
-			throws TeamRepositoryException, InvocationTargetException {
+	private boolean importItems(IProjectArea projectArea) throws TeamRepositoryException, InvocationTargetException {
 
 		// Is a custom mapping file configured?
-		String customMappingFile = getParameterManager().consumeParameter(
-				PARAMETER_CUSTOM_MAPPING_FILE);
+		String customMappingFile = getParameterManager().consumeParameter(PARAMETER_CUSTOM_MAPPING_FILE);
 
 		boolean result = true;
 
@@ -346,10 +324,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				if (fCustomMapping != null) {
 					// for debugging encoding issues, show the keyset of the
 					// mapping
-					Map<String, AttributeMapping> mapping_info = fCustomMapping
-							.getAttributeMappingsBySourceId();
-					debug("getAttributeMappingsBySourceId "
-							+ mapping_info.keySet().toString());
+					Map<String, AttributeMapping> mapping_info = fCustomMapping.getAttributeMappingsBySourceId();
+					debug("getAttributeMappingsBySourceId " + mapping_info.keySet().toString());
 				}
 			} catch (MalformedURLException x) {
 				throw new InvocationTargetException(x);
@@ -377,12 +353,13 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			// data.
 			// Try to create or update work items based on the data read
 			// @see http://opencsv.sourceforge.net/
-			CSVReader reader = new CSVReader(new InputStreamReader(
-					new FileInputStream(getImportFile()), getFileEncoding()),
-					getDelimiter(), getQuoteChar());
+			@SuppressWarnings("deprecation")
+			CSVReader reader = new CSVReader(
+					new InputStreamReader(new FileInputStream(getImportFile()), getFileEncoding()), getDelimiter(),
+					getQuoteChar());
 
-			ColumnHeaderAttributeNameMapper attributeNameMapper = new ColumnHeaderAttributeNameMapper(
-					projectArea, getWorkItemCommon(), getMonitor());
+			ColumnHeaderAttributeNameMapper attributeNameMapper = new ColumnHeaderAttributeNameMapper(projectArea,
+					getWorkItemCommon(), getMonitor());
 
 			debug("Importing File: " + getImportFile().getAbsolutePath());
 			List<String[]> myEntries = reader.readAll();
@@ -392,8 +369,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			int rowID = 0;
 			for (String[] row : myEntries) {
 				rowID++;
-				debug("Reading row " + rowID + " : "
-						+ Arrays.asList(row).toString());
+				debug("Reading row " + rowID + " : " + Arrays.asList(row).toString());
 				if (skiptitle) {
 					// The first row is the header we use to map attributes,
 					// store the header
@@ -403,8 +379,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				}
 				try {
 					// Try to import the work item
-					result &= updateCreateWorkItem(projectArea, header, row,
-							rowID, attributeNameMapper);
+					result &= updateCreateWorkItem(projectArea, header, row, rowID, attributeNameMapper);
 				} catch (WorkItemCommandLineException e) {
 					if (isIgnoreErrors()) {
 						result = false;
@@ -419,8 +394,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			}
 			debug("Imported");
 		} catch (FileNotFoundException e) {
-			throw new WorkItemCommandLineException("Import File not found: "
-					+ getImportFile().getAbsolutePath(), e);
+			throw new WorkItemCommandLineException("Import File not found: " + getImportFile().getAbsolutePath(), e);
 		} catch (IOException e) {
 			throw new WorkItemCommandLineException(e);
 		}
@@ -428,8 +402,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * This creates or updates a work item from the information found in a row
-	 * of data. The header is used to find the attributes to map to
+	 * This creates or updates a work item from the information found in a row of
+	 * data. The header is used to find the attributes to map to
 	 * 
 	 * @param projectArea
 	 * @param header
@@ -439,36 +413,27 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private boolean updateCreateWorkItem(IProjectArea projectArea,
-			String[] header, String[] row, int rowID,
-			ColumnHeaderAttributeNameMapper attributeMapping)
-			throws TeamRepositoryException {
+	private boolean updateCreateWorkItem(IProjectArea projectArea, String[] header, String[] row, int rowID,
+			ColumnHeaderAttributeNameMapper attributeMapping) throws TeamRepositoryException {
 
 		// Get the parameters for this work item from the CSV data and the
 		// mapping provided
-		ParameterList parameters = processRow(header, row, rowID,
-				attributeMapping);
+		ParameterList parameters = processRow(header, row, rowID, attributeMapping);
 		if (getPassNumber() > 0) {
 			if (null == parameters.getParameter(ORIGINAL_WORK_ITEM_ID)) {
 				throw new WorkItemCommandLineException(
-						"Multi Pass import requires column with work item ID's nanmed "
-								+ ORIGINAL_WORK_ITEM_ID);
+						"Multi Pass import requires column with work item ID's nanmed " + ORIGINAL_WORK_ITEM_ID);
 			}
 		}
-		parameters.addSwitch(
-				IWorkItemCommandLineConstants.SWITCH_BULK_OPERATION, "");
+		parameters.addSwitch(IWorkItemCommandLineConstants.SWITCH_BULK_OPERATION, "");
 		if (isEnforceSizeJimits()) {
-			parameters.addSwitch(
-					IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS,
-					"");
+			parameters.addSwitch(IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS, "");
 		}
 		if (isIgnoreErrors()) {
-			parameters.addSwitch(
-					IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS, "");
+			parameters.addSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS, "");
 		}
 		if (isSuppressMailNotification()) {
-			parameters.addSwitch(
-					IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION, "");
+			parameters.addSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION, "");
 		}
 
 		// For each work item we create a new parameter manager that is then
@@ -479,31 +444,26 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		this.setParameterManager(newParameterManager);
 		// if the mapping provides the work item ID, we can try to find
 		// the work item.
-		String wiID = getParameterManager().consumeParameter(
-				IWorkItem.ID_PROPERTY);
+		String wiID = getParameterManager().consumeParameter(IWorkItem.ID_PROPERTY);
 
 		// Try to get the original work item ID to be able to do the mapping
-		String originalWorkItemID = getParameterManager().consumeParameter(
-				ORIGINAL_WORK_ITEM_ID);
+		String originalWorkItemID = getParameterManager().consumeParameter(ORIGINAL_WORK_ITEM_ID);
 		if (getPassNumber() == MULTI_PASS_LINKMAPPING) {
 			if (originalWorkItemID == null) {
 				for (String val : row) {
 					System.out.print(val + ",");
 				}
 				throw new WorkItemCommandLineException(
-						"Original Work Item ID not provided in 2nd import pass in row: "
-								+ rowID + "! Row value: \n");
+						"Original Work Item ID not provided in 2nd import pass in row: " + rowID + "! Row value: \n");
 			}
 			wiID = getMappedWorkItemID(originalWorkItemID);
 		}
 		IWorkItem workItem = null;
 		if (wiID != null) {
 			// Try to locate the work item if we have an ID.
-			workItem = WorkItemUtil.findWorkItemByID(wiID,
-					IWorkItem.SMALL_PROFILE, getWorkItemCommon(), getMonitor());
+			workItem = WorkItemUtil.findWorkItemByID(wiID, IWorkItem.SMALL_PROFILE, getWorkItemCommon(), getMonitor());
 			if (workItem == null) {
-				this.appendResultString("Work Item " + wiID
-						+ " specified but not found. Creating new work item");
+				this.appendResultString("Work Item " + wiID + " specified but not found. Creating new work item");
 			}
 		}
 		if (workItem != null) {
@@ -512,23 +472,19 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		} else {
 			// We have to create a new work item
 			// Try to find the work item type
-			String workItemTypeIDorName = getParameterManager()
-					.consumeParameter(IWorkItem.TYPE_PROPERTY);
+			String workItemTypeIDorName = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY);
 			// Alternative ID for the type
 			if (workItemTypeIDorName == null) {
 				// If we have no type we can't create the work item
-				throw new WorkItemCommandLineException(
-						"Work item type not specified. ");
+				throw new WorkItemCommandLineException("Work item type not specified. ");
 			}
 			// Find the work item type specified
-			IWorkItemType workItemType = WorkItemTypeHelper
-					.findWorkItemTypeByIDAndDisplayName(workItemTypeIDorName,
-							projectArea.getProjectArea(), getWorkItemCommon(),
-							getMonitor());
+			IWorkItemType workItemType = WorkItemTypeHelper.findWorkItemTypeByIDAndDisplayName(workItemTypeIDorName,
+					projectArea.getProjectArea(), getWorkItemCommon(), getMonitor());
 			if (workItemType == null) {
 				// If we have no type we can't create the work item
-				throw new WorkItemCommandLineException("Work item type "
-						+ workItemTypeIDorName + " not found in project area. ");
+				throw new WorkItemCommandLineException(
+						"Work item type " + workItemTypeIDorName + " not found in project area. ");
 			}
 			// Create the work item
 			return createWorkItem(workItemType, originalWorkItemID);
@@ -543,26 +499,23 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private boolean createWorkItem(IWorkItemType workItemType,
-			String originalWorkItemID) throws TeamRepositoryException {
+	private boolean createWorkItem(IWorkItemType workItemType, String originalWorkItemID)
+			throws TeamRepositoryException {
 
 		ModifyWorkItem operation = new ModifyWorkItem("Creating Work Item");
 		IWorkItemHandle handle;
 		try {
 			handle = operation.run(workItemType, getMonitor());
 		} catch (TeamOperationCanceledException e) {
-			throw new WorkItemCommandLineException("Work item not created. "
-					+ e.getMessage(), e);
+			throw new WorkItemCommandLineException("Work item not created. " + e.getMessage(), e);
 		} catch (TeamRepositoryException e) {
-			throw new WorkItemCommandLineException("Work item not created. "
-					+ e.getMessage(), e);
+			throw new WorkItemCommandLineException("Work item not created. " + e.getMessage(), e);
 		}
 		if (handle == null) {
-			throw new WorkItemCommandLineException(
-					"Work item not created, cause unknown.");
+			throw new WorkItemCommandLineException("Work item not created, cause unknown.");
 		} else {
-			IWorkItem workItem = WorkItemUtil.resolveWorkItem(handle,
-					IWorkItem.SMALL_PROFILE, getWorkItemCommon(), getMonitor());
+			IWorkItem workItem = WorkItemUtil.resolveWorkItem(handle, IWorkItem.SMALL_PROFILE, getWorkItemCommon(),
+					getMonitor());
 			String newWorkItemID = new Integer(workItem.getId()).toString();
 			this.appendResultString("Created work item " + newWorkItemID + ".");
 			mapNewWorkItemID(originalWorkItemID, newWorkItemID);
@@ -577,82 +530,67 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private boolean updateWorkItem(IWorkItem workItem)
-			throws TeamRepositoryException {
-		ModifyWorkItem operation = new ModifyWorkItem("Updating work Item",
-				IWorkItem.FULL_PROFILE);
+	private boolean updateWorkItem(IWorkItem workItem) throws TeamRepositoryException {
+		ModifyWorkItem operation = new ModifyWorkItem("Updating work Item", IWorkItem.FULL_PROFILE);
 		try {
-			this.appendResultString("Updating work item " + workItem.getId()
-					+ ".");
+			this.appendResultString("Updating work item " + workItem.getId() + ".");
 
 			// Do we have to change the type?
-			String workItemTypeIDOrName = getParameterManager()
-					.consumeParameter(IWorkItem.TYPE_PROPERTY);
+			String workItemTypeIDOrName = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY);
 			// There is a type provided
 			if (workItemTypeIDOrName != null) {
-				IWorkItemType newType = WorkItemTypeHelper
-						.findWorkItemTypeByIDAndDisplayName(
-								workItemTypeIDOrName,
-								workItem.getProjectArea(), getWorkItemCommon(),
-								getMonitor());
+				IWorkItemType newType = WorkItemTypeHelper.findWorkItemTypeByIDAndDisplayName(workItemTypeIDOrName,
+						workItem.getProjectArea(), getWorkItemCommon(), getMonitor());
 				// If we can't find the type we can't change it
 				if (newType == null) {
 					// If we have no type we can't create the work item
-					throw new WorkItemCommandLineException("Work item type "
-							+ workItemTypeIDOrName
-							+ " not found in project area. ");
+					throw new WorkItemCommandLineException(
+							"Work item type " + workItemTypeIDOrName + " not found in project area. ");
 				}
 				// For output purposes
-				IWorkItemType oldType = WorkItemTypeHelper.findWorkItemType(
-						workItem.getWorkItemType(), workItem.getProjectArea(),
-						getWorkItemCommon(), getMonitor());
-				ChangeType changeTypeOperation = new ChangeType(
-						"Changing work item type", oldType, newType);
+				IWorkItemType oldType = WorkItemTypeHelper.findWorkItemType(workItem.getWorkItemType(),
+						workItem.getProjectArea(), getWorkItemCommon(), getMonitor());
+				ChangeType changeTypeOperation = new ChangeType("Changing work item type", oldType, newType);
 				changeTypeOperation.run(workItem, getMonitor());
 			}
 			operation.run(workItem, getMonitor());
-			this.appendResultString("Updated work item " + workItem.getId()
-					+ ".");
+			this.appendResultString("Updated work item " + workItem.getId() + ".");
 		} catch (TeamOperationCanceledException e) {
-			throw new WorkItemCommandLineException("Work item not updated. "
-					+ e.getMessage(), e);
+			throw new WorkItemCommandLineException("Work item not updated. " + e.getMessage(), e);
 		} catch (TeamRepositoryException e) {
-			throw new WorkItemCommandLineException("Work item not updated. "
-					+ e.getMessage(), e);
+			throw new WorkItemCommandLineException("Work item not updated. " + e.getMessage(), e);
 		}
 		return true;
 	}
 
 	/**
-	 * Based on the header, the row and the mapping, construct a list of
-	 * parameters that we can use to create or update a work item
+	 * Based on the header, the row and the mapping, construct a list of parameters
+	 * that we can use to create or update a work item
 	 * 
 	 * Mappings with mapping for the attribute value
 	 * 
-	 * <attribute sourceId="Priority"
-	 * targetId="com.ibm.team.workitem.attribute.priority"> <value
-	 * sourceId="Medium" targetId="priority.literal.l07"/> <value
-	 * sourceId="High" targetId="priority.literal.l11"/> </attribute> <attribute
-	 * sourceId="Type" targetId="com.ibm.team.workitem.attribute.workitemtype">
+	 * <attribute sourceId="Priority" targetId=
+	 * "com.ibm.team.workitem.attribute.priority">
+	 * <value sourceId="Medium" targetId="priority.literal.l07"/>
+	 * <value sourceId="High" targetId="priority.literal.l11"/> </attribute>
+	 * <attribute sourceId="Type" targetId=
+	 * "com.ibm.team.workitem.attribute.workitemtype">
 	 * <value sourceId="Story" targetId="com.ibm.team.apt.workItemType.story"/>
 	 * <value sourceId="Task" targetId="task"/> </attribute>
 	 * 
 	 * 
 	 * Mappings without mapping for the attribute value
 	 * 
-	 * <attribute sourceId="Summary"
-	 * targetId="com.ibm.team.workitem.attribute.summary"> </attribute>
-	 * <attribute sourceId="Filed Against"
-	 * targetId="com.ibm.team.workitem.attribute.category"> </attribute>
+	 * <attribute sourceId="Summary" targetId=
+	 * "com.ibm.team.workitem.attribute.summary"> </attribute>
+	 * <attribute sourceId="Filed Against" targetId=
+	 * "com.ibm.team.workitem.attribute.category"> </attribute>
 	 * 
-	 * @param header
-	 *            - The header row of the CSV file
-	 * @param row
-	 *            - The current row we are processing
-	 * @param customMapping
-	 *            - The mapping or null
-	 * @param attributeMapping
-	 *            - an internal mapping that maps attributeNames to ID's
+	 * @param header           - The header row of the CSV file
+	 * @param row              - The current row we are processing
+	 * @param customMapping    - The mapping or null
+	 * @param attributeMapping - an internal mapping that maps attributeNames to
+	 *                         ID's
 	 * 
 	 * @return a list of parameters
 	 */
@@ -674,8 +612,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 
 			if (fCustomMapping != null) {
 				// Get the maps from the mapping
-				Map<String, AttributeMapping> mapping = fCustomMapping
-						.getAttributeMappingsBySourceId();
+				Map<String, AttributeMapping> mapping = fCustomMapping.getAttributeMappingsBySourceId();
 				// Get the mapping for the attribute ID's
 				AttributeMapping attrmap = mapping.get(inputAttribute.trim());
 				if (attrmap != null) {
@@ -683,8 +620,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 					// attribute
 					// This could be a name or an ID
 					targetAttribute = attrmap.getTargetId();
-					targetAttribute = ParameterIDMapper
-							.getAlias(targetAttribute);
+					targetAttribute = ParameterIDMapper.getAlias(targetAttribute);
 					// Get the value mapping if exists
 					ValueMapping valuemap = attrmap.getValueMapping(inputValue);
 					if (valuemap != null) {
@@ -711,8 +647,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				rowHasData = true;
 			}
 			// Add the new parameter
-			processAttribute(attributeMapping, parameters, targetAttribute,
-					targetValue);
+			processAttribute(attributeMapping, parameters, targetAttribute, targetValue);
 
 		}
 		// Add all the information that is not imported as comment data.
@@ -722,8 +657,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			addParameter(parameters, IWorkItem.COMMENTS_PROPERTY, comment);
 		}
 		if (!rowHasData) {
-			throw new WorkItemCommandLineException(
-					"No data found in row or row malformed! Row: " + rowID);
+			throw new WorkItemCommandLineException("No data found in row or row malformed! Row: " + rowID);
 		}
 		return parameters;
 	}
@@ -737,8 +671,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * Process an attribute and try to create a parameter with the data needed
-	 * to create the work item
+	 * Process an attribute and try to create a parameter with the data needed to
+	 * create the work item
 	 * 
 	 * @param parameters
 	 * @param headerMapping
@@ -746,9 +680,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @param targetAttribute
 	 * @param targetValue
 	 */
-	private void processAttribute(
-			ColumnHeaderAttributeNameMapper headerMapping,
-			ParameterList parameters, String attributeID, String targetValue) {
+	private void processAttribute(ColumnHeaderAttributeNameMapper headerMapping, ParameterList parameters,
+			String attributeID, String targetValue) {
 		// If the parameter has no value, we don't process it.
 		if (targetValue.equals("")) {
 			return;
@@ -776,16 +709,11 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			if (getPassNumber() > 1) {
 				return;
 			}
-			if (attributeID
-					.trim()
-					.toLowerCase()
-					.equals(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS
-							.toLowerCase())) {
+			if (attributeID.trim().toLowerCase().equals(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS.toLowerCase())) {
 				addAttachmentParameters(parameters, attributeID, targetValue);
 				return;
 			}
-			getResult().appendResultString(
-					"No matching attribute found: " + attributeID);
+			getResult().appendResultString("No matching attribute found: " + attributeID);
 			// addParameter(parameters, attributeID, targetValue);
 			return;
 		}
@@ -798,19 +726,16 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 
 		// If the mapping is for the state attribute, we want to force the state
 		// as work items might not have an action to the state.
-		if (attribType.equals(ATTRIBUTE_STATE)
-				|| attribute.getIdentifier().equals(IWorkItem.STATE_PROPERTY)) {
-			targetValue = WorkItemUpdateHelper.STATECHANGE_FORCESTATE
-					+ WorkItemUpdateHelper.FORCESTATE_SEPARATOR + targetValue;
+		if (attribType.equals(ATTRIBUTE_STATE) || attribute.getIdentifier().equals(IWorkItem.STATE_PROPERTY)) {
+			targetValue = WorkItemUpdateHelper.STATECHANGE_FORCESTATE + WorkItemUpdateHelper.FORCESTATE_SEPARATOR
+					+ targetValue;
 		}
 		// Ignore attributes that can not be set, but are enforced by other
 		// attributes
 		if (attribute.getIdentifier().equals(IWorkItem.PROJECT_AREA_PROPERTY)) {
 			// Ignore
-			getResult().appendResultString(
-					"Ignored: Attribute is calculated and can not be set: "
-							+ attributeID + " mapped to: "
-							+ attribute.getIdentifier());
+			getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
+					+ " mapped to: " + attribute.getIdentifier());
 			return;
 		}
 
@@ -891,8 +816,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				return;
 			}
 			throw new WorkItemCommandLineException(
-					"Type not recognized - type not yet supported: "
-							+ attribType + " ID " + attribute.getIdentifier());
+					"Type not recognized - type not yet supported: " + attribType + " ID " + attribute.getIdentifier());
 		} else {
 			// Handle non list types - the simple ones first.
 
@@ -988,8 +912,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			}
 			// In case we forgot something or a new type gets implemented
 			throw new WorkItemCommandLineException(
-					"AttributeType not yet supported: " + attribType + " ID "
-							+ attribute.getIdentifier());
+					"AttributeType not yet supported: " + attribType + " ID " + attribute.getIdentifier());
 		}
 	}
 
@@ -1000,13 +923,11 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @param attributeID
 	 * @param targetValue
 	 */
-	private void addAttachmentParameters(ParameterList parameters,
-			String attributeID, String targetValue) {
+	private void addAttachmentParameters(ParameterList parameters, String attributeID, String targetValue) {
 		if (targetValue.equals("")) {
 			return;
 		}
-		List<String> attachments = StringUtil.splitStringToList(targetValue,
-				ExportWorkItemsCommand.SEPERATOR_NEWLINE);
+		List<String> attachments = StringUtil.splitStringToList(targetValue, ExportWorkItemsCommand.SEPERATOR_NEWLINE);
 		String rootfolder = getImportFile().getParent();
 		for (String attachment : attachments) {
 			addAttachmenParameter(parameters, attachment, rootfolder);
@@ -1020,8 +941,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @param attachment
 	 * @param rootfolder
 	 */
-	private void addAttachmenParameter(ParameterList parameters,
-			String attachment, String rootfolder) {
+	private void addAttachmenParameter(ParameterList parameters, String attachment, String rootfolder) {
 		List<String> attachmentData = StringUtil.splitStringToList(attachment,
 				WorkItemUpdateHelper.ATTACHMENT_SEPARATOR);
 		String fileName = "";
@@ -1048,14 +968,12 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		}
 
 		// TODO: Detect absolute path.
-		String attachmentvalue = rootfolder + File.separator + fileName
-				+ WorkItemUpdateHelper.ATTACHMENT_SEPARATOR + description
-				+ WorkItemUpdateHelper.ATTACHMENT_SEPARATOR + contentType
+		String attachmentvalue = rootfolder + File.separator + fileName + WorkItemUpdateHelper.ATTACHMENT_SEPARATOR
+				+ description + WorkItemUpdateHelper.ATTACHMENT_SEPARATOR + contentType
 				+ WorkItemUpdateHelper.ATTACHMENT_SEPARATOR + encoding;
 
-		String parameterValue = WorkItemUpdateHelper.PSEUDO_ATTRIBUTE_ATTACHFILE + "_"
-				+ getUniqueID().toString();
-		parameters.addParameterValue( parameterValue, attachmentvalue.trim());
+		String parameterValue = WorkItemUpdateHelper.PSEUDO_ATTRIBUTE_ATTACHFILE + "_" + getUniqueID().toString();
+		parameters.addParameterValue(parameterValue, attachmentvalue.trim());
 	}
 
 	/**
@@ -1065,8 +983,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @param linkID
 	 * @param targetValue
 	 */
-	private void addLinkParameter(ParameterList parameters, String linkID,
-			String targetValue) {
+	private void addLinkParameter(ParameterList parameters, String linkID, String targetValue) {
 		if (null == targetValue || targetValue.equals("")) {
 			// Nothing to do
 			return;
@@ -1078,8 +995,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		// Links are separated by newline - compute it to match the workItem
 		// command line format.
 		String linkName = WorkItemUpdateHelper.PSEUDO_ATTRIBUTE_LINK + linkID;
-		List<String> values = StringUtil.splitStringToList(targetValue,
-				ExportWorkItemsCommand.SEPERATOR_NEWLINE);
+		List<String> values = StringUtil.splitStringToList(targetValue, ExportWorkItemsCommand.SEPERATOR_NEWLINE);
 		List<String> resultValues = new ArrayList<String>(values.size());
 		// Special handling for work item links to be able to map the link to
 		// imported items, other links are just passed through
@@ -1097,16 +1013,14 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			// Replace the old value with the calculated new ones
 			values = resultValues;
 		}
-		values = StringUtil.removePrefixes(values,
-				ExportWorkItemsCommand.PREFIX_EXISTINGWORKITEM);
-		String importValue = StringUtil.listToString(values,
-				SEPERATOR_LINK_TARGETS);
+		values = StringUtil.removePrefixes(values, ExportWorkItemsCommand.PREFIX_EXISTINGWORKITEM);
+		String importValue = StringUtil.listToString(values, SEPERATOR_LINK_TARGETS);
 		addParameter(parameters, linkName, importValue);
 	}
 
 	/**
-	 * Try to get a work item from a link In a multi pass scenario, try to find
-	 * the work item that was created from the import.
+	 * Try to get a work item from a link In a multi pass scenario, try to find the
+	 * work item that was created from the import.
 	 * 
 	 * @param idval
 	 * @return
@@ -1115,10 +1029,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		boolean foundURIbasedWI = false;
 
 		String workItemID = idval;
-		if (StringUtil.hasPrefix(idval,
-				ExportWorkItemsCommand.PREFIX_EXISTINGWORKITEM)) {
-			workItemID = StringUtil.removePrefix(idval,
-					ExportWorkItemsCommand.PREFIX_EXISTINGWORKITEM);
+		if (StringUtil.hasPrefix(idval, ExportWorkItemsCommand.PREFIX_EXISTINGWORKITEM)) {
+			workItemID = StringUtil.removePrefix(idval, ExportWorkItemsCommand.PREFIX_EXISTINGWORKITEM);
 		}
 		String urlprefix = null;
 		String tempWorkItemID = null;
@@ -1144,8 +1056,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				if (!isForceLinkCreation())// Use the original ID provided in
 											// the import
 				{
-					System.out.println("Could not find new ID for item "
-							+ workItemID);
+					System.out.println("Could not find new ID for item " + workItemID);
 					// Don't create the link
 					return null;
 				}
@@ -1161,8 +1072,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * Convert the timestamp format from the one used to export to the one used
-	 * in the creation of the work item
+	 * Convert the timestamp format from the one used to export to the one used in
+	 * the creation of the work item
 	 * 
 	 * @param date
 	 * @return
@@ -1171,30 +1082,23 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		if (date == null || date.equals("")) {
 			return null;
 		}
-		Timestamp ts = SimpleDateFormatUtil
-				.createTimeStamp(
-						date,
-						getSimpleDateTimeFormatPattern());
-		String importdate = SimpleDateFormatUtil
-				.getDate(
-						ts,
-						SimpleDateFormatUtil.SIMPLE_DATE_FORMAT_PATTERN_YYYY_MM_DD_HH_MM_SS_Z);
+		Timestamp ts = SimpleDateFormatUtil.createTimeStamp(date, getSimpleDateTimeFormatPattern());
+		String importdate = SimpleDateFormatUtil.getDate(ts,
+				SimpleDateFormatUtil.SIMPLE_DATE_FORMAT_PATTERN_YYYY_MM_DD_HH_MM_SS_Z);
 		return importdate;
 	}
 
 	/**
-	 * Converts an item list from the export format used by RTC into the one
-	 * needed in WCL. Replace line breaks with other separator
+	 * Converts an item list from the export format used by RTC into the one needed
+	 * in WCL. Replace line breaks with other separator
 	 * 
 	 * @param targetValue
 	 * @return
 	 */
 	private String convertItemList(String targetValue) {
 		if (targetValue.indexOf(ExportWorkItemsCommand.SEPERATOR_NEWLINE) > 0) {
-			List<String> temp = StringUtil.splitStringToList(targetValue,
-					ExportWorkItemsCommand.SEPERATOR_NEWLINE);
-			return StringUtil.listToString(temp,
-					WorkItemUpdateHelper.ITEM_SEPARATOR);
+			List<String> temp = StringUtil.splitStringToList(targetValue, ExportWorkItemsCommand.SEPERATOR_NEWLINE);
+			return StringUtil.listToString(temp, WorkItemUpdateHelper.ITEM_SEPARATOR);
 		}
 		return targetValue;
 	}
@@ -1206,10 +1110,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @param attributeID
 	 * @param targetValue
 	 */
-	private void addParameter(ParameterList parameters, String attributeID,
-			String targetValue) {
-		debug("Mapped Attribute: [" + attributeID + "] Mapped Value: ["
-				+ targetValue + "]");
+	private void addParameter(ParameterList parameters, String attributeID, String targetValue) {
+		debug("Mapped Attribute: [" + attributeID + "] Mapped Value: [" + targetValue + "]");
 		// Currently using default TODO: add, set, default?
 		parameters.addParameterValue(attributeID, targetValue);
 	}
@@ -1223,21 +1125,19 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @param targetValue
 	 */
 	@SuppressWarnings("unused")
-	private void addParameterMode(ParameterList parameters, String attributeID, String updateMode,
-			String targetValue) {
-		String modeValue= "";
-		debug("Mapped Attribute: [" + attributeID + "] Mapped Value: ["
-				+ targetValue + "]");
+	private void addParameterMode(ParameterList parameters, String attributeID, String updateMode, String targetValue) {
+		String modeValue = "";
+		debug("Mapped Attribute: [" + attributeID + "] Mapped Value: [" + targetValue + "]");
 		// Currently using default TODO: add, set, default?
-		if(updateMode!=null){
+		if (updateMode != null) {
 			if (ParameterValue.MODE_ADD.equals(updateMode) || ParameterValue.MODE_REMOVE.equals(updateMode)
 					|| ParameterValue.MODE_SET.equals(updateMode)) {
 				modeValue = ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE + updateMode;
-			}	
-		} 
-		parameters.addParameterValue(attributeID+modeValue, targetValue);
+			}
+		}
+		parameters.addParameterValue(attributeID + modeValue, targetValue);
 	}
-	
+
 	/**
 	 * Get the ID for a mapped work item
 	 * 
@@ -1253,14 +1153,13 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * Create a mapping between the original ID and the new ID, in order to be
-	 * able to modify the link ID's for work item links.
+	 * Create a mapping between the original ID and the new ID, in order to be able
+	 * to modify the link ID's for work item links.
 	 * 
 	 * @param originalWorkItemID
 	 * @param newWorkItemID
 	 */
-	private void mapNewWorkItemID(String originalWorkItemID,
-			String newWorkItemID) {
+	private void mapNewWorkItemID(String originalWorkItemID, String newWorkItemID) {
 		if (originalWorkItemID != null) {
 			workItemIDMap.put(originalWorkItemID, newWorkItemID);
 		}
@@ -1280,8 +1179,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 */
 	private File getImportFile() {
 		if (fInputFile == null) {
-			throw new WorkItemCommandLineException(
-					"Import file can not be null");
+			throw new WorkItemCommandLineException("Import file can not be null");
 		}
 		return fInputFile;
 	}
@@ -1365,8 +1263,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	private void setDelimiter(String delimiter) {
 		if (delimiter.length() != 1) {
 			throw new WorkItemCommandLineException(
-					"Can not convert delimiter. Delimiter must have size 1 >"
-							+ delimiter + "<");
+					"Can not convert delimiter. Delimiter must have size 1 >" + delimiter + "<");
 		}
 		fDelimiter = delimiter.charAt(0);
 	}
