@@ -1,5 +1,5 @@
 # RTC Work Item Command Line
-WorkItemCommandLine Version V4.2
+WorkItemCommandLine Version V4.3
 
 See [Work Item Command Line 4.1](https://rsjazz.wordpress.com/2018/03/26/work-item-command-line-4-1/) for a instructions how to setup and install install WCL.
 
@@ -61,6 +61,23 @@ Available commands:
 ```
 
 ```bash
+-printworkitem
+    repository="value" 
+    user="value" 
+    password="value" 
+    id="value"
+    /allColumns 
+    /asrtceclipse
+    /attributeNamesAsIDs	
+    /ignoreErrors 
+    /suppressAttributeExceptions 
+    /ignoreErrors 
+    [attachmentFolder="C:\temp\export"]
+    [timestampFormat="TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A"]
+    [columns="Type,Id,Planned For,Filed Against,Description,Found In"]
+```
+
+```bash
 -create 
     repository="value" 
     user="value" 
@@ -114,7 +131,8 @@ Available commands:
     password="value"
     projectArea="value" 
     query="value" 
-    exportFile="value" 
+    exportFile="value"
+    /allColumns
     /asrtceclipse 
     /suppressAttributeExceptions 
     /headerIDs 
@@ -124,23 +142,6 @@ Available commands:
     [columns="Type,Id,Planned For,Filed Against,Description,Found In"] 
     [querysource="JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters"] 
     [timestampFormat="TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A"]
-```
-
-```bash
--printworkitem
-    repository="value" 
-    user="value" 
-    password="value" 
-    id="value"
-    /allColumns 
-    /asrtceclipse
-    /attributeNamesAsIDs	
-    /ignoreErrors 
-    /suppressAttributeExceptions 
-    /ignoreErrors 
-    [attachmentFolder="C:\temp\export"]
-    [timestampFormat="TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A"]
-    [columns="Type,Id,Planned For,Filed Against,Description,Found In"]
 ```
 
 ```bash
