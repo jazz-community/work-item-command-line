@@ -13,8 +13,7 @@ import java.util.Set;
 import com.ibm.team.workitem.common.model.IWorkItem;
 
 /**
- * Simple mapping tool to provide custom aliases that can be used for attribute
- * ID's.
+ * Simple mapping tool to provide custom aliases that can be used for attribute ID's.
  * 
  * <pre>
  * 

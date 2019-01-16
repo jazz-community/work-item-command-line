@@ -100,8 +100,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 	 * @param parameterManager
 	 */
 	private void addSupportedCommands(ParameterManager parameterManager) {
-		addSupportedCommand(new ExportCommand(new ParameterManager(
-				parameterManager.getArguments())));
+//		addSupportedCommand(new ExportCommand(new ParameterManager(
+//				parameterManager.getArguments())));
 		addSupportedCommand(new PrintWorkItemCommand(new ParameterManager(
 				parameterManager.getArguments())));
 		addSupportedCommand(new ValidateOSLCLinksCommand(new ParameterManager(

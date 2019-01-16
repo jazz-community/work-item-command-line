@@ -105,7 +105,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	// Export headers as ID's?
 	private boolean fHeaderAsIDs = false;
 	// Ignore minor errors?
-	private boolean fIgnoreErrors = true;
+	private boolean fIgnoreErrors = false;
 	// Suppress Attribute Not found Exception
 	private boolean fSuppressAttributeErrors = false;
 	private WorkItemExportHelper fWorkItemExportHelper;
@@ -519,7 +519,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @param hasSwitch
 	 */
 	private void setIgnoreErrors(boolean hasSwitch) {
-		this.fIgnoreErrors = true;
+		this.fIgnoreErrors = hasSwitch;
 	}
 
 	/**

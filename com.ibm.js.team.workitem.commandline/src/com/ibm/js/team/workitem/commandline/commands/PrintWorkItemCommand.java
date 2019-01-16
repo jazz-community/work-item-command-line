@@ -50,18 +50,13 @@ import com.opencsv.CSVWriter;
  * exports IItem values in a way that is uniquely identifying the item and
  * allows to reconstruct the item in the import.
  * 
- * This command uses opencsv-2.3jar @see http://opencsv.sourceforge.net/ as
- * external library to read the CSV file.
- * 
  */
 public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 
-	// Switch to disable attachment export
-	private static final String SWITCH_DISABLE_ATTACHMENT_EXPORT = "disableAttachmentExport";
 	// Switch to export like RTC would do it
 	public static final String SWITCH_RTC_ECLIPSE_EXPORT = "asrtceclipse";
 	// The header column uses ID's instead of display names
-	public static final String SWITCH_HEADER_AS_ID = "headerIDs";
+	public static final String SWITCH_PRINT_ATTRIBUTE_ID = "attributeNamesAsIDs";
 	// Try to determine all the supported attributes
 	public static final String SWITCH_ALL_COLUMNS = "allColumns";
 	// NewLine separator for lists in RTC compatible format
@@ -70,12 +65,10 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 	public static final String SEPERATOR_COMMA = ", ";
 	// If there is no value export this
 	public static final String CONSTANT_NO_VALUE = "";
-	// prefix to be used when exporting work item ID's
-	public static final String PREFIX_EXISTINGWORKITEM = "#";
 
 	// Parameter for the export file name
-	private static final String PARAMETER_EXPORT_FILE = "exportFile";
-	private static final String PARAMETER_EXPORT_FILE_EXAMPLE = "\"C:\\temp\\export.csv\"";
+	private static final String PARAMETER_ATTACHMENT_FOLDER = "attachmentFolder";
+	private static final String PARAMETER_ATTACHMENT_FOLDER_EXAMPLE = "\"C:\\temp\\export\"";
 
 	// Parameter to specify the query
 	private static final String PARAMETER_QUERY_NAME = "query";
@@ -84,24 +77,15 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 	// parameter to specify a sharing target for the query
 	// The sharing target can be the project area or a
 	// team area where the query is shared
-	private static final String PARAMETER_SHARING_TARGETS = "querysource";
+	private static final String PARAMETER_SHAR_ING_TARGETS = "querysource";
 	private static final String PARAMETER_SHARING_TARGETS_EXAMPLE = "\"JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters\"";
 	// parameter to specify which columns are supposed to be exported
 	private static final String PARAMETER_EXPORT_COLUMNS = "columns";
 	private static final String PARAMETER_EXPORT_COLUMNS_EXAMPLE1 = "\"Type,Id,Planned For,Filed Against,Description,Found In\"";
-	// private static final String PARAMETER_EXPORT_COLUMNS_EXAMPLE2 =
-	// "\"id,workItemType,internalState,internalPriority,internalSeverity,summary,owner,creator\"";
 
-	// The encoding to be used when saving the file
-	private String fFileEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_16LE;
-	// Delimiter to be used for columns
-	private char fDelimiter = IWorkItemCommandLineConstants.DEFAULT_DELIMITER;
-	// Export headers as ID's?
-	private boolean fHeaderAsIDs = false;
+	private boolean fAttributeNamesAsIDs = false;
 	// Ignore minor errors?
-	private boolean fIgnoreErrors = true;
-	// The output file
-//	private File fOutputFile = null;
+	private boolean fIgnoreErrors = false;
 	// Suppress Attribute Not found Exception
 	private boolean fSuppressAttributeErrors = false;
 	private WorkItemExportHelper fWorkItemExportHelper;
@@ -144,11 +128,14 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 //		getParameterManager().syntaxAddRequiredParameter(
 //				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
 //				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
-		getParameterManager().syntaxAddRequiredParameter(PARAMETER_EXPORT_FILE, PARAMETER_EXPORT_FILE_EXAMPLE);
+//		getParameterManager().syntaxAddRequiredParameter(PARAMETER_EXPORT_FILE, PARAMETER_EXPORT_FILE_EXAMPLE);
 //		getParameterManager().syntaxAddRequiredParameter(PARAMETER_QUERY_NAME, PARAMETER_QUERY_NAME_EXAMPLE);
 		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
-//		getParameterManager().syntaxAddSwitch(SWITCH_HEADER_AS_ID);
+		getParameterManager().syntaxAddSwitch(SWITCH_PRINT_ATTRIBUTE_ID);
+		getParameterManager().syntaxAddSwitch(SWITCH_ALL_COLUMNS);
 		getParameterManager().syntaxAddSwitch(SWITCH_RTC_ECLIPSE_EXPORT);
+		
+		
 //		getParameterManager().syntaxAddSwitch(SWITCH_DISABLE_ATTACHMENT_EXPORT);
 		getParameterManager()
 				.syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_EXPORT_SUPPRESS_ATTRIBUTE_EXCEPTIONS);
@@ -163,18 +150,9 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 	 */
 	@Override
 	public String helpSpecificUsage() {
-		return " [" + IWorkItemCommandLineConstants.PARAMETER_ENCODING
-				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
-				+ IWorkItemCommandLineConstants.PARAMETER_ENCODING_EXAMPLE + "]" + " ["
-				+ IWorkItemCommandLineConstants.PARAMETER_DELIMITER
-				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
-				+ IWorkItemCommandLineConstants.PARAMETER_DELIMITER_EXAMPLE + "]" + " [" + PARAMETER_EXPORT_COLUMNS
+		return "[" + PARAMETER_EXPORT_COLUMNS
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR + PARAMETER_EXPORT_COLUMNS_EXAMPLE1
-				+ "]" + " [" + PARAMETER_SHARING_TARGETS + IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
-				+ PARAMETER_SHARING_TARGETS_EXAMPLE + "]" + "["
-				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING
-				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
-				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING_EXAMPLE + "]";
+				+ "]" + " [" + IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING_EXAMPLE + "]";
 	}
 
 	/*
@@ -188,13 +166,15 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 		if(getParameterManager().hasSwitch(SWITCH_RTC_ECLIPSE_EXPORT)) {
 			getWorkItemExportHelper().setRTCEclipseExport();
 		}
-		setHeaderAsIDs(getParameterManager().hasSwitch(SWITCH_HEADER_AS_ID));
+		setAttributeNamesAsIDs(getParameterManager().hasSwitch(SWITCH_PRINT_ATTRIBUTE_ID));
 		setSuppressAttributeErrors(getParameterManager()
 				.hasSwitch(IWorkItemCommandLineConstants.SWITCH_EXPORT_SUPPRESS_ATTRIBUTE_EXCEPTIONS));
 
-		String filePath = getParameterManager().consumeParameter(PARAMETER_EXPORT_FILE);
+		String filePath = getParameterManager().consumeParameter(PARAMETER_ATTACHMENT_FOLDER);
 		if (filePath == null) {
-			throw new WorkItemCommandLineException("Export file path must be provided.");
+			getWorkItemExportHelper().disableSaveAttachments();
+		} else {
+			getWorkItemExportHelper().enableSaveAttachments(filePath);
 		}
 
 		// Read if there is a special date time format pattern provided
@@ -243,7 +223,7 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 	 */
 	private void getStringRepresentation(IWorkItem workItem, ColumnHeaderMappingHelper columnHeaderMapping)
 			throws WorkItemCommandLineException, TeamRepositoryException {
-		List<String> headerNames = columnHeaderMapping.analyzeColumnHeader(getHeaderAsIDs());
+		List<String> headerNames = columnHeaderMapping.analyzeColumnHeader(getAttributeNamesAsIDs());
 		List<ParameterValue> columns = columnHeaderMapping.getParameters();
 		getResult().appendResultString("Printing work item " + workItem.getId());
 		for (int i = 0; i < columns.size(); i++) {
@@ -253,7 +233,7 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 				value = getStringRepresentation(workItem, column);
 				getResult().appendResultString(headerNames.get(i) + " : " + value);
 			} catch (WorkItemCommandLineException e) {
-				String message = "Exception exporting work item " + workItem.getId() + " column " + i + " attribute "
+				String message = "Exception exporting work item " + workItem.getId() + " attribute "
 						+ column.getAttributeID() + " : " + e.getMessage();
 				if (isIgnoreErrors()) {
 					if (!isSuppressAttributeErrors()) {
@@ -307,15 +287,6 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 	}
 
 	/**
-	 * get the default quote character
-	 * 
-	 * @return
-	 */
-	private char getQuoteChar() {
-		return IWorkItemCommandLineConstants.DEFAULT_QUOTE_CHAR;
-	}
-
-	/**
 	 * If we want to override the query result set size limit.
 	 * 
 	 * @return
@@ -324,46 +295,6 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 		return true;
 	}
 
-	/**
-	 * Set the file encoding to be used
-	 * 
-	 * @param encoding
-	 */
-	private void setFileEncoding(String encoding) {
-		fFileEncoding = encoding;
-
-	}
-
-	/**
-	 * Get the file encoding
-	 * 
-	 * @return
-	 */
-	private String getFileEncoding() {
-		return fFileEncoding;
-	}
-
-	/**
-	 * To set the delimiter
-	 * 
-	 * @param delimiter
-	 */
-	private void setDelimiter(String delimiter) {
-		if (delimiter.length() != 1) {
-			throw new WorkItemCommandLineException(
-					"Can not convert delimiter. Delimiter must have size 1 >" + delimiter + "<");
-		}
-		fDelimiter = delimiter.charAt(0);
-	}
-
-	/**
-	 * Get the delimiter character
-	 * 
-	 * @return
-	 */
-	private char getDelimiter() {
-		return fDelimiter;
-	}
 
 	/**
 	 * @param hasSwitch
@@ -382,15 +313,15 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 	/**
 	 * @param hasSwitch
 	 */
-	private void setHeaderAsIDs(boolean hasSwitch) {
-		fHeaderAsIDs = hasSwitch;
+	private void setAttributeNamesAsIDs(boolean hasSwitch) {
+		fAttributeNamesAsIDs = hasSwitch;
 	}
 
 	/**
 	 * @return
 	 */
-	private boolean getHeaderAsIDs() {
-		return fHeaderAsIDs;
+	private boolean getAttributeNamesAsIDs() {
+		return fAttributeNamesAsIDs;
 	}
 
 	/**
