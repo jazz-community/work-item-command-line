@@ -131,6 +131,7 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 	@Override
 	public OperationResult process() throws TeamRepositoryException {
 		setIgnoreErrors(getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS));
+		getWorkItemExportHelper().setWorkItemLinkPrefix(false);
 		if (getParameterManager().hasSwitch(SWITCH_RTC_ECLIPSE_EXPORT)) {
 			getWorkItemExportHelper().setRTCEclipseExport();
 		}
@@ -159,7 +160,6 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 		if (workItem == null) {
 			throw new WorkItemCommandLineException("Work item cannot be found ID: " + wiID);
 		}
-		getResult().appendResultString("Exporting work item " + workItem.getId());
 		IProjectArea projectArea = ProcessAreaUtil.resolveProjectArea(workItem.getProjectArea(), getMonitor());
 
 		ColumnHeaderMappingHelper columnHeaderMapping = new ColumnHeaderMappingHelper(projectArea, getWorkItemCommon(),
@@ -193,7 +193,7 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 			throws WorkItemCommandLineException, TeamRepositoryException {
 		List<String> headerNames = columnHeaderMapping.analyzeColumnHeader(getAttributeNamesAsIDs());
 		List<ParameterValue> columns = columnHeaderMapping.getParameters();
-		getResult().appendResultString("Printing work item " + workItem.getId());
+		getResult().appendResultString("Printing work item " + workItem.getId() + "\n");
 		for (int i = 0; i < columns.size(); i++) {
 			ParameterValue column = columns.get(i);
 			String value = "";

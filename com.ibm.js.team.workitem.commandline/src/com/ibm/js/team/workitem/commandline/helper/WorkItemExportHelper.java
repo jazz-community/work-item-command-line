@@ -102,6 +102,8 @@ public class WorkItemExportHelper {
 	private boolean fSaveAttachments = false;
 	private String fOutputFolder = null;
 	private boolean fRTCEclipseCompatible = false;
+	// Should there be a prefix for existint work items? 
+	private boolean fWorkItemLinkPrefix=true;
 
 	public WorkItemExportHelper(ITeamRepository fTeamRepository, IProgressMonitor fMonitor) {
 		super();
@@ -457,7 +459,7 @@ public class WorkItemExportHelper {
 					if (referencedItem instanceof IWorkItemHandle) {
 						IWorkItem item = WorkItemUtil.resolveWorkItem((IWorkItemHandle) referencedItem,
 								IWorkItem.SMALL_PROFILE, getWorkItemCommon(), getMonitor());
-						referenceRepresentations.add(PREFIX_EXISTINGWORKITEM + Integer.toString(item.getId()));
+						referenceRepresentations.add(getExistingWorkitemPrefix() + Integer.toString(item.getId()));
 					}
 				} else {
 					throw new WorkItemCommandLineException(
@@ -472,6 +474,17 @@ public class WorkItemExportHelper {
 			}
 		}
 		return calculateStringListAsString(referenceRepresentations);
+	}
+
+	/**
+	 * Prefix work item ID? e.g. #123
+	 * 
+	 * @return prefix or empty string
+	 */
+	private String getExistingWorkitemPrefix() {
+		if(isWorkItemLinkPrefix())
+			return PREFIX_EXISTINGWORKITEM;
+		return "";
 	}
 
 	/**
@@ -556,7 +569,7 @@ public class WorkItemExportHelper {
 			if (referencedItem instanceof IWorkItemHandle) {
 				IWorkItem item = WorkItemUtil.resolveWorkItem((IWorkItemHandle) referencedItem, IWorkItem.SMALL_PROFILE,
 						getWorkItemCommon(), getMonitor());
-				return PREFIX_EXISTINGWORKITEM + Integer.toString(item.getId());
+				return getExistingWorkitemPrefix() + Integer.toString(item.getId());
 			}
 		}
 		throw new WorkItemCommandLineException("Unexpected reference type ItemReference expected: " + linkTypeID);
@@ -858,7 +871,7 @@ public class WorkItemExportHelper {
 		IWorkItem workItem = (IWorkItem) getTeamRepository().itemManager().fetchCompleteItem((IWorkItemHandle) value,
 				IItemManager.DEFAULT, getMonitor());
 		if (isRTCEclipseExport()) {
-			return PREFIX_EXISTINGWORKITEM + workItem.getId();
+			return getExistingWorkitemPrefix() + workItem.getId();
 		}
 		return new Integer(workItem.getId()).toString();
 	}
@@ -1187,5 +1200,21 @@ public class WorkItemExportHelper {
 			}
 		}
 		return StringUtil.listToString(resultList, seperator);
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean isWorkItemLinkPrefix() {
+		return fWorkItemLinkPrefix;
+	}
+
+	/**
+	 * Should a work item number for a work item link be prefixed?
+	 * 
+	 * @param showPrefix 
+	 */
+	public void setWorkItemLinkPrefix(boolean showPrefix) {
+		this.fWorkItemLinkPrefix = showPrefix;
 	}
 }
