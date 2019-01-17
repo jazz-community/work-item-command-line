@@ -63,7 +63,7 @@ import com.ibm.team.workitem.common.query.IResult;
 import com.ibm.team.workitem.common.query.ResultSize;
 
 /**
- * Command to print the work item types available in a project area.
+ * Command hat validates OSLC links and their back links in other applications fixing missing back links.
  * 
  */
 public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand implements IWorkItemCommand {
