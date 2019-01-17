@@ -8,6 +8,7 @@ To Build the WorkItem CommandLine for Shipping
    Click Finish and allow to create the folder.
 4. Copy the scripts wcl*.* and the other files from folder scripts into the export location for example C:\Temp\wcl\
 5. Copy the folder /lib into the export location for example C:\Temp\wcl\ but remove all files except the ReadMe.txt
+   Optional, follow lib/ReadMe.txt and download and add the libraries required for CSV import and export
 6. Select the folder, for example C:\Temp\wcl\ and compress the file
 7. Rename the archive file to wcl-Vx-YYYYMMDD.zip, 
    where YYYY is the year, MM is the month and DD is the day

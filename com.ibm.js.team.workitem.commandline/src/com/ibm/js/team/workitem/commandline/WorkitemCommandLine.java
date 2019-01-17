@@ -50,6 +50,7 @@ import com.ibm.team.repository.common.TeamRepositoryException;
  * remote interface
  * 
  */
+@SuppressWarnings("deprecation")
 public class WorkitemCommandLine extends UnicastRemoteObject implements
 		IRemoteWorkItemOperationCall {
 

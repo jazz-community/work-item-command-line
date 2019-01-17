@@ -3,20 +3,21 @@ WCL uses some libraries that don't ship with it to export and import.
 To run the the work item exporter and importer
 
 1. Download opencsv from 
-http://sourceforge.net/projects/opencsv/files/opencsv/3.7/ 
-and place the library opencsv-3.7.jar into the folder lib in the WCL folder. 
-Rename the file to opencsv.jar In case you have a different version of opencsv hopefully everything runs as expected.
+http://sourceforge.net/projects/opencsv/files/opencsv/3.7/
 
-2. Copy the Eclipse plugins from RTC Eclipse into the lib folder
+It is possible to use the latest version 4.3.2 from https://sourceforge.net/projects/opencsv/files/opencsv/
 
-Open the Eclipse Plugins folder for example jazz\client\eclipse\plugins and search for a file 
-com.ibm.team.workitem.rcp.core_*.jar 
+Rename the jar file e.g. opencsv-3.7.jar to opencsv.jar 
 
-The last part of the Jar file name is a version number and can be different. 
-An Example: com.ibm.team.workitem.rcp.core_3.1.800.v20140706_1427.jar
+1.a Copy the library file opencsv.jar into /com.ibm.js.team.workitem.commandline/lib to be able to run from Eclipse.
+1.b Place the library opencsv.jar into the folder lib in the WCL folder (see /com.ibm.js.team.workitem.commandline/ReadMe - HowToRelease.txt). 
 
-Copy this jar File into the folder lib in the WCL folder.
+2. Download apache commons-lang from 
+https://commons.apache.org/proper/commons-lang/download_lang.cgi
 
-You can now use the script files to run WCL.
+Version 3-3.1 works.
 
-To run the workitem command line in Eclipse, add the jar files to the classpath e.g. as User Library.
+Rename the jar file e.g. commons-lang3-3.1.jar to commons-lang.jar
+
+1.a Copy the library file commons-lang.jar into /com.ibm.js.team.workitem.commandline/lib to be able to run from Eclipse.
+1.b Place the library commons-lang.jar into the folder lib in the WCL folder (see /com.ibm.js.team.workitem.commandline/ReadMe - HowToRelease.txt). 

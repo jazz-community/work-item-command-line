@@ -69,7 +69,7 @@ public interface IWorkItemCommandLineConstants {
 
 	// the mapping file
 	public static final String PARAMETER_TIMESTAMP_ENCODING = "timestampFormat";
-	public static final String PARAMETER_TIMESTAMP_ENCODING_EXAMPLE = "\"TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A\"";
+	public static final String PARAMETER_TIMESTAMP_ENCODING_EXAMPLE = "\"" + TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A + "\"";
 
 	// Parsing
 	public static final String INFIX_PARAMETER_VALUE_SEPARATOR = "=";

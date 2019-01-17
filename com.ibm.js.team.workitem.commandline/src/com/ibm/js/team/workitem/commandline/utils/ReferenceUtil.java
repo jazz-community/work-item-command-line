@@ -130,6 +130,7 @@ public class ReferenceUtil {
 	 * 
 	 * @return the map created
 	 */
+	@SuppressWarnings("deprecation")
 	public static HashMap<String, IEndPointDescriptor> getCLM_URI_EndPointDescriptorMap() {
 		if (fCLM_URI_EndPointDescriptorMap == null) {
 			HashMap<String, IEndPointDescriptor> map = new HashMap<String, IEndPointDescriptor>();
@@ -194,6 +195,7 @@ public class ReferenceUtil {
 	 * 
 	 * @return the map created
 	 */
+	@SuppressWarnings("deprecation")
 	public static HashMap<String, IEndPointDescriptor> getCLM_WI_EndPointDescriptorMap() {
 
 		if (fCLM_WI_EndPointDescriptorMap == null) {
@@ -226,6 +228,7 @@ public class ReferenceUtil {
 	 * 
 	 * @return the map created
 	 */
+	@SuppressWarnings("deprecation")
 	public static HashMap<String, IEndPointDescriptor> getBuild_EndPointDescriptorMap() {
 
 		if (fBuild_EndPointDescriptorMap == null) {
