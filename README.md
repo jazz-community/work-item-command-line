@@ -73,7 +73,7 @@ Available commands:
     /suppressAttributeExceptions 
     /ignoreErrors 
     [attachmentFolder="C:\temp\export"]
-    [timestampFormat="TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A"]
+    [timestampFormat="MMM d, yyyy hh:mm a"]
     [columns="Type,Id,Planned For,Filed Against,Description,Found In"]
 ```
 
@@ -120,7 +120,7 @@ Available commands:
     /importmultipass 
     [mappingFile="C:\temp\mapping.xml"] 
     [encoding="UTF_16LE"] 
-    [timestampFormat="TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A"] 
+    [timestampFormat="MMM d, yyyy hh:mm a"] 
     [delimiter=","]
 ```
 
@@ -141,7 +141,7 @@ Available commands:
     [delimiter=","] 
     [columns="Type,Id,Planned For,Filed Against,Description,Found In"] 
     [querysource="JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters"] 
-    [timestampFormat="TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A"]
+    [timestampFormat="MMM d, yyyy hh:mm a"]
 ```
 
 ```bash
