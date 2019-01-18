@@ -57,14 +57,22 @@ import com.opencsv.CSVReader;
  * and save them. The save operation is governed by the process and might fail
  * if required parameters are missing.
  * 
- * This command uses opencsv-2.3jar @see http://opencsv.sourceforge.net/ as
+ * This command uses opencsv @see http://opencsv.sourceforge.net/ as
  * external library to read the CSV file.
+ * 
+ * Downloads are available here: @see https://sourceforge.net/projects/opencsv/
+ * 
+ * Compatibility with RTC versions before RTC 6.0.5
  * 
  * This command uses the com.ibm.team.workitem.rcp.core.jar file from the RTC
  * Eclipse client to be able to reuse the Bugzilla and CSV import mapping
  * capabilities.
  * 
  * The API from com.ibm.team.workitem.rcp.core.jar is internal API.
+ * 
+ * import com.ibm.team.workitem.rcp.core.internal.bugzilla.mappers.BugzillaMapping;
+ * import com.ibm.team.workitem.rcp.core.internal.bugzilla.mappers.BugzillaMapping.AttributeMapping;
+ * import com.ibm.team.workitem.rcp.core.internal.bugzilla.mappers.BugzillaMapping.ValueMapping;
  * 
  */
 @SuppressWarnings("restriction")
