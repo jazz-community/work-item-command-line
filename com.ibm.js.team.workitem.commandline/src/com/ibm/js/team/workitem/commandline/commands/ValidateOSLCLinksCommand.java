@@ -63,7 +63,14 @@ import com.ibm.team.workitem.common.query.IResult;
 import com.ibm.team.workitem.common.query.ResultSize;
 
 /**
- * Command hat validates OSLC links and their back links in other applications fixing missing back links.
+ * This command checks for missing and broken OSLC type links in RTC work items
+ * that are involved in a Global Configuration.
+ * 
+ * - A missing link is one where the link exists in RTC but not RQM or DNG.
+ * 
+ * - A broken link is one that is known to both RTC and RQM or DNG but when
+ * clicked on does not take you to the linked artifact because it is missing or
+ * no longer part of the global configuration.
  * 
  */
 public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand implements IWorkItemCommand {
