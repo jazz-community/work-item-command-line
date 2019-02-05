@@ -32,10 +32,8 @@ public class ColumnHeaderAttributeNameMapper {
 
 	private HashMap<String, String> nameIDMap = new HashMap<String, String>(50);
 	private HashMap<String, String> idNameMap = new HashMap<String, String>(50);
-	private HashMap<String, IAttribute> attributeMap = new HashMap<String, IAttribute>(
-			50);
-	private HashMap<String, IEndPointDescriptor> linkMap = new HashMap<String, IEndPointDescriptor>(
-			50);
+	private HashMap<String, IAttribute> attributeMap = new HashMap<String, IAttribute>(50);
+	private HashMap<String, IEndPointDescriptor> linkMap = new HashMap<String, IEndPointDescriptor>(50);
 	private HashMap<String, String> attributeIdNameMap = new HashMap<String, String>(50);
 
 	/**
@@ -46,10 +44,8 @@ public class ColumnHeaderAttributeNameMapper {
 	 * @param monitor
 	 * @throws TeamRepositoryException
 	 */
-	public ColumnHeaderAttributeNameMapper(
-			IProjectAreaHandle projectAreaHandle,
-			IWorkItemCommon workItemCommon, IProgressMonitor monitor)
-			throws TeamRepositoryException {
+	public ColumnHeaderAttributeNameMapper(IProjectAreaHandle projectAreaHandle, IWorkItemCommon workItemCommon,
+			IProgressMonitor monitor) throws TeamRepositoryException {
 		super();
 		getAttributeNameMap(projectAreaHandle, workItemCommon, monitor);
 	}
@@ -62,13 +58,11 @@ public class ColumnHeaderAttributeNameMapper {
 	 * @param monitor
 	 * @throws TeamRepositoryException
 	 */
-	private void getAttributeNameMap(IProjectAreaHandle projectAreaHandle,
-			IWorkItemCommon workItemCommon, IProgressMonitor monitor)
-			throws TeamRepositoryException {
+	private void getAttributeNameMap(IProjectAreaHandle projectAreaHandle, IWorkItemCommon workItemCommon,
+			IProgressMonitor monitor) throws TeamRepositoryException {
 
 		// Add all the attributes
-		List<IAttribute> attributes = workItemCommon.findAttributes(
-				projectAreaHandle, monitor);
+		List<IAttribute> attributes = workItemCommon.findAttributes(projectAreaHandle, monitor);
 		for (IAttribute attribute : attributes) {
 			String displayName = attribute.getDisplayName();
 			String id = attribute.getIdentifier();
@@ -83,17 +77,15 @@ public class ColumnHeaderAttributeNameMapper {
 			String linkID = ParameterLinkIDMapper.getinternalID(linkName);
 			nameIDMap.put(linkName, linkID);
 			idNameMap.put(linkID, linkName);
-			linkMap.put(linkID,
-					ReferenceUtil.getReferenceEndpointDescriptor(linkID));
+			linkMap.put(linkID, ReferenceUtil.getReferenceEndpointDescriptor(linkID));
 		}
 	}
 
 	/**
-	 * Check if there is an attribute/link with the matching display name and
-	 * get its ID.
+	 * Check if there is an attribute/link with the matching display name and get
+	 * its ID.
 	 * 
-	 * @param propertyName
-	 *            - the display name of the property
+	 * @param propertyName - the display name of the property
 	 * @return the id of the attribute or null
 	 */
 	private String getIDForName(String propertyName) {
@@ -105,8 +97,8 @@ public class ColumnHeaderAttributeNameMapper {
 	}
 
 	/**
-	 * Check if there is an alias available for a property ID and pass it back
-	 * if available.
+	 * Check if there is an alias available for a property ID and pass it back if
+	 * available.
 	 * 
 	 * @param attributeName
 	 * @return
@@ -159,7 +151,7 @@ public class ColumnHeaderAttributeNameMapper {
 	 * @return
 	 */
 	public String getDisplayNameForID(String id) {
-		return this.nameIDMap.get(id);
+		return this.idNameMap.get(id);
 	}
 
 	/**
@@ -169,7 +161,7 @@ public class ColumnHeaderAttributeNameMapper {
 	public boolean isLinkType(String linkID) {
 		return linkMap.containsKey(linkID);
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -183,7 +175,7 @@ public class ColumnHeaderAttributeNameMapper {
 	public HashMap<String, IEndPointDescriptor> getLinkMap() {
 		return linkMap;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -191,7 +183,6 @@ public class ColumnHeaderAttributeNameMapper {
 		return attributeIdNameMap;
 	}
 
-	
 	/**
 	 * Get all the available attributes and supported links in a sorted way.
 	 * 
@@ -205,9 +196,9 @@ public class ColumnHeaderAttributeNameMapper {
 		priorityAttributeIDs.add(IWorkItem.ID_PROPERTY);
 		priorityAttributeIDs.add(IWorkItem.TYPE_PROPERTY);
 		priorityAttributeIDs.add(IWorkItem.SUMMARY_PROPERTY);
-		
-		HashMap<String, String> attributeNameMap = getAttributeIdNameMap(); 
-		
+
+		HashMap<String, String> attributeNameMap = getAttributeIdNameMap();
+
 		ArrayList<String> sortedAttribs = new ArrayList<String>();
 		for (String id : priorityAttributeIDs) {
 			sortedAttribs.add(attributeNameMap.get(id));
@@ -218,12 +209,13 @@ public class ColumnHeaderAttributeNameMapper {
 		allAttribs.addAll(attributeNameMap.values());
 		Collections.sort(allAttribs);
 		sortedAttribs.addAll(allAttribs);
-		sortedAttribs.add(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS); // This is not a property add the artificial one
-		
+		sortedAttribs.add(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS); // This is not a property add the artificial
+																			// one
+
 		Set<String> linkNames = ParameterLinkIDMapper.getLinkNames();
 		ArrayList<String> sortedLinks = new ArrayList<String>(linkNames.size());
 		sortedLinks.addAll(linkNames);
-		Collections.sort(sortedLinks); 
+		Collections.sort(sortedLinks);
 
 		sortedAttribs.addAll(sortedLinks);
 		return sortedAttribs.toArray(new String[sortedAttribs.size()]);

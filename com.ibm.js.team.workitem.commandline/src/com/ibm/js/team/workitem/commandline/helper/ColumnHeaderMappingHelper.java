@@ -43,8 +43,8 @@ public class ColumnHeaderMappingHelper {
 	 * @param workItemCommon
 	 * @param monitor
 	 */
-	public ColumnHeaderMappingHelper(IProjectAreaHandle projectArea,
-			IWorkItemCommon workItemCommon, IProgressMonitor monitor) {
+	public ColumnHeaderMappingHelper(IProjectAreaHandle projectArea, IWorkItemCommon workItemCommon,
+			IProgressMonitor monitor) {
 		super();
 		this.fProjectArea = projectArea;
 		this.fWorkItemCommon = workItemCommon;
@@ -66,12 +66,11 @@ public class ColumnHeaderMappingHelper {
 		// If the column header is provided as ID, map the ID. If the header is
 		// not an ID, map the name to an ID.
 		if (exportColumns == null) {
-			throw new WorkItemCommandLineException(
-					"Column header can not be null in column ");
+			throw new WorkItemCommandLineException("Column header can not be null in column ");
 		}
 
-		ColumnHeaderAttributeNameMapper nameToIdMapper = new ColumnHeaderAttributeNameMapper(
-				fProjectArea, fWorkItemCommon, fMonitor);
+		ColumnHeaderAttributeNameMapper nameToIdMapper = new ColumnHeaderAttributeNameMapper(fProjectArea,
+				fWorkItemCommon, fMonitor);
 		int size = exportColumns.length;
 		List<String> header = new ArrayList<String>(size);
 
@@ -79,23 +78,25 @@ public class ColumnHeaderMappingHelper {
 			String col = exportColumns[i];
 			// Column can't be null
 			if (col == null) {
-				throw new WorkItemCommandLineException(
-						"Column ID can not be null in column " + i);
+				throw new WorkItemCommandLineException("Column ID can not be null in column " + i);
 			}
 			// Map the column to an attribute first
 			String val = col.trim();
 			String id = nameToIdMapper.getID(val);
 			if (id == null) {
-				throw new WorkItemCommandLineException("Column header " + col
-						+ " ID can not be mapped in column " + i);
+				throw new WorkItemCommandLineException("Column header " + col + " ID can not be mapped in column " + i);
 			}
 			if (getIDs) {
 				header.add(id);
 			} else {
-				header.add(col);
+				String name = nameToIdMapper.getDisplayNameForID(id);
+				if (name == null) {
+					throw new WorkItemCommandLineException("Column header " + col
+							+ " Display name can not be mapped from ID " + id + "in column " + i);
+				}
+				header.add(name);
 			}
-			ParameterValue columnParameter = new ParameterValue(id, null,
-					fProjectArea, fMonitor);
+			ParameterValue columnParameter = new ParameterValue(id, null, fProjectArea, fMonitor);
 			addColumnParameter(i, columnParameter);
 		}
 		return header;
