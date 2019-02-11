@@ -515,3 +515,5 @@ Available mappings:
 | com.ibm.team.workitem.attribute.version           | foundIn               |
 | com.ibm.team.workitem.attribute.workitemtype      | workItemType          |
 
+# License
+Licensed under the MIT License.
