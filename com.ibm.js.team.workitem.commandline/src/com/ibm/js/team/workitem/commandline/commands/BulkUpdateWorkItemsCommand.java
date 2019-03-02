@@ -284,6 +284,7 @@ public class BulkUpdateWorkItemsCommand extends AbstractWorkItemModificationComm
 	 * 
 	 * @param message
 	 */
+	@SuppressWarnings("unused")
 	private void debug(String message) {
 		if (isUpdateDebug()) {
 			this.appendResultString(message);
