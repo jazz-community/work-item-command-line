@@ -30,7 +30,7 @@ All of the following examples use bash multiline syntax for legibility. Leave th
     -   [Attribute ID Aliases](#attribute-id-aliases)
  
 ## Usage 
-`-command {switch} {parameter[:mode]=value}`
+`-[command] {switch} {parameter[:mode]=value}`
 
 (See [A RTC WorkItem Command Line Version 2](http://wp.me/p2DlHq-s9) for a more complete description):
 
