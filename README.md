@@ -1,5 +1,5 @@
 # RTC Work Item Command Line
-WorkItemCommandLine Version V4.3
+WorkItemCommandLine Version V4.4
 
 See [Work Item Command Line 4.3](https://rsjazz.wordpress.com/2019/01/17/work-item-command-line-4-3/) for instructions how to setup and install install WCL.
 
@@ -106,6 +106,21 @@ Available commands:
 ```
 
 ```bash
+-bulkupdate 
+    repository="value" 
+    user="value" 
+    password="value" 
+    query="value"
+    querysource="value"
+    /enableDeleteAttachment 
+    /enableDeleteApprovals 
+    /skipEmailNotification 
+    /enforceSizeLimits 
+    /ignoreErrors 
+    {parameter[:mode]=value}
+```
+
+```bash
 -importworkitems 
     repository="value" 
     user="value" 
@@ -131,6 +146,7 @@ Available commands:
     password="value"
     projectArea="value" 
     query="value" 
+    querysource="value"
     exportFile="value"
     /allColumns
     /asrtceclipse 
