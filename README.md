@@ -393,7 +393,7 @@ Examples:
 
     @attachFile="C:/temp/test.txt,Some Attachment,text/plain,UTF-8"
 
-    @attachFile_1="./test1.txt,Some Attachment 1,text/plain:UTF-8" @attachFile_2="./test2.txt,Some Attachment 2:text/plain,UTF-8"
+    @attachFile_1="./test1.txt,Some Attachment 1,text/plain,UTF-8" @attachFile_2="./test2.txt,Some Attachment 2,text/plain,UTF-8"
  
 A pseudo parameter `@deleteAttachments` can be used to delete all attachments. Modes have no influence on this attribute. This attribute supports the value `yes`. 
 
