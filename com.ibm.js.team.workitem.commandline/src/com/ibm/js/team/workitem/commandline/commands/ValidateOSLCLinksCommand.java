@@ -77,8 +77,6 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 
 	private Logger logger = Logger.getLogger(ValidateOSLCLinksCommand.class);
 	// Parameter to specify the query
-	private static final String PARAMETER_QUERY_NAME = "query";
-	private static final String PARAMETER_QUERY_NAME_EXAMPLE = "\"All WorkItems\"";
 	private static final String SWITCH_TRACE = "trace";
 	private static final String SWITCH_DEBUG = "debug";
 	private static final String OSLC_HEADER = "OSLC-Core-Version";
@@ -191,7 +189,8 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 		getParameterManager().syntaxAddRequiredParameter(
 				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
 				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
-		getParameterManager().syntaxAddRequiredParameter(PARAMETER_QUERY_NAME, PARAMETER_QUERY_NAME_EXAMPLE);
+		getParameterManager().syntaxAddRequiredParameter(IWorkItemCommandLineConstants.PARAMETER_QUERY_NAME,
+				IWorkItemCommandLineConstants.PARAMETER_QUERY_NAME_EXAMPLE);
 		getParameterManager().syntaxAddSwitch(SWITCH_TRACE);
 		getParameterManager().syntaxAddSwitch(SWITCH_DEBUG);
 	}
@@ -219,7 +218,7 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 		if (projectArea == null) {
 			throw new WorkItemCommandLineException("Project Area not found: " + projectAreaName);
 		}
-		String queryName = getParameterManager().consumeParameter(PARAMETER_QUERY_NAME);
+		String queryName = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_QUERY_NAME);
 		if (queryName == null || queryName.isEmpty()) {
 			throw new WorkItemCommandLineException("Query name must be provided.");
 		}

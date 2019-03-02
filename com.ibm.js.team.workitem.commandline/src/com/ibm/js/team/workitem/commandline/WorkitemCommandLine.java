@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
+import com.ibm.js.team.workitem.commandline.commands.BulkUpdateWorkItemsCommand;
 import com.ibm.js.team.workitem.commandline.commands.CreateWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.commands.ExportWorkItemsCommand;
 import com.ibm.js.team.workitem.commandline.commands.ImportWorkItemsCommand;
@@ -119,6 +120,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements
 		addSupportedCommand(new ImportWorkItemsCommand(new ParameterManager(
 				parameterManager.getArguments())));
 		addSupportedCommand(new ExportWorkItemsCommand(new ParameterManager(
+				parameterManager.getArguments())));
+		addSupportedCommand(new BulkUpdateWorkItemsCommand(new ParameterManager(
 				parameterManager.getArguments())));
 	}
 

@@ -126,6 +126,8 @@ public class WorkItemUpdateHelper {
 	public static final String STATECHANGE_FORCESTATE = "forceState";
 	// Pseudo attributes
 	public static final String PSEUDO_ATTRIBUTE_ATTACHFILE = "@attachFile";
+	public static final String PSEUDO_ATTRIBUTE_DELETEATTACHMENTS = "@deleteAttachments";
+	public static final String PSEUDO_ATTRIBUTEVALUE_DELETEATTACHMENTS = "yes";
 	public static final String PSEUDO_ATTRIBUTE_LINK = "@link_";
 	public static final String PSEUDO_ATTRIBUTE_TRIGGER_WORKFLOW_ACTION = "@workflowAction";
 	// Approval Data
@@ -462,6 +464,13 @@ public class WorkItemUpdateHelper {
 			// Use IWorkItemCommandLineConstants.SWITCH_ENABLE_SET_ATTACHMENT to
 			// enable deleting all attachments and only set the one attachment
 			updateAttachments(parameter);
+		} else if (StringUtil.hasPrefix(parameter.getAttributeID(),
+				PSEUDO_ATTRIBUTE_DELETEATTACHMENTS)) {
+			// Special handling to allow multiple attachments and still provide
+			// unique property ID's
+			// Use IWorkItemCommandLineConstants.SWITCH_ENABLE_SET_ATTACHMENT to
+			// enable deleting all attachments and only set the one attachment
+			deleteAllAttachments(parameter);
 		} else if (StringUtil.hasPrefix(parameter.getAttributeID(),
 				PSEUDO_ATTRIBUTE_LINK)) {
 			// Update Links from the work item to other items
@@ -879,6 +888,38 @@ public class WorkItemUpdateHelper {
 			createApproval(parameter, approvalData);
 		}
 	}
+	
+	/**
+	 * Delete all attachments of a work item
+	 * @param parameter 
+	 * 
+	 * @throws TeamRepositoryException
+	 */
+	private void deleteAllAttachments(ParameterValue parameter)
+			throws TeamRepositoryException {
+
+		boolean switchDeleteAttachments = getParameters().hasSwitch(
+				IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS);
+		if (!PSEUDO_ATTRIBUTEVALUE_DELETEATTACHMENTS.equals(parameter.getValue())) {
+			throw new WorkItemCommandLineException(
+					"Incorrect value: "
+							+ parameter.getAttributeID() + " Value: "
+							+ parameter.getValue()
+							+ helpUsageAttachmentUpload());
+		}
+		if (!switchDeleteAttachments) {
+			throw new WorkItemCommandLineException(
+					"Deletion of attachments not enabled: "
+							+ " use the switch "
+							+ IWorkItemCommandLineConstants.PREFIX_SWITCH
+							+ IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS
+							+ " to enable deletion of attachments.");
+
+		}
+		AttachmentUtil.removeAllAttachments(getWorkItem(),
+				getWorkItemCommon(), monitor);
+	}
+
 
 	/**
 	 * Update the attachments of a workitem.
@@ -3170,6 +3211,10 @@ public class WorkItemUpdateHelper {
 				+ "\" can be used to set a workflow action to change the work item state when saving.";
 		usage += helpUsageWorkflowAction();
 		usage += "\n\nAttachments: \n\tA pseudo parameter "
+				+ PSEUDO_ATTRIBUTE_DELETEATTACHMENTS
+				+ " can be used to delete all attachments.";
+		usage += "\n\tThis attribute requires only the value "+ PSEUDO_ATTRIBUTEVALUE_DELETEATTACHMENTS + ".";
+		usage += "\n\nAttachments: \n\tA pseudo parameter "
 				+ PSEUDO_ATTRIBUTE_ATTACHFILE
 				+ " can be used to upload attachments.";
 		usage += "\n\tThis attribute supports the modes default (same as) add, set and remove. "
@@ -3493,16 +3538,18 @@ public class WorkItemUpdateHelper {
 				+ IContent.ENCODING_US_ASCII + ".";
 		usage += "\n\n\tThe file must be accessible and in the correct encoding.";
 		usage += "\n\n\tExamples:" + "\n\t\t" + PSEUDO_ATTRIBUTE_ATTACHFILE
-				+ "=\"C:/temp/test.txt:Some Attachment:"
-				+ IContent.CONTENT_TYPE_TEXT + ":" + IContent.ENCODING_UTF_8
+				+ "=\"C:/temp/test.txt" + ATTACHMENT_SEPARATOR + "Some Attachment" + ATTACHMENT_SEPARATOR 
+				+ IContent.CONTENT_TYPE_TEXT + ATTACHMENT_SEPARATOR + IContent.ENCODING_UTF_8
 				+ "\"";
 		usage += "\n\t\t" + PSEUDO_ATTRIBUTE_ATTACHFILE
-				+ "_1=\"./test1.txt:Some Attachment 1:"
-				+ IContent.CONTENT_TYPE_TEXT + ":" + IContent.ENCODING_UTF_8
+				+ "_1=\"./test1.txt" + ATTACHMENT_SEPARATOR + "Some Attachment 1" + ATTACHMENT_SEPARATOR 
+				+ IContent.CONTENT_TYPE_TEXT + ATTACHMENT_SEPARATOR + IContent.ENCODING_UTF_8
 				+ "\"" + " " + PSEUDO_ATTRIBUTE_ATTACHFILE
-				+ "_2=\"./test2.txt:Some Attachment 2:"
-				+ IContent.CONTENT_TYPE_TEXT + ":" + IContent.ENCODING_UTF_8
+				+ "_2=\"./test2.txt" + ATTACHMENT_SEPARATOR + "Some Attachment 2" + ATTACHMENT_SEPARATOR 
+				+ IContent.CONTENT_TYPE_TEXT + ATTACHMENT_SEPARATOR + IContent.ENCODING_UTF_8
 				+ "\"";
+		usage += "\n\t\t" + PSEUDO_ATTRIBUTE_DELETEATTACHMENTS
+				+ "=\"" + PSEUDO_ATTRIBUTEVALUE_DELETEATTACHMENTS + "\"";
 		return usage;
 	}
 

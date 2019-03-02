@@ -56,15 +56,15 @@ public class WorkItemUtil {
 	 * 
 	 * @param handle
 	 * @param profile
-	 * @param common
+	 * @param wiCommon
 	 * @param monitor
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
 	public static IWorkItem resolveWorkItem(IAuditableHandle handle,
-			ItemProfile<IWorkItem> profile, IWorkItemCommon common,
+			ItemProfile<IWorkItem> profile, IWorkItemCommon wiCommon,
 			IProgressMonitor monitor) throws TeamRepositoryException {
-		return (IWorkItem) common.getAuditableCommon().resolveAuditable(handle,
+		return (IWorkItem) wiCommon.getAuditableCommon().resolveAuditable(handle,
 				profile, monitor);
 	}
 }

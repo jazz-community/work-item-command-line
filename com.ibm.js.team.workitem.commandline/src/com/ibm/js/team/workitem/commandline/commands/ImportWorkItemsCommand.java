@@ -85,7 +85,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	// Pass number for linking
 	private static final int MULTI_PASS_LINKMAPPING = 2;
 
-	// The clumn header for the column providing the original work item id's.
+	// The column header for the column providing the original work item id's.
 	public static final String ORIGINAL_WORK_ITEM_ID = "com.ibm.js.oldid";
 
 	private static final String SEPERATOR_LINK_TARGETS = "|";
@@ -445,8 +445,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		}
 
 		// For each work item we create a new parameter manager that is then
-		// used
-		// in the subsequent call to update or create the work item
+		// used in the subsequent call to update or create the work item
 		ParameterManager newParameterManager = new ParameterManager(parameters);
 		// Set the new parameter manager
 		this.setParameterManager(newParameterManager);

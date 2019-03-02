@@ -13,7 +13,7 @@ package com.ibm.js.team.workitem.commandline;
  */
 public interface IWorkItemCommandLineConstants {
 
-	public static final String VERSIONINFO = "V4.3";
+	public static final String VERSIONINFO = "V4.4";
 
 	// Commands available
 	public static final String COMMAND_CREATE = "create";
@@ -21,6 +21,7 @@ public interface IWorkItemCommandLineConstants {
 	public static final String COMMAND_PRINT_TYPES = "printtypes";
 	public static final String COMMAND_PRINT_TYPE_ATTRIBUTES = "printtypeattributes";
 	public static final String COMMAND_IMPORT_WORKITEMS = "importworkitems";
+	public static final String COMMAND_BULKUPDATE_WORKITEMS = "bulkupdate";
 	public static final String COMMAND_EXPORT_WORKITEMS = "exportworkitems";
 	public static final String COMMAND_PRINT_WORKITEM = "printworkitem";
 	public static final String COMMAND_VALIDATE_OSLC_LINKS = "validateoslclinks";
@@ -111,4 +112,13 @@ public interface IWorkItemCommandLineConstants {
 
 	public static final String COMMAND_EXPORT = "export";
 
+	// Parameter to specify the query
+	String PARAMETER_QUERY_NAME = "query";
+	String PARAMETER_QUERY_NAME_EXAMPLE = "\"All WorkItems\"";
+
+	// parameter to specify a sharing target for the query
+	// The sharing target can be the project area or a
+	// team area where the query is shared
+	String PARAMETER_SHARING_TARGETS = "querysource";
+	String PARAMETER_SHARING_TARGETS_EXAMPLE = "\"JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters\"";
 }

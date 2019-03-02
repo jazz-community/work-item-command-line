@@ -75,15 +75,6 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	private static final String PARAMETER_EXPORT_FILE = "exportFile";
 	private static final String PARAMETER_EXPORT_FILE_EXAMPLE = "\"C:\\temp\\export.csv\"";
 
-	// Parameter to specify the query
-	private static final String PARAMETER_QUERY_NAME = "query";
-	private static final String PARAMETER_QUERY_NAME_EXAMPLE = "\"All WorkItems\"";
-
-	// parameter to specify a sharing target for the query
-	// The sharing target can be the project area or a
-	// team area where the query is shared
-	private static final String PARAMETER_SHARING_TARGETS = "querysource";
-	private static final String PARAMETER_SHARING_TARGETS_EXAMPLE = "\"JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters\"";
 	// parameter to specify which columns are supposed to be exported
 	private static final String PARAMETER_EXPORT_COLUMNS = "columns";
 	private static final String PARAMETER_EXPORT_COLUMNS_EXAMPLE1 = "\"Type,Id,Planned For,Filed Against,Description,Found In\"";
@@ -139,7 +130,8 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
 				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
 		getParameterManager().syntaxAddRequiredParameter(PARAMETER_EXPORT_FILE, PARAMETER_EXPORT_FILE_EXAMPLE);
-		getParameterManager().syntaxAddRequiredParameter(PARAMETER_QUERY_NAME, PARAMETER_QUERY_NAME_EXAMPLE);
+		getParameterManager().syntaxAddRequiredParameter(IWorkItemCommandLineConstants.PARAMETER_QUERY_NAME,
+				IWorkItemCommandLineConstants.PARAMETER_QUERY_NAME_EXAMPLE);
 		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
 		getParameterManager().syntaxAddSwitch(SWITCH_HEADER_AS_ID);
 		getParameterManager().syntaxAddSwitch(SWITCH_RTC_ECLIPSE_EXPORT);
@@ -165,8 +157,8 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
 				+ IWorkItemCommandLineConstants.PARAMETER_DELIMITER_EXAMPLE + "]" + " [" + PARAMETER_EXPORT_COLUMNS
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR + PARAMETER_EXPORT_COLUMNS_EXAMPLE1
-				+ "]" + " [" + PARAMETER_SHARING_TARGETS + IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
-				+ PARAMETER_SHARING_TARGETS_EXAMPLE + "]" + "["
+				+ "]" + " [" + IWorkItemCommandLineConstants.PARAMETER_SHARING_TARGETS + IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
+				+ IWorkItemCommandLineConstants.PARAMETER_SHARING_TARGETS_EXAMPLE + "]" + "["
 				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
 				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING_EXAMPLE + "]";
@@ -232,11 +224,11 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 			}
 		}
 
-		String queryName = getParameterManager().consumeParameter(PARAMETER_QUERY_NAME);
+		String queryName = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_QUERY_NAME);
 		if (queryName == null) {
 			throw new WorkItemCommandLineException("Query name must be provided.");
 		}
-		String sharingTargetNames = getParameterManager().consumeParameter(PARAMETER_SHARING_TARGETS);
+		String sharingTargetNames = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_SHARING_TARGETS);
 
 		IQueryDescriptor query = getWorlkItemQuery(projectArea, queryName, sharingTargetNames);
 

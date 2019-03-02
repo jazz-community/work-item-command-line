@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/com.ibm.js.team.workitem.commandline/src/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-exportworkitems /ignoreErrors  repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph projectArea=&quot;Test2&quot;  exportFile=&quot;c:\aaTemp\travelApproval\exportTravel.csv&quot; query=&quot;Active Travel Requests&quot; delimiter=&quot;;&quot; columns=&quot;id,com.ibm.team.development.travel.requestname,manager,com.ibm.team.development.travel.approvalname,com.ibm.team.development.travel.concurrequest,com.ibm.team.development.travel.revenue,com.ibm.team.development.travel.type,com.ibm.team.development.travel.oppt,com.ibm.team.development.travel.businessjust,com.ibm.team.development.travel.from,com.ibm.team.development.travel.to,com.ibm.team.development.travel.start,com.ibm.team.development.travel.end,com.ibm.team.development.travel.expensequarter,com.ibm.team.development.travel.nights,com.ibm.team.development.travel.total.cost&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
+</launchConfiguration>
