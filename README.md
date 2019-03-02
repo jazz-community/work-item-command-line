@@ -12,6 +12,7 @@ All of the following examples use bash multiline syntax for legibility. Leave th
 -   [RTC Work Item Command Line](#rtc-work-item-command-line)
     -   [Usage](#usage)
     -   [Start in RMI server mode](#start-in-rmi-server-mode)
+    - [Command Parameters](#command-parameters)
     -   [WorkItem attribute parameter and value
         examples](#workitem-attribute-parameter-and-value-examples)
         -   [Parameters](#parameters)
@@ -182,6 +183,15 @@ Available commands:
     /trace
     /debug
 ```
+## Command parameters
+
+### Query 
+
+Provide a query name. The query by default is searched as a personal query owned by the logged in contributor. Provide a Query Source using the parameter `querysource`. The query source can contain a list of project area and team area names.   
+
+### Query Source
+
+Provide a list of project area and team area names. 
 
 ## Start in RMI server mode
 Use the switch `/rmiServer` to start an instance as RMI server. In this mode, the process will not terminate, but wait for RMI requests to perform commands. It will service commands requested by other client instances that are started with the additional switch `/rmiClient`. It is not necessary to provide a command or any other input values, when starting the server as they will be ignored. Since the TeamPlatform needs to be initialized only once in this mode, the performance is considerably increased for multiple subsequent client calls.
