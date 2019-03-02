@@ -366,13 +366,7 @@ A pseudo parameter `"@workflowAction"` can be used to set a workflow action to c
 Example: `@workflowAction="Stop working"`
 
 ### Attachments
-A pseudo parameter `@deleteAttachments` can be used to delete all attachments. Modes have no influence on this attribute. This attribute supports the value `yes`. 
 
-Example:
-
-    @deleteAttachments=yes
-
-### Attachments
 A pseudo parameter `@attachFile` can be used to upload attachments. This attribute supports the modes `default` (same as) `add`, `set` and `remove`. `Set` removes all attachments, `remove` only removes attachments with the specified file path and description. 
 
 #### Format
@@ -391,7 +385,11 @@ Examples:
 
     @attachFile_1="./test1.txt,Some Attachment 1,text/plain:UTF-8" @attachFile_2="./test2.txt,Some Attachment 2:text/plain,UTF-8"
  
+A pseudo parameter `@deleteAttachments` can be used to delete all attachments. Modes have no influence on this attribute. This attribute supports the value `yes`. 
 
+Example:
+
+    @deleteAttachments=yes
 ### Links
 A pseudo parameter `@link_ can` be used to link the current work item to other objects. Links support the modes default (same as) `add`, `set` and `remove`. `Set` removes all links of the specified type before creating the new links. 
 
