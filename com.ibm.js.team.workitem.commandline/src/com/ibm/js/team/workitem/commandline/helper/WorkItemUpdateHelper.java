@@ -3210,9 +3210,6 @@ public class WorkItemUpdateHelper {
 				+ PSEUDO_ATTRIBUTE_TRIGGER_WORKFLOW_ACTION
 				+ "\" can be used to set a workflow action to change the work item state when saving.";
 		usage += helpUsageWorkflowAction();
-		usage += "\n\nAttachments: \n\tA pseudo parameter "
-				+ PSEUDO_ATTRIBUTE_DELETEATTACHMENTS
-				+ " can be used to delete all attachments.";
 		usage += "\n\tThis attribute requires only the value "+ PSEUDO_ATTRIBUTEVALUE_DELETEATTACHMENTS + ".";
 		usage += "\n\nAttachments: \n\tA pseudo parameter "
 				+ PSEUDO_ATTRIBUTE_ATTACHFILE
@@ -3220,6 +3217,9 @@ public class WorkItemUpdateHelper {
 		usage += "\n\tThis attribute supports the modes default (same as) add, set and remove. "
 				+ "\n\tSet removes all attachments, remove only removes attachments with the specified file path and description. "
 				+ helpUsageAttachmentUpload();
+		usage += "\n\n\tA pseudo parameter "
+				+ PSEUDO_ATTRIBUTE_DELETEATTACHMENTS + "=yes"
+				+ " can be used to delete all attachments. ";
 		usage += "\n\nLinks: \n\t A pseudo parameter "
 				+ PSEUDO_ATTRIBUTE_LINK
 				+ " can be used to link the current work item to other objects."
@@ -3524,7 +3524,7 @@ public class WorkItemUpdateHelper {
 	 */
 	private String helpUsageAttachmentUpload() {
 		String usage = "\nFormat is: " + "\n\t" + PSEUDO_ATTRIBUTE_ATTACHFILE
-				+ "[<IDString>]=" + "\"SomeFilePath" + ATTACHMENT_SEPARATOR
+				+ "[<IDString>][:mode]=" + "\"SomeFilePath" + ATTACHMENT_SEPARATOR
 				+ "Some Description" + ATTACHMENT_SEPARATOR + "ContentTypeID"
 				+ ATTACHMENT_SEPARATOR + "EncodingID";
 		usage += "\"\n\n\tWhere:\n\t\t"
@@ -3542,7 +3542,7 @@ public class WorkItemUpdateHelper {
 				+ IContent.CONTENT_TYPE_TEXT + ATTACHMENT_SEPARATOR + IContent.ENCODING_UTF_8
 				+ "\"";
 		usage += "\n\t\t" + PSEUDO_ATTRIBUTE_ATTACHFILE
-				+ "_1=\"./test1.txt" + ATTACHMENT_SEPARATOR + "Some Attachment 1" + ATTACHMENT_SEPARATOR 
+				+ "_1:add=\"./test1.txt" + ATTACHMENT_SEPARATOR + "Some Attachment 1" + ATTACHMENT_SEPARATOR 
 				+ IContent.CONTENT_TYPE_TEXT + ATTACHMENT_SEPARATOR + IContent.ENCODING_UTF_8
 				+ "\"" + " " + PSEUDO_ATTRIBUTE_ATTACHFILE
 				+ "_2=\"./test2.txt" + ATTACHMENT_SEPARATOR + "Some Attachment 2" + ATTACHMENT_SEPARATOR 
