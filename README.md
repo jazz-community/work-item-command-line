@@ -12,6 +12,7 @@ All of the following examples use bash multiline syntax for legibility. Leave th
 -   [RTC Work Item Command Line](#rtc-work-item-command-line)
     -   [Usage](#usage)
     -   [Start in RMI server mode](#start-in-rmi-server-mode)
+    - [Command Parameters](#command-parameters)
     -   [WorkItem attribute parameter and value
         examples](#workitem-attribute-parameter-and-value-examples)
         -   [Parameters](#parameters)
@@ -30,7 +31,7 @@ All of the following examples use bash multiline syntax for legibility. Leave th
     -   [Attribute ID Aliases](#attribute-id-aliases)
  
 ## Usage 
-`-command {switch} {parameter[:mode]=value}`
+`-[command] {switch} {parameter[:mode]=value}`
 
 (See [A RTC WorkItem Command Line Version 2](http://wp.me/p2DlHq-s9) for a more complete description):
 
@@ -182,6 +183,15 @@ Available commands:
     /trace
     /debug
 ```
+## Command parameters
+
+### Query 
+
+Provide a query name. The query by default is searched as a personal query owned by the logged in contributor. Provide a Query Source using the parameter `querysource`. The query source can contain a list of project area and team area names.   
+
+### Query Source
+
+Provide a list of project area and team area names. 
 
 ## Start in RMI server mode
 Use the switch `/rmiServer` to start an instance as RMI server. In this mode, the process will not terminate, but wait for RMI requests to perform commands. It will service commands requested by other client instances that are started with the additional switch `/rmiClient`. It is not necessary to provide a command or any other input values, when starting the server as they will be ignored. Since the TeamPlatform needs to be initialized only once in this mode, the performance is considerably increased for multiple subsequent client calls.
@@ -366,6 +376,7 @@ A pseudo parameter `"@workflowAction"` can be used to set a workflow action to c
 Example: `@workflowAction="Stop working"`
 
 ### Attachments
+
 A pseudo parameter `@attachFile` can be used to upload attachments. This attribute supports the modes `default` (same as) `add`, `set` and `remove`. `Set` removes all attachments, `remove` only removes attachments with the specified file path and description. 
 
 #### Format
@@ -380,10 +391,15 @@ The file must be accessible and in the correct encoding.
 
 Examples:
 
-    @attachFile="C:/temp/test.txt:Some Attachment:text/plain:UTF-8"
+    @attachFile="C:/temp/test.txt,Some Attachment,text/plain,UTF-8"
 
-    @attachFile_1="./test1.txt:Some Attachment 1:text/plain:UTF-8" @attachFile_2="./test2.txt:Some Attachment 2:text/plain:UTF-8"
+    @attachFile_1="./test1.txt,Some Attachment 1,text/plain,UTF-8" @attachFile_2="./test2.txt,Some Attachment 2,text/plain,UTF-8"
+ 
+A pseudo parameter `@deleteAttachments` can be used to delete all attachments. Modes have no influence on this attribute. This attribute supports the value `yes`. 
 
+Example:
+
+    @deleteAttachments=yes
 ### Links
 A pseudo parameter `@link_ can` be used to link the current work item to other objects. Links support the modes default (same as) `add`, `set` and `remove`. `Set` removes all links of the specified type before creating the new links. 
 
