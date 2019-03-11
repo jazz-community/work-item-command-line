@@ -380,7 +380,7 @@ Example: `@workflowAction="Stop working"`
 A pseudo parameter `@attachFile` can be used to upload attachments. This attribute supports the modes `default` (same as) `add`, `set` and `remove`. `Set` removes all attachments, `remove` only removes attachments with the specified file path and description. 
 
 #### Format
-    @attachFile[<IDString>]="SomeFilePath,Some Description,ContentTypeID,EncodingID"
+    @attachFile[<IDString>][:<mode>]="SomeFilePath,Some Description,ContentTypeID,EncodingID"
 
 Where:
 `<IDString>` must be unique for multiple attachments in one command. If only one attachment is uploaded, the `IDString` can be left empty. `ContentTypeID` is `text/plain` or `application/unknown` or `application/xml`
@@ -393,7 +393,7 @@ Examples:
 
     @attachFile="C:/temp/test.txt,Some Attachment,text/plain,UTF-8"
 
-    @attachFile_1="./test1.txt,Some Attachment 1,text/plain,UTF-8" @attachFile_2="./test2.txt,Some Attachment 2,text/plain,UTF-8"
+    @attachFile_1:add="./test1.txt,Some Attachment 1,text/plain,UTF-8" @attachFile_2="./test2.txt,Some Attachment 2,text/plain,UTF-8"
  
 A pseudo parameter `@deleteAttachments` can be used to delete all attachments. Modes have no influence on this attribute. This attribute supports the value `yes`. 
 
