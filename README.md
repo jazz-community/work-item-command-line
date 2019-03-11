@@ -1,5 +1,5 @@
 # RTC Work Item Command Line
-WorkItemCommandLine Version V4.4
+WorkItemCommandLine Version V4.5
 
 See [Work Item Command Line 4.3](https://rsjazz.wordpress.com/2019/01/17/work-item-command-line-4-3/) for instructions how to setup and install install WCL.
 
