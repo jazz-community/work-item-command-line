@@ -468,7 +468,6 @@ The parameter value is a list of one or more CLM URI's for elements that support
     @link_related_execution_record=uri1|uri2|...
 
 Example:
-
     @link_affects_requirement=https://clm.example.com:9443/rm/resources/_848a30e315524069854f55e1d35a402d|https://clm.example.com:9443/rm/resources/_6c96bedb0e9a490494273eefc6e1f7c5
 
 Please note that the link "Associate Work Item" between a change set and the work item can only be created by the SCM component. The link created here is the looser CLM link. Create the work item change set link using the SCM command line.
@@ -489,6 +488,16 @@ Example:
 
     @link_reportAgainstBuild=@_IjluoH-oEeSHhcw_WFU6CQ|P20141208-1713
 
+### Delete all links of a link type 
+Delete all links of a link type.
+
+##### Format is:`|`
+
+    @deletelinks_linktype=yes
+
+Example:
+
+    @deletelinks_includedInBuild=yes
 
 ## Attribute ID Aliases
 
