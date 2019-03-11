@@ -127,8 +127,9 @@ public class WorkItemUpdateHelper {
 	// Pseudo attributes
 	public static final String PSEUDO_ATTRIBUTE_ATTACHFILE = "@attachFile";
 	public static final String PSEUDO_ATTRIBUTE_DELETEATTACHMENTS = "@deleteAttachments";
-	public static final String PSEUDO_ATTRIBUTEVALUE_DELETEATTACHMENTS = "yes";
+	public static final String PSEUDO_ATTRIBUTEVALUE_MASSDELETEAPPROVED = "yes";
 	public static final String PSEUDO_ATTRIBUTE_LINK = "@link_";
+	public static final String PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE = "@deletelinks_";
 	public static final String PSEUDO_ATTRIBUTE_TRIGGER_WORKFLOW_ACTION = "@workflowAction";
 	// Approval Data
 	public static final String APPROVAL_TYPE_VERIFICATION = "verification";
@@ -466,8 +467,7 @@ public class WorkItemUpdateHelper {
 			updateAttachments(parameter);
 		} else if (StringUtil.hasPrefix(parameter.getAttributeID(),
 				PSEUDO_ATTRIBUTE_DELETEATTACHMENTS)) {
-			// Special handling to allow multiple attachments and still provide
-			// unique property ID's
+			// Special handling to allow deleting all attachments
 			// Use IWorkItemCommandLineConstants.SWITCH_ENABLE_SET_ATTACHMENT to
 			// enable deleting all attachments and only set the one attachment
 			deleteAllAttachments(parameter);
@@ -475,6 +475,10 @@ public class WorkItemUpdateHelper {
 				PSEUDO_ATTRIBUTE_LINK)) {
 			// Update Links from the work item to other items
 			updateLinks(parameter, exceptions);
+		}  else if (StringUtil.hasPrefix(parameter.getAttributeID(),
+				PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE)) {
+			// Update Links from the work item to other items
+			deleteLinks(parameter, exceptions);
 		} else {
 			// Update all other attribute based values of the work item
 			updateGeneralAttribute(parameter, exceptions);
@@ -900,7 +904,7 @@ public class WorkItemUpdateHelper {
 
 		boolean switchDeleteAttachments = getParameters().hasSwitch(
 				IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS);
-		if (!PSEUDO_ATTRIBUTEVALUE_DELETEATTACHMENTS.equals(parameter.getValue())) {
+		if (!PSEUDO_ATTRIBUTEVALUE_MASSDELETEAPPROVED.equals(parameter.getValue())) {
 			throw new WorkItemCommandLineException(
 					"Incorrect value: "
 							+ parameter.getAttributeID() + " Value: "
@@ -1139,6 +1143,51 @@ public class WorkItemUpdateHelper {
 			// we want to create back links when needed
 			getWorkingCopy().getAdditionalSaveParameters().add(
 					IAdditionalSaveParameters.UPDATE_BACKLINKS);
+		}
+	}
+
+	/**
+	 * Delete all links of a certain link type
+	 * 
+	 * @param parameter
+	 *            - the parameter passed
+	 * @param exceptions
+	 *            - a list to pass exceptions back
+	 * @throws TeamRepositoryException
+	 */
+	private void deleteLinks(ParameterValue parameter, List<Exception> exceptions) throws TeamRepositoryException {
+		if (!PSEUDO_ATTRIBUTEVALUE_MASSDELETEAPPROVED.equals(parameter.getValue())) {
+			throw new WorkItemCommandLineException(
+					"Incorrect value: "
+							+ parameter.getAttributeID() + " Value: "
+							+ parameter.getValue()
+							+ helpUsageAllLinks());
+		}
+		String linkType = StringUtil.removePrefix(parameter.getAttributeID(), PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE);
+		IEndPointDescriptor endpoint = ReferenceUtil.getWorkItemEndPointDescriptorMap().get(linkType);
+		if (endpoint == null) {
+			endpoint = ReferenceUtil.getCLM_URI_EndPointDescriptorMap().get(linkType);
+		}
+		if (endpoint == null) {
+			endpoint = ReferenceUtil.getCLM_WI_EndPointDescriptorMap().get(linkType);
+		}
+		if (endpoint == null) {
+			endpoint = ReferenceUtil.getBuild_EndPointDescriptorMap().get(linkType);
+		}
+		if (endpoint == null) {
+			// This link type is not in our supported map
+			throw new WorkItemCommandLineException(
+					"Link Type unknown or not yet supported: " + linkType + helpUsageAllLinks());
+		}
+
+		IWorkItemReferences wiReferences = getWorkingCopy().getReferences();
+		List<IReference> current = wiReferences.getReferences(endpoint);
+		if (WorkItemLinkTypes.isCalmLink(endpoint)) {
+			// we want to create back links when needed
+			getWorkingCopy().getAdditionalSaveParameters().add(IAdditionalSaveParameters.UPDATE_BACKLINKS);
+		}
+		for (IReference iReference : current) {
+			getWorkingCopy().getReferences().remove(iReference);
 		}
 	}
 
@@ -3210,7 +3259,7 @@ public class WorkItemUpdateHelper {
 				+ PSEUDO_ATTRIBUTE_TRIGGER_WORKFLOW_ACTION
 				+ "\" can be used to set a workflow action to change the work item state when saving.";
 		usage += helpUsageWorkflowAction();
-		usage += "\n\tThis attribute requires only the value "+ PSEUDO_ATTRIBUTEVALUE_DELETEATTACHMENTS + ".";
+		usage += "\n\tThis attribute requires only the value "+ PSEUDO_ATTRIBUTEVALUE_MASSDELETEAPPROVED + ".";
 		usage += "\n\nAttachments: \n\tA pseudo parameter "
 				+ PSEUDO_ATTRIBUTE_ATTACHFILE
 				+ " can be used to upload attachments.";
@@ -3549,7 +3598,7 @@ public class WorkItemUpdateHelper {
 				+ IContent.CONTENT_TYPE_TEXT + ATTACHMENT_SEPARATOR + IContent.ENCODING_UTF_8
 				+ "\"";
 		usage += "\n\t\t" + PSEUDO_ATTRIBUTE_DELETEATTACHMENTS
-				+ "=\"" + PSEUDO_ATTRIBUTEVALUE_DELETEATTACHMENTS + "\"";
+				+ "=\"" + PSEUDO_ATTRIBUTEVALUE_MASSDELETEAPPROVED + "\"";
 		return usage;
 	}
 
@@ -3572,6 +3621,7 @@ public class WorkItemUpdateHelper {
 		usage += "\n\tThe link created here is the looser CLM link. Create the work item change set link using the SCM command line.";
 		usage += "\n\nBuild result Links - Links from a work item to a build result in the same repository."
 				+ helpUsageBuildResultLink();
+		usage += "\n\nDelete all links of a link type " + helpUsageDeleteLinksOfType();
 		return usage;
 	}
 
@@ -3690,4 +3740,23 @@ public class WorkItemUpdateHelper {
 				+ "P20141208-1713\n";
 		return usage;
 	}
+	/**
+	 * Creates the help output for linking to build results
+	 * 
+	 * @return a help description
+	 */
+	private String helpUsageDeleteLinksOfType() {
+		if (isBulkUpadte()) {
+			return "";
+		}
+		String usage = "\nFormat is:\n";
+		usage += "\t" + PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE
+				+ "linktype=yes\n";
+		usage += "\n\n\tExample:";
+		usage += "\n\n\t\t" + PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE
+				+ ReferenceUtil.LINKTYPE_INCLUDEDINBUILD
+				+ "=yes\n";
+		return usage;
+	}
+
 }
