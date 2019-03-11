@@ -478,7 +478,7 @@ Links from a work item to a build result in the same repository.
 ##### Format
     @link_reportAgainstBuild=buildResult1|buildResult2|...
 
-The parameter value is a list of one or more Build results specified by their ID or their label. Prefix the build labels @. The separator is:`|`
+The parameter value is a list of one or more Build results specified by their ID or their label. Prefix the build labels @. The separator is:
 
     @link_reportAgainstBuild=id1|@BuildLabel2|...
     @link_includedInBuild=id1|@BuildLabel2|...
@@ -491,7 +491,7 @@ Example:
 ### Delete all links of a link type 
 Delete all links of a link type.
 
-##### Format is:`|`
+##### Format is:
 
     @deletelinks_linktype=yes
 
