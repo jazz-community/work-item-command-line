@@ -127,7 +127,8 @@ public class WorkItemUpdateHelper {
 	// Pseudo attributes
 	public static final String PSEUDO_ATTRIBUTE_ATTACHFILE = "@attachFile";
 	public static final String PSEUDO_ATTRIBUTE_DELETEATTACHMENTS = "@deleteAttachments";
-	public static final String PSEUDO_ATTRIBUTEVALUE_MASSDELETEAPPROVED = "yes";
+	public static final String PSEUDO_ATTRIBUTEVALUE_YES = "yes";
+	public static final String PSEUDO_ATTRIBUTEVALUE_DELETEDANGLING = "deletedangling";
 	public static final String PSEUDO_ATTRIBUTE_LINK = "@link_";
 	public static final String PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE = "@deletelinks_";
 	public static final String PSEUDO_ATTRIBUTE_TRIGGER_WORKFLOW_ACTION = "@workflowAction";
@@ -163,6 +164,7 @@ public class WorkItemUpdateHelper {
 	private ParameterList fParameters = new ParameterList();
 	private boolean fEnforceSizeLimits = false;
 	private boolean fBulkupdate = false;
+	private boolean fupdateBacklinks=false;
 
 	/**
 	 * Internal class to parse and manage approval data.
@@ -904,7 +906,7 @@ public class WorkItemUpdateHelper {
 
 		boolean switchDeleteAttachments = getParameters().hasSwitch(
 				IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS);
-		if (!PSEUDO_ATTRIBUTEVALUE_MASSDELETEAPPROVED.equals(parameter.getValue())) {
+		if (!PSEUDO_ATTRIBUTEVALUE_YES.equals(parameter.getValue())) {
 			throw new WorkItemCommandLineException(
 					"Incorrect value: "
 							+ parameter.getAttributeID() + " Value: "
@@ -1140,9 +1142,7 @@ public class WorkItemUpdateHelper {
 			}
 		}
 		if (setUpdateBackLinks) {
-			// we want to create back links when needed
-			getWorkingCopy().getAdditionalSaveParameters().add(
-					IAdditionalSaveParameters.UPDATE_BACKLINKS);
+			updateBacklinks();
 		}
 	}
 
@@ -1156,7 +1156,13 @@ public class WorkItemUpdateHelper {
 	 * @throws TeamRepositoryException
 	 */
 	private void deleteLinks(ParameterValue parameter, List<Exception> exceptions) throws TeamRepositoryException {
-		if (!PSEUDO_ATTRIBUTEVALUE_MASSDELETEAPPROVED.equals(parameter.getValue())) {
+
+		boolean checkDangling=false;
+		boolean update = false;
+		if (!PSEUDO_ATTRIBUTEVALUE_DELETEDANGLING.equals(parameter.getValue())) {
+			checkDangling=true;
+		}	
+		if (!checkDangling && !PSEUDO_ATTRIBUTEVALUE_YES.equals(parameter.getValue())) {
 			throw new WorkItemCommandLineException(
 					"Incorrect value: "
 							+ parameter.getAttributeID() + " Value: "
@@ -1182,12 +1188,41 @@ public class WorkItemUpdateHelper {
 
 		IWorkItemReferences wiReferences = getWorkingCopy().getReferences();
 		List<IReference> current = wiReferences.getReferences(endpoint);
-		if (WorkItemLinkTypes.isCalmLink(endpoint)) {
-			// we want to create back links when needed
-			getWorkingCopy().getAdditionalSaveParameters().add(IAdditionalSaveParameters.UPDATE_BACKLINKS);
-		}
 		for (IReference iReference : current) {
-			getWorkingCopy().getReferences().remove(iReference);
+			if(checkDangling) {
+				if(isDangling(iReference)) {
+					getWorkingCopy().getReferences().remove(iReference);
+					update=true;
+				}
+			} else {
+				getWorkingCopy().getReferences().remove(iReference);
+				update=true;
+			}
+		}
+		if (update & WorkItemLinkTypes.isCalmLink(endpoint)) {
+			// we want to create back links when needed
+			updateBacklinks();
+		}
+	}
+
+	/**
+	 * Checnk if a link is dangling
+	 * 
+	 * @param iReference
+	 * @return
+	 */
+	private boolean isDangling(IReference iReference) {
+		// TODO to be implemented
+		return false;
+	}
+
+	/**
+	 * Update backlinks, add the additional safe parameter only once.
+	 */
+	private void updateBacklinks() {
+		if(!fupdateBacklinks) {
+			getWorkingCopy().getAdditionalSaveParameters().add(IAdditionalSaveParameters.UPDATE_BACKLINKS);
+			fupdateBacklinks=true;
 		}
 	}
 
@@ -3259,7 +3294,7 @@ public class WorkItemUpdateHelper {
 				+ PSEUDO_ATTRIBUTE_TRIGGER_WORKFLOW_ACTION
 				+ "\" can be used to set a workflow action to change the work item state when saving.";
 		usage += helpUsageWorkflowAction();
-		usage += "\n\tThis attribute requires only the value "+ PSEUDO_ATTRIBUTEVALUE_MASSDELETEAPPROVED + ".";
+		usage += "\n\tThis attribute requires only the value "+ PSEUDO_ATTRIBUTEVALUE_YES + ".";
 		usage += "\n\nAttachments: \n\tA pseudo parameter "
 				+ PSEUDO_ATTRIBUTE_ATTACHFILE
 				+ " can be used to upload attachments.";
@@ -3598,7 +3633,7 @@ public class WorkItemUpdateHelper {
 				+ IContent.CONTENT_TYPE_TEXT + ATTACHMENT_SEPARATOR + IContent.ENCODING_UTF_8
 				+ "\"";
 		usage += "\n\t\t" + PSEUDO_ATTRIBUTE_DELETEATTACHMENTS
-				+ "=\"" + PSEUDO_ATTRIBUTEVALUE_MASSDELETEAPPROVED + "\"";
+				+ "=\"" + PSEUDO_ATTRIBUTEVALUE_YES + "\"";
 		return usage;
 	}
 
