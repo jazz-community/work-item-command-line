@@ -1159,7 +1159,7 @@ public class WorkItemUpdateHelper {
 
 		boolean checkDangling=false;
 		boolean update = false;
-		if (!PSEUDO_ATTRIBUTEVALUE_DELETEDANGLING.equals(parameter.getValue())) {
+		if (PSEUDO_ATTRIBUTEVALUE_DELETEDANGLING.equals(parameter.getValue())) {
 			checkDangling=true;
 		}	
 		if (!checkDangling && !PSEUDO_ATTRIBUTEVALUE_YES.equals(parameter.getValue())) {
@@ -1190,7 +1190,7 @@ public class WorkItemUpdateHelper {
 		List<IReference> current = wiReferences.getReferences(endpoint);
 		for (IReference iReference : current) {
 			if(checkDangling) {
-				if(isDangling(iReference)) {
+				if(isDangling(endpoint, iReference)) {
 					getWorkingCopy().getReferences().remove(iReference);
 					update=true;
 				}
@@ -1208,10 +1208,11 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Checnk if a link is dangling
 	 * 
+	 * @param endpoint 
 	 * @param iReference
 	 * @return
 	 */
-	private boolean isDangling(IReference iReference) {
+	private boolean isDangling(IEndPointDescriptor endpoint, IReference iReference) {
 		// TODO to be implemented
 		return false;
 	}
