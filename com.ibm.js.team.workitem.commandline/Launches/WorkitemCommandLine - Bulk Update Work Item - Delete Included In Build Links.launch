@@ -6,6 +6,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-bulkupdate /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph &#13;&#10;projectArea=&quot;JKE Banking (Change Management)&quot;  query=&quot;RemoveLinks&quot; @deletelinks_includedInBuild=&quot;yes&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-bulkupdate /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph &#13;&#10;projectArea=&quot;JKE Banking (Change Management)&quot;  query=&quot;RemoveLinks&quot; @deleteLinks_includedInBuild=&quot;yes&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
 </launchConfiguration>

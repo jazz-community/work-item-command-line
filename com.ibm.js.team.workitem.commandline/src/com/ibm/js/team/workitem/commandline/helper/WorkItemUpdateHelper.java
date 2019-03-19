@@ -130,7 +130,7 @@ public class WorkItemUpdateHelper {
 	public static final String PSEUDO_ATTRIBUTEVALUE_YES = "yes";
 	public static final String PSEUDO_ATTRIBUTEVALUE_DELETEDANGLING = "deletedangling";
 	public static final String PSEUDO_ATTRIBUTE_LINK = "@link_";
-	public static final String PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE = "@deletelinks_";
+	public static final String PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE = "@deleteLinks_";
 	public static final String PSEUDO_ATTRIBUTE_TRIGGER_WORKFLOW_ACTION = "@workflowAction";
 	// Approval Data
 	public static final String APPROVAL_TYPE_VERIFICATION = "verification";
