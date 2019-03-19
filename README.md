@@ -493,11 +493,11 @@ Delete all links of a link type.
 
 ##### Format is:
 
-    @deletelinks_linktype=yes
+    @deleteLinks_linktype=yes
 
 Example:
 
-    @deletelinks_includedInBuild=yes
+    @deleteLinks_includedInBuild=yes
 
 ## Attribute ID Aliases
 
