@@ -479,7 +479,7 @@ public class WorkItemUpdateHelper {
 			updateLinks(parameter, exceptions);
 		}  else if (StringUtil.hasPrefix(parameter.getAttributeID(),
 				PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE)) {
-			// Update Links from the work item to other items
+			// Delete links from the work item to other items
 			deleteLinks(parameter, exceptions);
 		} else {
 			// Update all other attribute based values of the work item
