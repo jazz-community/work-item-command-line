@@ -1206,7 +1206,7 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Checnk if a link is dangling
+	 * Check if a link is dangling
 	 * 
 	 * @param endpoint 
 	 * @param iReference
@@ -1214,9 +1214,10 @@ public class WorkItemUpdateHelper {
 	 */
 	private boolean isDangling(IEndPointDescriptor endpoint, IReference iReference) {
 		// TODO to be implemented
+		// URI uri = iReference.createURI();
 		return false;
 	}
-
+	
 	/**
 	 * Update backlinks, add the additional safe parameter only once.
 	 */
