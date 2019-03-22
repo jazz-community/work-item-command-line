@@ -427,6 +427,9 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		// Get the parameters for this work item from the CSV data and the
 		// mapping provided
 		ParameterList parameters = processRow(header, row, rowID, attributeMapping);
+		if(parameters.isEmpty()) {
+			getResult().appendResultString("No attributes or columns found for row " + rowID + ". Check the import file format or delimiter. Delimiter is '" + getDelimiter() + "'");	
+		}
 		if (getPassNumber() > 0) {
 			if (null == parameters.getParameter(ORIGINAL_WORK_ITEM_ID)) {
 				throw new WorkItemCommandLineException(
