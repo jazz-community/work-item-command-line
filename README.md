@@ -1,5 +1,5 @@
 # RTC Work Item Command Line
-WorkItemCommandLine Version V4.5
+WorkItemCommandLine Version V4.6
 
 See [Work Item Command Line 4.3](https://rsjazz.wordpress.com/2019/01/17/work-item-command-line-4-3/) for instructions how to setup and install install WCL.
 
@@ -259,9 +259,10 @@ The values are specified by a string. This is can be display name of that value 
     `target="Main Development/Release 1.0/Sprint 3"`
     `custom.process.area="JKE Banking (Change Management)/Release Engineering"`
 
-- Dates have to be specified in the Java SimpleDateFormat notation.
+- Dates and Timestamps have to be specified in the Java SimpleDateFormat notation. The value "unassigned" can be used to delete the date.
 
     `dueDate="2015/02/01 12:30:00 GMT+01:00"`
+    `dueDate="unassigned"`
 
 - Duration values are specified in milliseconds, or a hours minutes format.
 
