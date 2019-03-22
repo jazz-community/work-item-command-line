@@ -2063,9 +2063,13 @@ public class WorkItemUpdateHelper {
 	private Object calculateTimestamp(ParameterValue parameter)
 			throws TeamRepositoryException {
 		try {
+			String value = parameter.getValue();
+			if(IWorkItemCommandLineConstants.UNASSIGNED.equals(value) || "".equals(value)) {
+				return null;
+			}
 			return SimpleDateFormatUtil
 					.createTimeStamp(
-							parameter.getValue(),
+							value,
 							SimpleDateFormatUtil.SIMPLE_DATE_FORMAT_PATTERN_YYYY_MM_DD_HH_MM_SS_Z);
 		} catch (IllegalArgumentException e) {
 			throw new WorkItemCommandLineException(
@@ -3408,8 +3412,9 @@ public class WorkItemUpdateHelper {
 		usage += "\n\t\tfoundIn=\"Sprint 2 Development\"";
 		usage += "\n\t\ttarget=\"Main Development/Release 1.0/Sprint 3\"";
 		usage += "\n\t\tcustom.process.area=\"JKE Banking (Change Management)/Release Engineering\"";
-		usage += "\n\t- Dates have to be specified in the Java SimpleDateFormat notation.";
+		usage += "\n\t- Dates and Timestamps have to be specified in the Java SimpleDateFormat notation. The value unassigned can be used to delete the date";
 		usage += "\n\t\tdueDate=\"2015/02/01 12:30:00 GMT+01:00\"";
+		usage += "\n\t\tdueDate=\"unassigned\"";
 		usage += "\n\t- Duration values are specified in milliseconds, or a hours minutes format.";
 		usage += "\n\t\tduration=1800000 correctedEstimate=3600000 timeSpent=60000";
 		usage += "\n\t\tduration=\"1 hour\" correctedEstimate=\"2 hours 30 minutes\" timeSpent=\"30 minutes\"";

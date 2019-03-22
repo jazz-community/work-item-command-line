@@ -112,6 +112,8 @@ public interface IWorkItemCommandLineConstants {
 
 	public static final String COMMAND_EXPORT = "export";
 
+	public static final String UNASSIGNED = "unassigned";
+
 	// Parameter to specify the query
 	String PARAMETER_QUERY_NAME = "query";
 	String PARAMETER_QUERY_NAME_EXAMPLE = "\"All WorkItems\"";
