@@ -3412,7 +3412,7 @@ public class WorkItemUpdateHelper {
 		usage += "\n\t\tfoundIn=\"Sprint 2 Development\"";
 		usage += "\n\t\ttarget=\"Main Development/Release 1.0/Sprint 3\"";
 		usage += "\n\t\tcustom.process.area=\"JKE Banking (Change Management)/Release Engineering\"";
-		usage += "\n\t- Dates and Timestamps have to be specified in the Java SimpleDateFormat notation. The value unassigned can be used to delete the date";
+		usage += "\n\t- Dates and Timestamps have to be specified in the Java SimpleDateFormat notation. The value \"unassigned\" can be used to delete the date.";
 		usage += "\n\t\tdueDate=\"2015/02/01 12:30:00 GMT+01:00\"";
 		usage += "\n\t\tdueDate=\"unassigned\"";
 		usage += "\n\t- Duration values are specified in milliseconds, or a hours minutes format.";
