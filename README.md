@@ -259,9 +259,10 @@ The values are specified by a string. This is can be display name of that value 
     `target="Main Development/Release 1.0/Sprint 3"`
     `custom.process.area="JKE Banking (Change Management)/Release Engineering"`
 
-- Dates have to be specified in the Java SimpleDateFormat notation.
+- Dates and Timestamps have to be specified in the Java SimpleDateFormat notation. The value "unassigned" can be used to delete the date.
 
     `dueDate="2015/02/01 12:30:00 GMT+01:00"`
+    `dueDate="unassigned"`
 
 - Duration values are specified in milliseconds, or a hours minutes format.
 
