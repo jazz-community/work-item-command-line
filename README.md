@@ -168,8 +168,9 @@ Available commands:
     password="value"  
     projectArea="value"  
     targetAttributeID="value" 
-    sourceAttributeID="value" 
-    /ignoreErrors workItemType="value"
+    sourceAttributeID="value"
+    workItemType="value"
+    /ignoreErrors 
     /skipEmailNotification
 ```
 
@@ -226,7 +227,8 @@ Format for parameter is:
 
     parameter[:mode]=value
 
-No spaces are allowed between parameter, value and the `=`. Parameter and value can also not have spaces. Use `"` to enclose values with spaces. Example: `"A Space"`
+No spaces are allowed between parameter, value and the `=`. Parameter and value can also not have spaces. Use `"` to enclose values with spaces. 
+Example: `"A Space"`
 
 ### Parameters
 Parameter is a work item attribute ID and value is a value or a list of values. Use the command `-printtypeattributes` to retrieve the available attribute ID's, or inspect the process configuration of your project area to extract the attribute ID's.
@@ -250,31 +252,39 @@ The values are specified by a string. This is can be display name of that value 
 
 - For work item type, owner and some other attributes use the object ID.
     `workItemType=task`
+    
     `owner=tanuj`
 
 - Use the display name for simple attributes or the path composed out of the display names for hierarchical attributes.
 
     `category=JKE/BRN`
+    
     `foundIn="Sprint 2 Development"`
+    
     `target="Main Development/Release 1.0/Sprint 3"`
+    
     `custom.process.area="JKE Banking (Change Management)/Release Engineering"`
 
 - Dates and Timestamps have to be specified in the Java SimpleDateFormat notation. The value "unassigned" can be used to delete the date.
 
     `dueDate="2015/02/01 12:30:00 GMT+01:00"`
+    
     `dueDate="unassigned"`
 
 - Duration values are specified in milliseconds, or a hours minutes format.
 
     `duration=1800000 correctedEstimate=3600000 timeSpent=60000`
+    
     `duration="1 hour" correctedEstimate="2 hours 30 minutes" timeSpent="30 minutes"`
 
 - WorkItem attribute values of <item type> List with a specified item type such as userList. Format is using the separator `,`:
 
 	`"value1,value2,...,valueN"`
+	
 	`Example: custom.user.list:add="deb,al,...,tanuj"`
 
 - WorkItem attributes with an general attribute value such as Item or itemList require encoding to locate the items. Format is:
+
 	`custom.item.list=value`
 
 	Where value has the form: `<value>{,<value>}`
@@ -287,9 +297,11 @@ The values are specified by a string. This is can be display name of that value 
      - Project area: ProjectArea - specified by its name. 
 
         Example: `"ProjectArea:JKE Banking (Change Management)"`
+	
      - Team area: TeamArea - specified by its name path. 
 
         Example: `"TeamArea:JKE Banking (Change Management)/Release Engineering"`
+	
      - Process area: ProcessArea - specified by its name path. 
 
         Example: `"ProcessArea:JKE Banking (Change Management)/Business Recovery Matters"`
