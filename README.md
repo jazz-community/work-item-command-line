@@ -228,6 +228,7 @@ Format for parameter is:
     parameter[:mode]=value
 
 No spaces are allowed between parameter, value and the `=`. Parameter and value can also not have spaces. Use `"` to enclose values with spaces. 
+
 Example: `"A Space"`
 
 ### Parameters
@@ -238,19 +239,23 @@ The values are specified by a string. This is can be display name of that value 
 
 ### Examples
 - For enumeration based attributes use the display value for the enumeration literal:
+
     `internalPriority=High`
 
 - For HTML and string based attributes use a string. HTML types like summary, description, comment and HTML support the following syntax.
+
     ```html
     description="Plain text<br/><b>bold text</b><br/><i>italic text</i><br/><a href="https://rsjazz.wordpress.com">External RSJazz Link</a><br/>User link to <b>@ralph </b><br/>Work Item link to Defect 3 <br/>"
     ```
 
-- For Wiki and multi line text attributes use `<br>` or `\n` for line breaks and check the syntax in the wiki editor.
+- For Wiki and multi line text attributes use `<br>` or `\n` for line breaks and check the syntax in the wiki editor. The Wiki syntax can be found in http://www.wikicreole.org/
+
     ```html
     custom.wiki="<br>=Heading1<br><br>Plain text\n==Heading 2\n\nNormal Text **bold text** <br>**bold text**<br>//Italics//"
     ```
 
 - For work item type, owner and some other attributes use the object ID.
+
     `workItemType=task`
     
     `owner=tanuj`
@@ -280,14 +285,15 @@ The values are specified by a string. This is can be display name of that value 
 - WorkItem attribute values of <item type> List with a specified item type such as userList. Format is using the separator `,`:
 
 	`"value1,value2,...,valueN"`
-	
-	`Example: custom.user.list:add="deb,al,...,tanuj"`
+
+	Example: `custom.user.list:add="deb,al,...,tanuj"`
 
 - WorkItem attributes with an general attribute value such as Item or itemList require encoding to locate the items. Format is:
 
 	`custom.item.list=value`
 
 	Where value has the form: `<value>{,<value>}`
+	
 	With `<value>` of the form `<TypeDescriptor>:<Item>`
 
 	No spaces are allowed in the value list.
@@ -305,18 +311,23 @@ The values are specified by a string. This is can be display name of that value 
      - Process area: ProcessArea - specified by its name path. 
 
         Example: `"ProcessArea:JKE Banking (Change Management)/Business Recovery Matters"`
+	
      - Category: Category - specified by its category path. 
 
         Example: `"Category:JKE/BRM"`
+	
      - User: User - specified by its id. 
 
         Example: `"User:tanuj"`
+	
      - Iteration: Iteration - specified by its name path (including the development line name). 
 
         Example: `"Iteration:Main Development/Release 1.0/Sprint 3"`
+	
      - Work item: WorkItem - specified by its id. 
 
         Example: `"WorkItem:20"`
+	
      - SCM component: SCMComponent - specified by its name. 
 
         Example: `"SCMComponent:Build"`
@@ -370,7 +381,6 @@ Available modes are: `set` `add` (set as default mode) and `remove`.
 Modes `set` and `remove` only remove approvals of the same type and must be enabled using the switch `enableDeleteApprovals`.
 
 Example: `internalApprovals="review:Please Review:deb,tanuj"`
-
 Example: `internalApprovals="verification:Please verify:sally,al"`
 
 where the user list is optional and can contain one or more users ID's
@@ -405,7 +415,6 @@ The file must be accessible and in the correct encoding.
 Examples:
 
     @attachFile="C:/temp/test.txt,Some Attachment,text/plain,UTF-8"
-
     @attachFile_1:add="./test1.txt,Some Attachment 1,text/plain,UTF-8" @attachFile_2="./test2.txt,Some Attachment 2,text/plain,UTF-8"
  
 A pseudo parameter `@deleteAttachments` can be used to delete all attachments. Modes have no influence on this attribute. This attribute supports the value `yes`. 
