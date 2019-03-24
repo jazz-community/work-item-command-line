@@ -211,7 +211,7 @@ Example start as an RMI client with a command:
 ```bash
 -create 
     /rmiClient=//clm.example.com:1199/WorkItemCommandLine 
-    repository="//https://clm.example.com:9443/ccm" 
+    repository="https://clm.example.com:9443/ccm" 
     user=functional 
     password=********* 
     projectArea="Test" 
