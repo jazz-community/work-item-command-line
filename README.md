@@ -248,7 +248,7 @@ The values are specified by a string. This is can be display name of that value 
     description="Plain text<br/><b>bold text</b><br/><i>italic text</i><br/><a href="https://rsjazz.wordpress.com">External RSJazz Link</a><br/>User link to <b>@ralph </b><br/>Work Item link to Defect 3 <br/>"
     ```
 
-- For Wiki and multi line text attributes use `<br>` or `\n` for line breaks and check the syntax in the wiki editor. The Wiki syntax can be found in http://www.wikicreole.org/
+- For Wiki and multi line text attributes use `<br>` or `\n` for line breaks and check the syntax in the wiki editor. The Wiki syntax can be found here http://www.wikicreole.org/ .
 
     ```html
     custom.wiki="<br>=Heading1<br><br>Plain text\n==Heading 2\n\nNormal Text **bold text** <br>**bold text**<br>//Italics//"
