@@ -202,20 +202,20 @@ It is possible to specify a different name and port by providing a value to the 
 
 The client command must be started with the same name and port as the server using the corresponding client switch
 
-Example server: 
+Example start as an RMI server: 
 
 `/rmiServer=//clm.example.com:1199/WorkItemCommandLine`
 
-Example client: 
+Example start as an RMI client: 
 
 ```bash
--create \
-    /rmiClient=//clm.example.com:1199/WorkItemCommandLine \
-    repository=<repositoryURL> \
-    user=<user> \
-    password=<pass> \
-    projectArea=<paName> \
-    workItemType=task \
+-create 
+    /rmiClient=//clm.example.com:1199/WorkItemCommandLine 
+    repository=<repositoryURL> 
+    user=<user> 
+    password=<pass> 
+    projectArea=<paName> 
+    workItemType=task 
     summary="New Item"
 ```
 
