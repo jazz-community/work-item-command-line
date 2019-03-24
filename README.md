@@ -206,15 +206,15 @@ Example start as an RMI server:
 
 `/rmiServer=//clm.example.com:1199/WorkItemCommandLine`
 
-Example start as an RMI client: 
+Example start as an RMI client with a command: 
 
 ```bash
 -create 
     /rmiClient=//clm.example.com:1199/WorkItemCommandLine 
-    repository=<repositoryURL> 
-    user=<user> 
-    password=<pass> 
-    projectArea=<paName> 
+    repository="//https://clm.example.com:9443/ccm" 
+    user=functional 
+    password=********* 
+    projectArea="Test" 
     workItemType=task 
     summary="New Item"
 ```
