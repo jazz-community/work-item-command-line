@@ -7,11 +7,15 @@
  *******************************************************************************/
 package com.ibm.js.team.workitem.commandline.framework;
 
+import java.net.URISyntaxException;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.js.team.workitem.commandline.IWorkItemCommandLineConstants;
 import com.ibm.js.team.workitem.commandline.OperationResult;
 import com.ibm.js.team.workitem.commandline.parameter.ParameterManager;
+import com.ibm.js.team.workitem.commandline.scenarionotifier.ExpensiveScenarioService;
+import com.ibm.js.team.workitem.commandline.scenarionotifier.IExpensiveScenarioService;
 import com.ibm.team.process.client.IProcessClientService;
 import com.ibm.team.repository.client.ITeamRepository;
 import com.ibm.team.repository.client.ITeamRepository.ILoginHandler;
@@ -31,6 +35,8 @@ import com.ibm.team.workitem.common.IWorkItemCommon;
 public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 
 	private ITeamRepository fTeamRepository;
+	private IExpensiveScenarioService fScenarioService;
+	private String fScenarioInstance;
 
 	protected AbstractTeamRepositoryCommand(ParameterManager parametermanager) {
 		super(parametermanager);
@@ -75,6 +81,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 		try {
 			// Login to the repository
 			this.fTeamRepository = login();
+			this.fScenarioInstance=startScenario();			
 		} catch (TeamRepositoryException e) {
 			this.appendResultString("TeamRepositoryException: Unable to log into repository!");
 			this.appendResultString(e.getMessage());
@@ -90,7 +97,41 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 			this.appendResultString(e.getMessage());
 			this.setFailed();
 		}
+		stopScenario(getScenarioInstance());
 		return getResult();
+	}
+
+
+	/**
+	 * Start a Resource Intensive Scenario instance
+	 * @see https://jazz.net/wiki/bin/view/Deployment/CreateCustomScenarios
+	 * 
+	 * @return
+	 */
+	protected String startScenario() {
+		String scenarioInstance=null;	
+		try {
+			this.fScenarioService = new ExpensiveScenarioService(getTeamRepository(), getTeamRepository().publicUriRoot(), "WCL " + IWorkItemCommandLineConstants.VERSIONINFO + " Command " + getCommandName());
+			scenarioInstance = getScenarioService().start();
+		} catch (NullPointerException | URISyntaxException e) {
+			this.appendResultString("Resource Intensive Scenario Notifier Service: Service can not be created!");
+		} catch (Exception e) {
+			this.appendResultString("Resource Intensive Scenario Notifier Service: Scenario can not be started!");
+		}
+		return scenarioInstance;
+	}
+
+	/**
+	 * Stop a Resource Intensive Scenario instance
+	 * 
+	 * @param scenarioInstance
+	 */
+	protected void stopScenario(String scenarioInstance) {
+		try {
+			getScenarioService().stop(scenarioInstance);
+		} catch (Exception e) {
+			this.appendResultString("Resource Intensive Scenario Notifier Service: Scenario can not be stopped!");
+		}
 	}
 
 	protected ITeamRepository getTeamRepository() {
@@ -120,6 +161,14 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	 */
 	protected IAuditableCommon getAuditableCommon() {
 		return (IAuditableCommon) getTeamRepository().getClientLibrary(IAuditableCommon.class);
+	}
+
+	protected IExpensiveScenarioService getScenarioService() {
+		return fScenarioService;
+	}
+
+	protected String getScenarioInstance() {
+		return fScenarioInstance;
 	}
 
 	/**
