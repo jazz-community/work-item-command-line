@@ -36,16 +36,14 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 
 	private ITeamRepository fTeamRepository;
 	private IExpensiveScenarioService fScenarioService;
-	private String fScenarioInstance;
 
 	protected AbstractTeamRepositoryCommand(ParameterManager parametermanager) {
 		super(parametermanager);
 	}
 
 	/**
-	 * Overriding classes should call super to get the parameters added These
-	 * are the basic parameters that are always needed to interact with the
-	 * repository
+	 * Overriding classes should call super to get the parameters added These are
+	 * the basic parameters that are always needed to interact with the repository
 	 * 
 	 * (non-Javadoc)
 	 * 
@@ -56,11 +54,9 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 		getParameterManager().syntaxAddRequiredParameter(
 				IWorkItemCommandLineConstants.PARAMETER_REPOSITORY_URL_PROPERTY,
 				IWorkItemCommandLineConstants.PARAMETER_REPOSITORY_URL_PROPERTY_EXAMPLE);
-		getParameterManager().syntaxAddRequiredParameter(
-				IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY,
+		getParameterManager().syntaxAddRequiredParameter(IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY,
 				IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY_EXAMPLE);
-		getParameterManager().syntaxAddRequiredParameter(
-				IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY,
+		getParameterManager().syntaxAddRequiredParameter(IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY,
 				IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY_EXAMPLE);
 	}
 
@@ -77,11 +73,11 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 
 	@Override
 	public OperationResult execute(IProgressMonitor monitor) throws TeamRepositoryException {
-
+		String scenarioInstance = null;
 		try {
 			// Login to the repository
 			this.fTeamRepository = login();
-			this.fScenarioInstance=startScenario();			
+			scenarioInstance = startScenario();
 		} catch (TeamRepositoryException e) {
 			this.appendResultString("TeamRepositoryException: Unable to log into repository!");
 			this.appendResultString(e.getMessage());
@@ -93,14 +89,14 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 		} catch (TeamRepositoryException e) {
 			this.appendResultString("TeamRepositoryException: Unable to process!");
 			this.appendResultString("This is often due to a link creation making the target work item invalid. ");
-			this.appendResultString("For example creating a parent chld relationship to a work item that already has a parent.");
+			this.appendResultString(
+					"For example creating a parent chld relationship to a work item that already has a parent.");
 			this.appendResultString(e.getMessage());
 			this.setFailed();
 		}
-		stopScenario(getScenarioInstance());
+		stopScenario(scenarioInstance);
 		return getResult();
 	}
-
 
 	/**
 	 * Start a Resource Intensive Scenario instance
@@ -109,9 +105,11 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	 * @return
 	 */
 	protected String startScenario() {
-		String scenarioInstance=null;	
+		String scenarioInstance = null;
 		try {
-			this.fScenarioService = new ExpensiveScenarioService(getTeamRepository(), getTeamRepository().publicUriRoot(), "WCL " + IWorkItemCommandLineConstants.VERSIONINFO + " Command " + getCommandName());
+			setScenarioService(new ExpensiveScenarioService(getTeamRepository(),
+					getTeamRepository().publicUriRoot(),
+					"WCL " + IWorkItemCommandLineConstants.VERSIONINFO + " " + getCommandName()));
 			scenarioInstance = getScenarioService().start();
 		} catch (NullPointerException | URISyntaxException e) {
 			this.appendResultString("Resource Intensive Scenario Notifier Service: Service can not be created!");
@@ -123,6 +121,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 
 	/**
 	 * Stop a Resource Intensive Scenario instance
+	 * @see https://jazz.net/wiki/bin/view/Deployment/CreateCustomScenarios
 	 * 
 	 * @param scenarioInstance
 	 */
@@ -132,6 +131,14 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 		} catch (Exception e) {
 			this.appendResultString("Resource Intensive Scenario Notifier Service: Scenario can not be stopped!");
 		}
+	}
+	
+	protected IExpensiveScenarioService getScenarioService() {
+		return fScenarioService;
+	}
+
+	protected void setScenarioService(IExpensiveScenarioService service) {
+		this.fScenarioService=service;
 	}
 
 	protected ITeamRepository getTeamRepository() {
@@ -151,8 +158,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	 * @return the IWorkItemCommon
 	 */
 	protected IWorkItemCommon getWorkItemCommon() {
-		IWorkItemCommon workItemCommon = (IWorkItemCommon) getTeamRepository().getClientLibrary(
-				IWorkItemCommon.class);
+		IWorkItemCommon workItemCommon = (IWorkItemCommon) getTeamRepository().getClientLibrary(IWorkItemCommon.class);
 		return workItemCommon;
 	}
 
@@ -163,51 +169,39 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 		return (IAuditableCommon) getTeamRepository().getClientLibrary(IAuditableCommon.class);
 	}
 
-	protected IExpensiveScenarioService getScenarioService() {
-		return fScenarioService;
-	}
-
-	protected String getScenarioInstance() {
-		return fScenarioInstance;
-	}
-
 	/**
-	 * Log into the teamrepository. Get the parameters from the parameter
-	 * managers list and use the values.
+	 * Log into the teamrepository. Get the parameters from the parameter managers
+	 * list and use the values.
 	 * 
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
 	private ITeamRepository login() throws TeamRepositoryException {
-		String repository = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_REPOSITORY_URL_PROPERTY);
-		String user = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY);
-		String password = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY);
+		String repository = getParameterManager()
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_REPOSITORY_URL_PROPERTY);
+		String user = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY);
+		String password = getParameterManager()
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY);
 
-		ITeamRepository teamRepository = TeamPlatform.getTeamRepositoryService().getTeamRepository(
-				repository);
+		ITeamRepository teamRepository = TeamPlatform.getTeamRepositoryService().getTeamRepository(repository);
 		teamRepository.registerLoginHandler(new LoginHandler(user, password));
 		teamRepository.login(getMonitor());
 		return teamRepository;
 	}
 
 	/**
-	 * Log into the teamrepository. Get the parameters from the parameter
-	 * managers list and use the values.
+	 * Log into the teamrepository. Get the parameters from the parameter managers
+	 * list and use the values.
 	 * 
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
 	protected ITeamRepository login(String repository) throws TeamRepositoryException {
-		String user = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY);
-		String password = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY);
+		String user = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY);
+		String password = getParameterManager()
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY);
 
-		ITeamRepository teamRepository = TeamPlatform.getTeamRepositoryService().getTeamRepository(
-				repository);
+		ITeamRepository teamRepository = TeamPlatform.getTeamRepositoryService().getTeamRepository(repository);
 		teamRepository.registerLoginHandler(new LoginHandler(user, password));
 		teamRepository.login(getMonitor());
 		return teamRepository;
