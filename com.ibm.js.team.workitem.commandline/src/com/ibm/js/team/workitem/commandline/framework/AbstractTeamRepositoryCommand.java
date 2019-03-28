@@ -109,7 +109,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 		try {
 			setScenarioService(new ExpensiveScenarioService(getTeamRepository(),
 					getTeamRepository().publicUriRoot(),
-					"WCL " + IWorkItemCommandLineConstants.VERSIONINFO + " " + getCommandName()));
+					"WCL_" + IWorkItemCommandLineConstants.VERSIONINFO + "_" + getCommandName()));
 			scenarioInstance = getScenarioService().start();
 		} catch (NullPointerException | URISyntaxException e) {
 			this.appendResultString("Resource Intensive Scenario Notifier Service: Service can not be created!");
