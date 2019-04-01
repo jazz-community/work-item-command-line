@@ -52,6 +52,27 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 	private ITeamRepository fTeamRepository;
 	private String fScenarioName;
 
+	/**
+	 * Start and stop expensive scenario counter are performed persisting the
+	 * scenario counter in a file or pass it as string. See option
+	 * persistStartAsFile.
+	 * 
+	 * @param teamRepository     Team repository
+	 * @param scenarioName       the name of the scenario
+	 * @throws URISyntaxException
+	 */
+	public ExpensiveScenarioService(final ITeamRepository teamRepository, final String scenarioName) throws URISyntaxException, NullPointerException {
+		if(teamRepository==null)
+			throw new NullPointerException("TeamRepository can not be null");
+		fTeamRepository = teamRepository;
+		String publicURI = teamRepository.getRepositoryURI();
+		if(publicURI==null)
+			throw new NullPointerException("Public URI can not be null");
+		fPublicURI = new URI(publicURI.replaceAll("/$", ""));
+		if(scenarioName==null)
+			throw new NullPointerException("Scenario name can not be null");
+		fScenarioName = scenarioName;
+	}
 
 	/**
 	 * Start and stop expensive scenario counter are performed persisting the
