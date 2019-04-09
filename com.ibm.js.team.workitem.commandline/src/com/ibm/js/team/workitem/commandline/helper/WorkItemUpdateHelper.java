@@ -483,6 +483,7 @@ public class WorkItemUpdateHelper {
 			deleteLinks(parameter, exceptions);
 		} else {
 			// Update all other attribute based values of the work item
+			// Ignore Errors?
 			updateGeneralAttribute(parameter, exceptions);
 		}
 		// If some errors happened, throw an exception and list the reasons for
@@ -512,9 +513,9 @@ public class WorkItemUpdateHelper {
 				throw new WorkItemCommandLineException(
 						"Attribute not available at work item: "
 								+ parameter.getAttributeID()
-								+ " Value: "
+								+ " Value: '"
 								+ parameter.getValue()
-								+ ". Check the work item type or consider synchronizing the attributes.");
+								+ "'. Check the work item type or consider synchronizing the attributes.");
 			} else {
 				Object result;
 				try {
@@ -1284,6 +1285,7 @@ public class WorkItemUpdateHelper {
 	 */
 	private void updateResolution(ParameterValue parameter)
 			throws WorkItemCommandLineException, TeamRepositoryException {
+		Identifier<IResolution> resolution = null;
 		if (!(parameter.isDefault() || parameter.isSet())) {
 			throw new WorkItemCommandLineException(
 					"Comments only supports the default and the "
@@ -1291,12 +1293,15 @@ public class WorkItemUpdateHelper {
 							+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET
 							+ " modes: " + parameter.getAttributeID() + " !");
 		}
-		Identifier<IResolution> resolution = findResolution(parameter
-				.getValue());
-		if (resolution == null) {
-			throw new WorkItemCommandLineException("Resolution not found: "
-					+ parameter.getAttributeID() + " Value: "
-					+ parameter.getValue());
+		String resolutionValue = parameter.getValue();
+		if(resolutionValue!=null) {			
+			try {
+				resolution = findResolution(parameter.getValue());
+			} catch (Exception e) {
+				throw new WorkItemCommandLineException("Resolution not found: "
+						+ parameter.getAttributeID() + " Value: "
+						+ parameter.getValue());
+			}
 		}
 		getWorkItem().setResolution2(resolution);
 	}
@@ -1337,7 +1342,7 @@ public class WorkItemUpdateHelper {
 		}
 		if (!notFoundList.isEmpty()) {
 			exceptions.add(new WorkItemCommandLineException(
-					"Sunscriber not found: " + parameter.getAttributeID()
+					"Subscriber not found: " + parameter.getAttributeID()
 							+ " Subscribers: "
 							+ helpGetDisplayStringFromList(notFoundList)));
 		}
@@ -2415,12 +2420,18 @@ public class WorkItemUpdateHelper {
 	 * related to a state. Search is by name and by ID of the resolution.
 	 * 
 	 * @param value
-	 *            - the resolution display text
-	 * @return the resolution object that was found
-	 * @throws TeamRepositoryException
+	 *            - the resolution display text or "" or null;
+	 * @return the resolution object that was found or null if the value is empty
+	 * @throws TeamRepositoryException, WorkItemCommandLineException
 	 */
 	private Identifier<IResolution> findResolution(String value)
-			throws TeamRepositoryException {
+			throws TeamRepositoryException, WorkItemCommandLineException {
+		if(value==null) {
+			return null;
+		}
+		if(value.equals("")) {
+			return null;
+		}
 		IWorkflowInfo workflowInfo = getWorkItemCommon().getWorkflow(
 				getWorkItem().getWorkItemType(),
 				getWorkItem().getProjectArea(), monitor);
@@ -2433,7 +2444,7 @@ public class WorkItemUpdateHelper {
 				return resolution;
 			}
 		}
-		return null;
+		throw new WorkItemCommandLineException("Resolution not found Value: " + value );
 	}
 
 	/**

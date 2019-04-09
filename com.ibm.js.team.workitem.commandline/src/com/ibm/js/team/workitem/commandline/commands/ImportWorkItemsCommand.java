@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.ibm.js.team.workitem.commandline.IWorkItemCommandLineConstants;
 import com.ibm.js.team.workitem.commandline.OperationResult;
 import com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemModificationCommand;
@@ -656,8 +658,18 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			if (targetValue != null && !targetValue.equals("")) {
 				rowHasData = true;
 			}
-			// Add the new parameter
-			processAttribute(attributeMapping, parameters, targetAttribute, targetValue);
+			try {
+				// Add the new parameter
+				processAttribute(attributeMapping, parameters, targetAttribute, targetValue);
+			} catch (Exception e) {
+				if(isIgnoreErrors()) {
+					if(!"".equals(targetValue)) {
+						this.appendResultString("Exception! " + e.getMessage());
+						this.appendResultString("Ignored....... ");
+					}
+					continue;
+				}
+			}
 
 		}
 		// Add all the information that is not imported as comment data.
@@ -693,11 +705,11 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	private void processAttribute(ColumnHeaderAttributeNameMapper headerMapping, ParameterList parameters,
 			String attributeID, String targetValue) {
 		// If the parameter has no value, we don't process it.
-		if (targetValue.equals("")) {
-			// @see https://github.com/jazz-community/work-item-command-line/issues/16
-			// TODO: Defect, we want to be able to clear attributes. 
-			return;  
-		}
+//		if (targetValue.equals("")) {
+//			// @see https://github.com/jazz-community/work-item-command-line/issues/16
+//			// TODO: Defect, we want to be able to clear attributes. 
+//			return;  
+//		}
 		// Try to get the attribute from the header mapping
 		IAttribute attribute = headerMapping.getAttribute(attributeID);
 		// Handle non attribute based values
