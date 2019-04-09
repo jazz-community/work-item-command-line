@@ -2429,7 +2429,7 @@ public class WorkItemUpdateHelper {
 		for (Identifier<IResolution> resolution : resolutions) {
 			if (workflowInfo.getResolutionName(resolution).equals(value)) {
 				return resolution;
-			} else if (resolution.toString().equals(value)) {
+			} else if (resolution.getStringIdentifier().equals(value)) {
 				return resolution;
 			}
 		}

@@ -71,6 +71,7 @@ import com.ibm.team.workitem.common.model.IDeliverable;
 import com.ibm.team.workitem.common.model.IDeliverableHandle;
 import com.ibm.team.workitem.common.model.IEnumeration;
 import com.ibm.team.workitem.common.model.ILiteral;
+import com.ibm.team.workitem.common.model.IResolution;
 import com.ibm.team.workitem.common.model.IState;
 import com.ibm.team.workitem.common.model.ISubscriptions;
 import com.ibm.team.workitem.common.model.IWorkItem;
@@ -239,6 +240,10 @@ public class WorkItemExportHelper {
 			// Handle states
 			return calculateStateAsString(workItem);
 		}
+		if (attribute.getIdentifier().equals(IWorkItem.RESOLUTION_PROPERTY)) {
+			// Handle states
+			return calculateResolutionAsString(workItem);
+		}
 		if (attribType.equals(AttributeTypes.APPROVALS)) {
 			// Handle approvals
 			return calculateApprovalsAsString(workItem);
@@ -386,6 +391,22 @@ public class WorkItemExportHelper {
 			throw new WorkItemCommandLineException(
 					"AttributeType not yet supported: " + attribType + " ID " + attribute.getIdentifier());
 		}
+	}
+
+	/**
+	 * Calculate the resolution attribute.
+	 * 
+	 * @param workItem
+	 * @return
+	 * @throws TeamRepositoryException 
+	 */
+	private String calculateResolutionAsString(IWorkItem workItem) throws TeamRepositoryException {
+		Identifier<IResolution> resolution = workItem.getResolution2();	
+		IWorkflowInfo workflowInfo;
+			workflowInfo = getWorkItemCommon().getWorkflow(
+					workItem.getWorkItemType(),
+					workItem.getProjectArea(), getMonitor());
+		return workflowInfo.getResolutionName(resolution);
 	}
 
 	/**
