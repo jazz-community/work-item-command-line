@@ -694,8 +694,6 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			String attributeID, String targetValue) {
 		// If the parameter has no value, we don't process it.
 		if (targetValue.equals("")) {
-			// @see https://github.com/jazz-community/work-item-command-line/issues/16
-			// TODO: Defect, we want to be able to clear attributes. 
 			return;  
 		}
 		// Try to get the attribute from the header mapping
