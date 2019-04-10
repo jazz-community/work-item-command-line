@@ -51,8 +51,7 @@ public class ParameterParser {
 	/**
 	 * Create a parser and parse the arguments
 	 * 
-	 * @param args
-	 *            - Array of arguments
+	 * @param args - Array of arguments
 	 * @return the parameter list with the parameters
 	 */
 	public static ParameterList parseParameters(String[] args) {
@@ -61,8 +60,8 @@ public class ParameterParser {
 	}
 
 	/**
-	 * Parses an input string and tries to split it into a parameter name and
-	 * value and store it in the hashmap
+	 * Parses an input string and tries to split it into a parameter name and value
+	 * and store it in the hashmap
 	 * 
 	 * Accepts forms like -testparameter testparameter=value testparameter
 	 * 
@@ -81,19 +80,16 @@ public class ParameterParser {
 			// nothing to do);
 			return;
 		}
-		if (inputString
-				.startsWith(IWorkItemCommandLineConstants.PREFIX_COMMAND)) {
+		if (inputString.startsWith(IWorkItemCommandLineConstants.PREFIX_COMMAND)) {
 			// Found a command remember it, strip of the prefix
 			String foundCommand = inputString.substring(1);
 			addCommand(foundCommand);
-		} else if (inputString
-				.startsWith(IWorkItemCommandLineConstants.PREFIX_SWITCH)) {
+		} else if (inputString.startsWith(IWorkItemCommandLineConstants.PREFIX_SWITCH)) {
 			// Found a switch, strip of the prefix and remember it
 			// switch can have additional parameter value
 			String foundSwitch = inputString.substring(1);
 			String switchValue = null;
-			int delimiter = inputString
-					.indexOf(IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR);
+			int delimiter = inputString.indexOf(IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR);
 			if (delimiter > 0) {
 				// Strip of the switch prefix
 				foundSwitch = inputString.substring(1, delimiter);
@@ -108,8 +104,7 @@ public class ParameterParser {
 			String parameterValue = null;
 
 			parameterValue = null;
-			int delimiter = inputString
-					.indexOf(IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR);
+			int delimiter = inputString.indexOf(IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR);
 			// If we find a separator, get the first section as parameterName
 			// and the rest as value
 			if (delimiter > 0) {
@@ -126,15 +121,12 @@ public class ParameterParser {
 	/**
 	 * Add a parameter with value
 	 * 
-	 * @param parameterName
-	 *            - the name of the parameter
-	 * @param parameterValue
-	 *            - the value of the parameter
+	 * @param parameterName  - the name of the parameter
+	 * @param parameterValue - the value of the parameter
 	 */
 	private void addParameterValue(String parameterName, String parameterValue) {
 		if (getParameterList().getParameter(parameterName) != null) {
-			throw new WorkItemCommandLineException("Duplicate parameter: "
-					+ parameterName);
+			throw new WorkItemCommandLineException("Duplicate parameter: " + parameterName);
 		}
 		getParameterList().addParameterValue(parameterName, parameterValue);
 	}
@@ -142,13 +134,12 @@ public class ParameterParser {
 	/**
 	 * Add a switch
 	 * 
-	 * @param name
-	 *            - the name of the switch
+	 * @param name - the name of the switch
 	 */
 	private void addSwitch(String name, String value) {
 		if (getParameterList().getParameter(name) != null) {
-			throw new WorkItemCommandLineException("Duplicate switch: "
-					+ IWorkItemCommandLineConstants.PREFIX_SWITCH + name);
+			throw new WorkItemCommandLineException(
+					"Duplicate switch: " + IWorkItemCommandLineConstants.PREFIX_SWITCH + name);
 		}
 		getParameterList().addParameter(Parameter.createSwitch(name, value));
 	}
@@ -156,15 +147,12 @@ public class ParameterParser {
 	/**
 	 * Add a command
 	 * 
-	 * @param name
-	 *            - the name of the command
+	 * @param name - the name of the command
 	 */
 	private void addCommand(String name) {
 		if (getParameterList().getCommand() != null) {
 			throw new WorkItemCommandLineException(
-					"Ambiguous command parameter: "
-							+ IWorkItemCommandLineConstants.PREFIX_COMMAND
-							+ name);
+					"Ambiguous command parameter: " + IWorkItemCommandLineConstants.PREFIX_COMMAND + name);
 		}
 		getParameterList().addCommand(name);
 	}

@@ -53,8 +53,7 @@ public class DevelopmentLineHelper {
 	 * @param teamRepository
 	 * @param monitor
 	 */
-	public DevelopmentLineHelper(ITeamRepository teamRepository,
-			IProgressMonitor monitor) {
+	public DevelopmentLineHelper(ITeamRepository teamRepository, IProgressMonitor monitor) {
 		fTeamRepository = teamRepository;
 		fMonitor = monitor;
 	}
@@ -64,21 +63,18 @@ public class DevelopmentLineHelper {
 	 * 
 	 * @param projectArea
 	 * @param path
-	 * @param byId
-	 *            search by id or name
+	 * @param byId        search by id or name
 	 * @return a development line found or null.
 	 * @throws TeamRepositoryException
 	 */
-	public IDevelopmentLine findDevelopmentLine(IProjectArea projectArea,
-			List<String> path, Mode comparemode) throws TeamRepositoryException {
+	public IDevelopmentLine findDevelopmentLine(IProjectArea projectArea, List<String> path, Mode comparemode)
+			throws TeamRepositoryException {
 		int level = 0;
 		String fookFor = path.get(level);
-		IDevelopmentLineHandle[] developmentLineHandles = projectArea
-				.getDevelopmentLines();
+		IDevelopmentLineHandle[] developmentLineHandles = projectArea.getDevelopmentLines();
 		for (IDevelopmentLineHandle developmentLineHandle : developmentLineHandles) {
-			IDevelopmentLine developmentLine = fAuditableClient
-					.resolveAuditable(developmentLineHandle,
-							ItemProfile.DEVELOPMENT_LINE_DEFAULT, fMonitor);
+			IDevelopmentLine developmentLine = fAuditableClient.resolveAuditable(developmentLineHandle,
+					ItemProfile.DEVELOPMENT_LINE_DEFAULT, fMonitor);
 			String compare = "";
 			switch (comparemode) {
 			case BYID:
@@ -108,18 +104,14 @@ public class DevelopmentLineHelper {
 	 * 
 	 * @throws TeamRepositoryException
 	 */
-	public IIteration findIteration(IProjectAreaHandle iProjectAreaHandle,
-			List<String> path, Mode comparemode) throws TeamRepositoryException {
-		fAuditableClient = (IAuditableClient) fTeamRepository
-				.getClientLibrary(IAuditableClient.class);
+	public IIteration findIteration(IProjectAreaHandle iProjectAreaHandle, List<String> path, Mode comparemode)
+			throws TeamRepositoryException {
+		fAuditableClient = (IAuditableClient) fTeamRepository.getClientLibrary(IAuditableClient.class);
 		IIteration foundIteration = null;
-		IProjectArea projectArea = ProcessAreaUtil.resolveProjectArea(
-				iProjectAreaHandle, fMonitor);
-		IDevelopmentLine developmentLine = findDevelopmentLine(projectArea,
-				path, comparemode);
+		IProjectArea projectArea = ProcessAreaUtil.resolveProjectArea(iProjectAreaHandle, fMonitor);
+		IDevelopmentLine developmentLine = findDevelopmentLine(projectArea, path, comparemode);
 		if (developmentLine != null) {
-			foundIteration = findIteration(developmentLine.getIterations(),
-					path, 1, comparemode);
+			foundIteration = findIteration(developmentLine.getIterations(), path, 1, comparemode);
 		}
 		return foundIteration;
 	}
@@ -134,14 +126,13 @@ public class DevelopmentLineHelper {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private IIteration findIteration(IIterationHandle[] iterations,
-			List<String> path, int level, Mode comparemode)
+	private IIteration findIteration(IIterationHandle[] iterations, List<String> path, int level, Mode comparemode)
 			throws TeamRepositoryException {
 		String lookFor = path.get(level);
 		for (IIterationHandle iIterationHandle : iterations) {
 
-			IIteration iteration = fAuditableClient.resolveAuditable(
-					iIterationHandle, ItemProfile.ITERATION_DEFAULT, fMonitor);
+			IIteration iteration = fAuditableClient.resolveAuditable(iIterationHandle, ItemProfile.ITERATION_DEFAULT,
+					fMonitor);
 			String compare = "";
 			switch (comparemode) {
 			case BYID:
@@ -156,8 +147,7 @@ public class DevelopmentLineHelper {
 			}
 			if (lookFor.equals(compare)) {
 				if (path.size() > level + 1) {
-					IIteration found = findIteration(iteration.getChildren(),
-							path, level + 1, comparemode);
+					IIteration found = findIteration(iteration.getChildren(), path, level + 1, comparemode);
 					if (found != null) {
 						return found;
 					}
@@ -176,14 +166,12 @@ public class DevelopmentLineHelper {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	public IIteration resolveIteration(IIterationHandle handle)
-			throws TeamRepositoryException {
+	public IIteration resolveIteration(IIterationHandle handle) throws TeamRepositoryException {
 		if (handle instanceof IIteration) {
 			return (IIteration) handle;
 		}
-		IIteration iteration = (IIteration) fTeamRepository.itemManager()
-				.fetchCompleteItem((IIterationHandle) handle,
-						IItemManager.DEFAULT, fMonitor);
+		IIteration iteration = (IIteration) fTeamRepository.itemManager().fetchCompleteItem((IIterationHandle) handle,
+				IItemManager.DEFAULT, fMonitor);
 		return iteration;
 	}
 
@@ -194,14 +182,12 @@ public class DevelopmentLineHelper {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	public IDevelopmentLine resolveDevelopmentLine(IDevelopmentLineHandle handle)
-			throws TeamRepositoryException {
+	public IDevelopmentLine resolveDevelopmentLine(IDevelopmentLineHandle handle) throws TeamRepositoryException {
 		if (handle instanceof IDevelopmentLine) {
 			return (IDevelopmentLine) handle;
 		}
-		IDevelopmentLine devLine = (IDevelopmentLine) fTeamRepository
-				.itemManager().fetchCompleteItem(handle, IItemManager.DEFAULT,
-						fMonitor);
+		IDevelopmentLine devLine = (IDevelopmentLine) fTeamRepository.itemManager().fetchCompleteItem(handle,
+				IItemManager.DEFAULT, fMonitor);
 		return devLine;
 	}
 
@@ -213,8 +199,7 @@ public class DevelopmentLineHelper {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	public String getDevelopmentLineAsString(IDevelopmentLineHandle handle,
-			Mode mode) throws TeamRepositoryException {
+	public String getDevelopmentLineAsString(IDevelopmentLineHandle handle, Mode mode) throws TeamRepositoryException {
 		IDevelopmentLine devLine = resolveDevelopmentLine(handle);
 		switch (mode) {
 		case BYID:
@@ -228,17 +213,16 @@ public class DevelopmentLineHelper {
 	}
 
 	/**
-	 * Get the iteration as string (Label, id or name). The mode chosen
-	 * determines what value is returned. This returns only the iteration
-	 * related data and not the path from the development line to the iteration.
+	 * Get the iteration as string (Label, id or name). The mode chosen determines
+	 * what value is returned. This returns only the iteration related data and not
+	 * the path from the development line to the iteration.
 	 * 
 	 * @param handle
 	 * @param mode
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	public String getIterationAsString(IIterationHandle handle, Mode mode)
-			throws TeamRepositoryException {
+	public String getIterationAsString(IIterationHandle handle, Mode mode) throws TeamRepositoryException {
 		IIteration iteration = resolveIteration(handle);
 		switch (mode) {
 		case BYID:
@@ -252,27 +236,23 @@ public class DevelopmentLineHelper {
 	}
 
 	/**
-	 * Get the iteration as full path string (Label, id or name) This includes
-	 * the development line and all the iterations above.
+	 * Get the iteration as full path string (Label, id or name) This includes the
+	 * development line and all the iterations above.
 	 * 
 	 * @param handle
 	 * @param mode
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	public String getIterationAsFullPath(IIterationHandle handle, Mode mode)
-			throws TeamRepositoryException {
+	public String getIterationAsFullPath(IIterationHandle handle, Mode mode) throws TeamRepositoryException {
 		IIteration iteration = resolveIteration(handle);
 		String fullPath = getIterationAsString(iteration, mode);
 		IIterationHandle parent = iteration.getParent();
 		if (parent == null) {
-			IDevelopmentLineHandle devLineHandle = iteration
-					.getDevelopmentLine();
-			return getDevelopmentLineAsString(devLineHandle, mode)
-					+ WorkItemUpdateHelper.PATH_SEPARATOR + fullPath;
+			IDevelopmentLineHandle devLineHandle = iteration.getDevelopmentLine();
+			return getDevelopmentLineAsString(devLineHandle, mode) + WorkItemUpdateHelper.PATH_SEPARATOR + fullPath;
 		} else {
-			return getIterationAsFullPath(parent, mode)
-					+ WorkItemUpdateHelper.PATH_SEPARATOR + fullPath;
+			return getIterationAsFullPath(parent, mode) + WorkItemUpdateHelper.PATH_SEPARATOR + fullPath;
 		}
 	}
 }

@@ -25,10 +25,9 @@ import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient.IRawRe
 import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient.IRawRestClientConnection.Response;
 
 /**
- * Service to execute a start and stop for an expensive scenario. 
+ * Service to execute a start and stop for an expensive scenario.
  * 
- * Uses JSON
- * instead of x-www-form-urlencoded to make parsing easier. 
+ * Uses JSON instead of x-www-form-urlencoded to make parsing easier.
  * 
  * The information to stop the expensive scenario is returned as a string.
  *
@@ -41,12 +40,11 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 	private static final String APPLICATION_JSON = "application/json";
 	private static final String SCENARIO_NAME = "scenarioName";
 	private static final String SCENARIO_INSTANCE_ID = "scenarioInstanceId";
-	
+
 	static final String DEBUG_NOFILE_COMMAND = "debug_nofile";
 	static final String DEBUG_FILE_COMMAND = "debug_file";
 	static final String START_COMMAND = "start";
 	static final String STOP_COMMAND = "stop";
-
 
 	private URI fPublicURI = null;
 	private ITeamRepository fTeamRepository;
@@ -57,19 +55,20 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 	 * scenario counter in a file or pass it as string. See option
 	 * persistStartAsFile.
 	 * 
-	 * @param teamRepository     Team repository
-	 * @param scenarioName       the name of the scenario
+	 * @param teamRepository Team repository
+	 * @param scenarioName   the name of the scenario
 	 * @throws URISyntaxException
 	 */
-	public ExpensiveScenarioService(final ITeamRepository teamRepository, final String scenarioName) throws URISyntaxException, NullPointerException {
-		if(teamRepository==null)
+	public ExpensiveScenarioService(final ITeamRepository teamRepository, final String scenarioName)
+			throws URISyntaxException, NullPointerException {
+		if (teamRepository == null)
 			throw new NullPointerException("TeamRepository can not be null");
 		fTeamRepository = teamRepository;
 		String publicURI = teamRepository.getRepositoryURI();
-		if(publicURI==null)
+		if (publicURI == null)
 			throw new NullPointerException("Public URI can not be null");
 		fPublicURI = new URI(publicURI.replaceAll("/$", ""));
-		if(scenarioName==null)
+		if (scenarioName == null)
 			throw new NullPointerException("Scenario name can not be null");
 		fScenarioName = scenarioName;
 	}
@@ -79,19 +78,20 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 	 * scenario counter in a file or pass it as string. See option
 	 * persistStartAsFile.
 	 * 
-	 * @param teamRepository     Team repository
-	 * @param publicURI          Public URI of the target CLM server
-	 * @param scenarioName       the name of the scenario
+	 * @param teamRepository Team repository
+	 * @param publicURI      Public URI of the target CLM server
+	 * @param scenarioName   the name of the scenario
 	 * @throws URISyntaxException
 	 */
-	public ExpensiveScenarioService(final ITeamRepository teamRepository,final String publicURI,final String scenarioName) throws URISyntaxException, NullPointerException {
-		if(teamRepository==null)
+	public ExpensiveScenarioService(final ITeamRepository teamRepository, final String publicURI,
+			final String scenarioName) throws URISyntaxException, NullPointerException {
+		if (teamRepository == null)
 			throw new NullPointerException("TeamRepository can not be null");
 		fTeamRepository = teamRepository;
-		if(publicURI==null)
+		if (publicURI == null)
 			throw new NullPointerException("Public URI can not be null");
 		fPublicURI = new URI(publicURI.replaceAll("/$", ""));
-		if(scenarioName==null)
+		if (scenarioName == null)
 			throw new NullPointerException("Scenario name can not be null");
 		fScenarioName = scenarioName;
 	}
@@ -106,8 +106,12 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 		return URI.create(fPublicURI.toString() + path);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.js.team.monitoring.custom.expensivescenario.IExpensiveScenarioService#start()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ibm.js.team.monitoring.custom.expensivescenario.IExpensiveScenarioService
+	 * #start()
 	 */
 	public String start() throws Exception {
 		Response response = null;
@@ -150,8 +154,12 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.js.team.monitoring.custom.expensivescenario.IExpensiveScenarioService#stop(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ibm.js.team.monitoring.custom.expensivescenario.IExpensiveScenarioService
+	 * #stop(java.lang.String)
 	 */
 	public void stop(String startRequestResponse)
 			throws URISyntaxException, TeamServiceException, TeamRepositoryException, IOException, Exception {

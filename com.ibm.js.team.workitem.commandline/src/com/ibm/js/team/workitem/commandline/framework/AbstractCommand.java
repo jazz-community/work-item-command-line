@@ -31,8 +31,7 @@ public abstract class AbstractCommand implements IWorkItemCommand {
 	/**
 	 * Delegate to add to the operation result
 	 * 
-	 * @param operationResult
-	 *            the result we want to add
+	 * @param operationResult the result we want to add
 	 */
 	protected void addOperationResult(OperationResult operationResult) {
 		this.result.addOperationResult(operationResult);
@@ -105,18 +104,16 @@ public abstract class AbstractCommand implements IWorkItemCommand {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.ibm.js.team.workitem.commandline.framework.IWorkItemCommandLineCommand
-	 * #
-	 * initialize(com.ibm.js.team.workitem.commandline.parameter.ParameterManager
-	 * )
+	 * com.ibm.js.team.workitem.commandline.framework.IWorkItemCommandLineCommand #
+	 * initialize(com.ibm.js.team.workitem.commandline.parameter.ParameterManager )
 	 */
 	public void initialize() {
 		setRequiredParameters();
 	}
 
 	/**
-	 * Inheriting classes need to provide the required parameters, if no
-	 * additional parameters are required this can be left blank.
+	 * Inheriting classes need to provide the required parameters, if no additional
+	 * parameters are required this can be left blank.
 	 */
 	public abstract void setRequiredParameters();
 
@@ -129,8 +126,7 @@ public abstract class AbstractCommand implements IWorkItemCommand {
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public OperationResult execute(IProgressMonitor monitor)
-			throws TeamRepositoryException {
+	public OperationResult execute(IProgressMonitor monitor) throws TeamRepositoryException {
 		return process();
 	}
 
@@ -143,8 +139,7 @@ public abstract class AbstractCommand implements IWorkItemCommand {
 	 */
 	@Override
 	public String helpUsage() {
-		return getParameterManager().helpUsageRequiredParameters() + " "
-				+ helpSpecificUsage();
+		return getParameterManager().helpUsageRequiredParameters() + " " + helpSpecificUsage();
 	}
 
 	public abstract String helpSpecificUsage();

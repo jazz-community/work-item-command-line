@@ -51,8 +51,7 @@ public class WorkItemTypeHelper {
 	 */
 	private IWorkItemClient getWorkItemCommon() {
 		ITeamRepository repo = getTeamRepository();
-		IWorkItemClient workItemClient = (IWorkItemClient) repo
-				.getClientLibrary(IWorkItemClient.class);
+		IWorkItemClient workItemClient = (IWorkItemClient) repo.getClientLibrary(IWorkItemClient.class);
 		return workItemClient;
 	}
 
@@ -62,8 +61,7 @@ public class WorkItemTypeHelper {
 	 * @return
 	 */
 	private IWorkItemClient getWorkItemClient() {
-		return (IWorkItemClient) getTeamRepository().getClientLibrary(
-				IWorkItemClient.class);
+		return (IWorkItemClient) getTeamRepository().getClientLibrary(IWorkItemClient.class);
 	}
 
 	/**
@@ -81,20 +79,21 @@ public class WorkItemTypeHelper {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	public OperationResult printWorkItemTypes(IProjectArea projectArea, IProgressMonitor monitor) throws TeamRepositoryException {
-		
+	public OperationResult printWorkItemTypes(IProjectArea projectArea, IProgressMonitor monitor)
+			throws TeamRepositoryException {
+
 		OperationResult result = new OperationResult();
-		List<IWorkItemType> workItemTypes= getWorkItemClient().findWorkItemTypes(projectArea, monitor);
+		List<IWorkItemType> workItemTypes = getWorkItemClient().findWorkItemTypes(projectArea, monitor);
 		for (IWorkItemType workItemType : workItemTypes) {
 			result.appendResultString("Work Item type: " + workItemType.getDisplayName());
 			result.appendResultString("Type ID: " + workItemType.getIdentifier());
 			result.appendResultString("Type Category: " + workItemType.getCategory());
-			result.appendResultString("");			
+			result.appendResultString("");
 		}
 		result.setSuccess();
 		return result;
 	}
-	
+
 	/**
 	 * Prints the built in and the custom attributes of this work item type.
 	 * 
@@ -104,27 +103,25 @@ public class WorkItemTypeHelper {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	public OperationResult printAttributesOfType(IProjectArea projectArea,
-			IWorkItemType workItemType, IProgressMonitor monitor)
-			throws TeamRepositoryException {
+	public OperationResult printAttributesOfType(IProjectArea projectArea, IWorkItemType workItemType,
+			IProgressMonitor monitor) throws TeamRepositoryException {
 		OperationResult result = new OperationResult();
 
-		result.appendResultString("Attributes of Work Item type: "
-				+ workItemType.getDisplayName() + " Type ID: "
+		result.appendResultString("Attributes of Work Item type: " + workItemType.getDisplayName() + " Type ID: "
 				+ workItemType.getIdentifier());
-		
+
 		result.appendResultString("  Built In Attributes");
-		result.appendResultString(printAttributesAndTypes(
-				getBuiltInAttributesOfType(projectArea, workItemType, monitor), monitor));
-		
+		result.appendResultString(
+				printAttributesAndTypes(getBuiltInAttributesOfType(projectArea, workItemType, monitor), monitor));
+
 		result.appendResultString("  Custom Attributes");
-		result.appendResultString(printAttributesAndTypes(
-				getCustomAttributesOfType(projectArea, workItemType, monitor), monitor));
+		result.appendResultString(
+				printAttributesAndTypes(getCustomAttributesOfType(projectArea, workItemType, monitor), monitor));
 
 		result.setSuccess();
 		return result;
 	}
-	
+
 	/**
 	 * Prints the built in and the custom attributes of this work item type.
 	 * 
@@ -134,17 +131,15 @@ public class WorkItemTypeHelper {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	public List<?> getBuiltInAttributesOfType(IProjectArea projectArea,
-			IWorkItemType workItemType, IProgressMonitor monitor)
-			throws TeamRepositoryException {
-		List<IAttributeHandle> builtInAttributeHandles = getWorkItemCommon()
-				.findBuiltInAttributes(projectArea, monitor);
-		IFetchResult builtIn = fTeamRepository.itemManager()
-				.fetchCompleteItemsPermissionAware(builtInAttributeHandles,
-						IItemManager.REFRESH, monitor);
+	public List<?> getBuiltInAttributesOfType(IProjectArea projectArea, IWorkItemType workItemType,
+			IProgressMonitor monitor) throws TeamRepositoryException {
+		List<IAttributeHandle> builtInAttributeHandles = getWorkItemCommon().findBuiltInAttributes(projectArea,
+				monitor);
+		IFetchResult builtIn = fTeamRepository.itemManager().fetchCompleteItemsPermissionAware(builtInAttributeHandles,
+				IItemManager.REFRESH, monitor);
 		return builtIn.getRetrievedItems();
 	}
-	
+
 	/**
 	 * Prints the built in and the custom attributes of this work item type.
 	 * 
@@ -154,74 +149,58 @@ public class WorkItemTypeHelper {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	public List<?> getCustomAttributesOfType(IProjectArea projectArea,
-			IWorkItemType workItemType, IProgressMonitor monitor)
-			throws TeamRepositoryException {
-		List<IAttributeHandle> custAttributeHandles = workItemType
-				.getCustomAttributes();
+	public List<?> getCustomAttributesOfType(IProjectArea projectArea, IWorkItemType workItemType,
+			IProgressMonitor monitor) throws TeamRepositoryException {
+		List<IAttributeHandle> custAttributeHandles = workItemType.getCustomAttributes();
 
-		IFetchResult custom = fTeamRepository.itemManager()
-				.fetchCompleteItemsPermissionAware(custAttributeHandles,
-						IItemManager.REFRESH, monitor);
+		IFetchResult custom = fTeamRepository.itemManager().fetchCompleteItemsPermissionAware(custAttributeHandles,
+				IItemManager.REFRESH, monitor);
 		return custom.getRetrievedItems();
 	}
 
-	
 	/**
-	 * Print the attributes and their type information from IAttributeTypes from
-	 * a list of attributes.
+	 * Print the attributes and their type information from IAttributeTypes from a
+	 * list of attributes.
 	 * 
 	 * @param items
 	 * @param monitor
 	 */
-	private String printAttributesAndTypes(List<?> items,
-			IProgressMonitor monitor) {
+	private String printAttributesAndTypes(List<?> items, IProgressMonitor monitor) {
 		String message = "";
-		message = message + "\tNumber of attributes: "
-				+ new Integer(items.size()).toString() + "\n";
+		message = message + "\tNumber of attributes: " + new Integer(items.size()).toString() + "\n";
 		for (@SuppressWarnings("rawtypes")
 		Iterator iterator = items.iterator(); iterator.hasNext();) {
 			Object object = iterator.next();
 			if (object instanceof IAttribute) {
 				IAttribute iAttribute = (IAttribute) object;
-				message = message + "\t " + iAttribute.getDisplayName()
-						+ " \tID: " + iAttribute.getIdentifier()
-						+ " \tValueType: " + iAttribute.getAttributeType()
-						+ "\n";
+				message = message + "\t " + iAttribute.getDisplayName() + " \tID: " + iAttribute.getIdentifier()
+						+ " \tValueType: " + iAttribute.getAttributeType() + "\n";
 			}
 		}
 		return message;
 	}
 
 	/**
-	 * Find a work item type by its ID provided as string. This is public static
-	 * and can be used without initializing the helper. Only search by ID is
-	 * supported.
+	 * Find a work item type by its ID provided as string. This is public static and
+	 * can be used without initializing the helper. Only search by ID is supported.
 	 * 
-	 * @param workItemTypeID
-	 *            - the ID to find
-	 * @param projectAreaHandle
-	 *            - the project area to look into
-	 * @param workitemCommon
-	 *            - the IWorkItemCommon client library
-	 * @param monitor
-	 *            - a progress monitor or null
+	 * @param workItemTypeID    - the ID to find
+	 * @param projectAreaHandle - the project area to look into
+	 * @param workitemCommon    - the IWorkItemCommon client library
+	 * @param monitor           - a progress monitor or null
 	 * @return the work item type
 	 * @throws TeamRepositoryException
 	 */
-	public static IWorkItemType findWorkItemTypeByIDAndDisplayName(
-			String workItemTypeDisplayName,
-			IProjectAreaHandle projectAreaHandle,
-			IWorkItemCommon workitemCommon, IProgressMonitor monitor)
+	public static IWorkItemType findWorkItemTypeByIDAndDisplayName(String workItemTypeDisplayName,
+			IProjectAreaHandle projectAreaHandle, IWorkItemCommon workitemCommon, IProgressMonitor monitor)
 			throws TeamRepositoryException {
 
-		IWorkItemType workItemType = findWorkItemType2(workItemTypeDisplayName,
-				projectAreaHandle, workitemCommon, monitor);
+		IWorkItemType workItemType = findWorkItemType2(workItemTypeDisplayName, projectAreaHandle, workitemCommon,
+				monitor);
 		if (workItemType != null) {
 			return workItemType;
 		}
-		List<IWorkItemType> allTypes = workitemCommon.findWorkItemTypes(
-				projectAreaHandle, monitor);
+		List<IWorkItemType> allTypes = workitemCommon.findWorkItemTypes(projectAreaHandle, monitor);
 		for (IWorkItemType aWorkItemType : allTypes) {
 			if (aWorkItemType.getDisplayName().equals(workItemTypeDisplayName)) {
 				return aWorkItemType;
@@ -231,28 +210,20 @@ public class WorkItemTypeHelper {
 	}
 
 	/**
-	 * Find a work item type by its ID provided as string. This is public static
-	 * and can be used without initializing the helper. Only search by ID is
-	 * supported.
+	 * Find a work item type by its ID provided as string. This is public static and
+	 * can be used without initializing the helper. Only search by ID is supported.
 	 * 
-	 * @param workItemTypeID
-	 *            - the ID to find
-	 * @param projectAreaHandle
-	 *            - the project area to look into
-	 * @param workitemCommon
-	 *            - the IWorkItemCommon client library
-	 * @param monitor
-	 *            - a progress monitor or null
+	 * @param workItemTypeID    - the ID to find
+	 * @param projectAreaHandle - the project area to look into
+	 * @param workitemCommon    - the IWorkItemCommon client library
+	 * @param monitor           - a progress monitor or null
 	 * @return the work item type
 	 * @throws TeamRepositoryException
 	 */
-	public static IWorkItemType findWorkItemType2(String workItemTypeID,
-			IProjectAreaHandle projectAreaHandle,
-			IWorkItemCommon workitemCommon, IProgressMonitor monitor)
-			throws TeamRepositoryException {
+	public static IWorkItemType findWorkItemType2(String workItemTypeID, IProjectAreaHandle projectAreaHandle,
+			IWorkItemCommon workitemCommon, IProgressMonitor monitor) throws TeamRepositoryException {
 
-		IWorkItemType workItemType = workitemCommon.findWorkItemType(
-				projectAreaHandle, workItemTypeID, monitor);
+		IWorkItemType workItemType = workitemCommon.findWorkItemType(projectAreaHandle, workItemTypeID, monitor);
 		if (workItemType != null) {
 			return workItemType;
 		}
@@ -260,33 +231,24 @@ public class WorkItemTypeHelper {
 	}
 
 	/**
-	 * Find a work item type by its ID provided as string. This is public static
-	 * and can be used without initializing the helper. Only search by ID is
-	 * supported.
+	 * Find a work item type by its ID provided as string. This is public static and
+	 * can be used without initializing the helper. Only search by ID is supported.
 	 * 
-	 * @param workItemTypeID
-	 *            - the ID to find
-	 * @param projectAreaHandle
-	 *            - the project area to look into
-	 * @param workitemCommon
-	 *            - the IWorkItemCommon client library
-	 * @param monitor
-	 *            - a progress monitor or null
+	 * @param workItemTypeID    - the ID to find
+	 * @param projectAreaHandle - the project area to look into
+	 * @param workitemCommon    - the IWorkItemCommon client library
+	 * @param monitor           - a progress monitor or null
 	 * @return the work item type
 	 * @throws TeamRepositoryException
 	 */
-	public static IWorkItemType findWorkItemType(String workItemTypeID,
-			IProjectAreaHandle projectAreaHandle,
-			IWorkItemCommon workitemCommon, IProgressMonitor monitor)
-			throws TeamRepositoryException {
+	public static IWorkItemType findWorkItemType(String workItemTypeID, IProjectAreaHandle projectAreaHandle,
+			IWorkItemCommon workitemCommon, IProgressMonitor monitor) throws TeamRepositoryException {
 
-		IWorkItemType workItemType = WorkItemTypeHelper.findWorkItemType2(
-				workItemTypeID, projectAreaHandle, workitemCommon, monitor);
+		IWorkItemType workItemType = WorkItemTypeHelper.findWorkItemType2(workItemTypeID, projectAreaHandle,
+				workitemCommon, monitor);
 		if (workItemType != null) {
 			return workItemType;
 		}
-		throw new WorkItemCommandLineException("Work item type not found: "
-				+ workItemTypeID);
+		throw new WorkItemCommandLineException("Work item type not found: " + workItemTypeID);
 	}
 }
-

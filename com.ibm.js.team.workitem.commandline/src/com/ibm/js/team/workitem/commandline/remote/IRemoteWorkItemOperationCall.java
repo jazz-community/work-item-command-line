@@ -34,6 +34,5 @@ public interface IRemoteWorkItemOperationCall extends Remote {
 	 * @throws TeamRepositoryException
 	 * @throws RemoteException
 	 */
-	public abstract OperationResult runOperation(String[] args)
-			throws TeamRepositoryException, RemoteException;
+	public abstract OperationResult runOperation(String[] args) throws TeamRepositoryException, RemoteException;
 }

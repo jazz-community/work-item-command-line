@@ -164,7 +164,8 @@ public class WorkItemUpdateHelper {
 	private ParameterList fParameters = new ParameterList();
 	private boolean fEnforceSizeLimits = false;
 	private boolean fBulkupdate = false;
-	private boolean fupdateBacklinks=false;
+	private boolean fupdateBacklinks = false;
+	private boolean fImportIgnoreMissingAttributes = false;
 
 	/**
 	 * Internal class to parse and manage approval data.
@@ -182,14 +183,11 @@ public class WorkItemUpdateHelper {
 		 * @param parameter
 		 */
 		public ApprovalInputData(ParameterValue parameter) {
-			List<String> approvalData = StringUtil.splitStringToList(
-					parameter.getValue(), APPROVAL_SEPARATOR);
+			List<String> approvalData = StringUtil.splitStringToList(parameter.getValue(), APPROVAL_SEPARATOR);
 			// Check format
 			if (approvalData.size() < 2 || 3 < approvalData.size()) {
-				throw new WorkItemCommandLineException(
-						"Incorrect approval format: "
-								+ parameter.getAttributeID() + " Value: "
-								+ parameter.getValue() + helpUsageApprovals());
+				throw new WorkItemCommandLineException("Incorrect approval format: " + parameter.getAttributeID()
+						+ " Value: " + parameter.getValue() + helpUsageApprovals());
 			}
 			// Get Approval base data
 			String approvalTypeString = approvalData.get(0);
@@ -197,20 +195,14 @@ public class WorkItemUpdateHelper {
 
 			// find approval type
 			if (APPROVAL_TYPE_APPROVAL.equals(approvalTypeString.trim())) {
-				this.approvalType = WorkItemApprovals.APPROVAL_TYPE
-						.getIdentifier();
+				this.approvalType = WorkItemApprovals.APPROVAL_TYPE.getIdentifier();
 			} else if (APPROVAL_TYPE_REVIEW.equals(approvalTypeString.trim())) {
-				this.approvalType = WorkItemApprovals.REVIEW_TYPE
-						.getIdentifier();
-			} else if (APPROVAL_TYPE_VERIFICATION.equals(approvalTypeString
-					.trim())) {
-				this.approvalType = WorkItemApprovals.VERIFICATION_TYPE
-						.getIdentifier();
+				this.approvalType = WorkItemApprovals.REVIEW_TYPE.getIdentifier();
+			} else if (APPROVAL_TYPE_VERIFICATION.equals(approvalTypeString.trim())) {
+				this.approvalType = WorkItemApprovals.VERIFICATION_TYPE.getIdentifier();
 			} else {
-				throw new WorkItemCommandLineException(
-						"Approval type not found: "
-								+ parameter.getAttributeID() + " Value: "
-								+ parameter.getValue() + helpUsageApprovals());
+				throw new WorkItemCommandLineException("Approval type not found: " + parameter.getAttributeID()
+						+ " Value: " + parameter.getValue() + helpUsageApprovals());
 			}
 			// get approver user ID's if available
 			if (approvalData.size() == 3) {
@@ -242,8 +234,7 @@ public class WorkItemUpdateHelper {
 
 	/**
 	 * This constructor should only be used for accessing the help text. The
-	 * constructor misses several core fields that are used for normal
-	 * operation.
+	 * constructor misses several core fields that are used for normal operation.
 	 */
 	public WorkItemUpdateHelper() {
 	}
@@ -251,15 +242,11 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Use this constructor to update attribute values.
 	 * 
-	 * @param workingCopy
-	 *            of the work item to be updated
-	 * @param parameters
-	 *            - the parameters passed e.g. for finding flags
-	 * @param monitor
-	 *            a progress monitor or null
+	 * @param workingCopy of the work item to be updated
+	 * @param parameters  - the parameters passed e.g. for finding flags
+	 * @param monitor     a progress monitor or null
 	 */
-	public WorkItemUpdateHelper(WorkItemWorkingCopy workingCopy,
-			ParameterList parameters, IProgressMonitor monitor) {
+	public WorkItemUpdateHelper(WorkItemWorkingCopy workingCopy, ParameterList parameters, IProgressMonitor monitor) {
 		super();
 		this.monitor = monitor;
 		if (parameters != null) {
@@ -268,14 +255,14 @@ public class WorkItemUpdateHelper {
 		this.fWorkingCopy = workingCopy;
 		this.fItem = fWorkingCopy.getWorkItem();
 		this.fTeamRepository = (ITeamRepository) fItem.getOrigin();
-		setEnforceSizeJimits(parameters
-				.hasSwitch(IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS));
-		setBatchOperation(parameters
-				.hasSwitch(IWorkItemCommandLineConstants.SWITCH_BULK_OPERATION));
+		setEnforceSizeJimits(parameters.hasSwitch(IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS));
+		setBatchOperation(parameters.hasSwitch(IWorkItemCommandLineConstants.SWITCH_BULK_OPERATION));
+		setImportIgnoreMissingAttributes(
+				parameters.hasSwitch(IWorkItemCommandLineConstants.SWITCH_IMPORT_IGNORE_MISSING_ATTTRIBUTES));
 	}
 
 	/**
-	 * Switch to minimise output for bulk updates - set value
+	 * Switch to minimize output for bulk updates - set value
 	 * 
 	 * @param hasSwitch
 	 */
@@ -283,8 +270,16 @@ public class WorkItemUpdateHelper {
 		this.fBulkupdate = hasSwitch;
 	}
 
+	public boolean isImportIgnoreMissingAttributes() {
+		return fImportIgnoreMissingAttributes;
+	}
+
+	public void setImportIgnoreMissingAttributes(boolean fImportIgnoreMissingAttributes) {
+		this.fImportIgnoreMissingAttributes = fImportIgnoreMissingAttributes;
+	}
+
 	/**
-	 * Switch to minimise output for bulk updates - set value
+	 * Switch to minimize output for bulk updates - set value
 	 * 
 	 * @return
 	 */
@@ -310,8 +305,8 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Some operations require the work items IWorkItem interface. This is
-	 * provided here.
+	 * Some operations require the work items IWorkItem interface. This is provided
+	 * here.
 	 * 
 	 * @return the IWorkItem interface
 	 */
@@ -336,76 +331,62 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * The main entry point for the helper. Call this method to update a
-	 * property for a work item. Provide the property ID and the attribute
-	 * value. Property ID and value can be encoded.
+	 * The main entry point for the helper. Call this method to update a property
+	 * for a work item. Provide the property ID and the attribute value. Property ID
+	 * and value can be encoded.
 	 * 
-	 * @param propertyID
-	 *            - the property ID this is for; this can be encoded
-	 * @param value
-	 *            - the value to sat
+	 * @param propertyID - the property ID this is for; this can be encoded
+	 * @param value      - the value to sat
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 * @throws IOException
 	 */
 	public void updateProperty(String propertyID, String value)
-			throws TeamRepositoryException, WorkItemCommandLineException,
-			IOException {
+			throws TeamRepositoryException, WorkItemCommandLineException, IOException {
 		// System.out.println("--->Trying: [" + propertyID + "] Value: [" +
 		// value
 		// + "]");
-		ParameterValue parameter = new ParameterValue(propertyID, value,
-				getWorkItem().getProjectArea(), monitor);
+		ParameterValue parameter = new ParameterValue(propertyID, value, getWorkItem().getProjectArea(), monitor);
 		// To be able to print a list of exceptions
 		List<Exception> exceptions = new ArrayList<Exception>();
 
 		// Handle special properties first
 		if (parameter.getAttributeID().equals(IWorkItem.ID_PROPERTY)) {
 			// The ID of the work item - this can not be modified.
-			throw new WorkItemCommandLineException(
-					"ID of work item can not be changed: "
-							+ parameter.getAttributeID() + " Value: "
-							+ parameter.getValue());
-		} else if (parameter.getAttributeID().equals(
-				IWorkItem.CREATION_DATE_PROPERTY)) {
+			throw new WorkItemCommandLineException("ID of work item can not be changed: '" + parameter.getAttributeID()
+					+ "' Value: '" + parameter.getValue() + "'.");
+		} else if (parameter.getAttributeID().equals(IWorkItem.CREATION_DATE_PROPERTY)) {
 			// The creationDate of the work item - this can not be modified.
-			throw new WorkItemCommandLineException(
-					"Creation date of work item can not be changed: "
-							+ parameter.getAttributeID() + " Value: "
-							+ parameter.getValue());
+			throw new WorkItemCommandLineException("Creation date of work item can not be changed: "
+					+ parameter.getAttributeID() + " Value: " + parameter.getValue());
 		} else if (parameter.getAttributeID().equals(IWorkItem.TYPE_PROPERTY)) {
 			// Update the type
-			// return calculateWorkItemType(parameter);
 			throw new WorkItemCommandLineException(
-					"Type of work item must be changed outside: "
-							+ parameter.getAttributeID() + " Value: "
-							+ parameter.getValue());
-		} else if (parameter.getAttributeID().equals(
-				IWorkItem.CONTEXT_ID_PROPERTY)) {
+					"Illegal parameter exception. The work item type parameter should have been already consumed by the command code: "
+							+ parameter.getAttributeID() + " Value: " + parameter.getValue());
+		} else if (parameter.getAttributeID().equals(IWorkItem.CONTEXT_ID_PROPERTY)) {
 			UUID contextID = calculateUUID(parameter, exceptions);
 			getWorkItem().setContextId(contextID);
-		} else if (parameter.getAttributeID()
-				.equals(IWorkItem.SUMMARY_PROPERTY)) {
+		} else if (parameter.getAttributeID().equals(IWorkItem.SUMMARY_PROPERTY)) {
 			/**
 			 * The Summary of the work item
 			 * 
 			 * Syntax:
 			 * 
-			 * "Plain Text <b>Bold Text</b> <i>Italic Text</i> <a href=\"https://rsjazz.wordpress.com\">External RSJazz Link</a>  <b>@ralph </b>Defect 3 "
-			 *  
+			 * "Plain Text <b>Bold Text</b> <i>Italic Text</i> <a
+			 * href=\"https://rsjazz.wordpress.com\">External RSJazz Link</a> <b>@ralph
+			 * </b>Defect 3 "  
 			 * 
-			 * Important: Escape additional quotes in input string as \" line
-			 * breaks are ignored.
+			 * Important: Escape additional quotes in input string as \" line breaks are
+			 * ignored.
 			 */
 
 			String summary = enforceSizeLimits(
-					calculateXMLDescription(parameter, getWorkItem()
-							.getHTMLSummary(), STRING_TYPE_PLAINSTRING),
+					calculateXMLDescription(parameter, getWorkItem().getHTMLSummary(), STRING_TYPE_PLAINSTRING),
 					parameter.getIAttribute().getAttributeType());
 
 			getWorkItem().setHTMLSummary(XMLString.createFromXMLText(summary));
-		} else if (parameter.getAttributeID().equals(
-				IWorkItem.DESCRIPTION_PROPERTY)) {
+		} else if (parameter.getAttributeID().equals(IWorkItem.DESCRIPTION_PROPERTY)) {
 			/**
 			 * The Description of the work item
 			 * 
@@ -422,63 +403,49 @@ public class WorkItemUpdateHelper {
 			 * Important: Escape additional quotes in input string as \"
 			 */
 			String description = enforceSizeLimits(
-					calculateXMLDescription(parameter, getWorkItem()
-							.getHTMLDescription(), STRING_TYPE_HTML), parameter
-							.getIAttribute().getAttributeType());
-			getWorkItem().setHTMLDescription(
-					XMLString.createFromXMLText(description));
-		} else if (parameter.getAttributeID().equals(
-				IWorkItem.COMMENTS_PROPERTY)) {
+					calculateXMLDescription(parameter, getWorkItem().getHTMLDescription(), STRING_TYPE_HTML),
+					parameter.getIAttribute().getAttributeType());
+			getWorkItem().setHTMLDescription(XMLString.createFromXMLText(description));
+		} else if (parameter.getAttributeID().equals(IWorkItem.COMMENTS_PROPERTY)) {
 			// The comments collection of the work item
 			updateComments(parameter);
 		} else if (parameter.getAttributeID().equals(IWorkItem.STATE_PROPERTY)) {
 			// The state of the work item
 			updateState(parameter);
-		} else if (parameter.getAttributeID().equals(
-				PSEUDO_ATTRIBUTE_TRIGGER_WORKFLOW_ACTION)) {
+		} else if (parameter.getAttributeID().equals(PSEUDO_ATTRIBUTE_TRIGGER_WORKFLOW_ACTION)) {
 			updateWorkFlowAction(parameter);
-		} else if (parameter.getAttributeID().equals(
-				IWorkItem.PROJECT_AREA_PROPERTY)) {
+		} else if (parameter.getAttributeID().equals(IWorkItem.PROJECT_AREA_PROPERTY)) {
 			// The project area of the work item - this is not processed. Set
 			// the category instead
-			throw new WorkItemCommandLineException(
-					"Project Area can not be changed, set the workitem category ("
-							+ IWorkItem.CATEGORY_PROPERTY + ") instead: "
-							+ parameter.getAttributeID() + " !");
-		} else if (parameter.getAttributeID().equals(
-				IWorkItem.RESOLUTION_PROPERTY)) {
+			throw new WorkItemCommandLineException("Project Area can not be changed, set the workitem category ("
+					+ IWorkItem.CATEGORY_PROPERTY + ") instead: " + parameter.getAttributeID() + " !");
+		} else if (parameter.getAttributeID().equals(IWorkItem.RESOLUTION_PROPERTY)) {
 			// The resolution attribute of the work item
 			updateResolution(parameter);
-		} else if (parameter.getAttributeID().equals(
-				IWorkItem.SUBSCRIPTIONS_PROPERTY)) {
+		} else if (parameter.getAttributeID().equals(IWorkItem.SUBSCRIPTIONS_PROPERTY)) {
 			// Update the subscribers collection of the work item
 			updateSubscribers(parameter, exceptions);
 		} else if (parameter.getAttributeID().equals(IWorkItem.TAGS_PROPERTY)) {
 			updateBuiltInTags(parameter);
-		} else if (StringUtil.hasPrefix(parameter.getAttributeID(),
-				IWorkItem.APPROVALS_PROPERTY)) {
+		} else if (StringUtil.hasPrefix(parameter.getAttributeID(), IWorkItem.APPROVALS_PROPERTY)) {
 			// The approvals collection of the work item
 			// Set is handled as add, unless the switch is specified
 			updateApprovals(parameter, exceptions);
-		} else if (StringUtil.hasPrefix(parameter.getAttributeID(),
-				PSEUDO_ATTRIBUTE_ATTACHFILE)) {
+		} else if (StringUtil.hasPrefix(parameter.getAttributeID(), PSEUDO_ATTRIBUTE_ATTACHFILE)) {
 			// Special handling to allow multiple attachments and still provide
 			// unique property ID's
 			// Use IWorkItemCommandLineConstants.SWITCH_ENABLE_SET_ATTACHMENT to
 			// enable deleting all attachments and only set the one attachment
 			updateAttachments(parameter);
-		} else if (StringUtil.hasPrefix(parameter.getAttributeID(),
-				PSEUDO_ATTRIBUTE_DELETEATTACHMENTS)) {
+		} else if (StringUtil.hasPrefix(parameter.getAttributeID(), PSEUDO_ATTRIBUTE_DELETEATTACHMENTS)) {
 			// Special handling to allow deleting all attachments
 			// Use IWorkItemCommandLineConstants.SWITCH_ENABLE_SET_ATTACHMENT to
 			// enable deleting all attachments and only set the one attachment
 			deleteAllAttachments(parameter);
-		} else if (StringUtil.hasPrefix(parameter.getAttributeID(),
-				PSEUDO_ATTRIBUTE_LINK)) {
+		} else if (StringUtil.hasPrefix(parameter.getAttributeID(), PSEUDO_ATTRIBUTE_LINK)) {
 			// Update Links from the work item to other items
 			updateLinks(parameter, exceptions);
-		}  else if (StringUtil.hasPrefix(parameter.getAttributeID(),
-				PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE)) {
+		} else if (StringUtil.hasPrefix(parameter.getAttributeID(), PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE)) {
 			// Delete links from the work item to other items
 			deleteLinks(parameter, exceptions);
 		} else {
@@ -492,16 +459,15 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Update all attributes that don't need special handling - basically these
-	 * are all attribute based values
+	 * Update all attributes that don't need special handling - basically these are
+	 * all attribute based values
 	 * 
 	 * @param parameter
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 */
-	private void updateGeneralAttribute(ParameterValue parameter,
-			List<Exception> exceptions) throws TeamRepositoryException,
-			WorkItemCommandLineException {
+	private void updateGeneralAttribute(ParameterValue parameter, List<Exception> exceptions)
+			throws TeamRepositoryException, WorkItemCommandLineException {
 		// Manage all other attributes by getting the data based on the
 		// attribute type.
 		//
@@ -510,12 +476,12 @@ public class WorkItemUpdateHelper {
 		if (theAttribute != null) {
 			// check if the work item has the attribute
 			if (!getWorkItem().hasAttribute(theAttribute)) {
-				throw new WorkItemCommandLineException(
-						"Attribute not available at work item: "
-								+ parameter.getAttributeID()
-								+ " Value: '"
-								+ parameter.getValue()
-								+ "'. Check the work item type or consider synchronizing the attributes.");
+				if (!isImportIgnoreMissingAttributes()) {
+					throw new WorkItemCommandLineException("Attribute not available at work item: "
+							+ parameter.getAttributeID() + " Value: '" + parameter.getValue()
+							+ "'. Check the work item type or consider synchronizing the attributes.");
+				}
+				return;
 			} else {
 				Object result;
 				try {
@@ -524,40 +490,34 @@ public class WorkItemUpdateHelper {
 					result = getRepresentation(parameter, exceptions);
 				} catch (WorkItemCommandLineException e) {
 					throw new WorkItemCommandLineException(
-							"Exception getting attribute representation: ["
-									+ parameter.getAttributeID() + "] Value: ["
-									+ parameter.getValue()
-									+ "]  Original exception: \n"
-									+ e.getMessage(), e);
+							"Exception getting attribute representation: '" + parameter.getAttributeID() + "' Value: '"
+									+ parameter.getValue() + "'.  Original exception: \n" + e.getMessage(),
+							e);
 				}
 				// Finally set the new value
 				getWorkItem().setValue(theAttribute, result);
 			}
 		} else {
-			throw new WorkItemCommandLineException("Attribute not found: "
-					+ parameter.getAttributeID() + " Value: "
-					+ parameter.getValue());
+			throw new WorkItemCommandLineException(
+					"Attribute not found: '" + parameter.getAttributeID() + "' Value: '" + parameter.getValue() + "'.");
 		}
 	}
 
 	/**
-	 * This method tries to get the matching representation of the value to be
-	 * set for a work item attribute. It basically goes through a list of
-	 * properties an attribute can have and locates the target type. Based on
-	 * that type it tries to create a matching value. The value is returned if
-	 * it was possible to create it.
+	 * This method tries to get the matching representation of the value to be set
+	 * for a work item attribute. It basically goes through a list of properties an
+	 * attribute can have and locates the target type. Based on that type it tries
+	 * to create a matching value. The value is returned if it was possible to
+	 * create it.
 	 * 
-	 * @param attribute
-	 *            - the IAttribute to find the representation for
-	 * @param value
-	 *            - the string value that is to be transformed.
+	 * @param attribute - the IAttribute to find the representation for
+	 * @param value     - the string value that is to be transformed.
 	 * @return
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 */
-	private Object getRepresentation(ParameterValue parameter,
-			List<Exception> exceptions) throws TeamRepositoryException,
-			WorkItemCommandLineException {
+	private Object getRepresentation(ParameterValue parameter, List<Exception> exceptions)
+			throws TeamRepositoryException, WorkItemCommandLineException {
 		String attribType = parameter.getIAttribute().getAttributeType();
 		// Handle list attribute types first
 		if (AttributeTypes.isListAttributeType(attribType)) {
@@ -594,18 +554,15 @@ public class WorkItemUpdateHelper {
 			}
 			if (attribType.equals(AttributeTypes.STRING_LIST)) {
 				// A list of strings in a collection
-				return enforceSizeLimitsStringCollection(
-						calculateStringList(parameter, exceptions), attribType);
+				return enforceSizeLimitsStringCollection(calculateStringList(parameter, exceptions), attribType);
 			}
 			if (AttributeTypes.isEnumerationListAttributeType(attribType)) {
 				// Handle all Enumeration List Types
 				return calculateEnumerationLiteralList(parameter, exceptions);
 			}
 			throw new WorkItemCommandLineException(
-					"Type not recognized - type not yet supported: "
-							+ parameter.getIAttribute().getIdentifier()
-							+ " Value: " + parameter.getValue() + " - "
-							+ helpGetTypeProperties(attribType));
+					"Type not recognized - type not yet supported: " + parameter.getIAttribute().getIdentifier()
+							+ " Value: " + parameter.getValue() + " - " + helpGetTypeProperties(attribType));
 		} else {
 			// Handle non list types - the simple ones first.
 			/**
@@ -613,9 +570,12 @@ public class WorkItemUpdateHelper {
 			 * 
 			 * HTML, use HTML tags example
 			 * 
-			 * "Plain Text <b>Bold Text</b> <i>Italic Text</i> <a href=\"https://rsjazz.wordpress.com\">External RSJazz Link</a>  <b>@ralph </b>Defect 3 "
+			 * "Plain Text <b>Bold Text</b> <i>Italic Text</i> <a
+			 * href=\"https://rsjazz.wordpress.com\">External RSJazz Link</a> <b>@ralph
+			 * </b>Defect 3 "
 			 * 
-			 * Use </br> or <br>
+			 * Use </br>
+			 * or <br>
 			 * for line breaks, escape quotes with \ e.g. <a
 			 * href=\"https://rsjazz.wordpress.com\">External RSJazz Link</a>
 			 * 
@@ -623,11 +583,11 @@ public class WorkItemUpdateHelper {
 			 * 
 			 * @see http://www.wikicreole.org/
 			 * 
-			 *      "<br>=
-			 *      Heading1<br>
-			 * <br>
-			 *      normal Text\n==Heading 2\n\nNormalText\n===Heading
-			 *      3\n\nNormal Text **bold text** <br>
+			 *      "<br>
+			 *      = Heading1<br>
+			 *      <br>
+			 *      normal Text\n==Heading 2\n\nNormalText\n===Heading 3\n\nNormal Text
+			 *      **bold text** <br>
 			 *      **bold text**<br>
 			 *      //Italics//"
 			 * 
@@ -646,24 +606,18 @@ public class WorkItemUpdateHelper {
 			}
 			if (AttributeTypes.STRING_TYPES.contains(attribType)) {
 
-				return enforceSizeLimits(
-						calculateStringValue(parameter, STRING_TYPE_PLAINSTRING),
-						attribType);
+				return enforceSizeLimits(calculateStringValue(parameter, STRING_TYPE_PLAINSTRING), attribType);
 			}
 			if (AttributeTypes.HTML_TYPES.contains(attribType)) {
 
-				return enforceSizeLimits(
-						calculateStringValue(parameter, STRING_TYPE_HTML),
-						attribType);
+				return enforceSizeLimits(calculateStringValue(parameter, STRING_TYPE_HTML), attribType);
 			}
 			// we don't handle add for the following parameter.
 			if (parameter.isAdd() || parameter.isRemove()) {
-				throw modeNotSupportedException(
-						parameter,
+				throw modeNotSupportedException(parameter,
 						"Mode not supported for this operation. Single value attributes only support the default and the "
 								+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
-								+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET
-								+ " modes.");
+								+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET + " modes.");
 			}
 			if (attribType.equals(AttributeTypes.BOOLEAN)) {
 				return new Boolean(parameter.getValue());
@@ -688,8 +642,7 @@ public class WorkItemUpdateHelper {
 					}
 				} catch (NumberFormatException e) {
 					throw new WorkItemCommandLineException(
-							"Attribute Value not valid - Number format exception: "
-									+ parameter.getValue(), e);
+							"Attribute Value not valid - Number format exception: " + parameter.getValue(), e);
 				}
 			}
 			if (attribType.equals(AttributeTypes.DELIVERABLE)) {
@@ -743,23 +696,20 @@ public class WorkItemUpdateHelper {
 			}
 			// In case we forgot something or a new type gets implemented
 			throw new WorkItemCommandLineException(
-					"AttributeType not yet supported: "
-							+ parameter.getIAttribute().getIdentifier()
-							+ " Value: " + parameter.getValue() + " - "
-							+ helpGetTypeProperties(attribType));
+					"AttributeType not yet supported: " + parameter.getIAttribute().getIdentifier() + " Value: "
+							+ parameter.getValue() + " - " + helpGetTypeProperties(attribType));
 		}
 	}
 
 	/**
-	 * Make sure strings in a string list are not longer than the maximum size
-	 * that can be stored in the attribute.
+	 * Make sure strings in a string list are not longer than the maximum size that
+	 * can be stored in the attribute.
 	 * 
 	 * @param input
 	 * @param attribType
 	 * @return
 	 */
-	private Collection<String> enforceSizeLimitsStringCollection(
-			Collection<String> input, String attribType) {
+	private Collection<String> enforceSizeLimitsStringCollection(Collection<String> input, String attribType) {
 		if (!isEnforceSizeLimits()) {
 			return input;
 		}
@@ -772,8 +722,8 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Make sure strings are not longer than the maximum size that can be stored
-	 * in the attribute.
+	 * Make sure strings are not longer than the maximum size that can be stored in
+	 * the attribute.
 	 * 
 	 * @param input
 	 * @param attribType
@@ -798,46 +748,35 @@ public class WorkItemUpdateHelper {
 		if (attribType.equals(AttributeTypes.SMALL_STRING)) {
 			sizeLimit = IAttribute.MAX_SMALL_STRING_BYTES;
 		}
-		if (attribType.equals(AttributeTypes.MEDIUM_STRING)
-				|| attribType.equals(AttributeTypes.MEDIUM_HTML)
-				|| attribType.equals(AttributeTypes.STRING_LIST)
-				|| attribType.equals(AttributeTypes.COMMENTS)) {
+		if (attribType.equals(AttributeTypes.MEDIUM_STRING) || attribType.equals(AttributeTypes.MEDIUM_HTML)
+				|| attribType.equals(AttributeTypes.STRING_LIST) || attribType.equals(AttributeTypes.COMMENTS)) {
 			sizeLimit = IAttribute.MAX_MEDIUM_STRING_BYTES;
 		}
-		if (attribType.equals(AttributeTypes.LARGE_STRING)
-				|| attribType.equals(AttributeTypes.LARGE_HTML)) {
+		if (attribType.equals(AttributeTypes.LARGE_STRING) || attribType.equals(AttributeTypes.LARGE_HTML)) {
 			sizeLimit = IAttribute.MAX_LARGE_STRING_BYTES;
 		}
 		if (value.length() >= sizeLimit) {
-			int lastpos = sizeLimit.intValue()
-					- (VALUE_TRUNCATED_POSTFIX.length() + XML_GROWTH_CONSTANT);
+			int lastpos = sizeLimit.intValue() - (VALUE_TRUNCATED_POSTFIX.length() + XML_GROWTH_CONSTANT);
 			value = value.substring(0, lastpos) + VALUE_TRUNCATED_POSTFIX;
 		}
 		return value;
 	}
 
 	/**
-	 * Composes an exception form multiple exceptions that happened during e.g.
-	 * item lookup and wraps it into one exception
+	 * Composes an exception form multiple exceptions that happened during e.g. item
+	 * lookup and wraps it into one exception
 	 * 
-	 * @param parameter
-	 *            - the parameter worked on at this time
-	 * @param exceptions
-	 *            - the list of exceptions that happened
+	 * @param parameter  - the parameter worked on at this time
+	 * @param exceptions - the list of exceptions that happened
 	 * @throws WorkItemCommandLineException
 	 */
-	private void throwComplexException(ParameterValue parameter,
-			List<Exception> exceptions) throws WorkItemCommandLineException {
+	private void throwComplexException(ParameterValue parameter, List<Exception> exceptions)
+			throws WorkItemCommandLineException {
 		if (!exceptions.isEmpty()) {
 			String exceptionInfo = "";
 			for (Exception exception : exceptions) {
-				exceptionInfo += "Recoverable Exception getting attribute representation: "
-						+ parameter.getAttributeID()
-						+ " Value: "
-						+ parameter.getValue()
-						+ " \n"
-						+ exception.getMessage()
-						+ "\n";
+				exceptionInfo += "Recoverable Exception getting attribute representation: " + parameter.getAttributeID()
+						+ " Value: " + parameter.getValue() + " \n" + exception.getMessage() + "\n";
 			}
 			throw new WorkItemCommandLineException(exceptionInfo);
 		}
@@ -848,35 +787,29 @@ public class WorkItemUpdateHelper {
 	 * 
 	 * Mode Default same as mode add - adds an approval
 	 * 
-	 * Mode set removes approvals first and then adds the new approval This
-	 * modes needs to be enabled with a switch
+	 * Mode set removes approvals first and then adds the new approval This modes
+	 * needs to be enabled with a switch
 	 * 
 	 * Mode remove removes an approval and needs to be enabled with a switch
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
-	 * @param exceptions
-	 *            - a list to pass exceptions back
+	 * @param parameter  - the parameter passed
+	 * @param exceptions - a list to pass exceptions back
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 */
-	private void updateApprovals(ParameterValue parameter,
-			List<Exception> exceptions) throws TeamRepositoryException,
-			WorkItemCommandLineException {
+	private void updateApprovals(ParameterValue parameter, List<Exception> exceptions)
+			throws TeamRepositoryException, WorkItemCommandLineException {
 
-		boolean enableDeleteApprovals = getParameters().hasSwitch(
-				IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_APPROVALS);
+		boolean enableDeleteApprovals = getParameters()
+				.hasSwitch(IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_APPROVALS);
 		if (parameter.isRemove() || parameter.isSet()) {
 			if (!enableDeleteApprovals) {
-				throw modeNotSupportedException(
-						parameter,
-						"Deletion of Approvals not enabled: "
-								+ " use the switch "
+				throw modeNotSupportedException(parameter,
+						"Deletion of Approvals not enabled: " + " use the switch "
 								+ IWorkItemCommandLineConstants.PREFIX_SWITCH
 								+ IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_APPROVALS
-								+ " to enable deletion of approvals. Parameter: "
-								+ parameter.getAttributeID() + " Value: "
-								+ parameter.getValue());
+								+ " to enable deletion of approvals. Parameter: " + parameter.getAttributeID()
+								+ " Value: " + parameter.getValue());
 			}
 		}
 		ApprovalInputData approvalData = new ApprovalInputData(parameter);
@@ -885,86 +818,66 @@ public class WorkItemUpdateHelper {
 			createApproval(parameter, approvalData);
 		} else if (parameter.isRemove()) {
 			if (!updateRemoveApproval(approvalData)) {
-				exceptions.add(new WorkItemCommandLineException(
-						"Remove Approval: approval not found: "
-								+ parameter.getAttributeID() + " Value: "
-								+ parameter.getValue()));
+				exceptions.add(new WorkItemCommandLineException("Remove Approval: approval not found: "
+						+ parameter.getAttributeID() + " Value: " + parameter.getValue()));
 			}
 		} else {
 			// Default and add
 			createApproval(parameter, approvalData);
 		}
 	}
-	
+
 	/**
 	 * Delete all attachments of a work item
-	 * @param parameter 
+	 * 
+	 * @param parameter
 	 * 
 	 * @throws TeamRepositoryException
 	 */
-	private void deleteAllAttachments(ParameterValue parameter)
-			throws TeamRepositoryException {
+	private void deleteAllAttachments(ParameterValue parameter) throws TeamRepositoryException {
 
-		boolean switchDeleteAttachments = getParameters().hasSwitch(
-				IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS);
+		boolean switchDeleteAttachments = getParameters()
+				.hasSwitch(IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS);
 		if (!PSEUDO_ATTRIBUTEVALUE_YES.equals(parameter.getValue())) {
-			throw new WorkItemCommandLineException(
-					"Incorrect value: "
-							+ parameter.getAttributeID() + " Value: "
-							+ parameter.getValue()
-							+ helpUsageAttachmentUpload());
+			throw new WorkItemCommandLineException("Incorrect value: " + parameter.getAttributeID() + " Value: "
+					+ parameter.getValue() + helpUsageAttachmentUpload());
 		}
 		if (!switchDeleteAttachments) {
-			throw new WorkItemCommandLineException(
-					"Deletion of attachments not enabled: "
-							+ " use the switch "
-							+ IWorkItemCommandLineConstants.PREFIX_SWITCH
-							+ IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS
-							+ " to enable deletion of attachments.");
+			throw new WorkItemCommandLineException("Deletion of attachments not enabled: " + " use the switch "
+					+ IWorkItemCommandLineConstants.PREFIX_SWITCH
+					+ IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS
+					+ " to enable deletion of attachments.");
 
 		}
-		AttachmentUtil.removeAllAttachments(getWorkItem(),
-				getWorkItemCommon(), monitor);
+		AttachmentUtil.removeAllAttachments(getWorkItem(), getWorkItemCommon(), monitor);
 	}
-
 
 	/**
 	 * Update the attachments of a workitem.
 	 * 
 	 * Supports all modes, however, needs a switch to enable the set mode Mode -
-	 * Default same as Add, adds an attachment - Set removes all attachments
-	 * first and then adds a new one - Remove removes an attachment, if it can
-	 * be found
+	 * Default same as Add, adds an attachment - Set removes all attachments first
+	 * and then adds a new one - Remove removes an attachment, if it can be found
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter - the parameter passed
 	 * @throws TeamRepositoryException
 	 */
-	private void updateAttachments(ParameterValue parameter)
-			throws TeamRepositoryException {
+	private void updateAttachments(ParameterValue parameter) throws TeamRepositoryException {
 
-		boolean switchDeleteAttachments = getParameters().hasSwitch(
-				IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS);
-		if ((parameter.isSet() || parameter.isRemove())
-				&& !switchDeleteAttachments) {
-			throw new WorkItemCommandLineException(
-					"Deletion of attachments not enabled: "
-							+ " use the switch "
-							+ IWorkItemCommandLineConstants.PREFIX_SWITCH
-							+ IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS
-							+ " to enable deletion of attachments. Parameter: "
-							+ parameter.getAttributeID() + " Value: "
-							+ parameter.getValue());
+		boolean switchDeleteAttachments = getParameters()
+				.hasSwitch(IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS);
+		if ((parameter.isSet() || parameter.isRemove()) && !switchDeleteAttachments) {
+			throw new WorkItemCommandLineException("Deletion of attachments not enabled: " + " use the switch "
+					+ IWorkItemCommandLineConstants.PREFIX_SWITCH
+					+ IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_ATTACHMENTS
+					+ " to enable deletion of attachments. Parameter: " + parameter.getAttributeID() + " Value: "
+					+ parameter.getValue());
 
 		}
-		List<String> attachmentData = StringUtil.splitStringToList(
-				parameter.getValue(), ATTACHMENT_SEPARATOR);
+		List<String> attachmentData = StringUtil.splitStringToList(parameter.getValue(), ATTACHMENT_SEPARATOR);
 		if (attachmentData.size() != 4) {
-			throw new WorkItemCommandLineException(
-					"Incorrect attachment format: "
-							+ parameter.getAttributeID() + " Value: "
-							+ parameter.getValue()
-							+ helpUsageAttachmentUpload());
+			throw new WorkItemCommandLineException("Incorrect attachment format: " + parameter.getAttributeID()
+					+ " Value: " + parameter.getValue() + helpUsageAttachmentUpload());
 		}
 
 		String fileName = attachmentData.get(0);
@@ -972,12 +885,10 @@ public class WorkItemUpdateHelper {
 		String contentType = attachmentData.get(2);
 		String encoding = attachmentData.get(3);
 		if (parameter.isRemove()) {
-			AttachmentUtil.removeAttachment(fileName, description,
-					getWorkItem(), getWorkItemCommon(), monitor);
+			AttachmentUtil.removeAttachment(fileName, description, getWorkItem(), getWorkItemCommon(), monitor);
 			return;
 		} else if (parameter.isSet()) {
-			AttachmentUtil.removeAllAttachments(getWorkItem(),
-					getWorkItemCommon(), monitor);
+			AttachmentUtil.removeAllAttachments(getWorkItem(), getWorkItemCommon(), monitor);
 			attachFile(fileName, description, contentType, encoding);
 			return;
 		} else {
@@ -990,12 +901,11 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Update the built in tags attribute
 	 * 
-	 * Supports all modes Mode - Default same as Add, adds a tag - Set removes
-	 * all tag first and then adds the new ones - Remove removes a tag, if it
-	 * can be found
+	 * Supports all modes Mode - Default same as Add, adds a tag - Set removes all
+	 * tag first and then adds the new ones - Remove removes a tag, if it can be
+	 * found
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter - the parameter passed
 	 */
 	private void updateBuiltInTags(ParameterValue parameter) {
 		List<String> newTags = getTags(parameter.getValue());
@@ -1016,33 +926,24 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Update the comments - only adding is supported
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter - the parameter passed
 	 * @throws WorkItemCommandLineException
 	 * @throws TeamRepositoryException
 	 */
-	private void updateComments(ParameterValue parameter)
-			throws WorkItemCommandLineException, TeamRepositoryException {
+	private void updateComments(ParameterValue parameter) throws WorkItemCommandLineException, TeamRepositoryException {
 		// Only add comments
 		if (!(parameter.isDefault() || parameter.isAdd())) {
-			throw modeNotSupportedException(
-					parameter,
-					"Mode not supported. Comments only supports the default and the "
-							+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
-							+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD
-							+ " modes. ");
+			throw modeNotSupportedException(parameter, "Mode not supported. Comments only supports the default and the "
+					+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
+					+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD + " modes. ");
 		}
 
 		XMLString commentContent = XMLString
-				.createFromXMLText(insertLineBreaks(parameter.getValue(),
-						STRING_TYPE_HTML));
-		XMLString limitedContent = XMLString
-				.createFromXMLText(enforceSizeLimits(commentContent
-						.getXMLText(), parameter.getIAttribute()
-						.getAttributeType()));
+				.createFromXMLText(insertLineBreaks(parameter.getValue(), STRING_TYPE_HTML));
+		XMLString limitedContent = XMLString.createFromXMLText(
+				enforceSizeLimits(commentContent.getXMLText(), parameter.getIAttribute().getAttributeType()));
 		IComments comments = getWorkItem().getComments();
-		IComment newComment = comments.createComment(getTeamRepository()
-				.loggedInContributor(), limitedContent);
+		IComment newComment = comments.createComment(getTeamRepository().loggedInContributor(), limitedContent);
 
 		comments.append(newComment);
 	}
@@ -1050,42 +951,33 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Update Links to work items, build results, clm links
 	 * 
-	 * Supports all modes Mode - Default same as Add, adds a tag - Set removes
-	 * all tag first and then adds the new ones - Remove removes a tag, if it
-	 * can be found
+	 * Supports all modes Mode - Default same as Add, adds a tag - Set removes all
+	 * tag first and then adds the new ones - Remove removes a tag, if it can be
+	 * found
 	 * 
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
-	 * @param exceptions
-	 *            - a list to pass exceptions back
+	 * @param parameter  - the parameter passed
+	 * @param exceptions - a list to pass exceptions back
 	 * @throws TeamRepositoryException
 	 */
-	private void updateLinks(ParameterValue parameter,
-			List<Exception> exceptions) throws TeamRepositoryException {
+	private void updateLinks(ParameterValue parameter, List<Exception> exceptions) throws TeamRepositoryException {
 		List<ReferenceData> references;
 		boolean setUpdateBackLinks = false;
-		String linkType = StringUtil.removePrefix(parameter.getAttributeID(),
-				PSEUDO_ATTRIBUTE_LINK);
-		IEndPointDescriptor endpoint = ReferenceUtil
-				.getWorkItemEndPointDescriptorMap().get(linkType);
+		String linkType = StringUtil.removePrefix(parameter.getAttributeID(), PSEUDO_ATTRIBUTE_LINK);
+		IEndPointDescriptor endpoint = ReferenceUtil.getWorkItemEndPointDescriptorMap().get(linkType);
 		if (endpoint == null) {
-			endpoint = ReferenceUtil.getCLM_URI_EndPointDescriptorMap().get(
-					linkType);
+			endpoint = ReferenceUtil.getCLM_URI_EndPointDescriptorMap().get(linkType);
 		}
 		if (endpoint == null) {
-			endpoint = ReferenceUtil.getCLM_WI_EndPointDescriptorMap().get(
-					linkType);
+			endpoint = ReferenceUtil.getCLM_WI_EndPointDescriptorMap().get(linkType);
 		}
 		if (endpoint == null) {
-			endpoint = ReferenceUtil.getBuild_EndPointDescriptorMap().get(
-					linkType);
+			endpoint = ReferenceUtil.getBuild_EndPointDescriptorMap().get(linkType);
 		}
 		if (endpoint == null) {
 			// This link type is not in our supported map
 			throw new WorkItemCommandLineException(
-					"Link Type unknown or not yet supported: " + linkType
-							+ helpUsageAllLinks());
+					"Link Type unknown or not yet supported: " + linkType + helpUsageAllLinks());
 		}
 		IWorkItemReferences wiReferences = getWorkingCopy().getReferences();
 		List<IReference> current = wiReferences.getReferences(endpoint);
@@ -1109,8 +1001,7 @@ public class WorkItemUpdateHelper {
 				// The code below either deletes all references of this endpoint
 				// or it finds a references if it exists to support avoiding
 				// duplicates.
-				if (iReference.sameDetailsExcludingCommentAs(newReferences
-						.getReference())) {
+				if (iReference.sameDetailsExcludingCommentAs(newReferences.getReference())) {
 					// Otherwise try to find a reference
 					// found the reference
 					foundReference = iReference;
@@ -1121,11 +1012,9 @@ public class WorkItemUpdateHelper {
 			// found in set mode we have noting found and add also
 			if (parameter.isDefault() || parameter.isAdd() || parameter.isSet()) {
 				if (foundReference == null) {
-					getWorkingCopy().getReferences().add(
-							newReferences.getEndPointDescriptor(),
+					getWorkingCopy().getReferences().add(newReferences.getEndPointDescriptor(),
 							newReferences.getReference());
-					if (WorkItemLinkTypes.isCalmLink(newReferences
-							.getEndPointDescriptor())) {
+					if (WorkItemLinkTypes.isCalmLink(newReferences.getEndPointDescriptor())) {
 						setUpdateBackLinks = true;
 					}
 				}
@@ -1135,8 +1024,7 @@ public class WorkItemUpdateHelper {
 				// place
 				if (foundReference != null) {
 					getWorkingCopy().getReferences().remove(foundReference);
-					if (WorkItemLinkTypes.isCalmLink(newReferences
-							.getEndPointDescriptor())) {
+					if (WorkItemLinkTypes.isCalmLink(newReferences.getEndPointDescriptor())) {
 						setUpdateBackLinks = true;
 					}
 				}
@@ -1150,25 +1038,20 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Delete all links of a certain link type
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
-	 * @param exceptions
-	 *            - a list to pass exceptions back
+	 * @param parameter  - the parameter passed
+	 * @param exceptions - a list to pass exceptions back
 	 * @throws TeamRepositoryException
 	 */
 	private void deleteLinks(ParameterValue parameter, List<Exception> exceptions) throws TeamRepositoryException {
 
-		boolean checkDangling=false;
+		boolean checkDangling = false;
 		boolean update = false;
 		if (PSEUDO_ATTRIBUTEVALUE_DELETEDANGLING.equals(parameter.getValue())) {
-			checkDangling=true;
-		}	
+			checkDangling = true;
+		}
 		if (!checkDangling && !PSEUDO_ATTRIBUTEVALUE_YES.equals(parameter.getValue())) {
-			throw new WorkItemCommandLineException(
-					"Incorrect value: "
-							+ parameter.getAttributeID() + " Value: "
-							+ parameter.getValue()
-							+ helpUsageAllLinks());
+			throw new WorkItemCommandLineException("Incorrect value: " + parameter.getAttributeID() + " Value: "
+					+ parameter.getValue() + helpUsageAllLinks());
 		}
 		String linkType = StringUtil.removePrefix(parameter.getAttributeID(), PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE);
 		IEndPointDescriptor endpoint = ReferenceUtil.getWorkItemEndPointDescriptorMap().get(linkType);
@@ -1190,14 +1073,14 @@ public class WorkItemUpdateHelper {
 		IWorkItemReferences wiReferences = getWorkingCopy().getReferences();
 		List<IReference> current = wiReferences.getReferences(endpoint);
 		for (IReference iReference : current) {
-			if(checkDangling) {
-				if(isDangling(endpoint, iReference)) {
+			if (checkDangling) {
+				if (isDangling(endpoint, iReference)) {
 					getWorkingCopy().getReferences().remove(iReference);
-					update=true;
+					update = true;
 				}
 			} else {
 				getWorkingCopy().getReferences().remove(iReference);
-				update=true;
+				update = true;
 			}
 		}
 		if (update & WorkItemLinkTypes.isCalmLink(endpoint)) {
@@ -1209,7 +1092,7 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Check if a link is dangling
 	 * 
-	 * @param endpoint 
+	 * @param endpoint
 	 * @param iReference
 	 * @return
 	 */
@@ -1218,33 +1101,29 @@ public class WorkItemUpdateHelper {
 		// URI uri = iReference.createURI();
 		return false;
 	}
-	
+
 	/**
 	 * Update backlinks, add the additional safe parameter only once.
 	 */
 	private void updateBacklinks() {
-		if(!fupdateBacklinks) {
+		if (!fupdateBacklinks) {
 			getWorkingCopy().getAdditionalSaveParameters().add(IAdditionalSaveParameters.UPDATE_BACKLINKS);
-			fupdateBacklinks=true;
+			fupdateBacklinks = true;
 		}
 	}
 
 	/**
 	 * Removes all approvals from the approvals collection
 	 * 
-	 * @param approvalData
-	 *            the data with the approval type to remove
+	 * @param approvalData the data with the approval type to remove
 	 * @return
 	 */
-	private void updateRemoveAllApprovalsOfSameType(
-			ApprovalInputData approvalData) {
+	private void updateRemoveAllApprovalsOfSameType(ApprovalInputData approvalData) {
 		IApprovals approvals = getWorkItem().getApprovals();
 		List<IApproval> approvalContent = approvals.getContents();
 		for (IApproval anApproval : approvalContent) {
 			IApprovalDescriptor descriptor = anApproval.getDescriptor();
-			if (descriptor != null
-					&& descriptor.getTypeIdentifier().equals(
-							approvalData.getApprovalType())) {
+			if (descriptor != null && descriptor.getTypeIdentifier().equals(approvalData.getApprovalType())) {
 				// The order is important
 				approvals.remove(anApproval);
 				approvals.remove(descriptor);
@@ -1253,8 +1132,8 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Tries to find a an approval from the approval data and deletes it if it
-	 * can be found Removes only the first instance found that matches.
+	 * Tries to find a an approval from the approval data and deletes it if it can
+	 * be found Removes only the first instance found that matches.
 	 * 
 	 * @param approvalData
 	 * @return
@@ -1264,10 +1143,8 @@ public class WorkItemUpdateHelper {
 		List<IApproval> approvalContent = approvals.getContents();
 		for (IApproval anApproval : approvalContent) {
 			IApprovalDescriptor descriptor = anApproval.getDescriptor();
-			if (descriptor.getTypeIdentifier().equals(
-					approvalData.getApprovalType())
-					&& descriptor.getName().equals(
-							approvalData.getApprovalName())) {
+			if (descriptor.getTypeIdentifier().equals(approvalData.getApprovalType())
+					&& descriptor.getName().equals(approvalData.getApprovalName())) {
 				approvals.remove(anApproval);
 				approvals.remove(descriptor);
 				return true;
@@ -1287,20 +1164,18 @@ public class WorkItemUpdateHelper {
 			throws WorkItemCommandLineException, TeamRepositoryException {
 		Identifier<IResolution> resolution = null;
 		if (!(parameter.isDefault() || parameter.isSet())) {
-			throw new WorkItemCommandLineException(
-					"Comments only supports the default and the "
-							+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
-							+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET
-							+ " modes: " + parameter.getAttributeID() + " !");
+			throw new WorkItemCommandLineException("Comments only supports the default and the "
+					+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
+					+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET + " modes: "
+					+ parameter.getAttributeID() + " !");
 		}
 		String resolutionValue = parameter.getValue();
-		if(resolutionValue!=null) {			
+		if (resolutionValue != null) {
 			try {
 				resolution = findResolution(parameter.getValue());
 			} catch (Exception e) {
-				throw new WorkItemCommandLineException("Resolution not found: "
-						+ parameter.getAttributeID() + " Value: "
-						+ parameter.getValue());
+				throw new WorkItemCommandLineException(
+						"Resolution not found: " + parameter.getAttributeID() + " Value: " + parameter.getValue());
 			}
 		}
 		getWorkItem().setResolution2(resolution);
@@ -1308,26 +1183,23 @@ public class WorkItemUpdateHelper {
 
 	/**
 	 * Update the subscriptions to a work item Mode set: Clear the current
-	 * subscribers and set the given list Mode default and mode add: add a list
-	 * of subscribers Mode remove: remove the specified subscribers.
+	 * subscribers and set the given list Mode default and mode add: add a list of
+	 * subscribers Mode remove: remove the specified subscribers.
 	 * 
 	 * Subscriptions make sure no duplicates are set.
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
-	 * @param exceptions
-	 *            - a list to pass exceptions back
+	 * @param parameter  - the parameter passed
+	 * @param exceptions - a list to pass exceptions back
 	 * @throws TeamRepositoryException
 	 */
-	private void updateSubscribers(ParameterValue parameter,
-			List<Exception> exceptions) throws TeamRepositoryException {
+	private void updateSubscribers(ParameterValue parameter, List<Exception> exceptions)
+			throws TeamRepositoryException {
 		List<String> notFoundList = new ArrayList<String>();
-		HashMap<String, IContributor> subscriberList = getContributors(
-				parameter.getValue(), ITEM_SEPARATOR, notFoundList);
+		HashMap<String, IContributor> subscriberList = getContributors(parameter.getValue(), ITEM_SEPARATOR,
+				notFoundList);
 		if (parameter.isSet()) {
 			// set - remove subscribers first
-			IContributorHandle[] subscribed = getWorkItem().getSubscriptions()
-					.getContents();
+			IContributorHandle[] subscribed = getWorkItem().getSubscriptions().getContents();
 			for (IContributorHandle removeContributor : subscribed) {
 				getWorkItem().getSubscriptions().remove(removeContributor);
 			}
@@ -1341,30 +1213,24 @@ public class WorkItemUpdateHelper {
 			}
 		}
 		if (!notFoundList.isEmpty()) {
-			exceptions.add(new WorkItemCommandLineException(
-					"Subscriber not found: " + parameter.getAttributeID()
-							+ " Subscribers: "
-							+ helpGetDisplayStringFromList(notFoundList)));
+			exceptions.add(new WorkItemCommandLineException("Subscriber not found: '" + parameter.getAttributeID()
+					+ "' Subscribers: " + helpGetDisplayStringFromList(notFoundList)));
 		}
 	}
 
 	/**
 	 * Update the state of a work item - only setting a state is supported
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter - the parameter passed
 	 * @throws WorkItemCommandLineException
 	 * @throws TeamRepositoryException
 	 */
-	private void updateState(ParameterValue parameter)
-			throws WorkItemCommandLineException, TeamRepositoryException {
+	private void updateState(ParameterValue parameter) throws WorkItemCommandLineException, TeamRepositoryException {
 		if (!(parameter.isDefault() || parameter.isSet())) {
-			throw modeNotSupportedException(
-					parameter,
+			throw modeNotSupportedException(parameter,
 					"Mode not supported for this operation. State change only supports the default and the "
 							+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
-							+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET
-							+ " mode.");
+							+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET + " mode.");
 		}
 		setState(parameter);
 	}
@@ -1373,8 +1239,7 @@ public class WorkItemUpdateHelper {
 	 * Update the state of a work item using a workflow action - only setting a
 	 * state is supported
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter - the parameter passed
 	 * @throws WorkItemCommandLineException
 	 * @throws TeamRepositoryException
 	 */
@@ -1382,12 +1247,10 @@ public class WorkItemUpdateHelper {
 			throws WorkItemCommandLineException, TeamRepositoryException {
 		// The state of the work item
 		if (!(parameter.isDefault() || parameter.isSet())) {
-			throw modeNotSupportedException(
-					parameter,
+			throw modeNotSupportedException(parameter,
 					"Mode not supported for this operation. State change only supports the default and the "
 							+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
-							+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET
-							+ " modes.");
+							+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET + " modes.");
 		}
 		setWorkFlowAction(parameter);
 	}
@@ -1395,18 +1258,15 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find the category specified in the value
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter - the parameter passed
 	 * @return the category found
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateCategory(ParameterValue parameter)
-			throws TeamRepositoryException {
+	private Object calculateCategory(ParameterValue parameter) throws TeamRepositoryException {
 		ICategoryHandle category = findCategory(parameter.getValue());
 		if (category == null) {
-			throw new WorkItemCommandLineException("Category not found: "
-					+ parameter.getIAttribute().getIdentifier() + " Value: "
-					+ parameter.getValue());
+			throw new WorkItemCommandLineException("Category not found: '" + parameter.getIAttribute().getIdentifier()
+					+ "' Value: '" + parameter.getValue() + "'.");
 		}
 		return category;
 	}
@@ -1414,45 +1274,38 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find a contributor for a given ID
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter - the parameter passed
 	 * @return the contributor
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateContributor(ParameterValue parameter)
-			throws TeamRepositoryException {
-
-		IContributor user = findContributorFromIDorName(parameter.getValue()
-				.trim());
+	private Object calculateContributor(ParameterValue parameter) throws TeamRepositoryException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return null; // Unassigned
+		}
+		IContributor user = findContributorFromIDorName(parameter.getValue().trim());
 		if (user == null) {
-			throw new WorkItemCommandLineException("Contributor ID not found: "
-					+ parameter.getValue());
+			throw new WorkItemCommandLineException("Contributor ID not found: '" + parameter.getValue() + "'.");
 		}
 		return user;
 	}
 
 	/**
-	 * Calculates a list of contributors from a list of ID's and adjusts the
-	 * value content as needed.
+	 * Calculates a list of contributors from a list of ID's and adjusts the value
+	 * content as needed.
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
-	 * @param exceptions
-	 *            - a list to pass exceptions back
-	 * @return a list of IContributors as object as a side effect it also
-	 *         returns a list of errors if an argument could not be processed
+	 * @param parameter  - the parameter passed
+	 * @param exceptions - a list to pass exceptions back
+	 * @return a list of IContributors as object as a side effect it also returns a
+	 *         list of errors if an argument could not be processed
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateContributorList(ParameterValue parameter,
-			List<Exception> exceptions) throws TeamRepositoryException {
+	private Object calculateContributorList(ParameterValue parameter, List<Exception> exceptions)
+			throws TeamRepositoryException {
 		List<String> notFoundList = new ArrayList<String>();
-		HashMap<String, IContributor> foundItems = getContributors(
-				parameter.getValue(), ITEM_SEPARATOR, notFoundList);
+		HashMap<String, IContributor> foundItems = getContributors(parameter.getValue(), ITEM_SEPARATOR, notFoundList);
 		if (!notFoundList.isEmpty()) {
 			exceptions.add(new WorkItemCommandLineException(
-					"Contributors not found: "
-							+ parameter.getIAttribute().getIdentifier()
-							+ " Contributors: "
+					"Contributors not found: '" + parameter.getIAttribute().getIdentifier() + "' Contributors: "
 							+ helpGetDisplayStringFromList(notFoundList)));
 		}
 
@@ -1464,19 +1317,17 @@ public class WorkItemUpdateHelper {
 		Object current = getWorkItem().getValue(parameter.getIAttribute());
 		if (!(current instanceof List<?>)) {
 			throw new WorkItemCommandLineException(
-					"Attribute type not a list attribute type, can not calculate current value: "
-							+ parameter.getIAttribute().getIdentifier());
+					"Attribute type not a list attribute type, can not calculate current value: '"
+							+ parameter.getIAttribute().getIdentifier() + "'.");
 		}
 		List<?> currentList = (List<?>) current;
 		for (Object currentObject : currentList) {
 			if (!(currentObject instanceof IItemHandle)) {
-				exceptions.add(incompatibleAttributeValueTypeException(
-						parameter, "Reading List Attribute value ("
-								+ currentObject.toString() + ") "));
+				exceptions.add(incompatibleAttributeValueTypeException(parameter,
+						"Reading List Attribute value (" + currentObject.toString() + ") "));
 			}
 			IItemHandle currentHandle = (IItemHandle) currentObject;
-			if (!foundItems.containsKey(currentHandle.getItemId()
-					.getUuidValue())) {
+			if (!foundItems.containsKey(currentHandle.getItemId().getUuidValue())) {
 				// did not find the current element in the input list I need to
 				// add it to the result
 				// for add: it is not in the found list and needed. The found
@@ -1498,18 +1349,15 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find a deliverable from the string representation.
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter - the parameter passed
 	 * @return the deliverable that was found
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateDeliverable(ParameterValue parameter)
-			throws TeamRepositoryException {
+	private Object calculateDeliverable(ParameterValue parameter) throws TeamRepositoryException {
 		IDeliverable result = findDeliverable(parameter.getValue());
 		if (null == result) {
-			throw new WorkItemCommandLineException("Deliverable not found: "
-					+ parameter.getIAttribute().getIdentifier() + " Value: "
-					+ parameter.getValue());
+			throw new WorkItemCommandLineException("Deliverable not found: '"
+					+ parameter.getIAttribute().getIdentifier() + "' Value: '" + parameter.getValue() + "'.");
 		}
 		return result;
 	}
@@ -1517,57 +1365,46 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find an enumeration literal for a value
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter - the parameter passed
 	 * @return the enumeration literal found
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateEnumerationLiteral(ParameterValue parameter)
-			throws TeamRepositoryException {
+	private Object calculateEnumerationLiteral(ParameterValue parameter) throws TeamRepositoryException {
 		try {
-			Identifier<? extends ILiteral> result = getEnumerationLiteralEqualsStringOrID(
-					parameter.getIAttribute(), parameter.getValue());
+			Identifier<? extends ILiteral> result = getEnumerationLiteralEqualsStringOrID(parameter.getIAttribute(),
+					parameter.getValue());
 			if (null == result) {
-				throw new WorkItemCommandLineException(
-						"Enumeration literal could not be resolved: "
-								+ parameter.getIAttribute().getIdentifier()
-								+ " Value: " + parameter.getValue());
+				throw new WorkItemCommandLineException("Enumeration literal could not be resolved: '"
+						+ parameter.getIAttribute().getIdentifier() + "' Value: '" + parameter.getValue() + "'.");
 			} else {
 				return result;
 			}
 		} catch (RuntimeException e) {
-			throw new WorkItemCommandLineException(
-					"Type could not be identified - Enumeration could not be resolved: "
-							+ parameter.getIAttribute().getIdentifier()
-							+ " Value: " + parameter.getValue());
+			throw new WorkItemCommandLineException("Type could not be identified - Enumeration could not be resolved: '"
+					+ parameter.getIAttribute().getIdentifier() + "' Value: '" + parameter.getValue() + "'.");
 		}
 	}
 
 	/**
-	 * Tries to find a list of enumeration literals for a list of values encoded
-	 * in a string.
+	 * Tries to find a list of enumeration literals for a list of values encoded in
+	 * a string.
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
-	 * @param exceptions
-	 *            - a list to pass exceptions back
+	 * @param parameter  - the parameter passed
+	 * @param exceptions - a list to pass exceptions back
 	 * @return a list of enumeration literals
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateEnumerationLiteralList(ParameterValue parameter,
-			List<Exception> exceptions) throws TeamRepositoryException {
-		List<String> values = StringUtil.splitStringToList(
-				parameter.getValue(), ITEM_SEPARATOR);
+	private Object calculateEnumerationLiteralList(ParameterValue parameter, List<Exception> exceptions)
+			throws TeamRepositoryException {
+		List<String> values = StringUtil.splitStringToList(parameter.getValue(), ITEM_SEPARATOR);
 		HashMap<String, Identifier<? extends ILiteral>> foundItems = new HashMap<String, Identifier<? extends ILiteral>>();
 
 		for (String displayValue : values) {
-			Identifier<? extends ILiteral> result = getEnumerationLiteralEqualsStringOrID(
-					parameter.getIAttribute(), displayValue);
+			Identifier<? extends ILiteral> result = getEnumerationLiteralEqualsStringOrID(parameter.getIAttribute(),
+					displayValue);
 			if (null == result) {
-				exceptions.add(new WorkItemCommandLineException(
-						"Enumeration literal could not be resolved: "
-								+ parameter.getIAttribute().getIdentifier()
-								+ " Value: " + displayValue));
+				exceptions.add(new WorkItemCommandLineException("Enumeration literal could not be resolved: '"
+						+ parameter.getIAttribute().getIdentifier() + "' Value: " + displayValue));
 			} else {
 				foundItems.put(result.getStringIdentifier(), result);
 			}
@@ -1580,19 +1417,17 @@ public class WorkItemUpdateHelper {
 		Object current = getWorkItem().getValue(parameter.getIAttribute());
 		if (!(current instanceof List<?>)) {
 			throw new WorkItemCommandLineException(
-					"Attribute type not a list attribute type, can not calculate current value: "
-							+ parameter.getIAttribute().getIdentifier());
+					"Attribute type not a list attribute type, can not calculate current value: '"
+							+ parameter.getIAttribute().getIdentifier() + "'.");
 		}
 		List<?> currentList = (List<?>) current;
 		for (Object currentObject : currentList) {
 			if (!(currentObject instanceof Identifier<?>)) {
-				exceptions.add(incompatibleAttributeValueTypeException(
-						parameter, "Reading List Attribute value ("
-								+ currentObject.toString() + ") "));
+				exceptions.add(incompatibleAttributeValueTypeException(parameter,
+						"Reading List Attribute value (" + currentObject.toString() + ") "));
 			}
 			Identifier<?> currentIdentifier = (Identifier<?>) currentObject;
-			if (!foundItems
-					.containsKey(currentIdentifier.getStringIdentifier())) {
+			if (!foundItems.containsKey(currentIdentifier.getStringIdentifier())) {
 				// did not find the current element in the input list I need to
 				// add it to the result
 				// for add: it is not in the found list and needed. The found
@@ -1612,33 +1447,27 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Tries to find an item for an unspecified item attribute type and returns
-	 * the object, if found.
+	 * Tries to find an item for an unspecified item attribute type and returns the
+	 * object, if found.
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
-	 * @param exceptions
-	 *            - a list to pass exceptions back
+	 * @param parameter  - the parameter passed
+	 * @param exceptions - a list to pass exceptions back
 	 * @return the IItem found
 	 * @throws WorkItemCommandLineException
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateItem(ParameterValue parameter,
-			List<Exception> exceptions) throws WorkItemCommandLineException,
-			TeamRepositoryException {
-		List<String> value = StringUtil.splitStringToList(parameter.getValue(),
-				ITEMTYPE_SEPARATOR);
+	private Object calculateItem(ParameterValue parameter, List<Exception> exceptions)
+			throws WorkItemCommandLineException, TeamRepositoryException {
+		List<String> value = StringUtil.splitStringToList(parameter.getValue(), ITEMTYPE_SEPARATOR);
 		if (value.size() != 2) {
-			throw new WorkItemCommandLineException("Unrecognizable encoding: "
-					+ parameter.getIAttribute().getIdentifier() + " Value: "
-					+ parameter.getValue() + " - "
-					+ helpUsageUnspecifiedItemValues());
+			throw new WorkItemCommandLineException(
+					"Unrecognizable encoding: '" + parameter.getIAttribute().getIdentifier() + "' Value: '"
+							+ parameter.getValue() + " - " + helpUsageUnspecifiedItemValues() + "'.");
 		}
 		String itemType = value.get(0);
 		String itemValue = value.get(1).trim();
 		parameter.setValue(itemValue);
-		if (itemType.equals(TYPE_PROJECT_AREA)
-				|| itemType.equals(TYPE_TEAM_AREA)
+		if (itemType.equals(TYPE_PROJECT_AREA) || itemType.equals(TYPE_TEAM_AREA)
 				|| itemType.equals(TYPE_PROCESS_AREA)) {
 			return calculateProcessArea(parameter, itemType);
 		}
@@ -1657,28 +1486,24 @@ public class WorkItemUpdateHelper {
 		if (itemType.equals(TYPE_SCM_COMPONENT)) {
 			return calculateSCMComponent(parameter, exceptions);
 		}
-		throw new WorkItemCommandLineException("Unrecognized item type ( "
-				+ itemType + ") :" + parameter.getIAttribute().getIdentifier()
-				+ " Value: " + parameter.getValue() + " - "
-				+ helpUsageUnspecifiedItemValues());
+		throw new WorkItemCommandLineException(
+				"Unrecognized item type (" + itemType + ") : ID '" + parameter.getIAttribute().getIdentifier()
+						+ "' Value: '" + parameter.getValue() + "' - " + helpUsageUnspecifiedItemValues());
 	}
 
 	/**
 	 * Calculates the items in an unspecified ItemList
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
-	 * @param exceptions
-	 *            - a list to pass exceptions back
+	 * @param parameter  - the parameter passed
+	 * @param exceptions - a list to pass exceptions back
 	 * @return returns a list with the values
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateItemList(ParameterValue parameter,
-			List<Exception> exceptions) throws TeamRepositoryException {
+	private Object calculateItemList(ParameterValue parameter, List<Exception> exceptions)
+			throws TeamRepositoryException {
 		String originalInputValue = parameter.getValue();
 		HashMap<String, Object> foundItems = new HashMap<String, Object>();
-		List<String> items = StringUtil.splitStringToList(originalInputValue,
-				ITEM_SEPARATOR);
+		List<String> items = StringUtil.splitStringToList(originalInputValue, ITEM_SEPARATOR);
 		for (String itemSpecification : items) {
 			// To be able to use the functionality of calculateItem, we need to
 			// rewrite the parameter value so that it only contains one value
@@ -1689,13 +1514,10 @@ public class WorkItemUpdateHelper {
 				Object item = calculateItem(parameter, exceptions);
 				if (item instanceof IItemHandle) {
 					IItemHandle anItemHandle = (IItemHandle) item;
-					foundItems.put(anItemHandle.getItemId().getUuidValue(),
-							anItemHandle);
+					foundItems.put(anItemHandle.getItemId().getUuidValue(), anItemHandle);
 				} else {
-					exceptions.add(incompatibleAttributeValueTypeException(
-							parameter,
-							"Incompatible value type found computing List Attribute value ("
-									+ item.toString() + ") "));
+					exceptions.add(incompatibleAttributeValueTypeException(parameter,
+							"Incompatible value type found computing List Attribute value (" + item.toString() + ") "));
 				}
 			} catch (WorkItemCommandLineException e) {
 				exceptions.add(e);
@@ -1713,14 +1535,12 @@ public class WorkItemUpdateHelper {
 		List<?> currentList = (List<?>) current;
 		for (Object currentObject : currentList) {
 			if (!(currentObject instanceof IItemHandle)) {
-				exceptions.add(incompatibleAttributeValueTypeException(
-						parameter,
-						"Incompatible value type found computing List Attribute value ("
-								+ currentObject.toString() + ") "));
+				exceptions.add(incompatibleAttributeValueTypeException(parameter,
+						"Incompatible value type found computing List Attribute value (" + currentObject.toString()
+								+ ") "));
 			}
 			IItemHandle currentHandle = (IItemHandle) currentObject;
-			if (!foundItems.containsKey(currentHandle.getItemId()
-					.getUuidValue())) {
+			if (!foundItems.containsKey(currentHandle.getItemId().getUuidValue())) {
 				// did not find the current element in the input list I need to
 				// add it to the result
 				// for add: it is not in the found list and needed. The found
@@ -1742,34 +1562,26 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find an iteration from a string encoding the value
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter - the parameter passed
 	 * @return the iteration found
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateIteration(ParameterValue parameter)
-			throws TeamRepositoryException {
-		List<String> path = StringUtil.splitStringToList(parameter.getValue(),
-				PATH_SEPARATOR);
-		DevelopmentLineHelper dh = new DevelopmentLineHelper(
-				getTeamRepository(), monitor);
+	private Object calculateIteration(ParameterValue parameter) throws TeamRepositoryException {
+		List<String> path = StringUtil.splitStringToList(parameter.getValue(), PATH_SEPARATOR);
+		DevelopmentLineHelper dh = new DevelopmentLineHelper(getTeamRepository(), monitor);
 		IProjectAreaHandle projectArea = getWorkItem().getProjectArea();
-		IIteration iteration = dh.findIteration(projectArea, path,
-				DevelopmentLineHelper.BYID);
+		IIteration iteration = dh.findIteration(projectArea, path, DevelopmentLineHelper.BYID);
 		if (iteration == null) { // find by label if find by ID fails
-			iteration = dh.findIteration(projectArea, path,
-					DevelopmentLineHelper.BYLABEL);
+			iteration = dh.findIteration(projectArea, path, DevelopmentLineHelper.BYLABEL);
 		}
 		if (iteration == null) {
-			throw new WorkItemCommandLineException("Iteration not found: "
-					+ parameter.getIAttribute().getIdentifier() + " Value: "
-					+ parameter.getValue());
+			throw new WorkItemCommandLineException("Iteration not found: '" + parameter.getIAttribute().getIdentifier()
+					+ "' Value: '" + parameter.getValue() + "'.");
 		}
 		if (!iteration.hasDeliverable()) {
 			throw new WorkItemCommandLineException(
-					"Iteration has no deliverable planned (A release is scheduled for this iteration): "
-							+ parameter.getIAttribute().getIdentifier()
-							+ " Value: " + parameter.getValue());
+					"Iteration has no deliverable planned (A release is scheduled for this iteration): '"
+							+ parameter.getIAttribute().getIdentifier() + "' Value: '" + parameter.getValue() + "'.");
 		}
 		return iteration;
 	}
@@ -1777,38 +1589,32 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find a process area from the name in the value string.
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter - the parameter passed
 	 * @return the process area that was found
 	 * @throws TeamRepositoryException
 	 */
-	private IProcessArea calculateProcessArea(ParameterValue parameter,
-			String areaType) throws TeamRepositoryException {
+	private IProcessArea calculateProcessArea(ParameterValue parameter, String areaType)
+			throws TeamRepositoryException {
 		IProcessArea processArea = null;
-		IProcessArea area = ProcessAreaUtil.findProcessAreaByFQN(parameter
-				.getValue().trim(), getProcessClientService(), monitor);
+		IProcessArea area = ProcessAreaUtil.findProcessAreaByFQN(parameter.getValue().trim(), getProcessClientService(),
+				monitor);
 		if (area == null) {
-			throw new WorkItemCommandLineException(areaType + " not found "
-					+ parameter.getIAttribute().getIdentifier() + " Value: "
-					+ parameter.getValue());
+			throw new WorkItemCommandLineException(areaType + " not found '" + parameter.getIAttribute().getIdentifier()
+					+ "' Value: '" + parameter.getValue() + "'.");
 		}
 		if (areaType.equals(TYPE_PROJECT_AREA)) {
 			if (area instanceof IProjectArea) {
 				processArea = area;
 			} else {
-				throw new WorkItemCommandLineException(
-						"Process Areas found but was not Project Area: "
-								+ parameter.getAttributeID() + " Area Name: "
-								+ parameter.getValue());
+				throw new WorkItemCommandLineException("Process Areas found but was not Project Area: '"
+						+ parameter.getAttributeID() + "' Area Name: '" + parameter.getValue() + "'.");
 			}
 		} else if (areaType.equals(TYPE_TEAM_AREA)) {
 			if (area instanceof ITeamArea) {
 				processArea = area;
 			} else {
-				new WorkItemCommandLineException(
-						"Process Areas found but was not Team Area: "
-								+ parameter.getAttributeID() + " Area Name: "
-								+ parameter.getValue());
+				new WorkItemCommandLineException("Process Areas found but was not Team Area: '"
+						+ parameter.getAttributeID() + "' Area Name: '" + parameter.getValue() + "'.");
 			}
 		} else {
 			// general process area
@@ -1818,35 +1624,30 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Find a list of process areas from the names in the value string. What
-	 * type of process area, Team Area/Project Area/both is determined from the
-	 * attribute type
+	 * Find a list of process areas from the names in the value string. What type of
+	 * process area, Team Area/Project Area/both is determined from the attribute
+	 * type
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
-	 * @param exceptions
-	 *            - a list to pass exceptions back
+	 * @param parameter  - the parameter passed
+	 * @param exceptions - a list to pass exceptions back
 	 * @return a list of process areas
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateProcessAreaList(ParameterValue parameter,
-			List<Exception> exceptions) throws TeamRepositoryException {
+	private Object calculateProcessAreaList(ParameterValue parameter, List<Exception> exceptions)
+			throws TeamRepositoryException {
 		String areaType = TYPE_PROCESS_AREA;
-		if (parameter.getIAttribute().getAttributeType()
-				.equals(AttributeTypes.PROJECT_AREA_LIST)) {
+		if (parameter.getIAttribute().getAttributeType().equals(AttributeTypes.PROJECT_AREA_LIST)) {
 			areaType = TYPE_PROJECT_AREA;
-		} else if (parameter.getIAttribute().getAttributeType()
-				.equals(AttributeTypes.TEAM_AREA_LIST)) {
+		} else if (parameter.getIAttribute().getAttributeType().equals(AttributeTypes.TEAM_AREA_LIST)) {
 			areaType = TYPE_TEAM_AREA;
 		}
 		HashMap<String, IProcessArea> foundItems = new HashMap<String, IProcessArea>();
 		List<String> notFoundList = new ArrayList<String>();
-		List<String> processAreaNames = StringUtil.splitStringToList(
-				parameter.getValue(), ITEM_SEPARATOR);
+		List<String> processAreaNames = StringUtil.splitStringToList(parameter.getValue(), ITEM_SEPARATOR);
 		for (String processAreaName : processAreaNames) {
 			processAreaName = processAreaName.trim();
-			IProcessArea area = ProcessAreaUtil.findProcessAreaByFQN(
-					processAreaName, getProcessClientService(), monitor);
+			IProcessArea area = ProcessAreaUtil.findProcessAreaByFQN(processAreaName, getProcessClientService(),
+					monitor);
 			if (area == null) {
 				notFoundList.add(processAreaName);
 			} else {
@@ -1854,19 +1655,16 @@ public class WorkItemUpdateHelper {
 					if (area instanceof IProjectArea) {
 						foundItems.put(area.getItemId().getUuidValue(), area);
 					} else {
-						exceptions.add(new WorkItemCommandLineException(
-								"Process Areas found but was not Project Area: "
-										+ parameter.getAttributeID()
-										+ " Area Name: " + processAreaName));
+						exceptions
+								.add(new WorkItemCommandLineException("Process Areas found but was not Project Area: '"
+										+ parameter.getAttributeID() + "' Area Name: '" + processAreaName + "'."));
 					}
 				} else if (areaType.equals(TYPE_TEAM_AREA)) {
 					if (area instanceof ITeamArea) {
 						foundItems.put(area.getItemId().getUuidValue(), area);
 					} else {
-						exceptions.add(new WorkItemCommandLineException(
-								"Process Areas found but was not Team Area: "
-										+ parameter.getAttributeID()
-										+ " Area Name: " + processAreaName));
+						exceptions.add(new WorkItemCommandLineException("Process Areas found but was not Team Area: '"
+								+ parameter.getAttributeID() + "' Area Name: '" + processAreaName + "'."));
 					}
 				} else {
 					// general process area
@@ -1875,10 +1673,8 @@ public class WorkItemUpdateHelper {
 			}
 		}
 		if (!notFoundList.isEmpty()) {
-			exceptions.add(new WorkItemCommandLineException(
-					"Process Areas not found: " + parameter.getAttributeID()
-							+ " process areas: "
-							+ helpGetDisplayStringFromList(notFoundList)));
+			exceptions.add(new WorkItemCommandLineException("Process Areas not found: '" + parameter.getAttributeID()
+					+ "' process areas: '" + helpGetDisplayStringFromList(notFoundList) + "'."));
 		}
 		if (parameter.isSet()) {
 			// Set the value to the new list
@@ -1888,20 +1684,18 @@ public class WorkItemUpdateHelper {
 		Object current = getWorkItem().getValue(parameter.getIAttribute());
 		if (!(current instanceof List<?>)) {
 			throw new WorkItemCommandLineException(
-					"Attribute type not a list attribute type, can not calculate current value: "
-							+ parameter.getIAttribute().getIdentifier());
+					"Attribute type not a list attribute type, can not calculate current value: '"
+							+ parameter.getIAttribute().getIdentifier() + "'.");
 		}
 		List<?> currentList = (List<?>) current;
 		for (Object currentObject : currentList) {
 			if (!(currentObject instanceof IItemHandle)) {
-				exceptions.add(incompatibleAttributeValueTypeException(
-						parameter,
-						"Incompatible value type found computing List Attribute value ("
-								+ currentObject.toString() + ") "));
+				exceptions.add(incompatibleAttributeValueTypeException(parameter,
+						"Incompatible value type found computing List Attribute value (" + currentObject.toString()
+								+ ") "));
 			}
 			IItemHandle currentHandle = (IItemHandle) currentObject;
-			if (!foundItems.containsKey(currentHandle.getItemId()
-					.getUuidValue())) {
+			if (!foundItems.containsKey(currentHandle.getItemId().getUuidValue())) {
 				// did not find the current element in the input list I need to
 				// add it to the result
 				// for add: it is not in the found list and needed. The found
@@ -1925,32 +1719,24 @@ public class WorkItemUpdateHelper {
 	 * 
 	 * If components with the same name exist, it returns the first one found
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
-	 * @param exceptions
-	 *            - a list to pass exceptions back
+	 * @param parameter  - the parameter passed
+	 * @param exceptions - a list to pass exceptions back
 	 * @return the component found
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateSCMComponent(ParameterValue parameter,
-			List<Exception> exceptions) throws TeamRepositoryException {
-		IWorkspaceManager wm = SCMPlatform
-				.getWorkspaceManager(getTeamRepository());
-		IComponentSearchCriteria criteria = IComponentSearchCriteria.FACTORY
-				.newInstance();
+	private Object calculateSCMComponent(ParameterValue parameter, List<Exception> exceptions)
+			throws TeamRepositoryException {
+		IWorkspaceManager wm = SCMPlatform.getWorkspaceManager(getTeamRepository());
+		IComponentSearchCriteria criteria = IComponentSearchCriteria.FACTORY.newInstance();
 		criteria.setExactName(parameter.getValue());
-		List<IComponentHandle> found = wm.findComponents(criteria,
-				Integer.MAX_VALUE, monitor);
+		List<IComponentHandle> found = wm.findComponents(criteria, Integer.MAX_VALUE, monitor);
 		if (found.size() == 0) {
-			new WorkItemCommandLineException("SCM Component not found :"
-					+ parameter.getIAttribute().getIdentifier() + " Value: "
-					+ parameter.getValue());
+			new WorkItemCommandLineException("SCM Component not found : '" + parameter.getIAttribute().getIdentifier()
+					+ "' Value: '" + parameter.getValue() + "'.");
 		}
 		if (found.size() > 1) {
-			exceptions.add(new WorkItemCommandLineException(
-					"Ambigious SCM Component name - returning first hit :"
-							+ parameter.getIAttribute().getIdentifier()
-							+ " Value: " + parameter.getValue()));
+			exceptions.add(new WorkItemCommandLineException("Ambigious SCM Component name - returning first hit : '"
+					+ parameter.getIAttribute().getIdentifier() + "' Value: '" + parameter.getValue() + "'."));
 		}
 		return found.get(0);
 	}
@@ -1958,28 +1744,23 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Calculates a string value to return to set string based attributes.
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter  - the parameter passed
 	 * @param stringType
 	 * @return the string to return
 	 * @throws TeamRepositoryException
 	 */
-	private String calculateStringValue(ParameterValue parameter,
-			String stringType) throws TeamRepositoryException {
+	private String calculateStringValue(ParameterValue parameter, String stringType) throws TeamRepositoryException {
 
 		if (parameter.isRemove()) {
-			throw modeNotSupportedException(parameter,
-					"Mode not supported for this operation.");
+			throw modeNotSupportedException(parameter, "Mode not supported for this operation.");
 		}
 		if (parameter.isAdd()) {
 			Object current = getWorkItem().getValue(parameter.getIAttribute());
 			if (current instanceof String) {
 				String content = (String) current;
-				return content.concat(insertLineBreaks(parameter.getValue(),
-						stringType));
+				return content.concat(insertLineBreaks(parameter.getValue(), stringType));
 			} else {
-				throw incompatibleAttributeValueTypeException(parameter,
-						"Set String value.");
+				throw incompatibleAttributeValueTypeException(parameter, "Set String value.");
 			}
 		}
 		// default and set mode
@@ -1989,17 +1770,14 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Calculate a string list from input variables and the current value
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
-	 * @param exceptions
-	 *            - a list to pass exceptions back
+	 * @param parameter  - the parameter passed
+	 * @param exceptions - a list to pass exceptions back
 	 * @return a list with strings to be set
 	 * @throws TeamRepositoryException
 	 */
-	private Collection<String> calculateStringList(ParameterValue parameter,
-			List<Exception> errors) throws TeamRepositoryException {
-		List<String> foundItems = StringUtil.splitStringToList(
-				parameter.getValue(), ITEM_SEPARATOR);
+	private Collection<String> calculateStringList(ParameterValue parameter, List<Exception> errors)
+			throws TeamRepositoryException {
+		List<String> foundItems = StringUtil.splitStringToList(parameter.getValue(), ITEM_SEPARATOR);
 		if (parameter.isSet()) {
 			return foundItems;
 		}
@@ -2007,8 +1785,8 @@ public class WorkItemUpdateHelper {
 		Object current = getWorkItem().getValue(parameter.getIAttribute());
 		if (!(current instanceof List<?>)) {
 			throw new WorkItemCommandLineException(
-					"Attribute type not a String list attribute type, can not calculate current value: "
-							+ parameter.getIAttribute().getIdentifier());
+					"Attribute type not a String list attribute type, can not calculate current value: '"
+							+ parameter.getIAttribute().getIdentifier() + "'.");
 		}
 		HashSet<String> results = new HashSet<String>();
 		List<?> currentList = (List<?>) current;
@@ -2034,15 +1812,12 @@ public class WorkItemUpdateHelper {
 	 * Calculate a list of tags from an attribute value and a list of tag names
 	 * encoded in a string.
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter - the parameter passed
 	 * @return the list of tags
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateTagList(ParameterValue parameter)
-			throws TeamRepositoryException {
-		SeparatedStringList tags = (SeparatedStringList) getWorkItem()
-				.getValue(parameter.getIAttribute());
+	private Object calculateTagList(ParameterValue parameter) throws TeamRepositoryException {
+		SeparatedStringList tags = (SeparatedStringList) getWorkItem().getValue(parameter.getIAttribute());
 		List<String> newTags = getTags(parameter.getValue());
 		if (parameter.isRemove()) {
 			tags.removeAll(newTags);
@@ -2060,51 +1835,40 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Calculates a timestamp from a string. Format @see SimpleDateFormatUtil
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter - the parameter passed
 	 * @return the timestamp that was calculated
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateTimestamp(ParameterValue parameter)
-			throws TeamRepositoryException {
+	private Object calculateTimestamp(ParameterValue parameter) throws TeamRepositoryException {
 		try {
 			String value = parameter.getValue();
-			if(IWorkItemCommandLineConstants.UNASSIGNED.equals(value) || "".equals(value)) {
+			if (IWorkItemCommandLineConstants.UNASSIGNED.equals(value) || StringUtil.isEmpty(value)) {
 				return null;
 			}
-			return SimpleDateFormatUtil
-					.createTimeStamp(
-							value,
-							SimpleDateFormatUtil.SIMPLE_DATE_FORMAT_PATTERN_YYYY_MM_DD_HH_MM_SS_Z);
+			return SimpleDateFormatUtil.createTimeStamp(value,
+					SimpleDateFormatUtil.SIMPLE_DATE_FORMAT_PATTERN_YYYY_MM_DD_HH_MM_SS_Z);
 		} catch (IllegalArgumentException e) {
-			throw new WorkItemCommandLineException(
-					"Wrong Timestamp format: "
-							+ parameter.getIAttribute().getIdentifier()
-							+ " Value: "
-							+ parameter.getValue()
-							+ " use format: "
-							+ SimpleDateFormatUtil.SIMPLE_DATE_FORMAT_PATTERN_YYYY_MM_DD_HH_MM_SS_Z);
+			throw new WorkItemCommandLineException("Wrong Timestamp format: "
+					+ parameter.getIAttribute().getIdentifier() + " Value: '" + parameter.getValue() + "' use format: "
+					+ SimpleDateFormatUtil.SIMPLE_DATE_FORMAT_PATTERN_YYYY_MM_DD_HH_MM_SS_Z);
 		}
 	}
 
 	/**
-	 * Get an UUID from a process area or access group - this is typically used
-	 * for restricted access
+	 * Get an UUID from a process area or access group - this is typically used for
+	 * restricted access
 	 * 
 	 * @param parameter
 	 * @param exceptions
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private UUID calculateUUID(ParameterValue parameter,
-			List<Exception> exceptions) throws TeamRepositoryException {
-		UUID accessContext = AccessContextUtil.getAccessContextFromFQN(
-				parameter.getValue(), getTeamRepository(),
+	private UUID calculateUUID(ParameterValue parameter, List<Exception> exceptions) throws TeamRepositoryException {
+		UUID accessContext = AccessContextUtil.getAccessContextFromFQN(parameter.getValue(), getTeamRepository(),
 				getAuditableCommon(), getProcessClientService(), null);
 		if (accessContext == null) {
-			throw new WorkItemCommandLineException("UUID not found: "
-					+ parameter.getIAttribute().getIdentifier() + " Value: "
-					+ parameter.getValue());
+			throw new WorkItemCommandLineException("UUID not found: '" + parameter.getIAttribute().getIdentifier()
+					+ "' Value: '" + parameter.getValue() + "'.");
 
 		}
 		return accessContext;
@@ -2113,8 +1877,7 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find a work item from an ID
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter - the parameter passed
 	 * @return the work item found
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
@@ -2122,41 +1885,36 @@ public class WorkItemUpdateHelper {
 	private Object calculateWorkItem(ParameterValue parameter)
 			throws TeamRepositoryException, WorkItemCommandLineException {
 		List<String> notFoundList = new ArrayList<String>();
-		HashMap<String, IWorkItem> workItems = findWorkItemsByIDValues(
-				parameter.getValue(), notFoundList, ITEM_SEPARATOR);
+		HashMap<String, IWorkItem> workItems = findWorkItemsByIDValues(parameter.getValue(), notFoundList,
+				ITEM_SEPARATOR);
 		Collection<IWorkItem> workItemList = workItems.values();
 		if (workItemList.size() > 0) {
 			// In this case we only search for one work item and only have to
 			// return one result
 			return workItemList.iterator().next();
 		} else {
-			throw new WorkItemCommandLineException("Work Item not found: "
-					+ parameter.getAttributeID() + " Value: "
-					+ parameter.getValue());
+			throw new WorkItemCommandLineException(
+					"Work Item not found: '" + parameter.getAttributeID() + "' Value: '" + parameter.getValue() + "'.");
 		}
 	}
 
 	/**
 	 * Find the work items for a list of ID's
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
-	 * @param exceptions
-	 *            - a list to pass exceptions back
+	 * @param parameter  - the parameter passed
+	 * @param exceptions - a list to pass exceptions back
 	 * @return the list of work items
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateWorkItemList(ParameterValue parameter,
-			List<Exception> exceptions) throws TeamRepositoryException {
+	private Object calculateWorkItemList(ParameterValue parameter, List<Exception> exceptions)
+			throws TeamRepositoryException {
 		List<String> notFoundList = new ArrayList<String>();
-		HashMap<String, IWorkItem> foundItems = findWorkItemsByIDValues(
-				parameter.getValue(), notFoundList, ITEM_SEPARATOR);
+		HashMap<String, IWorkItem> foundItems = findWorkItemsByIDValues(parameter.getValue(), notFoundList,
+				ITEM_SEPARATOR);
 		if (!notFoundList.isEmpty()) {
-			exceptions.add(new WorkItemCommandLineException(
-					"WorkItems not found: Attribute"
-							+ parameter.getAttributeID() + " value "
-							+ parameter.getValue() + " WorkItems: "
-							+ helpGetDisplayStringFromList(notFoundList)));
+			exceptions.add(new WorkItemCommandLineException("WorkItems not found: Attribute: '"
+					+ parameter.getAttributeID() + "' value '" + parameter.getValue() + "' WorkItems: '"
+					+ helpGetDisplayStringFromList(notFoundList) + "'."));
 		}
 		if (parameter.isSet()) {
 			// Set the value to the new list
@@ -2166,20 +1924,18 @@ public class WorkItemUpdateHelper {
 		Object current = getWorkItem().getValue(parameter.getIAttribute());
 		if (!(current instanceof List<?>)) {
 			throw new WorkItemCommandLineException(
-					"Attribute type not a list attribute type, can not calculate current value: "
-							+ parameter.getIAttribute().getIdentifier());
+					"Attribute type not a list attribute type, can not calculate current value: '"
+							+ parameter.getIAttribute().getIdentifier() + "'.");
 		}
 		List<?> currentList = (List<?>) current;
 		for (Object currentObject : currentList) {
 			if (!(currentObject instanceof IItemHandle)) {
-				exceptions.add(incompatibleAttributeValueTypeException(
-						parameter,
-						"Incompatible value type found computing List Attribute value ("
-								+ currentObject.toString() + ") "));
+				exceptions.add(incompatibleAttributeValueTypeException(parameter,
+						"Incompatible value type found computing List Attribute value: '" + currentObject.toString()
+								+ "' "));
 			}
 			IItemHandle currentHandle = (IItemHandle) currentObject;
-			if (!foundItems.containsKey(currentHandle.getItemId()
-					.getUuidValue())) {
+			if (!foundItems.containsKey(currentHandle.getItemId().getUuidValue())) {
 				// did not find the current element in the input list I need to
 				// add it to the result
 				// for add: it is not in the found list and needed. The found
@@ -2209,21 +1965,17 @@ public class WorkItemUpdateHelper {
 	 * Defect 3 <br/>
 	 *  
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
+	 * @param parameter  - the parameter passed
 	 * @param stringType
 	 * @return the XML string
 	 */
-	private String calculateXMLDescription(ParameterValue parameter,
-			XMLString originalContent, String stringType) {
+	private String calculateXMLDescription(ParameterValue parameter, XMLString originalContent, String stringType) {
 		XMLString input = XMLString.createFromPlainText("");
 		if (parameter.isRemove()) {
-			throw modeNotSupportedException(parameter,
-					"Mode not supported for this operation.");
+			throw modeNotSupportedException(parameter, "Mode not supported for this operation.");
 		}
 
-		input = XMLString.createFromXMLText(insertLineBreaks(
-				parameter.getValue(), stringType));
+		input = XMLString.createFromXMLText(insertLineBreaks(parameter.getValue(), stringType));
 
 		if (parameter.isAdd()) {
 			return originalContent.concat(input).getXMLText();
@@ -2236,57 +1988,49 @@ public class WorkItemUpdateHelper {
 	 * Create an approval on the work item.
 	 * 
 	 * @param parameter
-	 * @param approvalData
-	 *            - the value with the data to be set. This parameter is
-	 *            encoded.
+	 * @param approvalData - the value with the data to be set. This parameter is
+	 *                     encoded.
 	 * @throws TeamRepositoryException
 	 */
-	private void createApproval(ParameterValue parameter,
-			ApprovalInputData approvalData) throws TeamRepositoryException {
+	private void createApproval(ParameterValue parameter, ApprovalInputData approvalData)
+			throws TeamRepositoryException {
 
 		// Create Approval
 		IApprovals approvals = getWorkItem().getApprovals();
-		IApprovalDescriptor descriptor = approvals.createDescriptor(
-				approvalData.getApprovalType(), approvalData.getApprovalName());
+		IApprovalDescriptor descriptor = approvals.createDescriptor(approvalData.getApprovalType(),
+				approvalData.getApprovalName());
 
 		List<String> notFoundList = new ArrayList<String>();
-		HashMap<String, IContributor> approvers = getContributors(
-				approvalData.getApprovers(), ITEM_SEPARATOR, notFoundList);
+		HashMap<String, IContributor> approvers = getContributors(approvalData.getApprovers(), ITEM_SEPARATOR,
+				notFoundList);
 		// Add users to approval - if any
 		for (IContributorHandle approver : approvers.values()) {
-			IApproval newApproval = approvals.createApproval(descriptor,
-					approver);
+			IApproval newApproval = approvals.createApproval(descriptor, approver);
 			approvals.add(newApproval);
 		}
 		// Deal with false ID's in the approver list
 		if (!notFoundList.isEmpty()) {
-			throw new WorkItemCommandLineException("Approvers not found: "
-					+ parameter + " Approvers: "
-					+ helpGetDisplayStringFromList(notFoundList));
+			throw new WorkItemCommandLineException(
+					"Approvers not found: " + parameter + " Approvers: " + helpGetDisplayStringFromList(notFoundList));
 		}
 	}
 
 	/**
 	 * Gets a list of work items from a list of ID's
 	 * 
-	 * @param value
-	 *            - a list of work item ID's
-	 * @param notFoundList
-	 *            - A list to pass work item ID's with no work item found
+	 * @param value        - a list of work item ID's
+	 * @param notFoundList - A list to pass work item ID's with no work item found
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private HashMap<String, IWorkItem> findWorkItemsByIDValues(String value,
-			List<String> notFoundList, String separator)
-			throws TeamRepositoryException {
+	private HashMap<String, IWorkItem> findWorkItemsByIDValues(String value, List<String> notFoundList,
+			String separator) throws TeamRepositoryException {
 		HashMap<String, IWorkItem> items = new HashMap<String, IWorkItem>();
-		List<String> workItemIDs = StringUtil.splitStringToList(value,
-				separator);
+		List<String> workItemIDs = StringUtil.splitStringToList(value, separator);
 		for (String id : workItemIDs) {
 			IWorkItem item = null;
 			try {
-				item = WorkItemUtil.findWorkItemByID(id,
-						IWorkItem.SMALL_PROFILE, getWorkItemCommon(), monitor);
+				item = WorkItemUtil.findWorkItemByID(id, IWorkItem.SMALL_PROFILE, getWorkItemCommon(), monitor);
 			} catch (WorkItemCommandLineException e) {
 				// We just add the ID to the list of not found items
 			}
@@ -2302,34 +2046,28 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Finds a build result with a given label
 	 * 
-	 * @param buildResultLabel
-	 *            - the string representation of the build result label
+	 * @param buildResultLabel - the string representation of the build result label
 	 * @return the buildresult that was found
 	 * @throws WorkItemCommandLineException
 	 * @see https://jazz.net/library/article/1229
 	 */
-	private IBuildResultHandle findBuildResultByLabel(String buildResultLabel)
-			throws WorkItemCommandLineException {
+	private IBuildResultHandle findBuildResultByLabel(String buildResultLabel) throws WorkItemCommandLineException {
 
 		ITeamBuildClient buildClient = getBuildClient();
 		IBuildResultQueryModel buildResultQueryModel = IBuildResultQueryModel.ROOT;
-		IItemQuery query = IItemQuery.FACTORY
-				.newInstance(buildResultQueryModel);
+		IItemQuery query = IItemQuery.FACTORY.newInstance(buildResultQueryModel);
 		/*
 		 * Build up a query filter predicate that accepts a build label as input
 		 */
-		IPredicate buildByLabel = (buildResultQueryModel.label()._eq(query
-				.newStringArg()));
+		IPredicate buildByLabel = (buildResultQueryModel.label()._eq(query.newStringArg()));
 		query.filter(buildByLabel);
 		/* Order by build start time in descending order */
 		query.orderByDsc(buildResultQueryModel.buildStartTime());
 		try {
 			/*
-			 * Query for items using the build definition's item ID as the
-			 * argument.
+			 * Query for items using the build definition's item ID as the argument.
 			 */
-			IItemQueryPage queryPage = buildClient.queryItems(query,
-					new Object[] { buildResultLabel },
+			IItemQueryPage queryPage = buildClient.queryItems(query, new Object[] { buildResultLabel },
 					IQueryService.ITEM_QUERY_MAX_PAGE_SIZE, monitor);
 			IItemHandle[] results = queryPage.handlesAsArray();
 
@@ -2339,57 +2077,49 @@ public class WorkItemUpdateHelper {
 				}
 			}
 		} catch (TeamRepositoryException e) {
-			throw new WorkItemCommandLineException("Build Result not found "
-					+ buildResultLabel, e);
+			throw new WorkItemCommandLineException("Build Result not found " + buildResultLabel, e);
 		}
-		throw new WorkItemCommandLineException("Build Result not found "
-				+ buildResultLabel);
+		throw new WorkItemCommandLineException("Build Result not found " + buildResultLabel);
 	}
 
 	/**
 	 * Find the category from the string. Categories don't have ID's, so you can
 	 * only search for the value.
 	 * 
-	 * @param value
-	 *            - the category path
+	 * @param value - the category path
 	 * @return the category handle
 	 * @throws TeamRepositoryException
 	 */
-	private ICategoryHandle findCategory(String value)
-			throws TeamRepositoryException {
+	private ICategoryHandle findCategory(String value) throws TeamRepositoryException {
 		List<String> path = StringUtil.splitStringToList(value, PATH_SEPARATOR);
-		ICategoryHandle category = getWorkItemCommon().findCategoryByNamePath(
-				getWorkItem().getProjectArea(), path, monitor);
+		ICategoryHandle category = getWorkItemCommon().findCategoryByNamePath(getWorkItem().getProjectArea(), path,
+				monitor);
 		return category;
 	}
 
 	/**
-	 * Find a contributor from a given user ID string representation. Search by
-	 * ID or name first search for implemented.
+	 * Find a contributor from a given user ID string representation. Search by ID
+	 * or name first search for implemented.
 	 * 
-	 * @param userID
-	 *            - the user ID string encoded
-	 * @return the contributor object
+	 * @param userID - the user ID string encoded
+	 * @return the contributor object or null if the user ID could not be found
 	 * @throws TeamRepositoryException
 	 */
 	@SuppressWarnings("rawtypes")
-	private IContributor findContributorFromIDorName(String userID)
-			throws TeamRepositoryException {
+	private IContributor findContributorFromIDorName(final String userID) throws TeamRepositoryException {
+		String userTrimmed = userID.trim();
 		IContributor foundUser = null;
-		if (userID.isEmpty()) {
+		if (userTrimmed.isEmpty()) {
 			return foundUser;
 		}
 		try {
-			foundUser = getTeamRepository().contributorManager()
-					.fetchContributorByUserId(userID, monitor);
+			foundUser = getTeamRepository().contributorManager().fetchContributorByUserId(userID, monitor);
 		} catch (ItemNotFoundException e) {
 			// Try to find by name
-			List allContributors = getTeamRepository().contributorManager()
-					.fetchAllContributors(monitor);
-			for (Iterator iterator = allContributors.iterator(); iterator
-					.hasNext();) {
+			List allContributors = getTeamRepository().contributorManager().fetchAllContributors(monitor);
+			for (Iterator iterator = allContributors.iterator(); iterator.hasNext();) {
 				IContributor contributor = (IContributor) iterator.next();
-				if (contributor.getName().equals(userID)) {
+				if (contributor.getName().equals(userTrimmed)) {
 					foundUser = contributor;
 					break;
 				}
@@ -2402,41 +2132,35 @@ public class WorkItemUpdateHelper {
 	 * Find a deliverable (release) object from its name Deliverables don't have
 	 * ID's, so you can only search for the value.
 	 * 
-	 * @param value
-	 *            - the name of the deliverable
+	 * @param value - the name of the deliverable
 	 * @return the deliverable object
 	 * @throws TeamRepositoryException
 	 */
-	private IDeliverable findDeliverable(String value)
-			throws TeamRepositoryException {
-		return getWorkItemCommon().findDeliverableByName(
-				getWorkItem().getProjectArea(), value,
+	private IDeliverable findDeliverable(String value) throws TeamRepositoryException {
+		return getWorkItemCommon().findDeliverableByName(getWorkItem().getProjectArea(), value,
 				IDeliverable.FULL_PROFILE, monitor);
 	}
 
 	/**
-	 * Find a resolution from a given string representation. Note, this looks
-	 * into all resolutions and does not look into the specific resolutions
-	 * related to a state. Search is by name and by ID of the resolution.
+	 * Find a resolution from a given string representation. Note, this looks into
+	 * all resolutions and does not look into the specific resolutions related to a
+	 * state. Search is by name and by ID of the resolution.
 	 * 
-	 * @param value
-	 *            - the resolution display text or "" or null;
+	 * @param value - the resolution display text or "" or null;
 	 * @return the resolution object that was found or null if the value is empty
 	 * @throws TeamRepositoryException, WorkItemCommandLineException
 	 */
 	private Identifier<IResolution> findResolution(String value)
 			throws TeamRepositoryException, WorkItemCommandLineException {
-		if(value==null) {
+		if (value == null) {
 			return null;
 		}
-		if(value.equals("")) {
+		if (value.equals("")) {
 			return null;
 		}
-		IWorkflowInfo workflowInfo = getWorkItemCommon().getWorkflow(
-				getWorkItem().getWorkItemType(),
+		IWorkflowInfo workflowInfo = getWorkItemCommon().getWorkflow(getWorkItem().getWorkItemType(),
 				getWorkItem().getProjectArea(), monitor);
-		Identifier<IResolution>[] resolutions = workflowInfo
-				.getAllResolutionIds();
+		Identifier<IResolution>[] resolutions = workflowInfo.getAllResolutionIds();
 		for (Identifier<IResolution> resolution : resolutions) {
 			if (workflowInfo.getResolutionName(resolution).equals(value)) {
 				return resolution;
@@ -2444,29 +2168,24 @@ public class WorkItemUpdateHelper {
 				return resolution;
 			}
 		}
-		throw new WorkItemCommandLineException("Resolution not found Value: " + value );
+		throw new WorkItemCommandLineException("Resolution not found Value: " + value);
 	}
 
 	/**
-	 * Try to find an action that leads from the current state of the work item
-	 * to the desires target state. Searches by string display value first and
-	 * then by ID of the state.
+	 * Try to find an action that leads from the current state of the work item to
+	 * the desires target state. Searches by string display value first and then by
+	 * ID of the state.
 	 * 
-	 * @param value
-	 *            - the string representation of the target state.
+	 * @param value - the string representation of the target state.
 	 * @return the workflow action identifier.
 	 * @throws TeamRepositoryException
 	 */
-	private Identifier<IWorkflowAction> findActionToTargetState(String value)
-			throws TeamRepositoryException {
-		IWorkflowInfo workflowInfo = getWorkItemCommon().getWorkflow(
-				getWorkItem().getWorkItemType(),
+	private Identifier<IWorkflowAction> findActionToTargetState(String value) throws TeamRepositoryException {
+		IWorkflowInfo workflowInfo = getWorkItemCommon().getWorkflow(getWorkItem().getWorkItemType(),
 				getWorkItem().getProjectArea(), monitor);
-		Identifier<IWorkflowAction>[] ActionIDs = workflowInfo
-				.getActionIds(getWorkItem().getState2());
+		Identifier<IWorkflowAction>[] ActionIDs = workflowInfo.getActionIds(getWorkItem().getState2());
 		for (Identifier<IWorkflowAction> action : ActionIDs) {
-			Identifier<IState> targetState = workflowInfo
-					.getActionResultState(action);
+			Identifier<IState> targetState = workflowInfo.getActionResultState(action);
 			if (workflowInfo.getStateName(targetState).equals(value)) {
 				return action;
 			} else if ((targetState).getStringIdentifier().equals(value)) {
@@ -2477,22 +2196,18 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Try to find an action with a given name, that leads from the current
-	 * state of the work item. Searches by string display value first and then
-	 * by ID of the action.
+	 * Try to find an action with a given name, that leads from the current state of
+	 * the work item. Searches by string display value first and then by ID of the
+	 * action.
 	 * 
-	 * @param value
-	 *            - the string representation of the action.
+	 * @param value - the string representation of the action.
 	 * @return the workflow action identifier.
 	 * @throws TeamRepositoryException
 	 */
-	private Identifier<IWorkflowAction> findAction(String value)
-			throws TeamRepositoryException {
-		IWorkflowInfo workflowInfo = getWorkItemCommon().getWorkflow(
-				getWorkItem().getWorkItemType(),
+	private Identifier<IWorkflowAction> findAction(String value) throws TeamRepositoryException {
+		IWorkflowInfo workflowInfo = getWorkItemCommon().getWorkflow(getWorkItem().getWorkItemType(),
 				getWorkItem().getProjectArea(), monitor);
-		Identifier<IWorkflowAction>[] ActionIDs = workflowInfo
-				.getActionIds(getWorkItem().getState2());
+		Identifier<IWorkflowAction>[] ActionIDs = workflowInfo.getActionIds(getWorkItem().getState2());
 		for (Identifier<IWorkflowAction> action : ActionIDs) {
 			if (workflowInfo.getActionName(action).equals(value)) {
 				return action;
@@ -2504,18 +2219,15 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Find the state represented by its name as string. Searches by string
-	 * display value first and then by ID.
+	 * Find the state represented by its name as string. Searches by string display
+	 * value first and then by ID.
 	 * 
-	 * @param value
-	 *            - the string representation of the target state.
+	 * @param value - the string representation of the target state.
 	 * @return - the state identifier
 	 * @throws TeamRepositoryException
 	 */
-	private Identifier<IState> findTargetState(String value)
-			throws TeamRepositoryException {
-		IWorkflowInfo workflowInfo = getWorkItemCommon().getWorkflow(
-				getWorkItem().getWorkItemType(),
+	private Identifier<IState> findTargetState(String value) throws TeamRepositoryException {
+		IWorkflowInfo workflowInfo = getWorkItemCommon().getWorkflow(getWorkItem().getWorkItemType(),
 				getWorkItem().getProjectArea(), monitor);
 		Identifier<IState>[] states = workflowInfo.getAllStateIds();
 		for (Identifier<IState> stateId : states) {
@@ -2529,20 +2241,18 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Tests if a work item is in a certain state Searches by string display
-	 * value first and then by ID.
+	 * Tests if a work item is in a certain state Searches by string display value
+	 * first and then by ID.
 	 * 
-	 * @param value
-	 *            - the name of the state
-	 * @return true if the current state of the work item has the name of the
-	 *         value provided
+	 * @param value - the name of the state
+	 * @return true if the current state of the work item has the name of the value
+	 *         provided
 	 * @throws TeamRepositoryException
 	 */
-	private boolean isInState(IWorkItem workItem,
-			IWorkItemCommon workItemCommon, String value)
+	private boolean isInState(IWorkItem workItem, IWorkItemCommon workItemCommon, String value)
 			throws TeamRepositoryException {
-		IWorkflowInfo workflowInfo = workItemCommon.getWorkflow(
-				workItem.getWorkItemType(), workItem.getProjectArea(), monitor);
+		IWorkflowInfo workflowInfo = workItemCommon.getWorkflow(workItem.getWorkItemType(), workItem.getProjectArea(),
+				monitor);
 		Identifier<IState> currentState = getWorkItem().getState2();
 		if (currentState == null) {
 			// a new work item does not yet have a state
@@ -2557,24 +2267,19 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Set the state of the work item. Dependent on the input the method either
-	 * uses an action to the state - if that exists, or directly sets the state,
-	 * even if the action does not exist. To do the latter, it uses a deprecated
-	 * method.
+	 * Set the state of the work item. Dependent on the input the method either uses
+	 * an action to the state - if that exists, or directly sets the state, even if
+	 * the action does not exist. To do the latter, it uses a deprecated method.
 	 * 
-	 * @param propertyID
-	 *            - the property to access the attribute. this is encoded to
-	 *            deliver the approval type
-	 * @param value
-	 *            - the value with the data to be set. This parameter is
-	 *            encoded.
+	 * @param propertyID - the property to access the attribute. this is encoded to
+	 *                   deliver the approval type
+	 * @param value      - the value with the data to be set. This parameter is
+	 *                   encoded.
 	 * @throws TeamRepositoryException
 	 */
 	@SuppressWarnings("deprecation")
-	private void setState(ParameterValue parameter)
-			throws TeamRepositoryException {
-		List<String> stateList = StringUtil.splitStringToList(
-				parameter.getValue(), FORCESTATE_SEPARATOR);
+	private void setState(ParameterValue parameter) throws TeamRepositoryException {
+		List<String> stateList = StringUtil.splitStringToList(parameter.getValue(), FORCESTATE_SEPARATOR);
 		if (stateList.size() == 1) {
 			String targetState = stateList.get(0).trim();
 			if (isInState(getWorkItem(), getWorkItemCommon(), targetState)) {
@@ -2583,38 +2288,30 @@ public class WorkItemUpdateHelper {
 
 			Identifier<IWorkflowAction> foundAction = findActionToTargetState(targetState);
 			if (foundAction == null) {
-				throw new WorkItemCommandLineException(
-						"Action to target State not found: "
-								+ parameter.getAttributeID() + " Value: "
-								+ parameter.getValue());
+				throw new WorkItemCommandLineException("Action to target State not found: " + parameter.getAttributeID()
+						+ " Value: " + parameter.getValue());
 			}
-			((WorkItemWorkingCopy) getWorkingCopy())
-					.setWorkflowAction(foundAction.getStringIdentifier());
+			((WorkItemWorkingCopy) getWorkingCopy()).setWorkflowAction(foundAction.getStringIdentifier());
 		} else if (stateList.size() == 2) {
 			String prefix = stateList.get(0);
 			String newValue = stateList.get(1);
 			if (STATECHANGE_FORCESTATE.equals(prefix)) {
 				Identifier<IState> foundState = findTargetState(newValue.trim());
 				if (foundState == null) {
-					throw new WorkItemCommandLineException(
-							"Target state not found: "
-									+ parameter.getAttributeID() + " Value: "
-									+ parameter.getValue());
+					throw new WorkItemCommandLineException("Target state not found: " + parameter.getAttributeID()
+							+ " Value: " + parameter.getValue());
 				}
 				/**
 				 * Warning: Deprecated method does not respect the workflow.
 				 */
 				getWorkItem().setState2(foundState);
 			} else {
-				throw new WorkItemCommandLineException(
-						"Prefix not recognized: " + prefix + " in "
-								+ parameter.getAttributeID() + " Value: "
-								+ parameter.getValue());
+				throw new WorkItemCommandLineException("Prefix not recognized: " + prefix + " in "
+						+ parameter.getAttributeID() + " Value: " + parameter.getValue());
 
 			}
 		} else {
-			new WorkItemCommandLineException("Incorrect state format: "
-					+ parameter.getAttributeID() + " Value: "
+			new WorkItemCommandLineException("Incorrect state format: " + parameter.getAttributeID() + " Value: "
 					+ parameter.getValue() + helpUsageStateChange());
 		}
 	}
@@ -2622,84 +2319,64 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Creates links from the current work item to a list of target work items.
 	 * 
-	 * @param linkType
-	 *            the type of the link as defined in the map.
-	 * @param value
-	 *            the list of work items specified by work item ID's.
+	 * @param linkType the type of the link as defined in the map.
+	 * @param value    the list of work items specified by work item ID's.
 	 * @throws TeamRepositoryException
 	 */
-	private List<ReferenceData> createReferences(String linkType,
-			ParameterValue parameter, List<Exception> exceptions)
+	private List<ReferenceData> createReferences(String linkType, ParameterValue parameter, List<Exception> exceptions)
 			throws TeamRepositoryException {
-		IEndPointDescriptor buildEndpoint = ReferenceUtil
-				.getBuild_EndPointDescriptorMap().get(linkType);
+		IEndPointDescriptor buildEndpoint = ReferenceUtil.getBuild_EndPointDescriptorMap().get(linkType);
 		if (buildEndpoint != null) {
-			return createBuildResultReferences(parameter, buildEndpoint,
-					exceptions);
+			return createBuildResultReferences(parameter, buildEndpoint, exceptions);
 		}
 		// Get the target endpoint descriptor for the link type.
-		IEndPointDescriptor workItemEndpoint = ReferenceUtil
-				.getWorkItemEndPointDescriptorMap().get(linkType);
+		IEndPointDescriptor workItemEndpoint = ReferenceUtil.getWorkItemEndPointDescriptorMap().get(linkType);
 		if (workItemEndpoint != null) {
-			return createWorkItemReferences(parameter, workItemEndpoint,
-					exceptions);
+			return createWorkItemReferences(parameter, workItemEndpoint, exceptions);
 		}
-		IEndPointDescriptor wiCLMEndpoint = ReferenceUtil
-				.getCLM_WI_EndPointDescriptorMap().get(linkType);
+		IEndPointDescriptor wiCLMEndpoint = ReferenceUtil.getCLM_WI_EndPointDescriptorMap().get(linkType);
 		if (wiCLMEndpoint != null) {
 			return createCLM_WI_References(parameter, wiCLMEndpoint, exceptions);
 		}
-		IEndPointDescriptor uriEndpoint = ReferenceUtil
-				.getCLM_URI_EndPointDescriptorMap().get(linkType);
+		IEndPointDescriptor uriEndpoint = ReferenceUtil.getCLM_URI_EndPointDescriptorMap().get(linkType);
 		if (uriEndpoint != null) {
 			return createCLM_URI_References(parameter, uriEndpoint, exceptions);
 		}
 		// This link type is not in our supported map
 		throw new WorkItemCommandLineException(
-				"Link Type unknown or not yet supported: " + linkType
-						+ helpUsageWorkItemLinks());
+				"Link Type unknown or not yet supported: " + linkType + helpUsageWorkItemLinks());
 	}
 
 	/**
-	 * Create CLM links between work items. The work item can be provided using
-	 * its ID or by using the location URI
+	 * Create CLM links between work items. The work item can be provided using its
+	 * ID or by using the location URI
 	 * 
-	 * @param parameter
-	 *            - the parameter passed
-	 * @param endpoint
-	 *            the endpoint used for the links
-	 * @param exceptions
-	 *            - a list to pass exceptions back
+	 * @param parameter  - the parameter passed
+	 * @param endpoint   the endpoint used for the links
+	 * @param exceptions - a list to pass exceptions back
 	 * @return a list of references managed in a special class
 	 * @throws TeamRepositoryException
 	 */
-	private List<ReferenceData> createCLM_WI_References(
-			ParameterValue parameter, IEndPointDescriptor endpoint,
+	private List<ReferenceData> createCLM_WI_References(ParameterValue parameter, IEndPointDescriptor endpoint,
 			List<Exception> exceptions) throws TeamRepositoryException {
 		List<ReferenceData> found = new ArrayList<ReferenceData>();
-		List<String> workItems = StringUtil.splitStringToList(
-				parameter.getValue(), LINK_SEPARATOR);
+		List<String> workItems = StringUtil.splitStringToList(parameter.getValue(), LINK_SEPARATOR);
 		for (String value : workItems) {
 			if (value.startsWith(HTTP_PROTOCOL_PREFIX)) {
 				// We have an URI
 				IReference reference;
 				try {
-					reference = IReferenceFactory.INSTANCE
-							.createReferenceFromURI(new URI(value), value);
+					reference = IReferenceFactory.INSTANCE.createReferenceFromURI(new URI(value), value);
 					found.add(new ReferenceData(endpoint, reference));
 				} catch (URISyntaxException e) {
-					exceptions.add(new WorkItemCommandLineException(
-							"Creating URI Reference (" + value + ") failed: "
-									+ e.getMessage() + " \n "
-									+ parameter.getAttributeID() + " = "
-									+ parameter.getValue()
-									+ helpUsageBuildResultLink()));
+					exceptions.add(new WorkItemCommandLineException("Creating URI Reference (" + value + ") failed: "
+							+ e.getMessage() + " \n " + parameter.getAttributeID() + " = " + parameter.getValue()
+							+ helpUsageBuildResultLink()));
 				}
 			} else {
 				IWorkItem workItem = null;
 				try {
-					workItem = WorkItemUtil.findWorkItemByID(value,
-							IWorkItem.SMALL_PROFILE, getWorkItemCommon(),
+					workItem = WorkItemUtil.findWorkItemByID(value, IWorkItem.SMALL_PROFILE, getWorkItemCommon(),
 							monitor);
 				} catch (WorkItemCommandLineException e) {
 					exceptions.add(e);
@@ -2707,13 +2384,10 @@ public class WorkItemUpdateHelper {
 				if (workItem != null) {
 
 					Location location = Location.namedLocation(workItem,
-							((ITeamRepository) workItem.getOrigin())
-									.publicUriRoot());
+							((ITeamRepository) workItem.getOrigin()).publicUriRoot());
 
 					found.add(new ReferenceData(endpoint,
-							IReferenceFactory.INSTANCE
-									.createReferenceFromURI(location
-											.toAbsoluteUri())));
+							IReferenceFactory.INSTANCE.createReferenceFromURI(location.toAbsoluteUri())));
 				}
 			}
 		}
@@ -2724,43 +2398,33 @@ public class WorkItemUpdateHelper {
 	 * Creates a reference to a work item. the work items must be in the same
 	 * repository and only ID's are alloewd
 	 * 
-	 * @param parameter
-	 *            - the parameter with the values
-	 * @param endpoint
-	 *            - the endpoint for the reference
-	 * @param exceptions
-	 *            - exceptions that will be passed back
+	 * @param parameter  - the parameter with the values
+	 * @param endpoint   - the endpoint for the reference
+	 * @param exceptions - exceptions that will be passed back
 	 * @return a list of references that can be used later
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 */
-	private List<ReferenceData> createWorkItemReferences(
-			ParameterValue parameter, IEndPointDescriptor endpoint,
-			List<Exception> exceptions) throws TeamRepositoryException,
-			WorkItemCommandLineException {
+	private List<ReferenceData> createWorkItemReferences(ParameterValue parameter, IEndPointDescriptor endpoint,
+			List<Exception> exceptions) throws TeamRepositoryException, WorkItemCommandLineException {
 		List<ReferenceData> found = new ArrayList<ReferenceData>();
 		List<String> notFoundList = new ArrayList<String>();
-		HashMap<String, IWorkItem> workItemList = findWorkItemsByIDValues(
-				parameter.getValue(), notFoundList, LINK_SEPARATOR);
+		HashMap<String, IWorkItem> workItemList = findWorkItemsByIDValues(parameter.getValue(), notFoundList,
+				LINK_SEPARATOR);
 		if (!workItemList.isEmpty()) {
 			// Create the references
 			for (IWorkItem item : workItemList.values()) {
 				found.add(new ReferenceData(endpoint,
-						IReferenceFactory.INSTANCE.createReferenceToItem(item
-								.getItemHandle())));
+						IReferenceFactory.INSTANCE.createReferenceToItem(item.getItemHandle())));
 			}
 		} else {
-			throw new WorkItemCommandLineException(
-					"Link items - no targets found: "
-							+ parameter.getAttributeID() + " = "
-							+ parameter.getValue() + helpUsageWorkItemLinks());
+			throw new WorkItemCommandLineException("Link items - no targets found: " + parameter.getAttributeID()
+					+ " = " + parameter.getValue() + helpUsageWorkItemLinks());
 		}
 		if (!notFoundList.isEmpty()) {
-			exceptions.add(new WorkItemCommandLineException(
-					"Create Links WorkItems not found: "
-							+ parameter.getAttributeID() + " = "
-							+ parameter.getValue()
-							+ helpGetDisplayStringFromList(notFoundList)));
+			exceptions.add(
+					new WorkItemCommandLineException("Create Links WorkItems not found: " + parameter.getAttributeID()
+							+ " = " + parameter.getValue() + helpGetDisplayStringFromList(notFoundList)));
 		}
 		return found;
 	}
@@ -2768,38 +2432,28 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Creates a URI based reference to an object that is defined by an URI
 	 * 
-	 * @param parameter
-	 *            - the parameter with the values
-	 * @param endpoint
-	 *            - the endpoint for the reference
-	 * @param exceptions
-	 *            - exceptions that will be passed back
+	 * @param parameter  - the parameter with the values
+	 * @param endpoint   - the endpoint for the reference
+	 * @param exceptions - exceptions that will be passed back
 	 * @return a list of references that can be used later
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 */
-	private List<ReferenceData> createCLM_URI_References(
-			ParameterValue parameter, IEndPointDescriptor endpoint,
-			List<Exception> exceptions) throws TeamRepositoryException,
-			WorkItemCommandLineException {
+	private List<ReferenceData> createCLM_URI_References(ParameterValue parameter, IEndPointDescriptor endpoint,
+			List<Exception> exceptions) throws TeamRepositoryException, WorkItemCommandLineException {
 		List<ReferenceData> found = new ArrayList<ReferenceData>();
-		List<String> itemURIS = StringUtil.splitStringToList(
-				parameter.getValue(), LINK_SEPARATOR);
+		List<String> itemURIS = StringUtil.splitStringToList(parameter.getValue(), LINK_SEPARATOR);
 		for (String uri : itemURIS) {
 			if (uri.startsWith(HTTP_PROTOCOL_PREFIX)) {
 				// We have an URI
 				IReference reference;
 				try {
-					reference = IReferenceFactory.INSTANCE
-							.createReferenceFromURI(new URI(uri), uri);
+					reference = IReferenceFactory.INSTANCE.createReferenceFromURI(new URI(uri), uri);
 					found.add(new ReferenceData(endpoint, reference));
 				} catch (URISyntaxException e) {
-					exceptions.add(new WorkItemCommandLineException(
-							"Creating URI Reference (" + uri + ") failed: "
-									+ e.getMessage() + " \n "
-									+ parameter.getAttributeID() + " = "
-									+ parameter.getValue()
-									+ helpUsageBuildResultLink()));
+					exceptions.add(new WorkItemCommandLineException("Creating URI Reference (" + uri + ") failed: "
+							+ e.getMessage() + " \n " + parameter.getAttributeID() + " = " + parameter.getValue()
+							+ helpUsageBuildResultLink()));
 				}
 			}
 		}
@@ -2807,30 +2461,22 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Creates links from the current work item to a list of target build
-	 * results.
+	 * Creates links from the current work item to a list of target build results.
 	 * 
-	 * @param parameter
-	 *            - the parameter with the values
-	 * @param endpoint
-	 *            - the endpoint for the reference
-	 * @param exceptions
-	 *            - exceptions that will be passed back
+	 * @param parameter  - the parameter with the values
+	 * @param endpoint   - the endpoint for the reference
+	 * @param exceptions - exceptions that will be passed back
 	 * @return
 	 */
-	private List<ReferenceData> createBuildResultReferences(
-			ParameterValue parameter, IEndPointDescriptor endpoint,
+	private List<ReferenceData> createBuildResultReferences(ParameterValue parameter, IEndPointDescriptor endpoint,
 			List<Exception> exceptions) {
 		String basemessage = "Link to build result ";
 		List<ReferenceData> found = new ArrayList<ReferenceData>();
 		// Get the build results
-		List<String> buildResults = StringUtil.splitStringToList(
-				parameter.getValue(), LINK_SEPARATOR);
+		List<String> buildResults = StringUtil.splitStringToList(parameter.getValue(), LINK_SEPARATOR);
 		if (buildResults.isEmpty()) {
-			throw new WorkItemCommandLineException(basemessage
-					+ " - no build ID's/Labels specified: "
-					+ parameter.getAttributeID() + " = " + parameter.getValue()
-					+ helpUsageBuildResultLink());
+			throw new WorkItemCommandLineException(basemessage + " - no build ID's/Labels specified: "
+					+ parameter.getAttributeID() + " = " + parameter.getValue() + helpUsageBuildResultLink());
 		}
 		for (String buildResult : buildResults) {
 			String message = basemessage + buildResult;
@@ -2839,29 +2485,24 @@ public class WorkItemUpdateHelper {
 			try {
 				if (StringUtil.hasPrefix(buildResult, PREFIX_REFERENCETYPE)) {
 					// Find by ID
-					buildResult = StringUtil.removePrefix(buildResult,
-							PREFIX_REFERENCETYPE);
-					result = BuildUtil.findBuildResultbyID(buildResult,
-							getTeamRepository(), monitor);
+					buildResult = StringUtil.removePrefix(buildResult, PREFIX_REFERENCETYPE);
+					result = BuildUtil.findBuildResultbyID(buildResult, getTeamRepository(), monitor);
 				} else {
 					// Find by label
 					result = findBuildResultByLabel(buildResult);
 				}
 				if (result == null) {
-					throw new WorkItemCommandLineException(message
-							+ " failed: \n" + parameter.getValue()
-							+ helpUsageBuildResultLink());
+					throw new WorkItemCommandLineException(
+							message + " failed: \n" + parameter.getValue() + helpUsageBuildResultLink());
 				}
-				IItemReference reference = IReferenceFactory.INSTANCE
-						.createReferenceToItem(result);
+				IItemReference reference = IReferenceFactory.INSTANCE.createReferenceToItem(result);
 				found.add(new ReferenceData(endpoint, reference));
 				// createItemReference(buildResultEndpoint, result);
 			} catch (TeamRepositoryException e) {
-				throw new WorkItemCommandLineException(message + " failed: "
-						+ parameter.getValue() + helpUsageBuildResultLink(), e);
+				throw new WorkItemCommandLineException(
+						message + " failed: " + parameter.getValue() + helpUsageBuildResultLink(), e);
 			} catch (WorkItemCommandLineException e) {
-				exceptions.add(new WorkItemCommandLineException(message
-						+ " failed: " + e.getMessage() + " \n "
+				exceptions.add(new WorkItemCommandLineException(message + " failed: " + e.getMessage() + " \n "
 						+ parameter.getValue() + helpUsageBuildResultLink()));
 			}
 		}
@@ -2874,25 +2515,20 @@ public class WorkItemUpdateHelper {
 	 * @param parameter
 	 * @throws TeamRepositoryException
 	 */
-	private void setWorkFlowAction(ParameterValue parameter)
-			throws TeamRepositoryException {
-		Identifier<IWorkflowAction> foundAction = findAction(parameter
-				.getValue());
+	private void setWorkFlowAction(ParameterValue parameter) throws TeamRepositoryException {
+		Identifier<IWorkflowAction> foundAction = findAction(parameter.getValue());
 		if (foundAction != null) {
-			((WorkItemWorkingCopy) getWorkingCopy())
-					.setWorkflowAction(foundAction.getStringIdentifier());
+			((WorkItemWorkingCopy) getWorkingCopy()).setWorkflowAction(foundAction.getStringIdentifier());
 		} else {
-			throw new WorkItemCommandLineException("Action not found: "
-					+ parameter.getAttributeID() + " Value: "
-					+ parameter.getValue());
+			throw new WorkItemCommandLineException(
+					"Action not found: " + parameter.getAttributeID() + " Value: " + parameter.getValue());
 		}
 	}
 
 	/**
 	 * Get a duration in long from a string representation.
 	 * 
-	 * @param value
-	 *            - the duration
+	 * @param value - the duration
 	 * @return the value of the duration (in milliseconds) or as string
 	 *         representation like "1 hour 3 minutes"
 	 */
@@ -2907,8 +2543,7 @@ public class WorkItemUpdateHelper {
 	 * @return
 	 */
 	private List<String> getTags(String value) {
-		List<String> inputTags = StringUtil.splitStringToList(value,
-				ITEM_SEPARATOR);
+		List<String> inputTags = StringUtil.splitStringToList(value, ITEM_SEPARATOR);
 		List<String> trimmedTags = new ArrayList<String>(inputTags.size());
 		for (String input : inputTags) {
 			trimmedTags.add(input.trim());
@@ -2919,13 +2554,11 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Gets a list of tags to be added from a string, and creates a tag list
-	 * without duplicates.
+	 * Gets a list of tags to be added from a string, and creates a tag list without
+	 * duplicates.
 	 * 
-	 * @param value
-	 *            - a string list of tags
-	 * @param oldTags
-	 *            - a list of old tags
+	 * @param value   - a string list of tags
+	 * @param oldTags - a list of old tags
 	 * @return - a list of tags that can be set
 	 */
 	private List<String> getTagsList(List<String> oldTags, List<String> newTags) {
@@ -2946,57 +2579,49 @@ public class WorkItemUpdateHelper {
 	 * @return the IWorkItemCommon client library
 	 */
 	private IWorkItemCommon getWorkItemCommon() {
-		return (IWorkItemCommon) getTeamRepository().getClientLibrary(
-				IWorkItemCommon.class);
+		return (IWorkItemCommon) getTeamRepository().getClientLibrary(IWorkItemCommon.class);
 	}
 
 	/**
 	 * @return the IAuditableCommon client library
 	 */
 	private IAuditableCommon getAuditableCommon() {
-		return (IAuditableCommon) getTeamRepository().getClientLibrary(
-				IAuditableCommon.class);
+		return (IAuditableCommon) getTeamRepository().getClientLibrary(IAuditableCommon.class);
 	}
 
 	/**
 	 * @return the IProcessClientService client library
 	 */
 	private IProcessClientService getProcessClientService() {
-		return (IProcessClientService) getTeamRepository().getClientLibrary(
-				IProcessClientService.class);
+		return (IProcessClientService) getTeamRepository().getClientLibrary(IProcessClientService.class);
 	}
 
 	/**
 	 * @return the IWorkItemClient client library
 	 */
 	private IWorkItemClient getWorkItemClient() {
-		return (IWorkItemClient) getTeamRepository().getClientLibrary(
-				IWorkItemClient.class);
+		return (IWorkItemClient) getTeamRepository().getClientLibrary(IWorkItemClient.class);
 	}
 
 	/**
 	 * @return the ITeamBuildClient client library
 	 */
 	private ITeamBuildClient getBuildClient() {
-		return (ITeamBuildClient) getTeamRepository().getClientLibrary(
-				ITeamBuildClient.class);
+		return (ITeamBuildClient) getTeamRepository().getClientLibrary(ITeamBuildClient.class);
 	}
 
 	/**
-	 * Get a list of contributors from a string of separated user ID's,
-	 * separated by a specific separator.
+	 * Get a list of contributors from a string of separated user ID's, separated by
+	 * a specific separator.
 	 * 
-	 * @param value
-	 *            - the string representation with a list of user ID's
-	 * @param separator
-	 *            - the separator to split the user ID's
-	 * @param notFoundList
-	 *            - a string list to contain the user Id's that where not found
+	 * @param value        - the string representation with a list of user ID's
+	 * @param separator    - the separator to split the user ID's
+	 * @param notFoundList - a string list to contain the user Id's that where not
+	 *                     found
 	 * @return a Map of contributor UUID's and the found contributor objects
 	 * @throws TeamRepositoryException
 	 */
-	private HashMap<String, IContributor> getContributors(String value,
-			String separator, List<String> notFoundList)
+	private HashMap<String, IContributor> getContributors(String value, String separator, List<String> notFoundList)
 			throws TeamRepositoryException {
 
 		HashMap<String, IContributor> contributorList = new HashMap<String, IContributor>();
@@ -3005,9 +2630,11 @@ public class WorkItemUpdateHelper {
 		}
 		List<String> users = StringUtil.splitStringToList(value, separator);
 		for (String userID : users) {
-			IContributor user = findContributorFromIDorName(userID.trim());
+			IContributor user = findContributorFromIDorName(userID);
 			if (user == null) {
-				notFoundList.add(userID.trim());
+				if (!userID.trim().isEmpty()) {
+					notFoundList.add(userID);
+				}
 			} else {
 				contributorList.put(user.getItemId().getUuidValue(), user);
 			}
@@ -3019,26 +2646,20 @@ public class WorkItemUpdateHelper {
 	 * Gets an enumeration literal for an attribute that starts with a specific
 	 * literal name.
 	 * 
-	 * @param attributeHandle
-	 *            - the attribute handle
-	 * @param literalNamePrefix
-	 *            - the prefix literal to look for
+	 * @param attributeHandle   - the attribute handle
+	 * @param literalNamePrefix - the prefix literal to look for
 	 * @return the literal ID or null
 	 * @throws TeamRepositoryException
 	 */
 	@SuppressWarnings("unused")
 	// Used if no exact match possible
-	private Identifier<? extends ILiteral> getEnumerationLiteralStartsWithString(
-			IAttributeHandle attributeHandle, String literalNamePrefix)
-			throws TeamRepositoryException {
+	private Identifier<? extends ILiteral> getEnumerationLiteralStartsWithString(IAttributeHandle attributeHandle,
+			String literalNamePrefix) throws TeamRepositoryException {
 		Identifier<? extends ILiteral> literalID = null;
-		IEnumeration<? extends ILiteral> enumeration = getWorkItemCommon()
-				.resolveEnumeration(attributeHandle, null);
+		IEnumeration<? extends ILiteral> enumeration = getWorkItemCommon().resolveEnumeration(attributeHandle, null);
 
-		List<? extends ILiteral> literals = enumeration
-				.getEnumerationLiterals();
-		for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator
-				.hasNext();) {
+		List<? extends ILiteral> literals = enumeration.getEnumerationLiterals();
+		for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator.hasNext();) {
 			ILiteral iLiteral = (ILiteral) iterator.next();
 			if (iLiteral.getName().startsWith(literalNamePrefix.trim())) {
 				literalID = iLiteral.getIdentifier2();
@@ -3056,11 +2677,9 @@ public class WorkItemUpdateHelper {
 	 * @return
 	 */
 	@SuppressWarnings("unused")
-	private ILiteral getEnumerationLiteralByID(
-			final IEnumeration<? extends ILiteral> enumeration,
+	private ILiteral getEnumerationLiteralByID(final IEnumeration<? extends ILiteral> enumeration,
 			final String identifierName) {
-		final Identifier<? extends ILiteral> identifier = Identifier.create(
-				ILiteral.class, identifierName);
+		final Identifier<? extends ILiteral> identifier = Identifier.create(ILiteral.class, identifierName);
 		return enumeration.findEnumerationLiteral(identifier);
 	}
 
@@ -3068,31 +2687,24 @@ public class WorkItemUpdateHelper {
 	 * Gets an enumeration literal for an attribute that starts with a specific
 	 * literal name.
 	 * 
-	 * @param attributeHandle
-	 *            - the attribute handle
-	 * @param literalName
-	 *            - the literal display name to look for
+	 * @param attributeHandle - the attribute handle
+	 * @param literalName     - the literal display name to look for
 	 * @return the literal ID or null
 	 * @throws TeamRepositoryException
 	 */
-	private Identifier<? extends ILiteral> getEnumerationLiteralEqualsStringOrID(
-			IAttributeHandle attributeHandle, String literalName)
-			throws TeamRepositoryException {
+	private Identifier<? extends ILiteral> getEnumerationLiteralEqualsStringOrID(IAttributeHandle attributeHandle,
+			String literalName) throws TeamRepositoryException {
 		Identifier<? extends ILiteral> literalID = null;
-		IEnumeration<? extends ILiteral> enumeration = getWorkItemCommon()
-				.resolveEnumeration(attributeHandle, monitor);
+		IEnumeration<? extends ILiteral> enumeration = getWorkItemCommon().resolveEnumeration(attributeHandle, monitor);
 
-		List<? extends ILiteral> literals = enumeration
-				.getEnumerationLiterals();
-		for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator
-				.hasNext();) {
+		List<? extends ILiteral> literals = enumeration.getEnumerationLiterals();
+		for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator.hasNext();) {
 			ILiteral iLiteral = (ILiteral) iterator.next();
 
 			if (iLiteral.getName().equals(literalName.trim())) {
 				literalID = iLiteral.getIdentifier2();
 				break;
-			} else if (iLiteral.getIdentifier2().getStringIdentifier()
-					.equals(literalName.trim())) {
+			} else if (iLiteral.getIdentifier2().getStringIdentifier().equals(literalName.trim())) {
 				literalID = iLiteral.getIdentifier2();
 				break;
 			}
@@ -3104,26 +2716,20 @@ public class WorkItemUpdateHelper {
 	 * Gets an enumeration literal for an attribute that starts with a specific
 	 * literal name.
 	 * 
-	 * @param attributeHandle
-	 *            - the attribute handle
-	 * @param literalName
-	 *            - the literal display name to look for
+	 * @param attributeHandle - the attribute handle
+	 * @param literalName     - the literal display name to look for
 	 * @return the literal ID or null
 	 * @throws TeamRepositoryException
 	 * @Deprecated
 	 */
 	@SuppressWarnings("unused")
-	private Identifier<? extends ILiteral> getEnumerationLiteralEqualsString_old(
-			IAttributeHandle attributeHandle, String literalName)
-			throws TeamRepositoryException {
+	private Identifier<? extends ILiteral> getEnumerationLiteralEqualsString_old(IAttributeHandle attributeHandle,
+			String literalName) throws TeamRepositoryException {
 		Identifier<? extends ILiteral> literalID = null;
-		IEnumeration<? extends ILiteral> enumeration = getWorkItemCommon()
-				.resolveEnumeration(attributeHandle, monitor);
+		IEnumeration<? extends ILiteral> enumeration = getWorkItemCommon().resolveEnumeration(attributeHandle, monitor);
 
-		List<? extends ILiteral> literals = enumeration
-				.getEnumerationLiterals();
-		for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator
-				.hasNext();) {
+		List<? extends ILiteral> literals = enumeration.getEnumerationLiterals();
+		for (Iterator<? extends ILiteral> iterator = literals.iterator(); iterator.hasNext();) {
 			ILiteral iLiteral = (ILiteral) iterator.next();
 			if (iLiteral.getName().equals(literalName.trim())) {
 				literalID = iLiteral.getIdentifier2();
@@ -3136,38 +2742,29 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Utility method to upload and attach a file to a work item
 	 * 
-	 * @param fileName
-	 *            - the file name of the file to upload
-	 * @param description
-	 *            - the description of the attachment
-	 * @param contentType
-	 *            - the content type of the file
-	 * @param encoding
-	 *            - the encoding of the file
+	 * @param fileName    - the file name of the file to upload
+	 * @param description - the description of the attachment
+	 * @param contentType - the content type of the file
+	 * @param encoding    - the encoding of the file
 	 * 
 	 * @throws TeamRepositoryException
 	 */
-	private void attachFile(String fileName, String description,
-			String contentType, String encoding) throws TeamRepositoryException {
+	private void attachFile(String fileName, String description, String contentType, String encoding)
+			throws TeamRepositoryException {
 
 		File attachmentFile = new File(fileName);
 		FileInputStream fis;
 		try {
 			fis = new FileInputStream(attachmentFile);
 			try {
-				IAttachment newAttachment = getWorkItemClient()
-						.createAttachment(getWorkItem().getProjectArea(),
-								attachmentFile.getName(), description,
-								contentType, encoding, fis, monitor);
+				IAttachment newAttachment = getWorkItemClient().createAttachment(getWorkItem().getProjectArea(),
+						attachmentFile.getName(), description, contentType, encoding, fis, monitor);
 
 				newAttachment = (IAttachment) newAttachment.getWorkingCopy();
-				newAttachment = getWorkItemCommon().saveAttachment(
-						newAttachment, monitor);
-				IItemReference reference = WorkItemLinkTypes
-						.createAttachmentReference(newAttachment);
+				newAttachment = getWorkItemCommon().saveAttachment(newAttachment, monitor);
+				IItemReference reference = WorkItemLinkTypes.createAttachmentReference(newAttachment);
 
-				getWorkingCopy().getReferences().add(
-						WorkItemEndPoints.ATTACHMENT, reference);
+				getWorkingCopy().getReferences().add(WorkItemEndPoints.ATTACHMENT, reference);
 
 			} finally {
 				if (fis != null) {
@@ -3175,11 +2772,9 @@ public class WorkItemUpdateHelper {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			throw new WorkItemCommandLineException(
-					"Attach File - File not found: " + fileName, e);
+			throw new WorkItemCommandLineException("Attach File - File not found: " + fileName, e);
 		} catch (IOException e) {
-			throw new WorkItemCommandLineException(
-					"Attach File - I/O Exception: " + fileName, e);
+			throw new WorkItemCommandLineException("Attach File - I/O Exception: " + fileName, e);
 		}
 	}
 
@@ -3190,8 +2785,7 @@ public class WorkItemUpdateHelper {
 	 * @param message
 	 * @return
 	 */
-	private WorkItemCommandLineException modeNotSupportedException(
-			ParameterValue parameter, String message) {
+	private WorkItemCommandLineException modeNotSupportedException(ParameterValue parameter, String message) {
 		String mode = "unknown";
 		if (parameter.isDefault()) {
 			mode = com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_DEFAULT;
@@ -3205,27 +2799,23 @@ public class WorkItemUpdateHelper {
 		if (parameter.isRemove()) {
 			mode = com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_REMOVE;
 		}
-		return new WorkItemCommandLineException(message + " Mode: " + mode
-				+ " Attribute: " + parameter.getAttributeID() + " Value: "
-				+ parameter.getValue());
+		return new WorkItemCommandLineException(message + " Mode: " + mode + " Attribute: " + parameter.getAttributeID()
+				+ " Value: " + parameter.getValue());
 	}
 
 	/**
-	 * Create an exception if the type of the expected value and the value found
-	 * is incompatible
+	 * Create an exception if the type of the expected value and the value found is
+	 * incompatible
 	 * 
 	 * @param parameter
 	 * @param message
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	private WorkItemCommandLineException incompatibleAttributeValueTypeException(
-			ParameterValue parameter, String message)
-			throws TeamRepositoryException {
-		return new WorkItemCommandLineException(message
-				+ " Incompatible item type :"
-				+ parameter.getIAttribute().getIdentifier() + " Value: "
-				+ parameter.getValue());
+	private WorkItemCommandLineException incompatibleAttributeValueTypeException(ParameterValue parameter,
+			String message) throws TeamRepositoryException {
+		return new WorkItemCommandLineException(message + " Incompatible item type :"
+				+ parameter.getIAttribute().getIdentifier() + " Value: " + parameter.getValue());
 	}
 
 	/**
@@ -3245,13 +2835,10 @@ public class WorkItemUpdateHelper {
 	private String insertLineBreaks(String contentToAdd, String stringType) {
 		if (contentToAdd != null) {
 			if (stringType.equals(STRING_TYPE_PLAINSTRING)) {
-				contentToAdd = contentToAdd.replace(
-						STRING_LINEBREAK_BACKSLASH_N, "\n");
+				contentToAdd = contentToAdd.replace(STRING_LINEBREAK_BACKSLASH_N, "\n");
 			} else if (stringType.equals(STRING_TYPE_WIKI)) {
-				contentToAdd = contentToAdd.replace(STRING_LINEBREAK_HTML_BR,
-						"\n");
-				contentToAdd = contentToAdd.replace(
-						STRING_LINEBREAK_BACKSLASH_N, "\n");
+				contentToAdd = contentToAdd.replace(STRING_LINEBREAK_HTML_BR, "\n");
+				contentToAdd = contentToAdd.replace(STRING_LINEBREAK_BACKSLASH_N, "\n");
 			}
 		}
 		return contentToAdd;
@@ -3260,32 +2847,24 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Utility method to print a help screen
 	 * 
-	 * @param attribType
-	 *            - the attribute type as string.
+	 * @param attribType - the attribute type as string.
 	 * @return a help description
 	 */
 	private String helpGetTypeProperties(String attribType) {
-		String message = "Type: " + attribType + " [Primitive:"
-				+ AttributeTypes.isPrimitiveAttributeType(attribType)
-				+ " Item:" + AttributeTypes.isItemAttributeType(attribType)
-				+ " Enum:"
-				+ AttributeTypes.isEnumerationAttributeType(attribType)
-				+ " List:" + AttributeTypes.isListAttributeType(attribType)
-				+ " Enum-List:"
-				+ AttributeTypes.isEnumerationListAttributeType(attribType)
-				+ " Item-List:"
-				+ AttributeTypes.isItemListAttributeType(attribType)
-				+ " Supported-Custom:"
-				+ AttributeTypes.isSupportedCustomAttributeType(attribType)
-				+ "]";
+		String message = "Type: " + attribType + " [Primitive:" + AttributeTypes.isPrimitiveAttributeType(attribType)
+				+ " Item:" + AttributeTypes.isItemAttributeType(attribType) + " Enum:"
+				+ AttributeTypes.isEnumerationAttributeType(attribType) + " List:"
+				+ AttributeTypes.isListAttributeType(attribType) + " Enum-List:"
+				+ AttributeTypes.isEnumerationListAttributeType(attribType) + " Item-List:"
+				+ AttributeTypes.isItemListAttributeType(attribType) + " Supported-Custom:"
+				+ AttributeTypes.isSupportedCustomAttributeType(attribType) + "]";
 		return message;
 	}
 
 	/**
 	 * concatenates the elements in a list to create a help text
 	 * 
-	 * @param list
-	 *            - list of string elements to be concatenated
+	 * @param list - list of string elements to be concatenated
 	 * @return a help description
 	 */
 	private String helpGetDisplayStringFromList(List<String> list) {
@@ -3307,22 +2886,18 @@ public class WorkItemUpdateHelper {
 		usage += "\n" + helpUsageParameter();
 		usage += "\n\nSpecial Properties:";
 		usage += helpUsageSpecialProperties();
-		usage += "\n\nWorkFlow Action: \n\tA pseudo parameter \""
-				+ PSEUDO_ATTRIBUTE_TRIGGER_WORKFLOW_ACTION
+		usage += "\n\nWorkFlow Action: \n\tA pseudo parameter \"" + PSEUDO_ATTRIBUTE_TRIGGER_WORKFLOW_ACTION
 				+ "\" can be used to set a workflow action to change the work item state when saving.";
 		usage += helpUsageWorkflowAction();
-		usage += "\n\tThis attribute requires only the value "+ PSEUDO_ATTRIBUTEVALUE_YES + ".";
-		usage += "\n\nAttachments: \n\tA pseudo parameter "
-				+ PSEUDO_ATTRIBUTE_ATTACHFILE
+		usage += "\n\tThis attribute requires only the value " + PSEUDO_ATTRIBUTEVALUE_YES + ".";
+		usage += "\n\nAttachments: \n\tA pseudo parameter " + PSEUDO_ATTRIBUTE_ATTACHFILE
 				+ " can be used to upload attachments.";
 		usage += "\n\tThis attribute supports the modes default (same as) add, set and remove. "
 				+ "\n\tSet removes all attachments, remove only removes attachments with the specified file path and description. "
 				+ helpUsageAttachmentUpload();
-		usage += "\n\n\tA pseudo parameter "
-				+ PSEUDO_ATTRIBUTE_DELETEATTACHMENTS + "=yes"
+		usage += "\n\n\tA pseudo parameter " + PSEUDO_ATTRIBUTE_DELETEATTACHMENTS + "=yes"
 				+ " can be used to delete all attachments. ";
-		usage += "\n\nLinks: \n\t A pseudo parameter "
-				+ PSEUDO_ATTRIBUTE_LINK
+		usage += "\n\nLinks: \n\t A pseudo parameter " + PSEUDO_ATTRIBUTE_LINK
 				+ " can be used to link the current work item to other objects."
 				+ "\n\tLinks support the modes default (same as) add, set and remove. "
 				+ "\n\tSet removes all links of the specified type before creating the new links. "
@@ -3336,47 +2911,35 @@ public class WorkItemUpdateHelper {
 	 * @return a help description
 	 */
 	private String helpUsageSpecialProperties() {
-		String usage = "\n\tWork Item ID: Parameter \"" + IWorkItem.ID_PROPERTY
-				+ "\" can not be changed.";
-		usage += "\n\tProject Area: \n\tParameter \""
-				+ IWorkItem.PROJECT_AREA_PROPERTY
+		String usage = "\n\tWork Item ID: Parameter \"" + IWorkItem.ID_PROPERTY + "\" can not be changed.";
+		usage += "\n\tProject Area: \n\tParameter \"" + IWorkItem.PROJECT_AREA_PROPERTY
 				+ "\" can only be specified when creating the work item. It can not be set to a different value later.";
-		usage += "\n\nComments: Parameter \"" + IWorkItem.COMMENTS_PROPERTY
-				+ "\" can be used to add a comment.";
+		usage += "\n\nComments: Parameter \"" + IWorkItem.COMMENTS_PROPERTY + "\" can be used to add a comment.";
 		usage += "\n\tThis attribute only supports the default and add mode. Comments can not be removed.";
-		usage += "\n\tExample: " + IWorkItem.COMMENTS_PROPERTY + "="
-				+ "\"This is a comment\"";
-		usage += "\n\nSubscriptions: \n\tParameter \""
-				+ IWorkItem.SUBSCRIPTIONS_PROPERTY
+		usage += "\n\tExample: " + IWorkItem.COMMENTS_PROPERTY + "=" + "\"This is a comment\"";
+		usage += "\n\nSubscriptions: \n\tParameter \"" + IWorkItem.SUBSCRIPTIONS_PROPERTY
 				+ "\" can be used to subscribe a list of users using their user ID's.";
 		usage += "\n\tThis attribute supports the modes default (same as) add, set and remove mode.";
-		usage += "\n\tExample set specific users: "
-				+ IWorkItem.SUBSCRIPTIONS_PROPERTY
+		usage += "\n\tExample set specific users: " + IWorkItem.SUBSCRIPTIONS_PROPERTY
 				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET
-				+ "=" + "al" + ITEM_SEPARATOR + "tammy";
-		usage += "\n\tExample add users: "
-				+ IWorkItem.SUBSCRIPTIONS_PROPERTY
+				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET + "=" + "al" + ITEM_SEPARATOR
+				+ "tammy";
+		usage += "\n\tExample add users: " + IWorkItem.SUBSCRIPTIONS_PROPERTY
 				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD
-				+ "=" + "deb" + ITEM_SEPARATOR + "tanuj" + ITEM_SEPARATOR
-				+ "bob";
-		usage += "\n\tExample remove users: "
-				+ IWorkItem.SUBSCRIPTIONS_PROPERTY
+				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD + "=" + "deb" + ITEM_SEPARATOR
+				+ "tanuj" + ITEM_SEPARATOR + "bob";
+		usage += "\n\tExample remove users: " + IWorkItem.SUBSCRIPTIONS_PROPERTY
 				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_REMOVE
-				+ "=" + "sally" + ITEM_SEPARATOR + "bob";
-		usage += "\n\nTags: Parameter \"" + IWorkItem.TAGS_PROPERTY
-				+ "\" can be used to add a list of tags.";
+				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_REMOVE + "=" + "sally"
+				+ ITEM_SEPARATOR + "bob";
+		usage += "\n\nTags: Parameter \"" + IWorkItem.TAGS_PROPERTY + "\" can be used to add a list of tags.";
 		usage += "\n\tThis attribute supports the modes default (same as) add, set and remove mode.";
-		usage += "\n\tExample: " + IWorkItem.TAGS_PROPERTY + "=" + "Tag1"
-				+ ITEM_SEPARATOR + ".." + ITEM_SEPARATOR + "TagN";
-		usage += "\n\nApprovals: \n\tParameter \""
-				+ IWorkItem.APPROVALS_PROPERTY
+		usage += "\n\tExample: " + IWorkItem.TAGS_PROPERTY + "=" + "Tag1" + ITEM_SEPARATOR + ".." + ITEM_SEPARATOR
+				+ "TagN";
+		usage += "\n\nApprovals: \n\tParameter \"" + IWorkItem.APPROVALS_PROPERTY
 				+ "\" can be used to add approvals and approvers using their user ID's.";
 		usage += helpUsageApprovals();
-		usage += "\nWork Item State: \n\tParameter \""
-				+ IWorkItem.STATE_PROPERTY
+		usage += "\nWork Item State: \n\tParameter \"" + IWorkItem.STATE_PROPERTY
 				+ "\"  can be used to change the work item state.";
 		usage += helpUsageStateChange();
 		return usage;
@@ -3396,8 +2959,7 @@ public class WorkItemUpdateHelper {
 		usage += "\n";
 		usage += "\nParameters:";
 		usage += "\nParameter is a work item attribute ID and value is a value or a list of values.";
-		usage += "\nUse the command "
-				+ IWorkItemCommandLineConstants.PREFIX_COMMAND
+		usage += "\nUse the command " + IWorkItemCommandLineConstants.PREFIX_COMMAND
 				+ IWorkItemCommandLineConstants.COMMAND_PRINT_TYPE_ATTRIBUTES
 				+ " to retrieve the available attribute ID's, or";
 		usage += "\ninspect the process configuration of your project area to extract the attribute ID's.";
@@ -3438,31 +3000,21 @@ public class WorkItemUpdateHelper {
 		usage += "\nModes:";
 		usage += "\nModes allow different types of changes to attributes such as add values, append text or remove and set other data.";
 		usage += "\nSupported modes are default (no mode specified), "
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD
-				+ ", "
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET
-				+ ", "
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_REMOVE
-				+ ".";
+				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD + ", "
+				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET + ", "
+				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_REMOVE + ".";
 		usage += "\nIf no mode is specified, the default mode for the parameter is used.";
-		usage += "\n\tExample for "
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_DEFAULT
+		usage += "\n\tExample for " + com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_DEFAULT
 				+ " mode: summary=\"This is a summary.\".";
-		usage += "\n\tExample for "
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD
-				+ " mode: summary:"
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD
+		usage += "\n\tExample for " + com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD
+				+ " mode: summary:" + com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD
 				+ "=\" Add this to the summary.\".";
-		usage += "\n\tExample for "
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET
-				+ " mode: summary:"
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET
+		usage += "\n\tExample for " + com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET
+				+ " mode: summary:" + com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET
 				+ "=\"Overwite the existing summary with this.\".";
-		usage += "\n\tExample for "
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_REMOVE
+		usage += "\n\tExample for " + com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_REMOVE
 				+ " mode: custom.enumeration.list:"
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_REMOVE
-				+ "=$,Unassigned.";
+				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_REMOVE + "=$,Unassigned.";
 
 		usage += "\n\nWhich modes are supported and their behavior depends on attribute type.";
 		usage += "\nSingle value attributes typically support default and set mode, but not add and remove mode. ";
@@ -3481,12 +3033,10 @@ public class WorkItemUpdateHelper {
 	 * @return a help description
 	 */
 	private String helpUsageItemLists() {
-		String usage = "\nFormat is using the separator " + ITEM_SEPARATOR
-				+ " :";
-		usage += "\n\t\"value1" + ITEM_SEPARATOR + "value2" + ITEM_SEPARATOR
-				+ "..." + ITEM_SEPARATOR + "valueN\"";
-		usage += "\n\tExample: custom.user.list:add=\"deb" + ITEM_SEPARATOR
-				+ "al" + ITEM_SEPARATOR + "..." + ITEM_SEPARATOR + "tanuj\"";
+		String usage = "\nFormat is using the separator " + ITEM_SEPARATOR + " :";
+		usage += "\n\t\"value1" + ITEM_SEPARATOR + "value2" + ITEM_SEPARATOR + "..." + ITEM_SEPARATOR + "valueN\"";
+		usage += "\n\tExample: custom.user.list:add=\"deb" + ITEM_SEPARATOR + "al" + ITEM_SEPARATOR + "..."
+				+ ITEM_SEPARATOR + "tanuj\"";
 		return usage;
 	}
 
@@ -3499,42 +3049,30 @@ public class WorkItemUpdateHelper {
 		String usage = "\nFormat is:\n";
 		usage += "\tcustom.item.list=value";
 		usage += "\n";
-		usage += "\n\tWhere value has the form: <value>{" + ITEM_SEPARATOR
-				+ "<value>}";
-		usage += "\n\tWith <value> of the form <TypeDescriptor>"
-				+ ITEMTYPE_SEPARATOR + "<Item>.";
+		usage += "\n\tWhere value has the form: <value>{" + ITEM_SEPARATOR + "<value>}";
+		usage += "\n\tWith <value> of the form <TypeDescriptor>" + ITEMTYPE_SEPARATOR + "<Item>.";
 		usage += "\n";
 		usage += "\n\tNo spaces are allowed in the value list.";
 		usage += "\n";
 		usage += "\n\tAvailable <TypeDescriptor> values are:";
-		usage += "\n\t\t Project area: " + TYPE_PROJECT_AREA
-				+ " - specified by its name. Example: \"" + TYPE_PROJECT_AREA
-				+ ITEMTYPE_SEPARATOR + "JKE Banking (Change Management)\"";
-		usage += "\n\t\t Team area: " + TYPE_TEAM_AREA
-				+ " - specified by its name path. Example: \"" + TYPE_TEAM_AREA
-				+ ITEMTYPE_SEPARATOR
-				+ "JKE Banking (Change Management)/Release Engineering\"";
-		usage += "\n\t\t Process area: " + TYPE_PROCESS_AREA
-				+ " - specified by its name path. Example: \""
+		usage += "\n\t\t Project area: " + TYPE_PROJECT_AREA + " - specified by its name. Example: \""
+				+ TYPE_PROJECT_AREA + ITEMTYPE_SEPARATOR + "JKE Banking (Change Management)\"";
+		usage += "\n\t\t Team area: " + TYPE_TEAM_AREA + " - specified by its name path. Example: \"" + TYPE_TEAM_AREA
+				+ ITEMTYPE_SEPARATOR + "JKE Banking (Change Management)/Release Engineering\"";
+		usage += "\n\t\t Process area: " + TYPE_PROCESS_AREA + " - specified by its name path. Example: \""
 				+ TYPE_PROCESS_AREA + ITEMTYPE_SEPARATOR
 				+ "JKE Banking (Change Management)/Business Recovery Matters\"";
-		usage += "\n\t\t Category: " + TYPE_CATEGORY
-				+ " - specified by its category path. Example: \""
-				+ TYPE_CATEGORY + ITEMTYPE_SEPARATOR + "JKE/BRM\"";
-		usage += "\n\t\t User: " + TYPE_CONTRIBUTOR
-				+ " - specified by its id. Example: \"" + TYPE_CONTRIBUTOR
+		usage += "\n\t\t Category: " + TYPE_CATEGORY + " - specified by its category path. Example: \"" + TYPE_CATEGORY
+				+ ITEMTYPE_SEPARATOR + "JKE/BRM\"";
+		usage += "\n\t\t User: " + TYPE_CONTRIBUTOR + " - specified by its id. Example: \"" + TYPE_CONTRIBUTOR
 				+ ITEMTYPE_SEPARATOR + "tanuj";
-		usage += "\n\t\t Iteration: "
-				+ TYPE_ITERATION
-				+ " - specified by its name path (including the development line name). Example: \""
-				+ TYPE_ITERATION + ITEMTYPE_SEPARATOR
-				+ "Main Development/Release 1.0/Sprint 3\"";
-		usage += "\n\t\t Work item: " + TYPE_WORKITEM
-				+ " - specified by its id. Example: \"" + TYPE_WORKITEM
+		usage += "\n\t\t Iteration: " + TYPE_ITERATION
+				+ " - specified by its name path (including the development line name). Example: \"" + TYPE_ITERATION
+				+ ITEMTYPE_SEPARATOR + "Main Development/Release 1.0/Sprint 3\"";
+		usage += "\n\t\t Work item: " + TYPE_WORKITEM + " - specified by its id. Example: \"" + TYPE_WORKITEM
 				+ ITEMTYPE_SEPARATOR + "20\"";
-		usage += "\n\t\t SCM component: " + TYPE_SCM_COMPONENT
-				+ " - specified by its name. Example: \"" + TYPE_SCM_COMPONENT
-				+ ITEMTYPE_SEPARATOR + "Build\"";
+		usage += "\n\t\t SCM component: " + TYPE_SCM_COMPONENT + " - specified by its name. Example: \""
+				+ TYPE_SCM_COMPONENT + ITEMTYPE_SEPARATOR + "Build\"";
 		return usage;
 	}
 
@@ -3546,46 +3084,25 @@ public class WorkItemUpdateHelper {
 	private String helpUsageApprovals() {
 		String usage = "\n\tApprovals only support the modes default (same as) add, set and remove. "
 				+ "\n\tSet and remove only affects approvals of the same type. ";
-		usage += "\nFormat is:"
-				+ "\n\t"
-				+ IWorkItem.APPROVALS_PROPERTY
-				+ "[<ID>]["
+		usage += "\nFormat is:" + "\n\t" + IWorkItem.APPROVALS_PROPERTY + "[<ID>]["
 				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
-				+ "<mode>]" + "=\"" + APPROVAL_TYPE_APPROVAL
-				+ APPROVAL_SEPARATOR + "Approval Name as string"
-				+ APPROVAL_SEPARATOR + "userID1" + ITEM_SEPARATOR + ".."
-				+ ITEM_SEPARATOR + "userIDn\"";
+				+ "<mode>]" + "=\"" + APPROVAL_TYPE_APPROVAL + APPROVAL_SEPARATOR + "Approval Name as string"
+				+ APPROVAL_SEPARATOR + "userID1" + ITEM_SEPARATOR + ".." + ITEM_SEPARATOR + "userIDn\"";
 		usage += "\n\tWhere <ID> can be left out if only one approval is specified or needs to be unique if multiple approvals are specified. "
 				+ "Where <mode> can be left out and defaults to "
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD
-				+ ".";
-		usage += "\n\tAvailable modes are:"
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET
-				+ " "
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD
+				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD + ".";
+		usage += "\n\tAvailable modes are:" + com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET
+				+ " " + com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD
 				+ " (set as default mode) and "
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_REMOVE
-				+ ".";
-		usage += "\n\t Modes "
-				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET
-				+ " and "
+				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_REMOVE + ".";
+		usage += "\n\t Modes " + com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET + " and "
 				+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_REMOVE
 				+ " only remove approvals of the same type and must be enabled using the switch "
-				+ IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_APPROVALS
-				+ ".\n";
-		usage += "\tExample " + IWorkItem.APPROVALS_PROPERTY + "=\""
-				+ APPROVAL_TYPE_REVIEW + APPROVAL_SEPARATOR + "Please Review"
-				+ APPROVAL_SEPARATOR + "deb" + ITEM_SEPARATOR + "tanuj\"";
-		usage += "\n\tExample "
-				+ IWorkItem.APPROVALS_PROPERTY
-				+ "=\""
-				+ APPROVAL_TYPE_VERIFICATION
-				+ APPROVAL_SEPARATOR
-				+ "Please verify"
-				+ APPROVAL_SEPARATOR
-				+ "sally"
-				+ ITEM_SEPARATOR
-				+ "al\""
+				+ IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_APPROVALS + ".\n";
+		usage += "\tExample " + IWorkItem.APPROVALS_PROPERTY + "=\"" + APPROVAL_TYPE_REVIEW + APPROVAL_SEPARATOR
+				+ "Please Review" + APPROVAL_SEPARATOR + "deb" + ITEM_SEPARATOR + "tanuj\"";
+		usage += "\n\tExample " + IWorkItem.APPROVALS_PROPERTY + "=\"" + APPROVAL_TYPE_VERIFICATION + APPROVAL_SEPARATOR
+				+ "Please verify" + APPROVAL_SEPARATOR + "sally" + ITEM_SEPARATOR + "al\""
 				+ "\n\twhere the user list is optional and can contain one or more users ID's\n";
 		return usage;
 	}
@@ -3597,25 +3114,16 @@ public class WorkItemUpdateHelper {
 	 */
 	private String helpUsageStateChange() {
 		String usage = "\n\tState change only supports the modes default and set. ";
-		usage += "\nFormat is: "
-				+ "\n\t"
-				+ IWorkItem.STATE_PROPERTY
-				+ "=StateName"
+		usage += "\nFormat is: " + "\n\t" + IWorkItem.STATE_PROPERTY + "=StateName"
 				+ " to find a one step workflow action to change the state, and execute the action, or";
-		usage += "\n\t"
-				+ IWorkItem.STATE_PROPERTY
-				+ "="
-				+ STATECHANGE_FORCESTATE
-				+ FORCESTATE_SEPARATOR
+		usage += "\n\t" + IWorkItem.STATE_PROPERTY + "=" + STATECHANGE_FORCESTATE + FORCESTATE_SEPARATOR
 				+ "StateName to force the state change to the target state even if no workflow action exists";
 		return usage;
 	}
 
 	private String helpUsageWorkflowAction() {
-		String usage = "\n\tThis attribute supports only the modes default and set. "
-				+ "\n\tExample: "
-				+ PSEUDO_ATTRIBUTE_TRIGGER_WORKFLOW_ACTION
-				+ "=" + "\"Stop working\"";
+		String usage = "\n\tThis attribute supports only the modes default and set. " + "\n\tExample: "
+				+ PSEUDO_ATTRIBUTE_TRIGGER_WORKFLOW_ACTION + "=" + "\"Stop working\"";
 		return usage;
 	}
 
@@ -3625,33 +3133,25 @@ public class WorkItemUpdateHelper {
 	 * @return a help description
 	 */
 	private String helpUsageAttachmentUpload() {
-		String usage = "\nFormat is: " + "\n\t" + PSEUDO_ATTRIBUTE_ATTACHFILE
-				+ "[<IDString>][:mode]=" + "\"SomeFilePath" + ATTACHMENT_SEPARATOR
-				+ "Some Description" + ATTACHMENT_SEPARATOR + "ContentTypeID"
+		String usage = "\nFormat is: " + "\n\t" + PSEUDO_ATTRIBUTE_ATTACHFILE + "[<IDString>][:mode]="
+				+ "\"SomeFilePath" + ATTACHMENT_SEPARATOR + "Some Description" + ATTACHMENT_SEPARATOR + "ContentTypeID"
 				+ ATTACHMENT_SEPARATOR + "EncodingID";
 		usage += "\"\n\n\tWhere:\n\t\t"
 				+ "<IDString> must be unique for multiple attachments in one command. If only one attachment is uploaded, the IDString can be left empty.";
-		usage += "\n\t\tContentTypeID is " + IContent.CONTENT_TYPE_TEXT
-				+ " or " + IContent.CONTENT_TYPE_UNKNOWN + " or "
-				+ IContent.CONTENT_TYPE_XML;
-		usage += "\n\t\tEncodingID is " + IContent.ENCODING_UTF_8 + " or "
-				+ IContent.ENCODING_UTF_16LE + " or "
-				+ IContent.ENCODING_UTF_16BE + " or "
-				+ IContent.ENCODING_US_ASCII + ".";
+		usage += "\n\t\tContentTypeID is " + IContent.CONTENT_TYPE_TEXT + " or " + IContent.CONTENT_TYPE_UNKNOWN
+				+ " or " + IContent.CONTENT_TYPE_XML;
+		usage += "\n\t\tEncodingID is " + IContent.ENCODING_UTF_8 + " or " + IContent.ENCODING_UTF_16LE + " or "
+				+ IContent.ENCODING_UTF_16BE + " or " + IContent.ENCODING_US_ASCII + ".";
 		usage += "\n\n\tThe file must be accessible and in the correct encoding.";
-		usage += "\n\n\tExamples:" + "\n\t\t" + PSEUDO_ATTRIBUTE_ATTACHFILE
-				+ "=\"C:/temp/test.txt" + ATTACHMENT_SEPARATOR + "Some Attachment" + ATTACHMENT_SEPARATOR 
-				+ IContent.CONTENT_TYPE_TEXT + ATTACHMENT_SEPARATOR + IContent.ENCODING_UTF_8
-				+ "\"";
-		usage += "\n\t\t" + PSEUDO_ATTRIBUTE_ATTACHFILE
-				+ "_1:add=\"./test1.txt" + ATTACHMENT_SEPARATOR + "Some Attachment 1" + ATTACHMENT_SEPARATOR 
-				+ IContent.CONTENT_TYPE_TEXT + ATTACHMENT_SEPARATOR + IContent.ENCODING_UTF_8
-				+ "\"" + " " + PSEUDO_ATTRIBUTE_ATTACHFILE
-				+ "_2=\"./test2.txt" + ATTACHMENT_SEPARATOR + "Some Attachment 2" + ATTACHMENT_SEPARATOR 
-				+ IContent.CONTENT_TYPE_TEXT + ATTACHMENT_SEPARATOR + IContent.ENCODING_UTF_8
-				+ "\"";
-		usage += "\n\t\t" + PSEUDO_ATTRIBUTE_DELETEATTACHMENTS
-				+ "=\"" + PSEUDO_ATTRIBUTEVALUE_YES + "\"";
+		usage += "\n\n\tExamples:" + "\n\t\t" + PSEUDO_ATTRIBUTE_ATTACHFILE + "=\"C:/temp/test.txt"
+				+ ATTACHMENT_SEPARATOR + "Some Attachment" + ATTACHMENT_SEPARATOR + IContent.CONTENT_TYPE_TEXT
+				+ ATTACHMENT_SEPARATOR + IContent.ENCODING_UTF_8 + "\"";
+		usage += "\n\t\t" + PSEUDO_ATTRIBUTE_ATTACHFILE + "_1:add=\"./test1.txt" + ATTACHMENT_SEPARATOR
+				+ "Some Attachment 1" + ATTACHMENT_SEPARATOR + IContent.CONTENT_TYPE_TEXT + ATTACHMENT_SEPARATOR
+				+ IContent.ENCODING_UTF_8 + "\"" + " " + PSEUDO_ATTRIBUTE_ATTACHFILE + "_2=\"./test2.txt"
+				+ ATTACHMENT_SEPARATOR + "Some Attachment 2" + ATTACHMENT_SEPARATOR + IContent.CONTENT_TYPE_TEXT
+				+ ATTACHMENT_SEPARATOR + IContent.ENCODING_UTF_8 + "\"";
+		usage += "\n\t\t" + PSEUDO_ATTRIBUTE_DELETEATTACHMENTS + "=\"" + PSEUDO_ATTRIBUTEVALUE_YES + "\"";
 		return usage;
 	}
 
@@ -3679,8 +3179,7 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Creates the help output for linking this work item to other local work
-	 * items
+	 * Creates the help output for linking this work item to other local work items
 	 * 
 	 * @return a help description
 	 */
@@ -3692,22 +3191,19 @@ public class WorkItemUpdateHelper {
 		usage += "\n\t" + PSEUDO_ATTRIBUTE_LINK + "linktype=value\n";
 		usage += "\n\tThe parameter value is a list of one or more work items specified by their ID. The separator is:"
 				+ LINK_SEPARATOR_HELP + "\n\n";
-		Set<String> wiLinkTypes = ReferenceUtil
-				.getWorkItemEndPointDescriptorMap().keySet();
+		Set<String> wiLinkTypes = ReferenceUtil.getWorkItemEndPointDescriptorMap().keySet();
 		for (String linktype : wiLinkTypes) {
-			usage += "\t" + PSEUDO_ATTRIBUTE_LINK + linktype + "=id1"
-					+ LINK_SEPARATOR_HELP + "id2" + LINK_SEPARATOR_HELP
-					+ "...\n";
+			usage += "\t" + PSEUDO_ATTRIBUTE_LINK + linktype + "=id1" + LINK_SEPARATOR_HELP + "id2"
+					+ LINK_SEPARATOR_HELP + "...\n";
 		}
 		usage += "\n\tExample:";
-		usage += "\n\t\t" + PSEUDO_ATTRIBUTE_LINK + "related=123"
-				+ LINK_SEPARATOR_HELP + "80";
+		usage += "\n\t\t" + PSEUDO_ATTRIBUTE_LINK + "related=123" + LINK_SEPARATOR_HELP + "80";
 		return usage;
 	}
 
 	/**
-	 * Creates the help output for linking this work item to other work items
-	 * using CLM links
+	 * Creates the help output for linking this work item to other work items using
+	 * CLM links
 	 * 
 	 * @return a help description
 	 */
@@ -3719,16 +3215,13 @@ public class WorkItemUpdateHelper {
 		usage += "\n\t" + PSEUDO_ATTRIBUTE_LINK + "linktype=value\n";
 		usage += "\n\tThe parameter value is a list of one or more work items specified by their ID (if they are in the same repository) or by the Item URI. The separator is:"
 				+ LINK_SEPARATOR_HELP + "\n\n";
-		Set<String> wiLinkTypes = ReferenceUtil
-				.getCLM_WI_EndPointDescriptorMap().keySet();
+		Set<String> wiLinkTypes = ReferenceUtil.getCLM_WI_EndPointDescriptorMap().keySet();
 		for (String linktype : wiLinkTypes) {
-			usage += "\t" + PSEUDO_ATTRIBUTE_LINK + linktype + "=id1"
-					+ LINK_SEPARATOR_HELP + "id2" + LINK_SEPARATOR_HELP
-					+ "URI2" + LINK_SEPARATOR_HELP + "...\n";
+			usage += "\t" + PSEUDO_ATTRIBUTE_LINK + linktype + "=id1" + LINK_SEPARATOR_HELP + "id2"
+					+ LINK_SEPARATOR_HELP + "URI2" + LINK_SEPARATOR_HELP + "...\n";
 		}
 		usage += "\n\tExample:";
-		usage += "\n\t\t"
-				+ PSEUDO_ATTRIBUTE_LINK
+		usage += "\n\t\t" + PSEUDO_ATTRIBUTE_LINK
 				+ "tracks_workitem=\"https://clm.example.com:9443/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/80"
 				+ LINK_SEPARATOR_HELP + "120" + LINK_SEPARATOR_HELP + "150\"";
 		return usage;
@@ -3747,19 +3240,15 @@ public class WorkItemUpdateHelper {
 		usage += "\n\t" + PSEUDO_ATTRIBUTE_LINK + "linktype=value\n";
 		usage += "\n\tThe parameter value is a list of one or more CLM URI's for elements that support this link type. The separator is:"
 				+ LINK_SEPARATOR_HELP + "\n\n";
-		Set<String> wiLinkTypes = ReferenceUtil
-				.getCLM_URI_EndPointDescriptorMap().keySet();
+		Set<String> wiLinkTypes = ReferenceUtil.getCLM_URI_EndPointDescriptorMap().keySet();
 		for (String linktype : wiLinkTypes) {
-			usage += "\t" + PSEUDO_ATTRIBUTE_LINK + linktype + "=uri1"
-					+ LINK_SEPARATOR_HELP + "uri2" + LINK_SEPARATOR_HELP
-					+ "...\n";
+			usage += "\t" + PSEUDO_ATTRIBUTE_LINK + linktype + "=uri1" + LINK_SEPARATOR_HELP + "uri2"
+					+ LINK_SEPARATOR_HELP + "...\n";
 		}
 		usage += "\n\tExample:";
-		usage += "\n\t\t"
-				+ PSEUDO_ATTRIBUTE_LINK
+		usage += "\n\t\t" + PSEUDO_ATTRIBUTE_LINK
 				+ "affects_requirement=https://clm.example.com:9443/rm/resources/_848a30e315524069854f55e1d35a402d"
-				+ LINK_SEPARATOR_HELP
-				+ "https://clm.example.com:9443/rm/resources/_6c96bedb0e9a490494273eefc6e1f7c5";
+				+ LINK_SEPARATOR_HELP + "https://clm.example.com:9443/rm/resources/_6c96bedb0e9a490494273eefc6e1f7c5";
 		return usage;
 	}
 
@@ -3773,26 +3262,21 @@ public class WorkItemUpdateHelper {
 			return "";
 		}
 		String usage = "\nFormat is:\n";
-		usage += "\t" + PSEUDO_ATTRIBUTE_LINK
-				+ ReferenceUtil.LINKTYPE_REPORTED_AGAINST_BUILDRESULT
-				+ "=buildResult1" + LINK_SEPARATOR_HELP + "buildResult2"
-				+ LINK_SEPARATOR_HELP + "...\n";
+		usage += "\t" + PSEUDO_ATTRIBUTE_LINK + ReferenceUtil.LINKTYPE_REPORTED_AGAINST_BUILDRESULT + "=buildResult1"
+				+ LINK_SEPARATOR_HELP + "buildResult2" + LINK_SEPARATOR_HELP + "...\n";
 		usage += "\n\tThe parameter value is a list of one or more Buildresults specified by their ID or their label. Prefix the build labels @. The separator is:"
 				+ LINK_SEPARATOR_HELP + "\n\n";
-		Set<String> wiLinkTypes = ReferenceUtil
-				.getBuild_EndPointDescriptorMap().keySet();
+		Set<String> wiLinkTypes = ReferenceUtil.getBuild_EndPointDescriptorMap().keySet();
 		for (String linktype : wiLinkTypes) {
-			usage += "\t" + PSEUDO_ATTRIBUTE_LINK + linktype + "=id1"
-					+ LINK_SEPARATOR_HELP + "@BuildLabel2"
+			usage += "\t" + PSEUDO_ATTRIBUTE_LINK + linktype + "=id1" + LINK_SEPARATOR_HELP + "@BuildLabel2"
 					+ LINK_SEPARATOR_HELP + "...\n";
 		}
 		usage += "\n\n\tExample:";
-		usage += "\n\n\t\t" + PSEUDO_ATTRIBUTE_LINK
-				+ ReferenceUtil.LINKTYPE_REPORTED_AGAINST_BUILDRESULT
-				+ "=@_IjluoH-oEeSHhcw_WFU6CQ" + LINK_SEPARATOR_HELP
-				+ "P20141208-1713\n";
+		usage += "\n\n\t\t" + PSEUDO_ATTRIBUTE_LINK + ReferenceUtil.LINKTYPE_REPORTED_AGAINST_BUILDRESULT
+				+ "=@_IjluoH-oEeSHhcw_WFU6CQ" + LINK_SEPARATOR_HELP + "P20141208-1713\n";
 		return usage;
 	}
+
 	/**
 	 * Creates the help output for linking to build results
 	 * 
@@ -3803,12 +3287,9 @@ public class WorkItemUpdateHelper {
 			return "";
 		}
 		String usage = "\nFormat is:\n";
-		usage += "\t" + PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE
-				+ "linktype=yes\n";
+		usage += "\t" + PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE + "linktype=yes\n";
 		usage += "\n\n\tExample:";
-		usage += "\n\n\t\t" + PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE
-				+ ReferenceUtil.LINKTYPE_INCLUDEDINBUILD
-				+ "=yes\n";
+		usage += "\n\n\t\t" + PSEUDO_ATTRIBUTE_DELETELINKSOFTYPE + ReferenceUtil.LINKTYPE_INCLUDEDINBUILD + "=yes\n";
 		return usage;
 	}
 

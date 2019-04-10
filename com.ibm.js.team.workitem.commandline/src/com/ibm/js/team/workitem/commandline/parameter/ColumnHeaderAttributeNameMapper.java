@@ -73,7 +73,8 @@ public class ColumnHeaderAttributeNameMapper {
 		}
 		// Add all the pseudo attribute attachments
 		idNameMap.put(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS, ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS);
-		attributeIdNameMap.put(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS, ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS);
+		attributeIdNameMap.put(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS,
+				ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS);
 		// Add all the links
 		Set<String> linkNames = ParameterLinkIDMapper.getLinkNames();
 		for (String linkName : linkNames) {

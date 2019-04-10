@@ -22,8 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import com.ibm.js.team.workitem.commandline.IWorkItemCommandLineConstants;
 import com.ibm.js.team.workitem.commandline.OperationResult;
 import com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemModificationCommand;
@@ -59,8 +57,8 @@ import com.opencsv.CSVReader;
  * and save them. The save operation is governed by the process and might fail
  * if required parameters are missing.
  * 
- * This command uses opencsv @see http://opencsv.sourceforge.net/ as
- * external library to read the CSV file.
+ * This command uses opencsv @see http://opencsv.sourceforge.net/ as external
+ * library to read the CSV file.
  * 
  * Downloads are available here: @see https://sourceforge.net/projects/opencsv/
  * 
@@ -72,9 +70,12 @@ import com.opencsv.CSVReader;
  * 
  * The API from com.ibm.team.workitem.rcp.core.jar is internal API.
  * 
- * import com.ibm.team.workitem.rcp.core.internal.bugzilla.mappers.BugzillaMapping;
- * import com.ibm.team.workitem.rcp.core.internal.bugzilla.mappers.BugzillaMapping.AttributeMapping;
- * import com.ibm.team.workitem.rcp.core.internal.bugzilla.mappers.BugzillaMapping.ValueMapping;
+ * import
+ * com.ibm.team.workitem.rcp.core.internal.bugzilla.mappers.BugzillaMapping;
+ * import
+ * com.ibm.team.workitem.rcp.core.internal.bugzilla.mappers.BugzillaMapping.AttributeMapping;
+ * import
+ * com.ibm.team.workitem.rcp.core.internal.bugzilla.mappers.BugzillaMapping.ValueMapping;
  * 
  */
 @SuppressWarnings("restriction")
@@ -399,14 +400,23 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 					}
 					e.printStackTrace();
 				} finally {
-					reader.close();
+					if (reader != null) {
+						reader.close();
+					}
 				}
 			}
 			debug("Imported");
 		} catch (FileNotFoundException e) {
+			result = false;
 			throw new WorkItemCommandLineException("Import File not found: " + getImportFile().getAbsolutePath(), e);
 		} catch (IOException e) {
+			result = false;
 			throw new WorkItemCommandLineException(e);
+		} catch (Exception e) {
+			result = false;
+			throw new WorkItemCommandLineException(e);
+		} finally {
+			result = false;
 		}
 		return result;
 	}
@@ -429,8 +439,9 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		// Get the parameters for this work item from the CSV data and the
 		// mapping provided
 		ParameterList parameters = processRow(header, row, rowID, attributeMapping);
-		if(parameters.isEmpty()) {
-			getResult().appendResultString("No attributes or columns found for row " + rowID + ". Check the import file format or delimiter. Delimiter is '" + getDelimiter() + "'");	
+		if (parameters.isEmpty()) {
+			getResult().appendResultString("No attributes or columns found for row " + rowID
+					+ ". Check the import file format or delimiter. Delimiter is '" + getDelimiter() + "'");
 		}
 		if (getPassNumber() > 0) {
 			if (null == parameters.getParameter(ORIGINAL_WORK_ITEM_ID)) {
@@ -448,6 +459,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		if (isSuppressMailNotification()) {
 			parameters.addSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION, "");
 		}
+		parameters.addSwitch(IWorkItemCommandLineConstants.SWITCH_IMPORT_IGNORE_MISSING_ATTTRIBUTES, "");
 
 		// For each work item we create a new parameter manager that is then
 		// used in the subsequent call to update or create the work item
@@ -485,6 +497,10 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			// We have to create a new work item
 			// Try to find the work item type
 			String workItemTypeIDorName = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY);
+			if (workItemTypeIDorName == null) {
+				workItemTypeIDorName = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY
+						+ ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE + ParameterValue.MODE_SET);
+			}
 			// Alternative ID for the type
 			if (workItemTypeIDorName == null) {
 				// If we have no type we can't create the work item
@@ -549,6 +565,10 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 
 			// Do we have to change the type?
 			String workItemTypeIDOrName = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY);
+			if (workItemTypeIDOrName == null) {
+				workItemTypeIDOrName = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY
+						+ ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE + ParameterValue.MODE_SET);
+			}
 			// There is a type provided
 			if (workItemTypeIDOrName != null) {
 				IWorkItemType newType = WorkItemTypeHelper.findWorkItemTypeByIDAndDisplayName(workItemTypeIDOrName,
@@ -662,8 +682,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				// Add the new parameter
 				processAttribute(attributeMapping, parameters, targetAttribute, targetValue);
 			} catch (Exception e) {
-				if(isIgnoreErrors()) {
-					if(!"".equals(targetValue)) {
+				if (isIgnoreErrors()) {
+					if (!StringUtil.isEmpty(targetValue)) {
 						this.appendResultString("Exception! " + e.getMessage());
 						this.appendResultString("Ignored....... ");
 					}
@@ -676,7 +696,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		String comment = getComment();
 		if (comment.length() > 0) {
 			rowHasData = true;
-			addParameter(parameters, IWorkItem.COMMENTS_PROPERTY, comment);
+			addDefaultParameter(parameters, IWorkItem.COMMENTS_PROPERTY, comment);
 		}
 		if (!rowHasData) {
 			throw new WorkItemCommandLineException("No data found in row or row malformed! Row: " + rowID);
@@ -702,9 +722,16 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @param targetAttribute
 	 * @param targetValue
 	 */
+	/**
+	 * @param headerMapping
+	 * @param parameters
+	 * @param attributeID
+	 * @param targetValue
+	 */
 	private void processAttribute(ColumnHeaderAttributeNameMapper headerMapping, ParameterList parameters,
 			String attributeID, String targetValue) {
 		// If the parameter has no value, we don't process it.
+// TODO: Handle "" as deletion?		
 //		if (targetValue.equals("")) {
 //			// @see https://github.com/jazz-community/work-item-command-line/issues/16
 //			// TODO: Defect, we want to be able to clear attributes. 
@@ -716,7 +743,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		if (attribute == null) {
 			// Check for the mapping to the original work item
 			if (attributeID.trim().toLowerCase().matches(ORIGINAL_WORK_ITEM_ID)) {
-				addParameter(parameters, ORIGINAL_WORK_ITEM_ID, targetValue);
+				setParameter(parameters, ORIGINAL_WORK_ITEM_ID, targetValue);
 				return;
 			}
 			// check for a link
@@ -751,6 +778,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		// If the mapping is for the state attribute, we want to force the state
 		// as work items might not have an action to the state.
 		if (attribType.equals(ATTRIBUTE_STATE) || attribute.getIdentifier().equals(IWorkItem.STATE_PROPERTY)) {
+			// TODO: State attribute can not be empty
 			targetValue = WorkItemUpdateHelper.STATECHANGE_FORCESTATE + WorkItemUpdateHelper.FORCESTATE_SEPARATOR
 					+ targetValue;
 		}
@@ -778,7 +806,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		if (attribType.equals(AttributeTypes.SUBSCRIPTIONS)) {
 			// Handle Subscriptions
 			String contributorList = convertItemList(targetValue);
-			addParameter(parameters, attributeID, contributorList);
+			setParameter(parameters, attributeID, contributorList);
 			return;
 		}
 
@@ -789,54 +817,54 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				if (attribType.equals(AttributeTypes.CONTRIBUTOR_LIST)) {
 					// A list of contributors
 					String contributorList = convertItemList(targetValue);
-					addParameter(parameters, attributeID, contributorList);
+					setParameter(parameters, attributeID, contributorList);
 					return;
 				}
 				if (attribType.equals(AttributeTypes.PROCESS_AREA_LIST)) {
 					// A list of process areas (ProjectArea/TeamArea)
 					String contributorList = convertItemList(targetValue);
-					addParameter(parameters, attributeID, contributorList);
+					setParameter(parameters, attributeID, contributorList);
 					return;
 				}
 				if (attribType.equals(AttributeTypes.PROJECT_AREA_LIST)) {
 					// A list of process areas (ProjectAreas)
 					String contributorList = convertItemList(targetValue);
-					addParameter(parameters, attributeID, contributorList);
+					setParameter(parameters, attributeID, contributorList);
 					return;
 				}
 				if (attribType.equals(AttributeTypes.TEAM_AREA_LIST)) {
 					// A list of process areas (TeamAreas)
 					String contributorList = convertItemList(targetValue);
-					addParameter(parameters, attributeID, contributorList);
+					setParameter(parameters, attributeID, contributorList);
 					return;
 				}
 				if (attribType.equals(AttributeTypes.WORK_ITEM_LIST)) {
 					// A list of work items
 					String contributorList = convertItemList(targetValue);
-					addParameter(parameters, attributeID, contributorList);
+					setParameter(parameters, attributeID, contributorList);
 					return;
 				}
 				if (attribType.equals(AttributeTypes.ITEM_LIST)) {
 					String contributorList = convertItemList(targetValue);
-					addParameter(parameters, attributeID, contributorList);
+					setParameter(parameters, attributeID, contributorList);
 					return;
 				}
 			}
 			if (attribType.equals(AttributeTypes.TAGS)) {
 				// Handle Tags - also detected as list type
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (attribType.equals(AttributeTypes.STRING_LIST)) {
 				// A list of strings
 				String contributorList = convertItemList(targetValue);
-				addParameter(parameters, attributeID, contributorList);
+				setParameter(parameters, attributeID, contributorList);
 				return;
 			}
 			if (AttributeTypes.isEnumerationListAttributeType(attribType)) {
 				// Handle all Enumeration List Types
 				String contributorList = convertItemList(targetValue);
-				addParameter(parameters, attributeID, contributorList);
+				setParameter(parameters, attributeID, contributorList);
 				return;
 			}
 			throw new WorkItemCommandLineException(
@@ -846,92 +874,96 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 
 			if (attribType.equals(AttributeTypes.WIKI)) {
 				// return calculateString(value);
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (AttributeTypes.STRING_TYPES.contains(attribType)) {
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (AttributeTypes.HTML_TYPES.contains(attribType)) {
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (attribType.equals(AttributeTypes.BOOLEAN)) {
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (AttributeTypes.NUMBER_TYPES.contains(attribType)) {
-				addParameter(parameters, attributeID, targetValue);
+				// Do not set value if there is no data, assume attribute not available
+				if (StringUtil.isEmpty(targetValue)) {
+					return;
+				}
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (attribType.equals(AttributeTypes.DELIVERABLE)) {
 				// Handle deliverables - Found In and other attributes
 				// referencing a release.
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (attribType.equals(AttributeTypes.CATEGORY)) {
 				// Work item category - Filed Against and other attributes
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (attribType.equals(AttributeTypes.ITERATION)) {
 				// Iterations - Planned For and other such attributes
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (attribType.equals(AttributeTypes.CONTRIBUTOR)) {
 				// Contributors - user ID's
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (attribType.equals(AttributeTypes.TIMESTAMP)) {
 				// Timestamp types e.g. dates
 				String timestamp = convertTimestamp(targetValue);
 				if (timestamp != null) {
-					addParameter(parameters, attributeID, timestamp);
+					setParameter(parameters, attributeID, timestamp);
 				}
 				return;
 			}
 			if (attribType.equals(AttributeTypes.PROJECT_AREA)) {
 				// ProjectArea type attributes
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (attribType.equals(AttributeTypes.TEAM_AREA)) {
 				// TeamArea type attributes
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (attribType.equals(AttributeTypes.PROCESS_AREA)) {
 				// Process Area type attributes (TeamArea/ProjectArea)
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (attribType.equals(AttributeTypes.WORK_ITEM)) {
 				// Work Item attributes
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (attribType.equals(AttributeTypes.ITEM)) {
 				// Handle items where the type is not specified in the attribute
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (attribType.equals(AttributeTypes.TYPE)) {
 				// The work item type
-				addParameter(parameters, attributeID, targetValue);
+				addDefaultParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (AttributeTypes.isEnumerationAttributeType(attribType)) {
 				// Handle all enumeration types
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			if (attribType.equals(AttributeTypes.UUID)) {
 				// The work item restricted Access UUID
-				addParameter(parameters, attributeID, targetValue);
+				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
 			// In case we forgot something or a new type gets implemented
@@ -1039,7 +1071,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		}
 		values = StringUtil.removePrefixes(values, ExportWorkItemsCommand.PREFIX_EXISTINGWORKITEM);
 		String importValue = StringUtil.listToString(values, SEPERATOR_LINK_TARGETS);
-		addParameter(parameters, linkName, importValue);
+		setParameter(parameters, linkName, importValue);
 	}
 
 	/**
@@ -1128,15 +1160,25 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * Add a parameter to be used in the work item update
+	 * Add a parameter to be used in the work item update using set mode
 	 * 
 	 * @param parameters
 	 * @param attributeID
 	 * @param targetValue
 	 */
-	private void addParameter(ParameterList parameters, String attributeID, String targetValue) {
+	private void setParameter(ParameterList parameters, String attributeID, String targetValue) {
+		addParameterMode(parameters, attributeID, ParameterValue.MODE_SET, targetValue);
+	}
+
+	/**
+	 * Add a parameter to be used in the work item update with mode default
+	 * 
+	 * @param parameters
+	 * @param attributeID
+	 * @param targetValue
+	 */
+	private void addDefaultParameter(ParameterList parameters, String attributeID, String targetValue) {
 		debug("Mapped Attribute: [" + attributeID + "] Mapped Value: [" + targetValue + "]");
-		// Currently using default TODO: add, set, default?
 		parameters.addParameterValue(attributeID, targetValue);
 	}
 
@@ -1148,11 +1190,9 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @param updateMode
 	 * @param targetValue
 	 */
-	@SuppressWarnings("unused")
 	private void addParameterMode(ParameterList parameters, String attributeID, String updateMode, String targetValue) {
 		String modeValue = "";
 		debug("Mapped Attribute: [" + attributeID + "] Mapped Value: [" + targetValue + "]");
-		// Currently using default TODO: add, set, default?
 		if (updateMode != null) {
 			if (ParameterValue.MODE_ADD.equals(updateMode) || ParameterValue.MODE_REMOVE.equals(updateMode)
 					|| ParameterValue.MODE_SET.equals(updateMode)) {

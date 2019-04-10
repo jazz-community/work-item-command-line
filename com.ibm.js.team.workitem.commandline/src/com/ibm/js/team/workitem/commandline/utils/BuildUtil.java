@@ -29,31 +29,27 @@ public class BuildUtil {
 	/**
 	 * Finds a build result with a given label ID
 	 * 
-	 * @param buildResultID
-	 *            - the string representation of the build result ID
+	 * @param buildResultID - the string representation of the build result ID
 	 * @param monitor
 	 * @return the buildresult that was found
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 */
-	public static IBuildResult findBuildResultbyID(String buildResultID,
-			ITeamRepository teamRepository, IProgressMonitor monitor)
-			throws TeamRepositoryException, WorkItemCommandLineException {
+	public static IBuildResult findBuildResultbyID(String buildResultID, ITeamRepository teamRepository,
+			IProgressMonitor monitor) throws TeamRepositoryException, WorkItemCommandLineException {
 
 		IBuildResultHandle resultHandle;
 		try {
-			resultHandle = (IBuildResultHandle) IBuildResult.ITEM_TYPE
-					.createItemHandle(UUID.valueOf(buildResultID), null);
+			resultHandle = (IBuildResultHandle) IBuildResult.ITEM_TYPE.createItemHandle(UUID.valueOf(buildResultID),
+					null);
 		} catch (Exception e) {
-			throw new WorkItemCommandLineException(
-					"Exception getting build from label: " + e.getMessage(), e);
+			throw new WorkItemCommandLineException("Exception getting build from label: " + e.getMessage(), e);
 		}
 		ArrayList<IBuildResultHandle> handleList = new ArrayList<IBuildResultHandle>();
 		handleList.add(resultHandle);
 
-		IFetchResult fetchResult = teamRepository.itemManager()
-				.fetchCompleteItemsPermissionAware(handleList,
-						IItemManager.REFRESH, monitor);
+		IFetchResult fetchResult = teamRepository.itemManager().fetchCompleteItemsPermissionAware(handleList,
+				IItemManager.REFRESH, monitor);
 		@SuppressWarnings("rawtypes")
 		List retrieved = fetchResult.getRetrievedItems();
 		for (@SuppressWarnings("rawtypes")
@@ -64,16 +60,13 @@ public class BuildUtil {
 			}
 		}
 		if (fetchResult.hasPermissionDeniedItems()) {
-			throw new WorkItemCommandLineException(
-					"Access denied to Build Result: " + buildResultID);
+			throw new WorkItemCommandLineException("Access denied to Build Result: " + buildResultID);
 		}
 		if (fetchResult.hasNotFoundItems()) {
-			throw new WorkItemCommandLineException("Build Result not found "
-					+ buildResultID);
+			throw new WorkItemCommandLineException("Build Result not found " + buildResultID);
 		}
 
-		throw new WorkItemCommandLineException("Build Result not found "
-				+ buildResultID);
+		throw new WorkItemCommandLineException("Build Result not found " + buildResultID);
 	}
 
 	/**
@@ -81,23 +74,19 @@ public class BuildUtil {
 	 * 
 	 * @param monitor
 	 * 
-	 * @param buildResultID
-	 *            - the string representation of the build result ID
+	 * @param buildResultID - the string representation of the build result ID
 	 * @return the buildresult that was found
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 */
-	public static IBuildResult resolveBuildResult(
-			IBuildResultHandle buildResult, ITeamRepository teamRepository,
-			IProgressMonitor monitor) throws TeamRepositoryException,
-			WorkItemCommandLineException {
+	public static IBuildResult resolveBuildResult(IBuildResultHandle buildResult, ITeamRepository teamRepository,
+			IProgressMonitor monitor) throws TeamRepositoryException, WorkItemCommandLineException {
 
 		ArrayList<IBuildResultHandle> handleList = new ArrayList<IBuildResultHandle>();
 		handleList.add(buildResult);
 
-		IFetchResult fetchResult = teamRepository.itemManager()
-				.fetchCompleteItemsPermissionAware(handleList,
-						IItemManager.REFRESH, monitor);
+		IFetchResult fetchResult = teamRepository.itemManager().fetchCompleteItemsPermissionAware(handleList,
+				IItemManager.REFRESH, monitor);
 		@SuppressWarnings("rawtypes")
 		List retrieved = fetchResult.getRetrievedItems();
 		for (@SuppressWarnings("rawtypes")
@@ -108,16 +97,13 @@ public class BuildUtil {
 			}
 		}
 		if (fetchResult.hasPermissionDeniedItems()) {
-			throw new WorkItemCommandLineException(
-					"Access denied to Build Result: " + buildResult.getItemId());
+			throw new WorkItemCommandLineException("Access denied to Build Result: " + buildResult.getItemId());
 		}
 		if (fetchResult.hasNotFoundItems()) {
-			throw new WorkItemCommandLineException("Build Result not found "
-					+ buildResult.getItemId());
+			throw new WorkItemCommandLineException("Build Result not found " + buildResult.getItemId());
 		}
 
-		throw new WorkItemCommandLineException("Build Result not found "
-				+ buildResult.getItemId());
+		throw new WorkItemCommandLineException("Build Result not found " + buildResult.getItemId());
 	}
 
 	/**
@@ -129,16 +115,13 @@ public class BuildUtil {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	public static IBuildDefinition resolveBuildDefinition(
-			IBuildDefinitionHandle buildDefinition,
-			ITeamRepository teamRepository, IProgressMonitor monitor)
-			throws TeamRepositoryException {
+	public static IBuildDefinition resolveBuildDefinition(IBuildDefinitionHandle buildDefinition,
+			ITeamRepository teamRepository, IProgressMonitor monitor) throws TeamRepositoryException {
 		ArrayList<IBuildDefinitionHandle> handleList = new ArrayList<IBuildDefinitionHandle>();
 		handleList.add(buildDefinition);
 
-		IFetchResult fetchResult = teamRepository.itemManager()
-				.fetchCompleteItemsPermissionAware(handleList,
-						IItemManager.REFRESH, monitor);
+		IFetchResult fetchResult = teamRepository.itemManager().fetchCompleteItemsPermissionAware(handleList,
+				IItemManager.REFRESH, monitor);
 		@SuppressWarnings("rawtypes")
 		List retrieved = fetchResult.getRetrievedItems();
 		for (@SuppressWarnings("rawtypes")
@@ -149,17 +132,13 @@ public class BuildUtil {
 			}
 		}
 		if (fetchResult.hasPermissionDeniedItems()) {
-			throw new WorkItemCommandLineException(
-					"Access denied to Build Definition: "
-							+ buildDefinition.getItemId());
+			throw new WorkItemCommandLineException("Access denied to Build Definition: " + buildDefinition.getItemId());
 		}
 		if (fetchResult.hasNotFoundItems()) {
-			throw new WorkItemCommandLineException(
-					"Build Definition not found " + buildDefinition.getItemId());
+			throw new WorkItemCommandLineException("Build Definition not found " + buildDefinition.getItemId());
 		}
 
-		throw new WorkItemCommandLineException("Build Definition not found "
-				+ buildDefinition.getItemId());
+		throw new WorkItemCommandLineException("Build Definition not found " + buildDefinition.getItemId());
 	}
 
 }

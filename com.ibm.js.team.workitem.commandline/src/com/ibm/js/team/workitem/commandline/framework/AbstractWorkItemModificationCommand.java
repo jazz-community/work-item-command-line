@@ -34,30 +34,29 @@ import com.ibm.team.workitem.common.model.ItemProfile;
  * 
  */
 @SuppressWarnings("restriction")
-public abstract class AbstractWorkItemModificationCommand extends
-		AbstractTeamRepositoryCommand {
+public abstract class AbstractWorkItemModificationCommand extends AbstractTeamRepositoryCommand {
 
-	public final static String UPDATE_BACK_LINKS=IAdditionalSaveParameters.UPDATE_BACKLINKS;
+	public final static String UPDATE_BACK_LINKS = IAdditionalSaveParameters.UPDATE_BACKLINKS;
 	// 6.0 iFix3
 	// private final static String SKIP_MAIL = IAdditionalSaveParameters.SKIP_MAIL;
-	public final static String SKIP_MAIL= "com.ibm.team.workitem.common.internal.skipMail"; //$NON-NLS-1$
-	
+	public final static String SKIP_MAIL = "com.ibm.team.workitem.common.internal.skipMail"; //$NON-NLS-1$
+
 	// in some modes we want to be able to ignore an error e.g. when setting
 	// multiple attributes, we might want to try to not fail if one attribute
 	// can not be set.
 	private boolean fIgnoreErrors = false;
-	// Since 6.0 iFix3 there is an additional save parameter to avoid sending 
+	// Since 6.0 iFix3 there is an additional save parameter to avoid sending
 	// E-Mail notification to users (e.g. during automated updates).
-	private boolean suppressMailNotification=false;
+	private boolean suppressMailNotification = false;
 
-	// Create Back Links E-Mail notification to users (e.g. during automated updates).
-	private boolean createBackLinks=false;
+	// Create Back Links E-Mail notification to users (e.g. during automated
+	// updates).
+	private boolean createBackLinks = false;
 
 	/**
 	 * Set the flag
 	 * 
-	 * @param value
-	 *            true or false
+	 * @param value true or false
 	 */
 	public void setIgnoreErrors(boolean value) {
 		this.fIgnoreErrors = value;
@@ -74,29 +73,29 @@ public abstract class AbstractWorkItemModificationCommand extends
 
 	/**
 	 * Skip Email Notification since 6.0 iFix3
+	 * 
 	 * @param hasSwitch
 	 */
 	public void setSuppressMailNotification(boolean hasSwitch) {
-		this.suppressMailNotification = hasSwitch;	
+		this.suppressMailNotification = hasSwitch;
 	}
 
 	/**
 	 * is email notification suppression
-	 * @return 
+	 * 
+	 * @return
 	 */
 	public boolean isSuppressMailNotification() {
-		return this.suppressMailNotification;	
+		return this.suppressMailNotification;
 	}
 
-	
 	/**
 	 * The constructor that initializes the class.
 	 * 
-	 * @param parametermanager
-	 *            Used to pass the parameters and manage required parameters.
+	 * @param parametermanager Used to pass the parameters and manage required
+	 *                         parameters.
 	 */
-	protected AbstractWorkItemModificationCommand(
-			ParameterManager parametermanager) {
+	protected AbstractWorkItemModificationCommand(ParameterManager parametermanager) {
 		super(parametermanager);
 	}
 
@@ -110,18 +109,15 @@ public abstract class AbstractWorkItemModificationCommand extends
 		/**
 		 * Constructor
 		 * 
-		 * @param The
-		 *            title message for the operation
+		 * @param The title message for the operation
 		 */
 		public ModifyWorkItem(String message) {
 			super(message, IWorkItem.FULL_PROFILE);
 		}
 
 		/**
-		 * @param message
-		 *            The title message for the operation
-		 * @param profile
-		 *            The item load profile to be used for the operation.
+		 * @param message The title message for the operation
+		 * @param profile The item load profile to be used for the operation.
 		 */
 		public ModifyWorkItem(String message, ItemProfile<IWorkItem> profile) {
 			super(message, profile);
@@ -132,24 +128,23 @@ public abstract class AbstractWorkItemModificationCommand extends
 		 * 
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * com.ibm.team.workitem.client.WorkItemOperation#execute(com.ibm.team
+		 * @see com.ibm.team.workitem.client.WorkItemOperation#execute(com.ibm.team
 		 * .workitem.client.WorkItemWorkingCopy,
 		 * org.eclipse.core.runtime.IProgressMonitor)
 		 */
 		@Override
-		protected void execute(WorkItemWorkingCopy workingCopy,
-				IProgressMonitor monitor) throws TeamRepositoryException,
-				RuntimeException {
+		protected void execute(WorkItemWorkingCopy workingCopy, IProgressMonitor monitor)
+				throws TeamRepositoryException, RuntimeException {
 			// run the special method in the execute.
 			// This is called by the framework.
 
-			// If desired suppress e-mail notification 
-			if(isSuppressMailNotification()){
+			// If desired suppress e-mail notification
+			if (isSuppressMailNotification()) {
 				workingCopy.getAdditionalSaveParameters().add(SKIP_MAIL);
 			}
-			// If desired create backlinks - this can be also added to the workingcopy elsewhere 
-			if(isCreateBackLinks()){
+			// If desired create backlinks - this can be also added to the workingcopy
+			// elsewhere
+			if (isCreateBackLinks()) {
 				workingCopy.getAdditionalSaveParameters().add(UPDATE_BACK_LINKS);
 			}
 			update(workingCopy);
@@ -159,26 +154,22 @@ public abstract class AbstractWorkItemModificationCommand extends
 	/**
 	 * This operation does the main task of updating the work item
 	 * 
-	 * @param workingCopy
-	 *            the workingcopy of the workitem to be updated.
+	 * @param workingCopy the workingcopy of the workitem to be updated.
 	 * 
 	 * @throws RuntimeException
 	 * @throws TeamRepositoryException
 	 */
-	public void update(WorkItemWorkingCopy workingCopy)
-			throws RuntimeException, TeamRepositoryException {
+	public void update(WorkItemWorkingCopy workingCopy) throws RuntimeException, TeamRepositoryException {
 
 		ParameterList arguments = getParameterManager().getArguments();
 
 		// We use a WorkItemHelper to do the real work
-		WorkItemUpdateHelper workItemHelper = new WorkItemUpdateHelper(
-				workingCopy, arguments, getMonitor());
+		WorkItemUpdateHelper workItemHelper = new WorkItemUpdateHelper(workingCopy, arguments, getMonitor());
 
 		// Run through all properties not yet consumed and try to set the values
 		// as provided
 		for (Parameter parameter : arguments) {
-			if (!(parameter.isConsumed() || parameter.isSwitch() || parameter
-					.isCommand())) {
+			if (!(parameter.isConsumed() || parameter.isSwitch() || parameter.isCommand())) {
 				// Get the property ID
 				String propertyName = parameter.getName();
 				// Get the property value
@@ -193,14 +184,12 @@ public abstract class AbstractWorkItemModificationCommand extends
 						throw e;
 					}
 				} catch (RuntimeException e) {
-					this.appendResultString("Runtime Exception: Property "
-							+ propertyName + " Value " + propertyValue + " \n"
-							+ e.getMessage());
+					this.appendResultString("Runtime Exception: Property " + propertyName + " Value " + propertyValue
+							+ " \n" + e.getMessage());
 					e.printStackTrace();
 					throw e;
 				} catch (IOException e) {
-					this.appendResultString("IO Exception: Property "
-							+ propertyName + " Value " + propertyValue + " \n"
+					this.appendResultString("IO Exception: Property " + propertyName + " Value " + propertyValue + " \n"
 							+ e.getMessage());
 					throw new RuntimeException(e.getMessage(), e);
 				}
@@ -210,6 +199,7 @@ public abstract class AbstractWorkItemModificationCommand extends
 
 	/**
 	 * Enforce creation of back links - also set in {@link WorkItemUpdateHelper}
+	 * 
 	 * @return
 	 */
 	public boolean isCreateBackLinks() {
@@ -218,6 +208,7 @@ public abstract class AbstractWorkItemModificationCommand extends
 
 	/**
 	 * Enforce creation of back links - also set in {@link WorkItemUpdateHelper}
+	 * 
 	 * @param createBackLinks
 	 */
 	public void setCreateBackLinks(boolean createBackLinks) {
@@ -237,11 +228,9 @@ public abstract class AbstractWorkItemModificationCommand extends
 		/**
 		 * Constructor
 		 * 
-		 * @param The
-		 *            title message for the operation
+		 * @param The title message for the operation
 		 */
-		public ChangeType(String message, IWorkItemType oldType,
-				IWorkItemType newType) {
+		public ChangeType(String message, IWorkItemType oldType, IWorkItemType newType) {
 			super(message, IWorkItem.FULL_PROFILE);
 			this.fOldType = oldType;
 			this.fNewType = newType;
@@ -252,23 +241,20 @@ public abstract class AbstractWorkItemModificationCommand extends
 		 * 
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * com.ibm.team.workitem.client.WorkItemOperation#execute(com.ibm.team
+		 * @see com.ibm.team.workitem.client.WorkItemOperation#execute(com.ibm.team
 		 * .workitem.client.WorkItemWorkingCopy,
 		 * org.eclipse.core.runtime.IProgressMonitor)
 		 */
 		@Override
-		protected void execute(WorkItemWorkingCopy workingCopy,
-				IProgressMonitor monitor) throws TeamRepositoryException,
-				RuntimeException {
-			
-			// If desired suppress e-mail notification 
-			if(isSuppressMailNotification()){
+		protected void execute(WorkItemWorkingCopy workingCopy, IProgressMonitor monitor)
+				throws TeamRepositoryException, RuntimeException {
+
+			// If desired suppress e-mail notification
+			if (isSuppressMailNotification()) {
 				workingCopy.getAdditionalSaveParameters().add(SKIP_MAIL);
 			}
 			// change the type
-			getWorkItemCommon().updateWorkItemType(workingCopy.getWorkItem(),
-					fNewType, fOldType, getMonitor());
+			getWorkItemCommon().updateWorkItemType(workingCopy.getWorkItem(), fNewType, fOldType, getMonitor());
 		}
 	}
 

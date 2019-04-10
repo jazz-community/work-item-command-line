@@ -34,13 +34,11 @@ public interface IWorkItemCommand {
 	/**
 	 * Execute an operation. Passes the required interfaces and values.
 	 * 
-	 * @param monitor
-	 *            a progress monitor, may be null.
+	 * @param monitor a progress monitor, may be null.
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	public OperationResult execute(IProgressMonitor monitor)
-			throws TeamRepositoryException;
+	public OperationResult execute(IProgressMonitor monitor) throws TeamRepositoryException;
 
 	/**
 	 * Used to print user help on the command.

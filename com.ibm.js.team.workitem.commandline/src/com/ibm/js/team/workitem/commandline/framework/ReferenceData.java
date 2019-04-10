@@ -22,10 +22,8 @@ public class ReferenceData {
 	/**
 	 * Create a reference
 	 * 
-	 * @param endPoint
-	 *            the endpoint to be used
-	 * @param reference
-	 *            the reference to the item
+	 * @param endPoint  the endpoint to be used
+	 * @param reference the reference to the item
 	 */
 	public ReferenceData(IEndPointDescriptor endPoint, IReference reference) {
 		this.endpoint = endPoint;

@@ -32,17 +32,16 @@ public class AccessContextUtil {
 	public static final String PUBLIC_ACCESS = "Public";
 
 	/**
-	 * For a given value from the restricted access attribute, compute the name
-	 * of the object. First try if this is a project area, then try a team area,
+	 * For a given value from the restricted access attribute, compute the name of
+	 * the object. First try if this is a project area, then try a team area,
 	 * finally search through the groups.
 	 * 
 	 * @param uuid
 	 * @return An UUID for public access, a IProjectArea, a ITeamArea, a
 	 *         IAccessGroup or null
 	 */
-	public static Object getAccessContextFromUUID(UUID uuid,
-			ITeamRepository teamRepository, IAuditableCommon auditableCommon,
-			IProgressMonitor monitor) {
+	public static Object getAccessContextFromUUID(UUID uuid, ITeamRepository teamRepository,
+			IAuditableCommon auditableCommon, IProgressMonitor monitor) {
 		if (uuid == null) {
 			return null;
 		}
@@ -50,23 +49,20 @@ public class AccessContextUtil {
 			return uuid;
 		}
 		try {
-			IProjectArea area = ProcessAreaUtil.getProjectAreaFormUUID(uuid,
-					teamRepository, monitor);
+			IProjectArea area = ProcessAreaUtil.getProjectAreaFormUUID(uuid, teamRepository, monitor);
 			return area;
 		} catch (Exception e) {
 			// Catch unwanted exceptions thrown by the API
 		}
 		try {
-			ITeamArea area = ProcessAreaUtil.getTeamAreaFormUUID(uuid,
-					teamRepository, monitor);
+			ITeamArea area = ProcessAreaUtil.getTeamAreaFormUUID(uuid, teamRepository, monitor);
 			return area.getName();
 		} catch (Exception e) {
 			// Catch unwanted exceptions thrown by the API
 		}
 		IAccessGroup[] groups;
 		try {
-			groups = auditableCommon.getAccessGroups(null, Integer.MAX_VALUE,
-					monitor);
+			groups = auditableCommon.getAccessGroups(null, Integer.MAX_VALUE, monitor);
 			for (IAccessGroup group : groups) {
 				// Compare to the contextID and not the uuid value.
 				if (group.getContextId().equals(uuid)) {
@@ -80,8 +76,8 @@ public class AccessContextUtil {
 	}
 
 	/**
-	 * Get an UUID from a process area or access group name - this is typically
-	 * used for restricted access
+	 * Get an UUID from a process area or access group name - this is typically used
+	 * for restricted access
 	 * 
 	 * @param value
 	 * @param teamRepository
@@ -91,9 +87,8 @@ public class AccessContextUtil {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	public static UUID getAccessContextFromFQN(String value,
-			ITeamRepository teamRepository, IAuditableCommon auditableCommon,
-			IProcessClientService processClient, IProgressMonitor monitor)
+	public static UUID getAccessContextFromFQN(String value, ITeamRepository teamRepository,
+			IAuditableCommon auditableCommon, IProcessClientService processClient, IProgressMonitor monitor)
 			throws TeamRepositoryException {
 		if (null == value) {
 			return null;
@@ -102,8 +97,7 @@ public class AccessContextUtil {
 			return IContext.PUBLIC;
 		}
 		try {
-			IProcessArea processArea = ProcessAreaUtil.findProcessAreaByFQN(
-					value, processClient, monitor);
+			IProcessArea processArea = ProcessAreaUtil.findProcessAreaByFQN(value, processClient, monitor);
 			if (processArea != null) {
 				return processArea.getContextId();
 			}
@@ -112,8 +106,7 @@ public class AccessContextUtil {
 		}
 		IAccessGroup[] groups;
 		try {
-			groups = auditableCommon.getAccessGroups(null, Integer.MAX_VALUE,
-					monitor);
+			groups = auditableCommon.getAccessGroups(null, Integer.MAX_VALUE, monitor);
 			for (IAccessGroup group : groups) {
 				// Compare to the contextID and not the uuid value.
 				if (group.getName().equals(value)) {

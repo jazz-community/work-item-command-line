@@ -28,11 +28,10 @@ public class SimpleDateFormatUtil {
 
 	/**
 	 * 
-	 * Uses java.text.SimpleDateFormat to parse the string using a pattern
-	 * Create a new timeStamp from a String using a pattern 'yyyy/MM/dd hh:mm:ss
-	 * z'
+	 * Uses java.text.SimpleDateFormat to parse the string using a pattern Create a
+	 * new timeStamp from a String using a pattern 'yyyy/MM/dd hh:mm:ss z'
 	 * 
-	 * @see http 
+	 * @see http
 	 *      ://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
 	 * 
 	 * @param aDate
@@ -46,19 +45,17 @@ public class SimpleDateFormatUtil {
 
 	/**
 	 * 
-	 * Uses java.text.SimpleDateFormat to parse the string using a pattern
-	 * Create a new timeStamp from a String using a pattern
+	 * Uses java.text.SimpleDateFormat to parse the string using a pattern Create a
+	 * new timeStamp from a String using a pattern
 	 * 
 	 * @param aDate
-	 * @param timeFormatPattern
-	 *            A SimpleDateFormat pattern to parse the string, a default
-	 *            pattern 'yyyy/MM/dd hh:mm:ss z' if null.
+	 * @param timeFormatPattern A SimpleDateFormat pattern to parse the string, a
+	 *                          default pattern 'yyyy/MM/dd hh:mm:ss z' if null.
 	 * 
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	public static Timestamp createTimeStamp(String aDate,
-			String timeFormatPattern) {
+	public static Timestamp createTimeStamp(String aDate, String timeFormatPattern) {
 		if (null == timeFormatPattern) {
 			timeFormatPattern = SIMPLE_DATE_FORMAT_PATTERN_YYYY_MM_DD_HH_MM_SS_Z;
 		}
@@ -67,8 +64,8 @@ public class SimpleDateFormatUtil {
 			Date date = sDFormat.parse(aDate);
 			return new Timestamp(date.getTime());
 		} catch (ParseException e) {
-			throw new WorkItemCommandLineException("Parse Exception! Input: "
-					+ aDate + " Parsing pattern: " + timeFormatPattern, e);
+			throw new WorkItemCommandLineException(
+					"Parse Exception! Input: " + aDate + " Parsing pattern: " + timeFormatPattern, e);
 		}
 	}
 
@@ -80,8 +77,7 @@ public class SimpleDateFormatUtil {
 	 * @return
 	 */
 	public static boolean sameDay(Timestamp date1, Timestamp date2) {
-		SimpleDateFormat sDFormat = new SimpleDateFormat(
-				SIMPLE_DATE_FORMAT_PATTERN_YYYY_MM_DD);
+		SimpleDateFormat sDFormat = new SimpleDateFormat(SIMPLE_DATE_FORMAT_PATTERN_YYYY_MM_DD);
 		return sDFormat.format(date1).equals(sDFormat.format(date2));
 	}
 
@@ -102,9 +98,7 @@ public class SimpleDateFormatUtil {
 
 	/**
 	 * Takes a duration and converts it into a long containing the miliseconds.
-	 * Input format: 3 hours 3 minutes
-	 * Input format: 3 hours 
-	 * Input format: 3 minutes
+	 * Input format: 3 hours 3 minutes Input format: 3 hours Input format: 3 minutes
 	 * Input format: 3600000
 	 * 
 	 * @param duration
@@ -126,20 +120,18 @@ public class SimpleDateFormatUtil {
 		}
 		if (minsIndex > 0) {
 			int start = 0;
-			if (hoursIndex>0){
+			if (hoursIndex > 0) {
 				start = hoursIndex + DURATION_HOURS.length();
 			}
-			String minutes = duration.substring(
-					start,
-					duration.length() - DURATION_MINUTES.length()).trim();
+			String minutes = duration.substring(start, duration.length() - DURATION_MINUTES.length()).trim();
 			time += TimeUnit.MINUTES.toMillis(new Long(minutes));
 		}
 		return time;
 	}
 
 	/**
-	 * Creates a presentation in hours, minutes example result format: 1 hours,
-	 * 20 minutes
+	 * Creates a presentation in hours, minutes example result format: 1 hours, 20
+	 * minutes
 	 * 
 	 * @param milliseconds
 	 * @return

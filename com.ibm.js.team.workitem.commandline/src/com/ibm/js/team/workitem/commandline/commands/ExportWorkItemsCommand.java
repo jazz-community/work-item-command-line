@@ -128,7 +128,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY,
 				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY_EXAMPLE);
 		getParameterManager().syntaxAddRequiredParameter(PARAMETER_EXPORT_FILE, PARAMETER_EXPORT_FILE_EXAMPLE);
-		getParameterManager().syntaxAddRequiredParameter(IWorkItemCommandLineConstants.PARAMETER_QUERY_NAME, IWorkItemCommandLineConstants.PARAMETER_QUERY_NAME_EXAMPLE);
+		getParameterManager().syntaxAddRequiredParameter(IWorkItemCommandLineConstants.PARAMETER_QUERY_NAME,
+				IWorkItemCommandLineConstants.PARAMETER_QUERY_NAME_EXAMPLE);
 		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
 		getParameterManager().syntaxAddSwitch(SWITCH_HEADER_AS_ID);
 		getParameterManager().syntaxAddSwitch(SWITCH_RTC_ECLIPSE_EXPORT);
@@ -154,7 +155,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
 				+ IWorkItemCommandLineConstants.PARAMETER_DELIMITER_EXAMPLE + "]" + " [" + PARAMETER_EXPORT_COLUMNS
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR + PARAMETER_EXPORT_COLUMNS_EXAMPLE1
-				+ "]" + " [" + IWorkItemCommandLineConstants.PARAMETER_SHARING_TARGETS + IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
+				+ "]" + " [" + IWorkItemCommandLineConstants.PARAMETER_SHARING_TARGETS
+				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
 				+ IWorkItemCommandLineConstants.PARAMETER_SHARING_TARGETS_EXAMPLE + "]" + "["
 				+ IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING
 				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR
@@ -224,7 +226,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		if (queryName == null) {
 			throw new WorkItemCommandLineException("Query name must be provided.");
 		}
-		String sharingTargetNames = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_SHARING_TARGETS);
+		String sharingTargetNames = getParameterManager()
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_SHARING_TARGETS);
 
 		IQueryDescriptor query = getWorlkItemQuery(projectArea, queryName, sharingTargetNames);
 

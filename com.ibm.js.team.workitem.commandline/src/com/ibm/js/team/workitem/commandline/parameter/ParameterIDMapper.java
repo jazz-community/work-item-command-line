@@ -13,7 +13,8 @@ import java.util.Set;
 import com.ibm.team.workitem.common.model.IWorkItem;
 
 /**
- * Simple mapping tool to provide custom aliases that can be used for attribute ID's.
+ * Simple mapping tool to provide custom aliases that can be used for attribute
+ * ID's.
  * 
  * <pre>
  * 
@@ -72,8 +73,8 @@ public class ParameterIDMapper {
 	}
 
 	/**
-	 * Create the mapping of aliases/display names for attributes to the
-	 * internal representation
+	 * Create the mapping of aliases/display names for attributes to the internal
+	 * representation
 	 * 
 	 */
 	private void setMappings() {
@@ -104,51 +105,30 @@ public class ParameterIDMapper {
 		putMap("MODIFIED_BY", IWorkItem.MODIFIED_BY_PROPERTY);
 
 		// Importer
-		putMap("com.ibm.team.workitem.attribute.severity",
-				IWorkItem.SEVERITY_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.priority",
-				IWorkItem.PRIORITY_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.version",
-				IWorkItem.FOUND_IN_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.severity", IWorkItem.SEVERITY_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.priority", IWorkItem.PRIORITY_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.version", IWorkItem.FOUND_IN_PROPERTY);
 		putMap("com.ibm.team.workitem.attribute.id", IWorkItem.ID_PROPERTY);
-		putMap(ID_COM_IBM_TEAM_WORKITEM_ATTRIBUTE_WORKITEMTYPE,
-				IWorkItem.TYPE_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.projectarea",
-				IWorkItem.PROJECT_AREA_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.summary",
-				IWorkItem.SUMMARY_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.state",
-				IWorkItem.STATE_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.creator",
-				IWorkItem.CREATOR_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.owner",
-				IWorkItem.OWNER_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.description",
-				IWorkItem.DESCRIPTION_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.creationdate",
-				IWorkItem.CREATION_DATE_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.resolutiondate",
-				IWorkItem.RESOLUTION_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.duedate",
-				IWorkItem.DUE_DATE_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.duration",
-				IWorkItem.DURATION_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.correctedestimate",
-				"correctedEstimate");
+		putMap(ID_COM_IBM_TEAM_WORKITEM_ATTRIBUTE_WORKITEMTYPE, IWorkItem.TYPE_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.projectarea", IWorkItem.PROJECT_AREA_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.summary", IWorkItem.SUMMARY_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.state", IWorkItem.STATE_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.creator", IWorkItem.CREATOR_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.owner", IWorkItem.OWNER_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.description", IWorkItem.DESCRIPTION_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.creationdate", IWorkItem.CREATION_DATE_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.resolutiondate", IWorkItem.RESOLUTION_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.duedate", IWorkItem.DUE_DATE_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.duration", IWorkItem.DURATION_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.correctedestimate", "correctedEstimate");
 		getMap().put("com.ibm.team.workitem.attribute.timespent", "timeSpent");
-		putMap("com.ibm.team.workitem.attribute.category",
-				IWorkItem.CATEGORY_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.target",
-				IWorkItem.TARGET_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.resolver",
-				IWorkItem.RESOLVER_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.resolutiondate",
-				IWorkItem.RESOLUTION_DATE_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.category", IWorkItem.CATEGORY_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.target", IWorkItem.TARGET_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.resolver", IWorkItem.RESOLVER_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.resolutiondate", IWorkItem.RESOLUTION_DATE_PROPERTY);
 		putMap("com.ibm.team.workitem.attribute.tags", IWorkItem.TAGS_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.modified",
-				IWorkItem.MODIFIED_PROPERTY);
-		putMap("com.ibm.team.workitem.attribute.modifiedby",
-				IWorkItem.MODIFIED_BY_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.modified", IWorkItem.MODIFIED_PROPERTY);
+		putMap("com.ibm.team.workitem.attribute.modifiedby", IWorkItem.MODIFIED_BY_PROPERTY);
 	}
 
 	/**
@@ -164,11 +144,10 @@ public class ParameterIDMapper {
 	}
 
 	/**
-	 * Check if there is an alias available for a property ID and pass it back
-	 * if available.
+	 * Check if there is an alias available for a property ID and pass it back if
+	 * available.
 	 * 
-	 * @param propertyID
-	 *            - the ID of the property
+	 * @param propertyID - the ID of the property
 	 * @return the alias or the original property
 	 */
 	public static String getAlias(String propertyID) {
@@ -204,8 +183,8 @@ public class ParameterIDMapper {
 	}
 
 	/**
-	 * Check if there is an alias available for a property ID and pass it back
-	 * if available.
+	 * Check if there is an alias available for a property ID and pass it back if
+	 * available.
 	 * 
 	 * @param propertyID
 	 * @return
