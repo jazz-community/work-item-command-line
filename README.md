@@ -1,7 +1,7 @@
 # RTC Work Item Command Line
-Work Item Command Line Version 4.8
+Work Item Command Line Version 5.0
 
-See [Work Item Command Line 4.3](https://rsjazz.wordpress.com/2019/01/17/work-item-command-line-4-3/) for instructions how to setup and install install WCL.
+See [Work Item Command Line 4.3](https://rsjazz.wordpress.com/2019/01/17/work-item-command-line-4-3/) for instructions how to setup and install WCL.
 
 This software is licensed under the MIT license which is as follows: [MIT License](com.ibm.js.team.workitem.commandline/LICENSE.txt)
 
