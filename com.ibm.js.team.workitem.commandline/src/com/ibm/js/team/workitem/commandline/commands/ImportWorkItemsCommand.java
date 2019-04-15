@@ -416,7 +416,6 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			result = false;
 			throw new WorkItemCommandLineException(e);
 		} finally {
-			result = false;
 		}
 		return result;
 	}
@@ -497,10 +496,6 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			// We have to create a new work item
 			// Try to find the work item type
 			String workItemTypeIDorName = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY);
-			if (workItemTypeIDorName == null) {
-				workItemTypeIDorName = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY
-						+ ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE + ParameterValue.MODE_SET);
-			}
 			// Alternative ID for the type
 			if (workItemTypeIDorName == null) {
 				// If we have no type we can't create the work item
@@ -743,7 +738,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		if (attribute == null) {
 			// Check for the mapping to the original work item
 			if (attributeID.trim().toLowerCase().matches(ORIGINAL_WORK_ITEM_ID)) {
-				setParameter(parameters, ORIGINAL_WORK_ITEM_ID, targetValue);
+				addDefaultParameter(parameters, ORIGINAL_WORK_ITEM_ID, targetValue);
 				return;
 			}
 			// check for a link
@@ -772,7 +767,17 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		if (getPassNumber() == MULTI_PASS_LINKMAPPING) {
 			return;
 		}
-
+		// Handle attributes we must detect 
+		if (attributeID.trim().equals(IWorkItem.ID_PROPERTY)) {
+			addDefaultParameter(parameters, attributeID, targetValue);
+			return;
+		}
+		if (attributeID.trim().equals(IWorkItem.TYPE_PROPERTY)) {
+			addDefaultParameter(parameters, attributeID, targetValue);
+			return;
+		}
+		
+		
 		String attribType = attribute.getAttributeType();
 
 		// If the mapping is for the state attribute, we want to force the state
@@ -871,7 +876,11 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 					"Type not recognized - type not yet supported: " + attribType + " ID " + attribute.getIdentifier());
 		} else {
 			// Handle non list types - the simple ones first.
-
+			if (attribType.equals(AttributeTypes.WIKI)) {
+				// return calculateString(value);
+				setParameter(parameters, attributeID, targetValue);
+				return;
+			}
 			if (attribType.equals(AttributeTypes.WIKI)) {
 				// return calculateString(value);
 				setParameter(parameters, attributeID, targetValue);

@@ -989,6 +989,8 @@ public class WorkItemUpdateHelper {
 					setUpdateBackLinks = true;
 				}
 			}
+			// To be able to detect the new references
+			current.clear();
 		}
 		// Create the new references
 		references = createReferences(linkType, parameter, exceptions);
@@ -1354,6 +1356,9 @@ public class WorkItemUpdateHelper {
 	 * @throws TeamRepositoryException
 	 */
 	private Object calculateDeliverable(ParameterValue parameter) throws TeamRepositoryException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return null; // Unassigned
+		}
 		IDeliverable result = findDeliverable(parameter.getValue());
 		if (null == result) {
 			throw new WorkItemCommandLineException("Deliverable not found: '"
@@ -1370,18 +1375,16 @@ public class WorkItemUpdateHelper {
 	 * @throws TeamRepositoryException
 	 */
 	private Object calculateEnumerationLiteral(ParameterValue parameter) throws TeamRepositoryException {
-		try {
-			Identifier<? extends ILiteral> result = getEnumerationLiteralEqualsStringOrID(parameter.getIAttribute(),
-					parameter.getValue());
-			if (null == result) {
-				throw new WorkItemCommandLineException("Enumeration literal could not be resolved: '"
-						+ parameter.getIAttribute().getIdentifier() + "' Value: '" + parameter.getValue() + "'.");
-			} else {
-				return result;
-			}
-		} catch (RuntimeException e) {
-			throw new WorkItemCommandLineException("Type could not be identified - Enumeration could not be resolved: '"
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return null; // Unassigned
+		}
+		Identifier<? extends ILiteral> result = getEnumerationLiteralEqualsStringOrID(parameter.getIAttribute(),
+				parameter.getValue());
+		if (null == result) {
+			throw new WorkItemCommandLineException("Enumeration literal could not be resolved: '"
 					+ parameter.getIAttribute().getIdentifier() + "' Value: '" + parameter.getValue() + "'.");
+		} else {
+			return result;
 		}
 	}
 
@@ -1567,6 +1570,9 @@ public class WorkItemUpdateHelper {
 	 * @throws TeamRepositoryException
 	 */
 	private Object calculateIteration(ParameterValue parameter) throws TeamRepositoryException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return null; // Unassigned
+		}
 		List<String> path = StringUtil.splitStringToList(parameter.getValue(), PATH_SEPARATOR);
 		DevelopmentLineHelper dh = new DevelopmentLineHelper(getTeamRepository(), monitor);
 		IProjectAreaHandle projectArea = getWorkItem().getProjectArea();

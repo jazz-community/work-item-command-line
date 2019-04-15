@@ -96,10 +96,10 @@ public class UpdateWorkItemCommand extends AbstractWorkItemModificationCommand {
 		try {
 			this.appendResultString("Updating work item " + workItem.getId() + ".");
 			String workItemTypeID = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY);
-			if (workItemTypeID == null) {
-				workItemTypeID = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY
-						+ ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE + ParameterValue.MODE_SET);
-			}
+//			if (workItemTypeID == null) {
+//				workItemTypeID = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY
+//						+ ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE + ParameterValue.MODE_SET);
+//			}
 			if (workItemTypeID != null) {
 				IWorkItemType newType = WorkItemTypeHelper.findWorkItemTypeByIDAndDisplayName(workItemTypeID,
 						workItem.getProjectArea(), getWorkItemCommon(), getMonitor());
