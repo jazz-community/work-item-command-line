@@ -326,7 +326,6 @@ public class WorkItemExportHelper {
 					if (attribType.equals(AttributeTypes.DURATION)) {
 						return calculateDurationAsString(value, attribType);
 					}
-
 					return calculateNumberAsString(value, attribType);
 				} catch (NumberFormatException e) {
 					throw new WorkItemCommandLineException(

@@ -899,10 +899,11 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				return;
 			}
 			if (AttributeTypes.NUMBER_TYPES.contains(attribType)) {
-				// Do not set value if there is no data, assume attribute not available
-				if (StringUtil.isEmpty(targetValue)) {
-					return;
-				}
+// use empty values to delete.
+//				// Do not set value if there is no data, assume attribute not available
+//				if (StringUtil.isEmpty(targetValue)) {
+//					return;
+//				}
 				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
@@ -930,9 +931,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			if (attribType.equals(AttributeTypes.TIMESTAMP)) {
 				// Timestamp types e.g. dates
 				String timestamp = convertTimestamp(targetValue);
-				if (timestamp != null) {
 					setParameter(parameters, attributeID, timestamp);
-				}
 				return;
 			}
 			if (attribType.equals(AttributeTypes.PROJECT_AREA)) {

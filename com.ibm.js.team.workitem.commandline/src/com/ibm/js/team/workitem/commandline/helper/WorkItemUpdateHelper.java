@@ -625,20 +625,28 @@ public class WorkItemUpdateHelper {
 			if (AttributeTypes.NUMBER_TYPES.contains(attribType)) {
 				// different number types
 				try {
+					String value=parameter.getValue(); 
+					boolean isEmpty=false; 
+					if (StringUtil.isEmpty(value)) {
+						isEmpty=true; 
+					}
 					if (attribType.equals(AttributeTypes.INTEGER)) {
-						return new Integer(parameter.getValue());
+						return new Integer(value);
 					}
 					if (attribType.equals(AttributeTypes.LONG)) {
-						return new Long(parameter.getValue());
+						return new Long(value);
 					}
 					if (attribType.equals(AttributeTypes.FLOAT)) {
-						return new Float(parameter.getValue());
+						return new Float(value);
 					}
 					if (attribType.equals(AttributeTypes.DECIMAL)) {
-						return new BigDecimal(parameter.getValue());
+						return new BigDecimal(value);
 					}
 					if (attribType.equals(AttributeTypes.DURATION)) {
-						return getDurationFromString(parameter.getValue());
+						if(isEmpty) {
+							value="-1";
+						}
+						return getDurationFromString(value);
 					}
 				} catch (NumberFormatException e) {
 					throw new WorkItemCommandLineException(
@@ -1306,6 +1314,9 @@ public class WorkItemUpdateHelper {
 	 */
 	private Object calculateContributorList(ParameterValue parameter, List<Exception> exceptions)
 			throws TeamRepositoryException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return new ArrayList<Object>(0); // empty list
+		}
 		List<String> notFoundList = new ArrayList<String>();
 		HashMap<String, IContributor> foundItems = getContributors(parameter.getValue(), ITEM_SEPARATOR, notFoundList);
 		if (!notFoundList.isEmpty()) {
@@ -1402,6 +1413,9 @@ public class WorkItemUpdateHelper {
 	 */
 	private Object calculateEnumerationLiteralList(ParameterValue parameter, List<Exception> exceptions)
 			throws TeamRepositoryException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return new ArrayList<Object>(0); // empty list
+		}
 		List<String> values = StringUtil.splitStringToList(parameter.getValue(), ITEM_SEPARATOR);
 		HashMap<String, Identifier<? extends ILiteral>> foundItems = new HashMap<String, Identifier<? extends ILiteral>>();
 
@@ -1511,7 +1525,7 @@ public class WorkItemUpdateHelper {
 	private Object calculateItemList(ParameterValue parameter, List<Exception> exceptions)
 			throws TeamRepositoryException {
 		if (StringUtil.isEmpty(parameter.getValue())) {
-			return null; // Unassigned
+			return new ArrayList<Object>(0); // empty list
 		}
 		String originalInputValue = parameter.getValue();
 		HashMap<String, Object> foundItems = new HashMap<String, Object>();
@@ -1610,6 +1624,9 @@ public class WorkItemUpdateHelper {
 	 */
 	private IProcessArea calculateProcessArea(ParameterValue parameter, String areaType)
 			throws TeamRepositoryException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return null; // Unassigned
+		}
 		IProcessArea processArea = null;
 		IProcessArea area = ProcessAreaUtil.findProcessAreaByFQN(parameter.getValue().trim(), getProcessClientService(),
 				monitor);
@@ -1650,6 +1667,9 @@ public class WorkItemUpdateHelper {
 	 */
 	private Object calculateProcessAreaList(ParameterValue parameter, List<Exception> exceptions)
 			throws TeamRepositoryException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return new ArrayList<Object>(0); // empty list
+		}
 		String areaType = TYPE_PROCESS_AREA;
 		if (parameter.getIAttribute().getAttributeType().equals(AttributeTypes.PROJECT_AREA_LIST)) {
 			areaType = TYPE_PROJECT_AREA;
@@ -1741,6 +1761,7 @@ public class WorkItemUpdateHelper {
 	 */
 	private Object calculateSCMComponent(ParameterValue parameter, List<Exception> exceptions)
 			throws TeamRepositoryException {
+		// TODO: Null?
 		IWorkspaceManager wm = SCMPlatform.getWorkspaceManager(getTeamRepository());
 		IComponentSearchCriteria criteria = IComponentSearchCriteria.FACTORY.newInstance();
 		criteria.setExactName(parameter.getValue());
@@ -1792,6 +1813,9 @@ public class WorkItemUpdateHelper {
 	 */
 	private Collection<String> calculateStringList(ParameterValue parameter, List<Exception> errors)
 			throws TeamRepositoryException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return new ArrayList<String>(0); // empty list
+		}
 		List<String> foundItems = StringUtil.splitStringToList(parameter.getValue(), ITEM_SEPARATOR);
 		if (parameter.isSet()) {
 			return foundItems;
@@ -1832,6 +1856,9 @@ public class WorkItemUpdateHelper {
 	 * @throws TeamRepositoryException
 	 */
 	private Object calculateTagList(ParameterValue parameter) throws TeamRepositoryException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return new ArrayList<Object>(0); // empty list
+		}
 		SeparatedStringList tags = (SeparatedStringList) getWorkItem().getValue(parameter.getIAttribute());
 		List<String> newTags = getTags(parameter.getValue());
 		if (parameter.isRemove()) {
@@ -1855,6 +1882,9 @@ public class WorkItemUpdateHelper {
 	 * @throws TeamRepositoryException
 	 */
 	private Object calculateTimestamp(ParameterValue parameter) throws TeamRepositoryException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return null; // Unassigned
+		}
 		try {
 			String value = parameter.getValue();
 			if (IWorkItemCommandLineConstants.UNASSIGNED.equals(value) || StringUtil.isEmpty(value)) {
@@ -1900,6 +1930,9 @@ public class WorkItemUpdateHelper {
 	 */
 	private Object calculateWorkItem(ParameterValue parameter)
 			throws TeamRepositoryException, WorkItemCommandLineException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return null; // Unassigned
+		}
 		List<String> notFoundList = new ArrayList<String>();
 		HashMap<String, IWorkItem> workItems = findWorkItemsByIDValues(parameter.getValue(), notFoundList,
 				ITEM_SEPARATOR);
@@ -1924,6 +1957,9 @@ public class WorkItemUpdateHelper {
 	 */
 	private Object calculateWorkItemList(ParameterValue parameter, List<Exception> exceptions)
 			throws TeamRepositoryException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return new ArrayList<Object>(0); // empty list
+		}
 		List<String> notFoundList = new ArrayList<String>();
 		HashMap<String, IWorkItem> foundItems = findWorkItemsByIDValues(parameter.getValue(), notFoundList,
 				ITEM_SEPARATOR);
