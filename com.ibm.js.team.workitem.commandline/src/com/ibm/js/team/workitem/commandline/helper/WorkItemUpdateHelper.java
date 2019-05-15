@@ -46,6 +46,7 @@ import com.ibm.team.links.common.IReference;
 import com.ibm.team.links.common.factory.IReferenceFactory;
 import com.ibm.team.links.common.registry.IEndPointDescriptor;
 import com.ibm.team.process.client.IProcessClientService;
+import com.ibm.team.process.common.IDevelopmentLine;
 import com.ibm.team.process.common.IIteration;
 import com.ibm.team.process.common.IProcessArea;
 import com.ibm.team.process.common.IProjectArea;
@@ -118,6 +119,7 @@ public class WorkItemUpdateHelper {
 	// Addition for ItemList and Item type
 	public static final String TYPE_CATEGORY = "Category";
 	public static final String TYPE_CONTRIBUTOR = "User";
+	public static final String TYPE_TIMELINE = "Timeline";
 	public static final String TYPE_ITERATION = "Iteration";
 	public static final String TYPE_WORKITEM = "WorkItem";
 	public static final String TYPE_SCM_COMPONENT = "SCMComponent";
@@ -661,6 +663,10 @@ public class WorkItemUpdateHelper {
 			if (attribType.equals(AttributeTypes.CATEGORY)) {
 				// Work item category - Filed Against and other attributes
 				return calculateCategory(parameter);
+			}
+			if (attribType.equals(AttributeTypes.TIMELINE)) {
+				// Iterations - Planned For and other such attributes
+				return calculateTimeline(parameter);
 			}
 			if (attribType.equals(AttributeTypes.ITERATION)) {
 				// Iterations - Planned For and other such attributes
@@ -1500,6 +1506,9 @@ public class WorkItemUpdateHelper {
 		if (itemType.equals(TYPE_CONTRIBUTOR)) {
 			return calculateContributor(parameter);
 		}
+		if (itemType.equals(TYPE_TIMELINE)) {
+			return calculateTimeline(parameter);
+		}
 		if (itemType.equals(TYPE_ITERATION)) {
 			return calculateIteration(parameter);
 		}
@@ -1583,6 +1592,32 @@ public class WorkItemUpdateHelper {
 			results.addAll(foundItems.values());
 		}
 		return results;
+	}
+	
+	/**
+	 * Find an timelinen from a string encoding the value
+	 * 
+	 * @param parameter
+	 * @return
+	 * @throws TeamRepositoryException
+	 */
+	private Object calculateTimeline(ParameterValue parameter) throws TeamRepositoryException {
+		String timeline=parameter.getValue(); 
+		if (StringUtil.isEmpty(timeline)) {
+			return null; // Unassigned
+		}
+		List<String> path = StringUtil.splitStringToList(parameter.getValue(), PATH_SEPARATOR);
+		DevelopmentLineHelper dh = new DevelopmentLineHelper(getTeamRepository(), monitor);
+		IProjectAreaHandle projectArea = getWorkItem().getProjectArea();
+		IDevelopmentLine developmentLine = dh.findDevelopmentLine(projectArea, path, DevelopmentLineHelper.BYID);
+		if (developmentLine == null) { // find by label if find by ID fails
+			developmentLine = dh.findDevelopmentLine(projectArea, path, DevelopmentLineHelper.BYLABEL);
+		}
+		if (developmentLine == null) {
+			throw new WorkItemCommandLineException("Timeline not found: '" + parameter.getIAttribute().getIdentifier()
+					+ "' Value: '" + parameter.getValue() + "'.");
+		}
+		return developmentLine;
 	}
 
 	/**

@@ -959,6 +959,11 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				setParameter(parameters, attributeID, targetValue);
 				return;
 			}
+			if (attribType.equals(AttributeTypes.TIMELINE)) {
+				// Handle the attributeType Timeline
+				setParameter(parameters, attributeID, targetValue);
+				return;
+			}
 			// In case we forgot something or a new type gets implemented
 			throw new WorkItemCommandLineException(
 					"AttributeType not yet supported: " + attribType + " ID " + attribute.getIdentifier());

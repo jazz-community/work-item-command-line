@@ -67,13 +67,14 @@ public class DevelopmentLineHelper {
 	 * @return a development line found or null.
 	 * @throws TeamRepositoryException
 	 */
-	public IDevelopmentLine findDevelopmentLine(IProjectArea projectArea, List<String> path, Mode comparemode)
+	public IDevelopmentLine findDevelopmentLine(IProjectAreaHandle projectAreaHandle, List<String> path, Mode comparemode)
 			throws TeamRepositoryException {
 		int level = 0;
 		String fookFor = path.get(level);
+		IProjectArea projectArea = ProcessAreaUtil.resolveProjectArea(projectAreaHandle, fMonitor);
 		IDevelopmentLineHandle[] developmentLineHandles = projectArea.getDevelopmentLines();
 		for (IDevelopmentLineHandle developmentLineHandle : developmentLineHandles) {
-			IDevelopmentLine developmentLine = fAuditableClient.resolveAuditable(developmentLineHandle,
+			IDevelopmentLine developmentLine = getAuditableClient().resolveAuditable(developmentLineHandle,
 					ItemProfile.DEVELOPMENT_LINE_DEFAULT, fMonitor);
 			String compare = "";
 			switch (comparemode) {
@@ -106,7 +107,7 @@ public class DevelopmentLineHelper {
 	 */
 	public IIteration findIteration(IProjectAreaHandle iProjectAreaHandle, List<String> path, Mode comparemode)
 			throws TeamRepositoryException {
-		fAuditableClient = (IAuditableClient) fTeamRepository.getClientLibrary(IAuditableClient.class);
+		getAuditableClient();
 		IIteration foundIteration = null;
 		IProjectArea projectArea = ProcessAreaUtil.resolveProjectArea(iProjectAreaHandle, fMonitor);
 		IDevelopmentLine developmentLine = findDevelopmentLine(projectArea, path, comparemode);
@@ -114,6 +115,13 @@ public class DevelopmentLineHelper {
 			foundIteration = findIteration(developmentLine.getIterations(), path, 1, comparemode);
 		}
 		return foundIteration;
+	}
+
+	private IAuditableClient getAuditableClient() {
+		if(this.fAuditableClient==null) {
+			this.fAuditableClient = (IAuditableClient) fTeamRepository.getClientLibrary(IAuditableClient.class);
+		}
+		return this.fAuditableClient;
 	}
 
 	/**
@@ -131,7 +139,7 @@ public class DevelopmentLineHelper {
 		String lookFor = path.get(level);
 		for (IIterationHandle iIterationHandle : iterations) {
 
-			IIteration iteration = fAuditableClient.resolveAuditable(iIterationHandle, ItemProfile.ITERATION_DEFAULT,
+			IIteration iteration = getAuditableClient().resolveAuditable(iIterationHandle, ItemProfile.ITERATION_DEFAULT,
 					fMonitor);
 			String compare = "";
 			switch (comparemode) {
