@@ -118,12 +118,14 @@ public interface IWorkItemCommandLineConstants {
 	public static final String SWITCH_IMPORT_IGNORE_MISSING_ATTTRIBUTES = "ignoreMissingAttributes";
 
 	// Parameter to specify the query
-	String PARAMETER_QUERY_NAME = "query";
-	String PARAMETER_QUERY_NAME_EXAMPLE = "\"All WorkItems\"";
+	public static final String PARAMETER_QUERY_NAME = "query";
+	public static final String PARAMETER_QUERY_NAME_EXAMPLE = "\"All WorkItems\"";
 
 	// parameter to specify a sharing target for the query
 	// The sharing target can be the project area or a
 	// team area where the query is shared
-	String PARAMETER_SHARING_TARGETS = "querysource";
-	String PARAMETER_SHARING_TARGETS_EXAMPLE = "\"JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters\"";
+	public static final String PARAMETER_SHARING_TARGETS = "querysource";
+	public static final String PARAMETER_SHARING_TARGETS_EXAMPLE = "\"JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters\"";
+
+	public static final String UNASSIGNED_USER = "Unassigned";
 }

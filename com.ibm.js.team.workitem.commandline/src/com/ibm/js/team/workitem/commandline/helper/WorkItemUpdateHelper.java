@@ -1265,6 +1265,9 @@ public class WorkItemUpdateHelper {
 	 * @throws TeamRepositoryException
 	 */
 	private Object calculateCategory(ParameterValue parameter) throws TeamRepositoryException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return null; // Unassigned
+		}
 		ICategoryHandle category = findCategory(parameter.getValue());
 		if (category == null) {
 			throw new WorkItemCommandLineException("Category not found: '" + parameter.getIAttribute().getIdentifier()
@@ -1461,6 +1464,9 @@ public class WorkItemUpdateHelper {
 	 */
 	private Object calculateItem(ParameterValue parameter, List<Exception> exceptions)
 			throws WorkItemCommandLineException, TeamRepositoryException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return null; // Unassigned
+		}		
 		List<String> value = StringUtil.splitStringToList(parameter.getValue(), ITEMTYPE_SEPARATOR);
 		if (value.size() != 2) {
 			throw new WorkItemCommandLineException(
@@ -1504,6 +1510,9 @@ public class WorkItemUpdateHelper {
 	 */
 	private Object calculateItemList(ParameterValue parameter, List<Exception> exceptions)
 			throws TeamRepositoryException {
+		if (StringUtil.isEmpty(parameter.getValue())) {
+			return null; // Unassigned
+		}
 		String originalInputValue = parameter.getValue();
 		HashMap<String, Object> foundItems = new HashMap<String, Object>();
 		List<String> items = StringUtil.splitStringToList(originalInputValue, ITEM_SEPARATOR);
@@ -1870,6 +1879,7 @@ public class WorkItemUpdateHelper {
 	 * @throws TeamRepositoryException
 	 */
 	private UUID calculateUUID(ParameterValue parameter, List<Exception> exceptions) throws TeamRepositoryException {
+		// can not be null
 		UUID accessContext = AccessContextUtil.getAccessContextFromFQN(parameter.getValue(), getTeamRepository(),
 				getAuditableCommon(), getProcessClientService(), null);
 		if (accessContext == null) {
@@ -2116,10 +2126,10 @@ public class WorkItemUpdateHelper {
 		String userTrimmed = userID.trim();
 		IContributor foundUser = null;
 		if (userTrimmed.isEmpty()) {
-			return foundUser;
+			userTrimmed=IWorkItemCommandLineConstants.UNASSIGNED_USER;
 		}
 		try {
-			foundUser = getTeamRepository().contributorManager().fetchContributorByUserId(userID, monitor);
+			foundUser = getTeamRepository().contributorManager().fetchContributorByUserId(userTrimmed, monitor);
 		} catch (ItemNotFoundException e) {
 			// Try to find by name
 			List allContributors = getTeamRepository().contributorManager().fetchAllContributors(monitor);
