@@ -82,6 +82,7 @@ import com.ibm.team.workitem.common.model.IApprovals;
 import com.ibm.team.workitem.common.model.IAttachment;
 import com.ibm.team.workitem.common.model.IAttribute;
 import com.ibm.team.workitem.common.model.IAttributeHandle;
+import com.ibm.team.workitem.common.model.ICategory;
 import com.ibm.team.workitem.common.model.ICategoryHandle;
 import com.ibm.team.workitem.common.model.IComment;
 import com.ibm.team.workitem.common.model.IComments;
@@ -2181,6 +2182,12 @@ public class WorkItemUpdateHelper {
 		List<String> path = StringUtil.splitStringToList(value, PATH_SEPARATOR);
 		ICategoryHandle category = getWorkItemCommon().findCategoryByNamePath(getWorkItem().getProjectArea(), path,
 				monitor);
+		if(category==null && value!=null) {
+			if(value.equals("Unassigned")) {
+				//category=ICategory.DEFAULT_CATEGORY_PROPERTY;
+				category=getWorkItemCommon().findUnassignedCategory(getWorkItem().getProjectArea(), ICategory.SMALL_PROFILE, monitor);
+			}
+		}
 		return category;
 	}
 

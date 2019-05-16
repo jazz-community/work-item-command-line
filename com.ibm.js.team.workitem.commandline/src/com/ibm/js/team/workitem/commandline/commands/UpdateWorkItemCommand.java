@@ -10,7 +10,6 @@ package com.ibm.js.team.workitem.commandline.commands;
 import com.ibm.js.team.workitem.commandline.IWorkItemCommandLineConstants;
 import com.ibm.js.team.workitem.commandline.OperationResult;
 import com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemModificationCommand;
-import com.ibm.js.team.workitem.commandline.framework.ParameterValue;
 import com.ibm.js.team.workitem.commandline.framework.WorkItemCommandLineException;
 import com.ibm.js.team.workitem.commandline.helper.WorkItemTypeHelper;
 import com.ibm.js.team.workitem.commandline.parameter.ParameterManager;
