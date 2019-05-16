@@ -162,8 +162,10 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	private boolean fMultipass = false;
 	// Use original ID if no mapping was found
 	private boolean fForceLinkCreation = false;
-
-	private boolean fIgnoreEmptyTargetValues;
+	// TODO: Compatibility mode? In the past during import empty attribute values
+	// was ignored. Since 5.0 it is handled as override. The attribute gets deleted
+	// if this is allowed.
+	private boolean fIgnoreEmptyTargetValues = false;
 
 	/**
 	 * The constructor
@@ -718,7 +720,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 */
 	private void processAttribute(ColumnHeaderAttributeNameMapper headerMapping, ParameterList parameters,
 			String attributeID, String targetValue) {
-		if(fIgnoreEmptyTargetValues)
+		if(isIgnoreEmptyTargetValues())
 			// If the parameter has no value, we don't process it.
 			if (targetValue.equals("")) {
 				// @see https://github.com/jazz-community/work-item-command-line/issues/16
@@ -968,6 +970,14 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			throw new WorkItemCommandLineException(
 					"AttributeType not yet supported: " + attribType + " ID " + attribute.getIdentifier());
 		}
+	}
+
+	public boolean isIgnoreEmptyTargetValues() {
+		return fIgnoreEmptyTargetValues;
+	}
+
+	public void setIgnoreEmptyTargetValues(boolean ignoreEmptyTargetValues) {
+		this.fIgnoreEmptyTargetValues = ignoreEmptyTargetValues;
 	}
 
 	/**
