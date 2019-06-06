@@ -64,8 +64,9 @@ public class ColumnHeaderAttributeNameMapper {
 		// Add all the attributes
 		List<IAttribute> attributes = workItemCommon.findAttributes(projectAreaHandle, monitor);
 		for (IAttribute attribute : attributes) {
-			String displayName = attribute.getDisplayName();
-			String id = attribute.getIdentifier();
+			// It is possible to have whitespaces in display names
+			String displayName = attribute.getDisplayName().trim();
+			String id = attribute.getIdentifier().trim();
 			nameIDMap.put(displayName, id);
 			idNameMap.put(id, displayName);
 			attributeIdNameMap.put(id, displayName);
@@ -188,7 +189,8 @@ public class ColumnHeaderAttributeNameMapper {
 	}
 
 	/**
-	 * Get all the available attributes and supported links in a sorted way.
+	 * Get the names of all the available attributes and supported links 
+	 * in a sorted way.
 	 * 
 	 * @param projectArea
 	 * @return

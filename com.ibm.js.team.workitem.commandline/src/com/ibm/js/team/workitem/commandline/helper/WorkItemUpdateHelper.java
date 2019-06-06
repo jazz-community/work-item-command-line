@@ -286,7 +286,7 @@ public class WorkItemUpdateHelper {
 	 * 
 	 * @return
 	 */
-	private boolean isBulkUpadte() {
+	private boolean isBulkUpdate() {
 		return this.fBulkupdate;
 	}
 
@@ -3255,7 +3255,7 @@ public class WorkItemUpdateHelper {
 	 * @return a help description
 	 */
 	private String helpUsageAllLinks() {
-		if (isBulkUpadte()) {
+		if (isBulkUpdate()) {
 			return "";
 		}
 		String usage = "\n\nWork Item Links - links between this work item and another work item within the same repository:"
@@ -3278,7 +3278,7 @@ public class WorkItemUpdateHelper {
 	 * @return a help description
 	 */
 	private String helpUsageWorkItemLinks() {
-		if (isBulkUpadte()) {
+		if (isBulkUpdate()) {
 			return "";
 		}
 		String usage = "\nFormat is:";
@@ -3302,7 +3302,7 @@ public class WorkItemUpdateHelper {
 	 * @return a help description
 	 */
 	private String helpUsageCLMWorkItemLink() {
-		if (isBulkUpadte()) {
+		if (isBulkUpdate()) {
 			return "";
 		}
 		String usage = "\nFormat is:";
@@ -3327,7 +3327,7 @@ public class WorkItemUpdateHelper {
 	 * @return a help description
 	 */
 	private String helpUsageCLMItemURILink() {
-		if (isBulkUpadte()) {
+		if (isBulkUpdate()) {
 			return "";
 		}
 		String usage = "\nFormat is:";
@@ -3352,7 +3352,7 @@ public class WorkItemUpdateHelper {
 	 * @return a help description
 	 */
 	private String helpUsageBuildResultLink() {
-		if (isBulkUpadte()) {
+		if (isBulkUpdate()) {
 			return "";
 		}
 		String usage = "\nFormat is:\n";
@@ -3377,7 +3377,7 @@ public class WorkItemUpdateHelper {
 	 * @return a help description
 	 */
 	private String helpUsageDeleteLinksOfType() {
-		if (isBulkUpadte()) {
+		if (isBulkUpdate()) {
 			return "";
 		}
 		String usage = "\nFormat is:\n";
