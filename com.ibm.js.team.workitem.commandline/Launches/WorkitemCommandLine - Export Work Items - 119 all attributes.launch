@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/com.ibm.js.team.workitem.commandline/src/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-exportworkitems /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph projectArea=&quot;Formal&quot; exportFile=&quot;C:\aaTemp\Export\plan2.csv&quot; query=&quot;119&quot; delimiter=&quot;;&quot; /suppressAttributeExceptions columns=&quot;Id&quot;,&quot;Type&quot;,&quot;Summary&quot;,&quot;Description&quot;,&quot;Constraint Type&quot;,&quot;Created By&quot;,&quot;Estimate&quot;,&quot;Filed Against&quot;,&quot;Owned By&quot;,&quot;Planned For&quot;,&quot;Precision&quot;,&quot;Severity&quot;,&quot;Status&quot;,&quot;Rank&quot;,&quot;Predecessor&quot;,&quot;Successor&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
+</launchConfiguration>
