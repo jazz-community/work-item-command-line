@@ -91,9 +91,11 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	// The column header for the column providing the original work item id's.
 	public static final String ORIGINAL_WORK_ITEM_ID = "com.ibm.js.oldid";
 
-	private static final String SEPERATOR_LINK_TARGETS = "|";
+	public static final String SEPERATOR_LINK_TARGETS = "|";
 
 	public static final int ATTRIBUTE_SUMMARY_MAXLENGTH = 1000;
+
+	public static final String SWITCH_IGNORE_EMPTY_TARGET_VALUES = "ignoreemptycolumnvalues";
 
 	// Multi pass import to recreate work item links
 	public static final String SWITCH_MULTI_PASS_IMPORT = "importmultipass";
@@ -105,12 +107,13 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	private static final String ATTRIBUTE_STATE = "com.ibm.team.workitem.attribute.state";
 
 	// file with the data for import
-	private static final String PARAMETER_IMPORT_FILE = "importFile";
-	private static final String PARAMETER_IMPORT_FILE_EXAMPLE = "\"C:\\temp\\export.csv\"";
+	public static final String PARAMETER_IMPORT_FILE = "importFile";
+	public static final String PARAMETER_IMPORT_FILE_EXAMPLE = "\"C:\\temp\\export.csv\"";
 
 	// the mapping file
-	private static final String PARAMETER_CUSTOM_MAPPING_FILE = "mappingFile";
-	private static final String PARAMETER_CUSTOM_MAPPING_FILE_EXAMPLE = "\"C:\\temp\\mapping.xml\"";
+	public static final String PARAMETER_CUSTOM_MAPPING_FILE = "mappingFile";
+	public static final String PARAMETER_CUSTOM_MAPPING_FILE_EXAMPLE = "\"C:\\temp\\mapping.xml\"";
+
 
 	// To determine if we are in debug mode
 	private boolean fDebug;
@@ -162,7 +165,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	private boolean fMultipass = false;
 	// Use original ID if no mapping was found
 	private boolean fForceLinkCreation = false;
-	// TODO: Compatibility mode? In the past during import empty attribute values
+	// Compatibility mode. In the past during import empty attribute values
 	// was ignored. Since 5.0 it is handled as override. The attribute gets deleted
 	// if this is allowed.
 	private boolean fIgnoreEmptyTargetValues = false;
@@ -206,6 +209,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		getParameterManager().syntaxAddSwitch(SWITCH_MULTI_PASS_IMPORT);
 		getParameterManager().syntaxAddSwitch(SWITCH_FORCE_LINK_CREATION);
 		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION);
+		getParameterManager().syntaxAddSwitch(SWITCH_IGNORE_EMPTY_TARGET_VALUES);
 	}
 
 	/**
@@ -238,6 +242,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 */
 	@Override
 	public OperationResult process() throws TeamRepositoryException {
+		setIgnoreEmptyTargetValues(getParameterManager().hasSwitch(SWITCH_IGNORE_EMPTY_TARGET_VALUES));
 		setMultiPass(getParameterManager().hasSwitch(SWITCH_MULTI_PASS_IMPORT));
 		this.setForceLinkCreation(getParameterManager().hasSwitch(SWITCH_FORCE_LINK_CREATION));
 		this.setEnforceSizeJimits(
@@ -720,11 +725,11 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 */
 	private void processAttribute(ColumnHeaderAttributeNameMapper headerMapping, ParameterList parameters,
 			String attributeID, String targetValue) {
+		// Allow for a mode that ignores empty colum values.
 		if(isIgnoreEmptyTargetValues())
 			// If the parameter has no value, we don't process it.
 			if (targetValue.equals("")) {
 				// @see https://github.com/jazz-community/work-item-command-line/issues/16
-				// TODO: Defect, we want to be able to clear attributes. 
 				return;  
 			}
 		// Try to get the attribute from the header mapping
