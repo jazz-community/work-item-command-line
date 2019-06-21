@@ -103,8 +103,8 @@ public class WorkItemExportHelper {
 	private boolean fSaveAttachments = false;
 	private String fOutputFolder = null;
 	private boolean fRTCEclipseCompatible = false;
-	// Should there be a prefix for existint work items? 
-	private boolean fWorkItemLinkPrefix=true;
+	// Should there be a prefix for existint work items?
+	private boolean fWorkItemLinkPrefix = true;
 
 	public WorkItemExportHelper(ITeamRepository fTeamRepository, IProgressMonitor fMonitor) {
 		super();
@@ -326,7 +326,6 @@ public class WorkItemExportHelper {
 					if (attribType.equals(AttributeTypes.DURATION)) {
 						return calculateDurationAsString(value, attribType);
 					}
-
 					return calculateNumberAsString(value, attribType);
 				} catch (NumberFormatException e) {
 					throw new WorkItemCommandLineException(
@@ -398,14 +397,13 @@ public class WorkItemExportHelper {
 	 * 
 	 * @param workItem
 	 * @return
-	 * @throws TeamRepositoryException 
+	 * @throws TeamRepositoryException
 	 */
 	private String calculateResolutionAsString(IWorkItem workItem) throws TeamRepositoryException {
-		Identifier<IResolution> resolution = workItem.getResolution2();	
+		Identifier<IResolution> resolution = workItem.getResolution2();
 		IWorkflowInfo workflowInfo;
-			workflowInfo = getWorkItemCommon().getWorkflow(
-					workItem.getWorkItemType(),
-					workItem.getProjectArea(), getMonitor());
+		workflowInfo = getWorkItemCommon().getWorkflow(workItem.getWorkItemType(), workItem.getProjectArea(),
+				getMonitor());
 		return workflowInfo.getResolutionName(resolution);
 	}
 
@@ -503,7 +501,7 @@ public class WorkItemExportHelper {
 	 * @return prefix or empty string
 	 */
 	private String getExistingWorkitemPrefix() {
-		if(isWorkItemLinkPrefix())
+		if (isWorkItemLinkPrefix())
 			return PREFIX_EXISTINGWORKITEM;
 		return "";
 	}
@@ -1233,7 +1231,7 @@ public class WorkItemExportHelper {
 	/**
 	 * Should a work item number for a work item link be prefixed?
 	 * 
-	 * @param showPrefix 
+	 * @param showPrefix
 	 */
 	public void setWorkItemLinkPrefix(boolean showPrefix) {
 		this.fWorkItemLinkPrefix = showPrefix;

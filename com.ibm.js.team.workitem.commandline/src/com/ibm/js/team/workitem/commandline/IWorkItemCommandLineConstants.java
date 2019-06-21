@@ -13,7 +13,7 @@ package com.ibm.js.team.workitem.commandline;
  */
 public interface IWorkItemCommandLineConstants {
 
-	public static final String VERSIONINFO = "4.9";
+	public static final String VERSIONINFO = "5.0";
 
 	// Commands available
 	public static final String COMMAND_CREATE = "create";
@@ -70,7 +70,8 @@ public interface IWorkItemCommandLineConstants {
 
 	// the mapping file
 	public static final String PARAMETER_TIMESTAMP_ENCODING = "timestampFormat";
-	public static final String PARAMETER_TIMESTAMP_ENCODING_EXAMPLE = "\"" + TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A + "\"";
+	public static final String PARAMETER_TIMESTAMP_ENCODING_EXAMPLE = "\""
+			+ TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A + "\"";
 
 	// Parsing
 	public static final String INFIX_PARAMETER_VALUE_SEPARATOR = "=";
@@ -114,13 +115,17 @@ public interface IWorkItemCommandLineConstants {
 
 	public static final String UNASSIGNED = "unassigned";
 
+	public static final String SWITCH_IMPORT_IGNORE_MISSING_ATTTRIBUTES = "ignoreMissingAttributes";
+
 	// Parameter to specify the query
-	String PARAMETER_QUERY_NAME = "query";
-	String PARAMETER_QUERY_NAME_EXAMPLE = "\"All WorkItems\"";
+	public static final String PARAMETER_QUERY_NAME = "query";
+	public static final String PARAMETER_QUERY_NAME_EXAMPLE = "\"All WorkItems\"";
 
 	// parameter to specify a sharing target for the query
 	// The sharing target can be the project area or a
 	// team area where the query is shared
-	String PARAMETER_SHARING_TARGETS = "querysource";
-	String PARAMETER_SHARING_TARGETS_EXAMPLE = "\"JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters\"";
+	public static final String PARAMETER_SHARING_TARGETS = "querysource";
+	public static final String PARAMETER_SHARING_TARGETS_EXAMPLE = "\"JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters\"";
+
+	public static final String UNASSIGNED_USER = "Unassigned";
 }

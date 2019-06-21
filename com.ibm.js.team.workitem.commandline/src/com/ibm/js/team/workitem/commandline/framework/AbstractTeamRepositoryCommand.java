@@ -100,6 +100,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 
 	/**
 	 * Start a Resource Intensive Scenario instance
+	 * 
 	 * @see https://jazz.net/wiki/bin/view/Deployment/CreateCustomScenarios
 	 * 
 	 * @return
@@ -120,6 +121,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 
 	/**
 	 * Stop a Resource Intensive Scenario instance
+	 * 
 	 * @see https://jazz.net/wiki/bin/view/Deployment/CreateCustomScenarios
 	 * 
 	 * @param scenarioInstance
@@ -131,13 +133,13 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 			this.appendResultString("Resource Intensive Scenario Notifier Service: Scenario can not be stopped!");
 		}
 	}
-	
+
 	protected IExpensiveScenarioService getScenarioService() {
 		return fScenarioService;
 	}
 
 	protected void setScenarioService(IExpensiveScenarioService service) {
-		this.fScenarioService=service;
+		this.fScenarioService = service;
 	}
 
 	protected ITeamRepository getTeamRepository() {

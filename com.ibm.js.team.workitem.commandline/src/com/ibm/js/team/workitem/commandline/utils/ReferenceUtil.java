@@ -82,42 +82,28 @@ public class ReferenceUtil {
 	// null;
 
 	/**
-	 * Creates a map with string to IEndPointDescriptor values to create links
-	 * to local work items
+	 * Creates a map with string to IEndPointDescriptor values to create links to
+	 * local work items
 	 * 
 	 * @return the map created
 	 */
 	public static HashMap<String, IEndPointDescriptor> getWorkItemEndPointDescriptorMap() {
 		if (fWorkItemEndPointDescriptorMap == null) {
 			HashMap<String, IEndPointDescriptor> map = new HashMap<String, IEndPointDescriptor>();
-			map.put(ReferenceUtil.LINKTYPE_PARENT,
-					WorkItemEndPoints.PARENT_WORK_ITEM);
-			map.put(ReferenceUtil.LINKTYPE_CHILD,
-					WorkItemEndPoints.CHILD_WORK_ITEMS);
-			map.put(ReferenceUtil.LINKTYPE_BLOCKS_WORKITEM,
-					WorkItemEndPoints.BLOCKS_WORK_ITEM);
-			map.put(ReferenceUtil.LINKTYPE_COPIED_FROM_WORKITEM,
-					WorkItemEndPoints.COPIED_FROM_WORK_ITEM);
-			map.put(ReferenceUtil.LINKTYPE_COPIED_WORKITEM,
-					WorkItemEndPoints.COPIED_WORK_ITEM);
-			map.put(ReferenceUtil.LINKTYPE_DEPENDS_ON_WORKITEM,
-					WorkItemEndPoints.DEPENDS_ON_WORK_ITEM);
-			map.put(ReferenceUtil.LINKTYPE_DUPLICATE_OF_WORKITEM,
-					WorkItemEndPoints.DUPLICATE_OF_WORK_ITEM);
-			map.put(ReferenceUtil.LINKTYPE_DUPLICATE_WORKITEM,
-					WorkItemEndPoints.DUPLICATE_WORK_ITEM);
-			map.put(ReferenceUtil.LINKTYPE_MENTIONS_WORKITEM,
-					WorkItemEndPoints.MENTIONS);
-			map.put(ReferenceUtil.LINKTYPE_PREDECESSOR_WORKITEM,
-					WorkItemEndPoints.PREDECESSOR_WORK_ITEMS);
-			map.put(ReferenceUtil.LINKTYPE_RELATED_WORKITEM,
-					WorkItemEndPoints.RELATED_WORK_ITEM);
-			map.put(ReferenceUtil.LINKTYPE_RESOLVED_BY_WORKITEM,
-					WorkItemEndPoints.RESOLVED_BY_WORK_ITEM);
-			map.put(ReferenceUtil.LINKTYPE_RESOLVES_WORKITEM,
-					WorkItemEndPoints.RESOLVES_WORK_ITEM);
-			map.put(ReferenceUtil.LINKTYPE_SUCCESSOR_WORKITEM,
-					WorkItemEndPoints.SUCCESSOR_WORK_ITEMS);
+			map.put(ReferenceUtil.LINKTYPE_PARENT, WorkItemEndPoints.PARENT_WORK_ITEM);
+			map.put(ReferenceUtil.LINKTYPE_CHILD, WorkItemEndPoints.CHILD_WORK_ITEMS);
+			map.put(ReferenceUtil.LINKTYPE_BLOCKS_WORKITEM, WorkItemEndPoints.BLOCKS_WORK_ITEM);
+			map.put(ReferenceUtil.LINKTYPE_COPIED_FROM_WORKITEM, WorkItemEndPoints.COPIED_FROM_WORK_ITEM);
+			map.put(ReferenceUtil.LINKTYPE_COPIED_WORKITEM, WorkItemEndPoints.COPIED_WORK_ITEM);
+			map.put(ReferenceUtil.LINKTYPE_DEPENDS_ON_WORKITEM, WorkItemEndPoints.DEPENDS_ON_WORK_ITEM);
+			map.put(ReferenceUtil.LINKTYPE_DUPLICATE_OF_WORKITEM, WorkItemEndPoints.DUPLICATE_OF_WORK_ITEM);
+			map.put(ReferenceUtil.LINKTYPE_DUPLICATE_WORKITEM, WorkItemEndPoints.DUPLICATE_WORK_ITEM);
+			map.put(ReferenceUtil.LINKTYPE_MENTIONS_WORKITEM, WorkItemEndPoints.MENTIONS);
+			map.put(ReferenceUtil.LINKTYPE_PREDECESSOR_WORKITEM, WorkItemEndPoints.PREDECESSOR_WORK_ITEMS);
+			map.put(ReferenceUtil.LINKTYPE_RELATED_WORKITEM, WorkItemEndPoints.RELATED_WORK_ITEM);
+			map.put(ReferenceUtil.LINKTYPE_RESOLVED_BY_WORKITEM, WorkItemEndPoints.RESOLVED_BY_WORK_ITEM);
+			map.put(ReferenceUtil.LINKTYPE_RESOLVES_WORKITEM, WorkItemEndPoints.RESOLVES_WORK_ITEM);
+			map.put(ReferenceUtil.LINKTYPE_SUCCESSOR_WORKITEM, WorkItemEndPoints.SUCCESSOR_WORK_ITEMS);
 			fWorkItemEndPointDescriptorMap = map;
 		}
 
@@ -125,8 +111,8 @@ public class ReferenceUtil {
 	}
 
 	/**
-	 * Creates a map with string to IEndPointDescriptor values to create links
-	 * to CLM URI's (not work items)
+	 * Creates a map with string to IEndPointDescriptor values to create links to
+	 * CLM URI's (not work items)
 	 * 
 	 * @return the map created
 	 */
@@ -134,64 +120,42 @@ public class ReferenceUtil {
 	public static HashMap<String, IEndPointDescriptor> getCLM_URI_EndPointDescriptorMap() {
 		if (fCLM_URI_EndPointDescriptorMap == null) {
 			HashMap<String, IEndPointDescriptor> map = new HashMap<String, IEndPointDescriptor>();
-			map.put(ReferenceUtil.LINKTYPE_RELATED_ARTIFACT,
-					WorkItemEndPoints.RELATED_ARTIFACT);
-			map.put(ReferenceUtil.LINKTYPE_AFFECTS_EXECUTION_RESULT,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							WorkItemLinkTypes.AFFECTS_EXECUTION_RESULT)
-							.getTargetEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_RELATED_ARTIFACT, WorkItemEndPoints.RELATED_ARTIFACT);
+			map.put(ReferenceUtil.LINKTYPE_AFFECTS_EXECUTION_RESULT, ILinkTypeRegistry.INSTANCE
+					.getLinkType(WorkItemLinkTypes.AFFECTS_EXECUTION_RESULT).getTargetEndPointDescriptor());
 			// map.put(ReferenceUtil.LINKTYPE_ELABORATED_BY,
 			// ILinkTypeRegistry.INSTANCE
 			// .getLinkType(WorkItemLinkTypes.ELABORATED_BY)
 			// .getTargetEndPointDescriptor());
-			map.put(ReferenceUtil.LINKTYPE_IMPLEMENTS_REQUIREMENT,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							WorkItemLinkTypes.IMPLEMENTS_REQUIREMENT)
-							.getTargetEndPointDescriptor());
-			map.put(ReferenceUtil.LINKTYPE_RELATED_TEST_EXECUTION_RECORD,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							WorkItemLinkTypes.RELATED_EXECUTION_RECORD)
-							.getTargetEndPointDescriptor());
-			map.put(ReferenceUtil.LINKTYPE_AFFECTS_REQUIREMENT,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							WorkItemLinkTypes.RELATED_REQUIREMENT)
-							.getTargetEndPointDescriptor());
-			map.put(ReferenceUtil.LINKTYPE_RELATED_TEST_CASE,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							WorkItemLinkTypes.RELATED_TEST_CASE)
-							.getTargetEndPointDescriptor());
-			map.put(ReferenceUtil.LINKTYPE_RELATED_TEST_PLAN,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							WorkItemLinkTypes.RELATED_TEST_PLAN)
-							.getTargetEndPointDescriptor());
-			map.put(ReferenceUtil.LINKTYPE_BLOCKS_TEST_EXECUTION,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							WorkItemLinkTypes.BLOCKS_EXECUTION_RECORD)
-							.getTargetEndPointDescriptor());
-			map.put(ReferenceUtil.LINKTYPE_TESTED_BY_TEST_CASE,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							WorkItemLinkTypes.TESTED_BY_TEST_CASE)
-							.getTargetEndPointDescriptor());
-			map.put(ReferenceUtil.LINKTYPE_TRACKS_CHANGES,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							WorkItemLinkTypes.TRACKS_CHANGES)
-							.getTargetEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_IMPLEMENTS_REQUIREMENT, ILinkTypeRegistry.INSTANCE
+					.getLinkType(WorkItemLinkTypes.IMPLEMENTS_REQUIREMENT).getTargetEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_RELATED_TEST_EXECUTION_RECORD, ILinkTypeRegistry.INSTANCE
+					.getLinkType(WorkItemLinkTypes.RELATED_EXECUTION_RECORD).getTargetEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_AFFECTS_REQUIREMENT, ILinkTypeRegistry.INSTANCE
+					.getLinkType(WorkItemLinkTypes.RELATED_REQUIREMENT).getTargetEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_RELATED_TEST_CASE, ILinkTypeRegistry.INSTANCE
+					.getLinkType(WorkItemLinkTypes.RELATED_TEST_CASE).getTargetEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_RELATED_TEST_PLAN, ILinkTypeRegistry.INSTANCE
+					.getLinkType(WorkItemLinkTypes.RELATED_TEST_PLAN).getTargetEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_BLOCKS_TEST_EXECUTION, ILinkTypeRegistry.INSTANCE
+					.getLinkType(WorkItemLinkTypes.BLOCKS_EXECUTION_RECORD).getTargetEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_TESTED_BY_TEST_CASE, ILinkTypeRegistry.INSTANCE
+					.getLinkType(WorkItemLinkTypes.TESTED_BY_TEST_CASE).getTargetEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_TRACKS_CHANGES, ILinkTypeRegistry.INSTANCE
+					.getLinkType(WorkItemLinkTypes.TRACKS_CHANGES).getTargetEndPointDescriptor());
 			// map.put(LINKTYPE_CHANGESET, ILinkTypeRegistry.INSTANCE
 			// .getLinkType(WorkItemLinkTypes.CHANGE_SET)
 			// .getTargetEndPointDescriptor());
-			map.put(ReferenceUtil.LINKTYPE_TRACKS_REQUIREMENT,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							WorkItemLinkTypes.TRACKS_REQUIREMENT)
-							.getTargetEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_TRACKS_REQUIREMENT, ILinkTypeRegistry.INSTANCE
+					.getLinkType(WorkItemLinkTypes.TRACKS_REQUIREMENT).getTargetEndPointDescriptor());
 			fCLM_URI_EndPointDescriptorMap = map;
 		}
 		return fCLM_URI_EndPointDescriptorMap;
 	}
 
 	/**
-	 * Creates a map with string to IEndPointDescriptor values to create CLM
-	 * links to local and remote work items (e.g. located on a different CCM
-	 * server)
+	 * Creates a map with string to IEndPointDescriptor values to create CLM links
+	 * to local and remote work items (e.g. located on a different CCM server)
 	 * 
 	 * @return the map created
 	 */
@@ -200,31 +164,22 @@ public class ReferenceUtil {
 
 		if (fCLM_WI_EndPointDescriptorMap == null) {
 			HashMap<String, IEndPointDescriptor> map = new HashMap<String, IEndPointDescriptor>();
-			map.put(ReferenceUtil.LINKTYPE_AFFECTED_BY_DEFECT,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							WorkItemLinkTypes.AFFECTED_BY_DEFECT)
-							.getTargetEndPointDescriptor());
-			map.put(ReferenceUtil.LINKTYPE_AFFECTS_PLAN_ITEM,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							WorkItemLinkTypes.AFFECTS_PLAN_ITEM)
-							.getTargetEndPointDescriptor());
-			map.put(ReferenceUtil.LINKTYPE_RELATED_CHANGE_MANAGEMENT,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							WorkItemLinkTypes.RELATED_CHANGE_MANAGEMENT)
-							.getTargetEndPointDescriptor());
-			map.put(ReferenceUtil.LINKTYPE_TRACKS_WORK_ITEM,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							WorkItemLinkTypes.TRACKS_WORK_ITEM)
-							.getTargetEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_AFFECTED_BY_DEFECT, ILinkTypeRegistry.INSTANCE
+					.getLinkType(WorkItemLinkTypes.AFFECTED_BY_DEFECT).getTargetEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_AFFECTS_PLAN_ITEM, ILinkTypeRegistry.INSTANCE
+					.getLinkType(WorkItemLinkTypes.AFFECTS_PLAN_ITEM).getTargetEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_RELATED_CHANGE_MANAGEMENT, ILinkTypeRegistry.INSTANCE
+					.getLinkType(WorkItemLinkTypes.RELATED_CHANGE_MANAGEMENT).getTargetEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_TRACKS_WORK_ITEM, ILinkTypeRegistry.INSTANCE
+					.getLinkType(WorkItemLinkTypes.TRACKS_WORK_ITEM).getTargetEndPointDescriptor());
 			fCLM_WI_EndPointDescriptorMap = map;
 		}
 		return fCLM_WI_EndPointDescriptorMap;
 	}
 
 	/**
-	 * Creates a map with string to IEndPointDescriptor values to create CLM
-	 * links to local and remote work items (e.g. located on a different CCM
-	 * server)
+	 * Creates a map with string to IEndPointDescriptor values to create CLM links
+	 * to local and remote work items (e.g. located on a different CCM server)
 	 * 
 	 * @return the map created
 	 */
@@ -233,14 +188,10 @@ public class ReferenceUtil {
 
 		if (fBuild_EndPointDescriptorMap == null) {
 			HashMap<String, IEndPointDescriptor> map = new HashMap<String, IEndPointDescriptor>();
-			map.put(ReferenceUtil.LINKTYPE_REPORTED_AGAINST_BUILDRESULT,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							BuildLinkTypes.REPORTED_WORK_ITEMS)
-							.getSourceEndPointDescriptor());
-			map.put(ReferenceUtil.LINKTYPE_INCLUDEDINBUILD,
-					ILinkTypeRegistry.INSTANCE.getLinkType(
-							BuildLinkTypes.INCLUDED_WORK_ITEMS)
-							.getSourceEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_REPORTED_AGAINST_BUILDRESULT, ILinkTypeRegistry.INSTANCE
+					.getLinkType(BuildLinkTypes.REPORTED_WORK_ITEMS).getSourceEndPointDescriptor());
+			map.put(ReferenceUtil.LINKTYPE_INCLUDEDINBUILD, ILinkTypeRegistry.INSTANCE
+					.getLinkType(BuildLinkTypes.INCLUDED_WORK_ITEMS).getSourceEndPointDescriptor());
 			fBuild_EndPointDescriptorMap = map;
 		}
 		return fBuild_EndPointDescriptorMap;
@@ -252,8 +203,7 @@ public class ReferenceUtil {
 	 * @param linkID
 	 * @return
 	 */
-	public static IEndPointDescriptor getReferenceEndpointDescriptor(
-			String linkID) {
+	public static IEndPointDescriptor getReferenceEndpointDescriptor(String linkID) {
 		linkID = ParameterLinkIDMapper.getinternalID(linkID);
 		if (linkID == null) {
 			return null;
@@ -376,8 +326,7 @@ public class ReferenceUtil {
 		if (null != ReferenceUtil.getCLM_WI_EndPointDescriptorMap().get(linkID)) {
 			return true;
 		}
-		if (null != ReferenceUtil.getWorkItemEndPointDescriptorMap()
-				.get(linkID)) {
+		if (null != ReferenceUtil.getWorkItemEndPointDescriptorMap().get(linkID)) {
 			return true;
 		}
 		return false;

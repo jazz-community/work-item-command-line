@@ -8,11 +8,12 @@
 package com.ibm.js.team.workitem.commandline.scenarionotifier;
 
 /**
- * Interface for a basic Expensive Scenario Service that passes the information required between service calls using a string. 
+ * Interface for a basic Expensive Scenario Service that passes the information
+ * required between service calls using a string.
  *
  */
 public interface IExpensiveScenarioService {
-	
+
 	/**
 	 * Start an expensive scenario.
 	 * 
@@ -21,7 +22,7 @@ public interface IExpensiveScenarioService {
 	 * @throws Exception
 	 */
 	public String start() throws Exception;
-	
+
 	/**
 	 * Stop the expensive scenario.
 	 * 

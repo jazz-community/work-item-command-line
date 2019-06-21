@@ -25,12 +25,9 @@ public class AttributeUtil {
 	/**
 	 * Find the attribute type (IAttribute) from the process
 	 * 
-	 * @param attributeID
-	 *            - the ID of the attribute we are working at
-	 * @param projectArea
-	 *            - must not be null
-	 * @param monitor
-	 *            - an IProgressMonitor or null
+	 * @param attributeID - the ID of the attribute we are working at
+	 * @param projectArea - must not be null
+	 * @param monitor     - an IProgressMonitor or null
 	 * @return the IAttribute found or null, in case it can not be found
 	 * @throws TeamRepositoryException
 	 */
@@ -42,18 +39,13 @@ public class AttributeUtil {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	public static IAttribute resolveAttribute(String attributeID,
-			IProjectAreaHandle projectAreaHandle, IProgressMonitor monitor)
-			throws TeamRepositoryException {
+	public static IAttribute resolveAttribute(String attributeID, IProjectAreaHandle projectAreaHandle,
+			IProgressMonitor monitor) throws TeamRepositoryException {
 		if (projectAreaHandle == null) {
-			throw new WorkItemCommandLineException(
-					"Resolve Attribute: project area handle must not be null");
+			throw new WorkItemCommandLineException("Resolve Attribute: project area handle must not be null");
 		}
-		ITeamRepository teamRepository = (ITeamRepository) projectAreaHandle
-				.getOrigin();
-		IWorkItemCommon workItemCommon = (IWorkItemCommon) teamRepository
-				.getClientLibrary(IWorkItemCommon.class);
-		return workItemCommon.findAttribute(projectAreaHandle, attributeID,
-				monitor);
+		ITeamRepository teamRepository = (ITeamRepository) projectAreaHandle.getOrigin();
+		IWorkItemCommon workItemCommon = (IWorkItemCommon) teamRepository.getClientLibrary(IWorkItemCommon.class);
+		return workItemCommon.findAttribute(projectAreaHandle, attributeID, monitor);
 	}
 }

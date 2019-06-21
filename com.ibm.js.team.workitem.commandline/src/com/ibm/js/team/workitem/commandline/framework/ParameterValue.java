@@ -43,11 +43,12 @@ public class ParameterValue {
 	 * 
 	 * @param parameter
 	 * @param value
+	 * @param projectAreaHandle
+	 * @param monitor
 	 * @throws WorkItemCommandLineException
 	 */
-	public ParameterValue(String parameter, String value,
-			IProjectAreaHandle projectAreaHandle, IProgressMonitor monitor)
-			throws WorkItemCommandLineException {
+	public ParameterValue(String parameter, String value, IProjectAreaHandle projectAreaHandle,
+			IProgressMonitor monitor) throws WorkItemCommandLineException {
 		analyzeValue(parameter, value, projectAreaHandle, monitor);
 	}
 
@@ -58,28 +59,23 @@ public class ParameterValue {
 	 * @param monitor
 	 * @throws WorkItemCommandLineException
 	 */
-	private void analyzeValue(String parameter, String value,
-			IProjectAreaHandle projectAreaHandle, IProgressMonitor monitor)
-			throws WorkItemCommandLineException {
+	private void analyzeValue(String parameter, String value, IProjectAreaHandle projectAreaHandle,
+			IProgressMonitor monitor) throws WorkItemCommandLineException {
 		fProjectAreaHandle = projectAreaHandle;
 		fMonitor = monitor;
 		if (parameter == null) {
-			throw new WorkItemCommandLineException(
-					"Parameter can not be null: ");
+			throw new WorkItemCommandLineException("Parameter can not be null: ");
 		}
 		this.value = value;
-		List<String> propertyData = StringUtil.splitStringToList(parameter,
-				POSTFIX_PARAMETER_MANIPULATION_MODE);
+		List<String> propertyData = StringUtil.splitStringToList(parameter, POSTFIX_PARAMETER_MANIPULATION_MODE);
 		this.attributeID = ParameterIDMapper.getAlias(propertyData.get(0));
 		if (propertyData.size() == 2) {
 			String foundMode = propertyData.get(1);
-			if (MODE_ADD.equals(foundMode) || MODE_REMOVE.equals(foundMode)
-					|| MODE_SET.equals(foundMode)) {
+			if (MODE_ADD.equals(foundMode) || MODE_REMOVE.equals(foundMode) || MODE_SET.equals(foundMode)) {
 				mode = foundMode;
 			} else {
 				throw new WorkItemCommandLineException(
-						"Parameter update mode not recognizeable: " + parameter
-								+ " Value: " + value);
+						"Parameter update mode not recognizeable: " + parameter + " Value: " + value);
 			}
 		}
 	}
@@ -104,8 +100,7 @@ public class ParameterValue {
 	 */
 	public IAttribute getIAttribute() throws TeamRepositoryException {
 		if (this.theAttribute == null) {
-			this.theAttribute = AttributeUtil.resolveAttribute(
-					this.attributeID, fProjectAreaHandle, fMonitor);
+			this.theAttribute = AttributeUtil.resolveAttribute(this.attributeID, fProjectAreaHandle, fMonitor);
 		}
 		return this.theAttribute;
 	}
@@ -157,8 +152,7 @@ public class ParameterValue {
 	public String getDisplayName() throws TeamRepositoryException {
 		IAttribute attribute = getIAttribute();
 		if (attribute == null) {
-			throw new WorkItemCommandLineException("Attribute not found: "
-					+ this.attributeID);
+			throw new WorkItemCommandLineException("Attribute not found: " + this.attributeID);
 		}
 		return getIAttribute().getDisplayName();
 	}

@@ -89,8 +89,7 @@ public class ParameterLinkIDMapper {
 	}
 
 	/**
-	 * Creates a map from an external name (alias) to the internal
-	 * representation
+	 * Creates a map from an external name (alias) to the internal representation
 	 * 
 	 * putMap("key", "Value");
 	 */
@@ -98,64 +97,44 @@ public class ParameterLinkIDMapper {
 		// TODO: ReferenceUtil.LINKTYPE_RELATED_CHANGE_MANAGEMENT
 		putMap(LINKNAME_PARENT, ReferenceUtil.LINKTYPE_PARENT);
 		putMap(LINKNAME_CHILDREN, ReferenceUtil.LINKTYPE_CHILD);
-		putMap(LINKNAME_PREDECESSOR,
-				ReferenceUtil.LINKTYPE_PREDECESSOR_WORKITEM);
+		putMap(LINKNAME_PREDECESSOR, ReferenceUtil.LINKTYPE_PREDECESSOR_WORKITEM);
 		putMap(LINKNAME_SUCCESSOR, ReferenceUtil.LINKTYPE_SUCCESSOR_WORKITEM);
 		putMap(LINKNAME_TRACKS, ReferenceUtil.LINKTYPE_TRACKS_WORK_ITEM);
-		//putMap(LINKNAME_CONTRIBUTES_TO, ReferenceUtil.LINKTYPE_CONTRIBUTES_TO_WORK_ITEM);
-		putMap(LINKNAME_AFFECTED_BY_DEFECT,
-				ReferenceUtil.LINKTYPE_AFFECTED_BY_DEFECT);
-		putMap(LINKNAME_AFFECTS_TEST_RESULT,
-				ReferenceUtil.LINKTYPE_AFFECTS_EXECUTION_RESULT);
-		putMap(LINKNAME_AFFECTS_PLAN_ITEM,
-				ReferenceUtil.LINKTYPE_AFFECTS_PLAN_ITEM);
-		putMap(LINKNAME_AFFECTS_REQUIREMENT,
-				ReferenceUtil.LINKTYPE_AFFECTS_REQUIREMENT);
-		putMap(LINKNAME_BLOCKS_TEST_EXECUTION,
-				ReferenceUtil.LINKTYPE_BLOCKS_TEST_EXECUTION);
+		// putMap(LINKNAME_CONTRIBUTES_TO,
+		// ReferenceUtil.LINKTYPE_CONTRIBUTES_TO_WORK_ITEM);
+		putMap(LINKNAME_AFFECTED_BY_DEFECT, ReferenceUtil.LINKTYPE_AFFECTED_BY_DEFECT);
+		putMap(LINKNAME_AFFECTS_TEST_RESULT, ReferenceUtil.LINKTYPE_AFFECTS_EXECUTION_RESULT);
+		putMap(LINKNAME_AFFECTS_PLAN_ITEM, ReferenceUtil.LINKTYPE_AFFECTS_PLAN_ITEM);
+		putMap(LINKNAME_AFFECTS_REQUIREMENT, ReferenceUtil.LINKTYPE_AFFECTS_REQUIREMENT);
+		putMap(LINKNAME_BLOCKS_TEST_EXECUTION, ReferenceUtil.LINKTYPE_BLOCKS_TEST_EXECUTION);
 		putMap(LINKNAME_BLOCKS, ReferenceUtil.LINKTYPE_BLOCKS_WORKITEM);
-		putMap(LINKNAME_COPIED_FROM,
-				ReferenceUtil.LINKTYPE_COPIED_FROM_WORKITEM);
+		putMap(LINKNAME_COPIED_FROM, ReferenceUtil.LINKTYPE_COPIED_FROM_WORKITEM);
 		putMap(LINKNAME_COPIES, ReferenceUtil.LINKTYPE_COPIED_WORKITEM);
 		putMap(LINKNAME_DEPENDS_ON, ReferenceUtil.LINKTYPE_DEPENDS_ON_WORKITEM);
-		putMap(LINKNAME_DUPLICATE_OF,
-				ReferenceUtil.LINKTYPE_DUPLICATE_OF_WORKITEM);
-		putMap(LINKNAME_DUPLICATED_BY,
-				ReferenceUtil.LINKTYPE_DUPLICATE_WORKITEM);
-		putMap(LINKNAME_IMPLEMENTS_REQUIREMENT,
-				ReferenceUtil.LINKTYPE_IMPLEMENTS_REQUIREMENT);
-		putMap(LINKNAME_INCLUDED_IN_BUILDS,
-				ReferenceUtil.LINKTYPE_INCLUDEDINBUILD);
+		putMap(LINKNAME_DUPLICATE_OF, ReferenceUtil.LINKTYPE_DUPLICATE_OF_WORKITEM);
+		putMap(LINKNAME_DUPLICATED_BY, ReferenceUtil.LINKTYPE_DUPLICATE_WORKITEM);
+		putMap(LINKNAME_IMPLEMENTS_REQUIREMENT, ReferenceUtil.LINKTYPE_IMPLEMENTS_REQUIREMENT);
+		putMap(LINKNAME_INCLUDED_IN_BUILDS, ReferenceUtil.LINKTYPE_INCLUDEDINBUILD);
 		// putMap(, ReferenceUtil.LINKTYPE_RELATED_CHANGE_MANAGEMENT);
-		putMap(LINKNAME_RELATED_ARTIFACTS,
-				ReferenceUtil.LINKTYPE_RELATED_ARTIFACT);
-		putMap(LINKNAME_RELATED_TEST_CASE,
-				ReferenceUtil.LINKTYPE_RELATED_TEST_CASE);
-		putMap(LINKNAME_RELATED_TEST_EXECUTION_RECORD,
-				ReferenceUtil.LINKTYPE_RELATED_TEST_EXECUTION_RECORD);
-		putMap(LINKNAME_RELATED_TEST_PLAN,
-				ReferenceUtil.LINKTYPE_RELATED_TEST_PLAN);
+		putMap(LINKNAME_RELATED_ARTIFACTS, ReferenceUtil.LINKTYPE_RELATED_ARTIFACT);
+		putMap(LINKNAME_RELATED_TEST_CASE, ReferenceUtil.LINKTYPE_RELATED_TEST_CASE);
+		putMap(LINKNAME_RELATED_TEST_EXECUTION_RECORD, ReferenceUtil.LINKTYPE_RELATED_TEST_EXECUTION_RECORD);
+		putMap(LINKNAME_RELATED_TEST_PLAN, ReferenceUtil.LINKTYPE_RELATED_TEST_PLAN);
 		putMap(LINKNAME_RELATED, ReferenceUtil.LINKTYPE_RELATED_WORKITEM);
-		putMap(LINKNAME_REPORTED_AGAINST_BUILD,
-				ReferenceUtil.LINKTYPE_REPORTED_AGAINST_BUILDRESULT);
-		putMap(LINKNAME_RESOLVED_BY,
-				ReferenceUtil.LINKTYPE_RESOLVED_BY_WORKITEM);
+		putMap(LINKNAME_REPORTED_AGAINST_BUILD, ReferenceUtil.LINKTYPE_REPORTED_AGAINST_BUILDRESULT);
+		putMap(LINKNAME_RESOLVED_BY, ReferenceUtil.LINKTYPE_RESOLVED_BY_WORKITEM);
 		putMap(LINKNAME_RESOLVES, ReferenceUtil.LINKTYPE_RESOLVES_WORKITEM);
-		putMap(LINKNAME_TESTED_BY_TEST_CASE,
-				ReferenceUtil.LINKTYPE_TESTED_BY_TEST_CASE);
+		putMap(LINKNAME_TESTED_BY_TEST_CASE, ReferenceUtil.LINKTYPE_TESTED_BY_TEST_CASE);
 		// putMap(LINKNAME_TRACKS, ReferenceUtil.LINKTYPE_TRACKS_CHANGES);
-		putMap(LINKNAME_TRACKS_REQUIREMENT,
-				ReferenceUtil.LINKTYPE_TRACKS_REQUIREMENT);
+		putMap(LINKNAME_TRACKS_REQUIREMENT, ReferenceUtil.LINKTYPE_TRACKS_REQUIREMENT);
 		// putMap(, ReferenceUtil.);
 	}
 
 	/**
 	 * Put an entry into the map
 	 * 
-	 * @param key
-	 *            - The external name or alias of the link (attribute)
-	 * @param value
-	 *            - The internal representation
+	 * @param key   - The external name or alias of the link (attribute)
+	 * @param value - The internal representation
 	 */
 	protected void putMap(String key, String value) {
 		getMap().put(key, value);
@@ -171,8 +150,8 @@ public class ParameterLinkIDMapper {
 	}
 
 	/**
-	 * Check if there is an alias available for a property ID and pass it back
-	 * if available.
+	 * Check if there is an alias available for a property ID and pass it back if
+	 * available.
 	 * 
 	 * @param linkName
 	 * @return
@@ -210,11 +189,10 @@ public class ParameterLinkIDMapper {
 	}
 
 	/**
-	 * Check if there is an alias available for a link name and pass the ID it
-	 * back if available.
+	 * Check if there is an alias available for a link name and pass the ID it back
+	 * if available.
 	 * 
-	 * @param linkName
-	 *            - the ID of the property
+	 * @param linkName - the ID of the property
 	 * @return the alias or the original property
 	 */
 	public static String getinternalID(String linkName) {

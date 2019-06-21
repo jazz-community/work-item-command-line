@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/com.ibm.js.team.workitem.commandline/src/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-exportworkitems /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot;  user=myadmin password=myadmin projectArea=&quot;JKE Banking (Change Management)&quot; exportFile=&quot;C:\aaTemp\Export\AllAttribs.csv&quot; query=&quot;Resolution 18&quot; delimiter=&quot;;&quot; /allColumns /suppressAttributeExceptions"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
+</launchConfiguration>

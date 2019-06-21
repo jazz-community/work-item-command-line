@@ -84,15 +84,16 @@ public class ColumnHeaderMappingHelper {
 			String val = col.trim();
 			String id = nameToIdMapper.getID(val);
 			if (id == null) {
-				throw new WorkItemCommandLineException("Column header '" + col + "' ID can not be mapped in column " + i);
+				throw new WorkItemCommandLineException(
+						"Column header '" + col + "' ID can not be mapped in column " + i);
 			}
 			if (getIDs) {
 				header.add(id);
 			} else {
 				String name = nameToIdMapper.getDisplayNameForID(id);
 				if (name == null) {
-					throw new WorkItemCommandLineException("Column header '" + col
-							+ "' can not be mapped from ID '" + id + "' in column " + i);
+					throw new WorkItemCommandLineException(
+							"Column header '" + col + "' can not be mapped from ID '" + id + "' in column " + i);
 				}
 				header.add(name);
 			}

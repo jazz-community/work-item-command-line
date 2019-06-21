@@ -55,6 +55,7 @@ public class UpdateWorkItemCommand extends AbstractWorkItemModificationCommand {
 		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_APPROVALS);
 		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS);
 		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION);
+		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_IMPORT_IGNORE_MISSING_ATTTRIBUTES);
 	}
 
 	/*
@@ -94,6 +95,10 @@ public class UpdateWorkItemCommand extends AbstractWorkItemModificationCommand {
 		try {
 			this.appendResultString("Updating work item " + workItem.getId() + ".");
 			String workItemTypeID = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY);
+//			if (workItemTypeID == null) {
+//				workItemTypeID = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY
+//						+ ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE + ParameterValue.MODE_SET);
+//			}
 			if (workItemTypeID != null) {
 				IWorkItemType newType = WorkItemTypeHelper.findWorkItemTypeByIDAndDisplayName(workItemTypeID,
 						workItem.getProjectArea(), getWorkItemCommon(), getMonitor());
@@ -112,6 +117,10 @@ public class UpdateWorkItemCommand extends AbstractWorkItemModificationCommand {
 			this.appendResultString("Updated work item " + workItem.getId() + ".");
 		} catch (TeamOperationCanceledException e) {
 			throw new WorkItemCommandLineException("Work item not updated. " + e.getMessage(), e);
+		} catch (Exception e) {
+			this.setFailed();
+			throw new WorkItemCommandLineException(e);
+		} finally {
 		}
 		return true;
 	}
