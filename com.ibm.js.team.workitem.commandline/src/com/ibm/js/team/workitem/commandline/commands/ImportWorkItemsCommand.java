@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2017 IBM Corporation
+ * Copyright (c) 2015-2019 IBM Corporation
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -725,13 +725,15 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 */
 	private void processAttribute(ColumnHeaderAttributeNameMapper headerMapping, ParameterList parameters,
 			String attributeID, String targetValue) {
-		// Allow for a mode that ignores empty colum values.
+
+    // Allow for a mode that ignores empty colum values.
 		if(isIgnoreEmptyTargetValues())
 			// If the parameter has no value, we don't process it.
 			if (targetValue.equals("")) {
 				// @see https://github.com/jazz-community/work-item-command-line/issues/16
 				return;  
 			}
+
 		// Try to get the attribute from the header mapping
 		IAttribute attribute = headerMapping.getAttribute(attributeID);
 		// Handle non attribute based values
