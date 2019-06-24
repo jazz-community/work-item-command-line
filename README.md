@@ -134,7 +134,8 @@ Available commands:
     /importdebug 
     /forcelinkcreation 
     /enforceSizeLimits 
-    /importmultipass 
+    /importmultipass
+    /ignoreemptycolumnvalues
     [mappingFile="C:\temp\mapping.xml"] 
     [encoding="UTF_16LE"] 
     [timestampFormat="MMM d, yyyy hh:mm a"] 
