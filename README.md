@@ -149,7 +149,6 @@ Available commands:
     password="value"
     projectArea="value" 
     query="value" 
-    querysource="value"
     exportFile="value"
     /allColumns
     /asrtceclipse 
