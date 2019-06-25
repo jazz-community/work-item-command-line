@@ -1280,9 +1280,6 @@ public class WorkItemUpdateHelper {
 	 * @throws TeamRepositoryException
 	 */
 	private Object calculateCategory(ParameterValue parameter) throws TeamRepositoryException {
-		if (StringUtil.isEmpty(parameter.getValue())) {
-			return null; // Unassigned
-		}
 		ICategoryHandle category = findCategory(parameter.getValue());
 		if (category == null) {
 			throw new WorkItemCommandLineException("Category not found: '" + parameter.getIAttribute().getIdentifier()
