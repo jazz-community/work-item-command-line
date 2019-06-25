@@ -761,7 +761,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				addAttachmentParameters(parameters, attributeID, targetValue);
 				return;
 			}
-			getResult().appendResultString("No matching attribute found: " + attributeID);
+			getResult().appendResultString("No matching attribute found: '" + attributeID+"'");
 			return;
 		}
 		// Ignore everything else in the second pass
@@ -816,13 +816,19 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		}
 		if (attribute.getIdentifier().equals(IWorkItem.CUSTOM_ATTRIBUTES_PROPERTY)) {
 			// Ignore
-			getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
+			getResult().appendResultString("Ignored: Attribute can not be set: " + attributeID
 					+ " mapped to: " + attribute.getIdentifier());
 			return;
 		}
 		if (attribute.getIdentifier().equals(IWorkItem.ESIGNATURE_RECORD_PROPERTY)) {
 			// Ignore
-			getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
+			getResult().appendResultString("Ignored: Attribute can not be set: " + attributeID
+					+ " mapped to: " + attribute.getIdentifier());
+			return;
+		}
+		if (attribute.getIdentifier().equals(IWorkItem.STATE_TRANSITIONS_PROPERTY)) {
+			// Ignore
+			getResult().appendResultString("Ignored: Attribute can not be set: " + attributeID
 					+ " mapped to: " + attribute.getIdentifier());
 			return;
 		}

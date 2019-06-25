@@ -256,7 +256,7 @@ public class BulkUpdateWorkItemsCommand extends AbstractWorkItemModificationComm
 			operation.run(workItem, getMonitor());
 			this.appendResultString("Updated work item " + workItem.getId() + ".");
 		} catch (TeamOperationCanceledException e) {
-			throw new WorkItemCommandLineException("Work item not updated. " + e.getMessage(), e);
+			throw new WorkItemCommandLineException("Work item update cancelled. " + e.getMessage(), e);
 		} catch (TeamRepositoryException e) {
 			throw new WorkItemCommandLineException("Work item not updated. " + e.getMessage(), e);
 		}
