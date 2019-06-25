@@ -801,6 +801,31 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 					+ " mapped to: " + attribute.getIdentifier());
 			return;
 		}
+		// Ignore attributes that can not be set
+		if (attribute.getIdentifier().equals(IWorkItem.CREATION_DATE_PROPERTY)) {
+			// Ignore
+			getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
+					+ " mapped to: " + attribute.getIdentifier());
+			return;
+		}
+		if (attribute.getIdentifier().equals(IWorkItem.CREATOR_PROPERTY)) {
+			// Ignore
+			getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
+					+ " mapped to: " + attribute.getIdentifier());
+			return;
+		}
+		if (attribute.getIdentifier().equals(IWorkItem.CUSTOM_ATTRIBUTES_PROPERTY)) {
+			// Ignore
+			getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
+					+ " mapped to: " + attribute.getIdentifier());
+			return;
+		}
+		if (attribute.getIdentifier().equals(IWorkItem.ESIGNATURE_RECORD_PROPERTY)) {
+			// Ignore
+			getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
+					+ " mapped to: " + attribute.getIdentifier());
+			return;
+		}
 		if (attribType.equals(AttributeTypes.APPROVALS)) {
 			// handle Approvals
 			// For now we basically create a comment with the content.

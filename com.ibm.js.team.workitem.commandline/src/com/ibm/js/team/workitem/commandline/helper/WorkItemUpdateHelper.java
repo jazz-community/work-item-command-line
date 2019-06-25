@@ -1299,9 +1299,6 @@ public class WorkItemUpdateHelper {
 	 * @throws TeamRepositoryException
 	 */
 	private Object calculateContributor(ParameterValue parameter) throws TeamRepositoryException {
-		if (StringUtil.isEmpty(parameter.getValue())) {
-			return null; // Unassigned
-		}
 		IContributor user = findContributorFromIDorName(parameter.getValue().trim());
 		if (user == null) {
 			throw new WorkItemCommandLineException("Contributor ID not found: '" + parameter.getValue() + "'.");

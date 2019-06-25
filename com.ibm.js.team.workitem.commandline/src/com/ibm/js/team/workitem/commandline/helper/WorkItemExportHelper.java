@@ -329,7 +329,7 @@ public class WorkItemExportHelper {
 					return calculateNumberAsString(value, attribType);
 				} catch (NumberFormatException e) {
 					throw new WorkItemCommandLineException(
-							"Attribute Value not valid - Number format exception: " + value, e);
+							"Attribute Value not valid - Number format exception: '" + value+"'", e);
 				}
 			}
 			if (attribType.equals(AttributeTypes.DELIVERABLE)) {
