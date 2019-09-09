@@ -1,8 +1,8 @@
 #!/bin/sh
 #JAVA_HOME=/usr/java/jdk1.8.0_20/bin
-PLAIN_JAVA=/usr/RTC606Dev/Installs/PlainJavaAPI
-
 #export JAVA_HOME
+
+PLAIN_JAVA=/usr/RTC606Dev/Installs/PlainJavaAPI
 export PLAIN_JAVA
 
 # In the -Djava.ext.dirs always keep the Java distribution in the front
