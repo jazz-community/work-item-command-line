@@ -1,17 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7" />
-	<classpathentry kind="con"
-		path="org.eclipse.pde.core.requiredPlugins" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/PlainJavaApi" />
-	<classpathentry kind="src" path="src" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/OpenCSV" />
-	<classpathentry kind="con"
-		path="org.eclipse.jdt.USER_LIBRARY/rtcmapping" />
-	<classpathentry kind="lib" path="lib/opencsv.jar" />
-	<classpathentry kind="lib" path="lib/commons-lang.jar" />
-	<classpathentry kind="output" path="bin" />
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenCSV"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/rtcmapping"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/apache-mime4j-0.6.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.icu_4.4.2.v20110823.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.rational.wvcm.ct_3.0.1200.v20161206_1803.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.rational.wvcm.factory_3.0.400.v20161206_1803.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.rational.wvcm.interop_3.1.1000.v20161206_1803.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.rational.wvcm.ri.repo_3.0.900.v20161206_1803.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.build.client_3.0.1500.v20170420_1859.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.build.common_3.1.1700.v20180504_0035.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.calm.foundation.common_3.1.1600.v20180510_0007.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.connector.scm.client_3.0.1300.v20161206_1803.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.connector.scm.common_3.1.500.v20170613_0129.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.connector.scm.operations_3.1.700.v20161206_1803.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.datawarehouse.common_2.2.3000.v20171113_1731.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.dev.jdojo.runtime.common_3.0.1100.v20170613_0129.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.enterprise.buildablesubset.client_3.1.900.v20161206_1803.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.enterprise.buildablesubset.common_3.1.1200.v20170613_0129.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.enterprise.scd.client_1.1.0.v20161102_2211.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.enterprise.scd.common_1.1.100.v20171020_1633.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.filesystem.client_3.2.1100.v20180408_1635.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.filesystem.client.1.7.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.filesystem.client.daemon_3.1.1100.v20180314_0142.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.filesystem.client.workitems_3.1.1300.v20170628_0309.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.filesystem.common_3.2.1100.v20180330_0051.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.filesystem.common.workitems_3.1.1200.v20170824_1555.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.foundation.client_1.1.3000.v20180503_1701.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.foundation.common_1.3.4000.v20180303_0135.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.foundation.rcp.core_1.1.5000.v20180503_1701.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.fulltext.common_1.2.3000.v20180424_1643.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.interop.client_3.0.900.v20161206_1803.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.interop.client.rest_3.0.900.v20170613_0129.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.interop.common_3.0.1200.v20170613_0129.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.process.client_1.3.4000.v20180503_1701.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.process.common_1.3.4000.v20180416_1641.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.reports.client_2.1.3000.v20180503_1701.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.reports.common_2.4.3000.v20180424_0024.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.repository.client_1.3.4000.v20180503_1655.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.repository.common_1.4.4000.v20180417_0035.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.repository.common.json_1.2.3000.v20171113_1731.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.repository.common.remoteaccess_1.2.4000.v20180504_0021.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.repository.common.remoteaccess.auth_1.3.3000.v20171113_1731.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.repository.common.serialize_1.2.4000.v20171202_0140.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.repository.common.transport_1.2.2000.v20171113_1731.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.repository.rcp.common_3.1.900.v20170613_0129.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.rtc.common_3.1.1800.v20180429_1815.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.rtc.foundation.api.common_3.1.1000.v20170613_0129.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.scm.admin.common_3.2.400.v20170613_0129.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.scm.client_3.2.1000.v20180124_0354.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.scm.common_3.2.1100.v20180504_0035.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.workitem.api.common_3.1.1400.v20180330_0051.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.workitem.client_3.1.1800.v20180314_0142.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/com.ibm.team.workitem.common_3.2.1000.v20180506_1631.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/commons-io-1.2.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/httpclient-4.5.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/httpclient-cache-4.5.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/httpclient-win-4.5.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/httpcore-4.4.1.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/httpcore-ab-4.4.1.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/httpcore-nio-4.4.1.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/httpmime-4.5.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/javax.servlet_3.0.0.v201112011016.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/javax.wvcm_1.7.0.v20161102_2211.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/net.oauth_0.2.3000.v20180417_2022.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.apache.commons.codec_1.9.0.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.apache.commons.httpclient_3.1.0.v201012070820.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.apache.commons.logging_1.0.4.v201101211617.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.apache.log4j_1.2.15.v201012070815.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.core.filesystem_1.3.200.v20130115-145044.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.core.jobs_3.5.300.v20120912-155018.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.core.resources_3.8.1.v20121114-124432.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.core.runtime_3.8.0.v20120912-155025.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.emf.common_2.8.0.v20130125-0546.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.emf.ecore_2.8.3.v20130125-0546.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.emf.ecore.change_2.8.0.v20130125-0546.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.emf.ecore.xmi_2.8.1.v20130125-0546.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.equinox.common_3.6.100.v20120522-1841.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.equinox.preferences_3.5.1.v20121031-182809.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.equinox.registry_3.5.200.v20120522-1841.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.equinox.registry_3.5.201.v20131009-2050.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.jface.text_3.8.2.v20121126-164145.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.jface.text_3.8.3.v20141001-2118.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.osgi_3.8.2.v20130124-134944.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.osgi_3.8.2.v20140416-1442.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.text_3.5.200.v20120523-1310.jar"/>
+	<classpathentry kind="var" path="PLAIN_JAVA/org.eclipse.xsd_2.8.1.v20130125-0826.jar"/>
+	<classpathentry kind="var" path="IMPORT_EXPORT_LIBS"/>
+	<classpathentry kind="var" path="IMPORT_EXPORT_LIBS/commons-lang3-3.1.jar"/>
+	<classpathentry kind="var" path="IMPORT_EXPORT_LIBS/opencsv.jar"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>
