@@ -1,0 +1,59 @@
+plugins {
+  id 'maven'
+  id 'java-library'
+}
+
+repositories {
+  maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+dependencies {
+  api group: 'com.opencsv', name: 'opencsv', version: '3.7'
+  implementation files(addPlainJavaLibDependencies())
+}
+
+jar {
+  archiveName = "wcl.jar"
+}
+
+task pkg(type:Zip,dependsOn:jar) {
+  archiveName = "wcl-${version}.zip"
+  from(jar.destinationDir){
+    include jar.archiveName
+  }
+  into('lib'){
+    from('lib'){
+      include '*.jar'
+    }
+  }
+
+  from(new File(sourceSets.main.output.resourcesDir,"/scripts/"))
+
+}
+
+/**
+ * Collect PLAIN_JAVA toolkit dependencies.
+ * This is done by prepending a required -Pplain_java property value to the
+ * PLAIN_JAVA dependencies found in the classpath file.
+ */
+def addPlainJavaLibDependencies(){
+  // first get locally defined path to plain java libs
+  if(!findProperty('plain_java')){
+    throw new GradleException("Need path to PLAIN JAVA libs! Use -Pplain_java=<path>")
+  }
+
+  def plain_java_path = findProperty('plain_java').replaceAll("\\\\","/")
+
+  def libs = []
+
+  // iterate the classpath file finding the plain java dependencies
+  file(".classpath").readLines().each{ entry->
+    if(entry =~ /PLAIN_JAVA/){
+      libs << sprintf("%s/%s",plain_java_path, entry.replaceAll('.*PLAIN_JAVA/(.*)".*', '$1'))
+    }
+  }
+  return libs
+}
