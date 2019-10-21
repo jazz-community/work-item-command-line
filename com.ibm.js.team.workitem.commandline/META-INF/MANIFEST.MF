@@ -15,4 +15,4 @@ Require-Bundle: com.ibm.team.workitem.common,
  com.ibm.team.scm.client,
  com.ibm.team.workitem.rcp.core,
  org.eclipse.core.runtime
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
