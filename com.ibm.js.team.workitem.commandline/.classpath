@@ -5,7 +5,6 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PlainJavaApi"/>
-	<classpathentry kind="lib" path="lib/commons-lang.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenCSV"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Commons-lang"/>
 	<classpathentry kind="output" path="bin"/>

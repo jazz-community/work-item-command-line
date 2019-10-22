@@ -60,7 +60,8 @@ public class ReferenceUtil {
 	public static final String LINKTYPE_TRACKS_CHANGES = "scm_tracks_scm_changes";
 	public static final String LINKTYPE_TRACKS_REQUIREMENT = "tracks_requirement";
 	public static final String LINKTYPE_BLOCKS_TEST_EXECUTION = "blocks_test_execution";
-
+	//public static final String LINKTYPE_GIT_COMMIT = "git_commit";
+	
 	// work Item to work item links across repositories named location based
 	public static final String LINKTYPE_AFFECTS_PLAN_ITEM = "affects_plan_item";
 	// // the reverse to affects plan item
@@ -179,7 +180,7 @@ public class ReferenceUtil {
 
 	/**
 	 * Creates a map with string to IEndPointDescriptor values to create CLM links
-	 * to local and remote work items (e.g. located on a different CCM server)
+	 * to build results
 	 * 
 	 * @return the map created
 	 */
