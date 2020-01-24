@@ -87,10 +87,11 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 		try {
 			this.process();
 		} catch (TeamRepositoryException e) {
+			e.printStackTrace();
 			this.appendResultString("TeamRepositoryException: Unable to process!");
 			this.appendResultString("This is often due to a link creation making the target work item invalid. ");
 			this.appendResultString(
-					"For example creating a parent chld relationship to a work item that already has a parent.");
+					"For example creating a parent child relationship to a work item that already has a parent.");
 			this.appendResultString(e.getMessage());
 			this.setFailed();
 		}
