@@ -92,6 +92,8 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 			this.appendResultString("This is often due to a link creation making the target work item invalid. ");
 			this.appendResultString(
 					"For example creating a parent child relationship to a work item that already has a parent.");
+			this.appendResultString(
+					"Another cause is using the work item type alias instead of the work item type ID to create a work item.");
 			this.appendResultString(e.getMessage());
 			this.setFailed();
 		}
