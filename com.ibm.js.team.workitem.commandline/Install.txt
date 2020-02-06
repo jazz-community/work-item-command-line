@@ -1,0 +1,17 @@
+See https://github.com/jazz-community/work-item-command-line for code and documentation.
+
+1. Extract the content of the zip file into a folder. For example C:\Temp.
+2. Open the folder WCL that was create.
+
+3. Download the Plain Java Client Libraries from the Engineering Workflow Management (EWM/RTC) all download pages.
+4. Unzip the downloaded file into a folder.
+5. Edit the script file for your environment
+	- wcl.bat
+	- wcl.sh
+	
+	Provide a valid JRE and the plain java client libraries folder
+	
+	set JAVA_HOME=C:\PROGRA~1\Java\jre1.8.0_231
+	set PLAIN_JAVA=C:\RTC6061Dev\Installs\PlainJavaAPI
+
+run the work item command line e.g. wcl.bat

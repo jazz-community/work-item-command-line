@@ -436,7 +436,7 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 			commandName = "command";
 		}
 		String usage = "\n";
-		usage += "\n\nUsage (See http://wp.me/p2DlHq-s9 for a more complete description) :";
+		usage += "\n\nUsage (See https://rsjazz.wordpress.com/2019/07/03/work-item-command-line-5-0/ for a more complete description) :";
 		usage += "\n";
 		usage += IWorkItemCommandLineConstants.PREFIX_COMMAND + commandName + " {switch}" + " {parameter[:mode]=value}";
 		usage += "\n";

@@ -1,7 +1,7 @@
 
 WorkItemCommandLine Version 5.1
 
-Usage (See http://wp.me/p2DlHq-s9 for a more complete description) :
+Usage (See https://rsjazz.wordpress.com/2019/07/03/work-item-command-line-5-0/ for a more complete description) :
 -command {switch} {parameter[:mode]=value}
 
 Multiple parameter/value pairs and switches can be provided separated by spaces.

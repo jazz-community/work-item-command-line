@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/com.ibm.js.team.workitem.commandline/src/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
+<listEntry value="/com.ibm.js.team.workitem.commandline/src/main/java/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
