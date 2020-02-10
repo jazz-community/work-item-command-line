@@ -530,7 +530,7 @@ Format is:
 
 		Where encodingID is UTF-8 or UTF-16LE or UTF-16BE or us-ascii.
 
-	Example:
+Example:
 
 		encoding=UTF-8
 
