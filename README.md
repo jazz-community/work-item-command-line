@@ -522,6 +522,16 @@ Example:
 
     @deleteLinks_includedInBuild=yes
 
+Importing from a CSV file can fail if the file encoding does not match the expected encodig. An encoding can be provided for the CSV import and export. The default is: UTF-8
+Format is: 
+	encoding=encodingID
+
+		Where encodingID is UTF-8 or UTF-16LE or UTF-16BE or us-ascii.
+
+	Example:
+
+		encoding=UTF-8
+
 ## Attribute ID Aliases
 
 The attribute IDs available to a work item type can be listed with the pryttypeattributes command. It is also possible to look into the process specification. The attribute type ID's can be looked up in the RTC project area administration Web UI. Note that the Eclipse project area administation UI does not show the correct ID. For example for the category attribute, the Eclipse project area admin UI shows com.ibm.team.workitem.attribute.category but the correct value of the attribute is category. For Severity the correct ID is internalSeverity and not com.ibm.team.workitem.attribute.severity as the Eclipse Admin UI shows. To mitigate this problem and to allow to use the values similar to the constants shown in attribute customization, WCL provides a mapping for additional strings representing the same attribute ID. The table below shows which attribute ID aliases map to the predefined values. 
