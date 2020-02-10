@@ -137,7 +137,7 @@ Available commands:
     /importmultipass
     /ignoreemptycolumnvalues
     [mappingFile="C:\temp\mapping.xml"] 
-    [encoding="UTF_16LE"] 
+    [encoding="UTF-8"] 
     [timestampFormat="MMM d, yyyy hh:mm a"] 
     [delimiter=","]
 ```
@@ -155,7 +155,7 @@ Available commands:
     /suppressAttributeExceptions 
     /headerIDs 
     /ignoreErrors 
-    [encoding="UTF_16LE"] 
+    [encoding="UTF-8"] 
     [delimiter=","] 
     [columns="Type,Id,Planned For,Filed Against,Description,Found In"] 
     [querysource="JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters"] 
@@ -409,7 +409,7 @@ A pseudo parameter `@attachFile` can be used to upload attachments. This attribu
 Where:
 `<IDString>` must be unique for multiple attachments in one command. If only one attachment is uploaded, the `IDString` can be left empty. `ContentTypeID` is `text/plain` or `application/unknown` or `application/xml`
 
-`EncodingID` is `UTF-8` or `UTF-16LE` or `UTF-16BE` or `us-ascii`.
+`EncodingID` is `UTF-8` (default) or `UTF-16LE` or `UTF-16BE` or `us-ascii`.
 
 The file must be accessible and in the correct encoding.
 
