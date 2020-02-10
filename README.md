@@ -511,7 +511,7 @@ Example:
 
     @link_reportAgainstBuild=@_IjluoH-oEeSHhcw_WFU6CQ|P20141208-1713
 
-### Delete all links of a link type 
+#### Delete all links of a link type 
 Delete all links of a link type.
 
 ##### Format is:
@@ -521,6 +521,8 @@ Delete all links of a link type.
 Example:
 
     @deleteLinks_includedInBuild=yes
+
+#### Encoding
 
 Importing from a CSV file can fail if the file encoding does not match the expected encodig. An encoding can be provided for the CSV import and export. The default is: UTF-8
 Format is: 
