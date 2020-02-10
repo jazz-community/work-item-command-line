@@ -524,8 +524,10 @@ Example:
 
 #### Encoding
 
-Importing from a CSV file can fail if the file encoding does not match the expected encodig. An encoding can be provided for the CSV import and export. The default is: UTF-8
-Format is: 
+Importing from a CSV file can fail if the file encoding does not match the expected encodig. An encoding can be provided for the CSV import and export. The default encoding is: UTF-8
+
+#### Format is: 
+
 	encoding=encodingID
 
 		Where encodingID is UTF-8 or UTF-16LE or UTF-16BE or us-ascii.
