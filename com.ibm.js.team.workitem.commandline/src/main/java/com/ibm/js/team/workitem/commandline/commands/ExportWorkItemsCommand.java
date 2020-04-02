@@ -207,7 +207,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		}
 
 		ColumnHeaderMappingHelper columnHeaderMapping = new ColumnHeaderMappingHelper(projectArea, getWorkItemCommon(),
-				getMonitor());
+				getMonitor(), isIgnoreErrors());
 
 		// get the columns to export
 		if (getParameterManager().hasSwitch(SWITCH_ALL_COLUMNS)) {

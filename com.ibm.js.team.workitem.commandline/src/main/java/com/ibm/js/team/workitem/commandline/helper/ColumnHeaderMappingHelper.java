@@ -35,6 +35,7 @@ public class ColumnHeaderMappingHelper {
 
 	List<ParameterValue> columns = new ArrayList<ParameterValue>();
 	private String[] fColumns = null;
+	private boolean ignoreErrors = false;
 
 	/**
 	 * The constructor
@@ -49,6 +50,15 @@ public class ColumnHeaderMappingHelper {
 		this.fProjectArea = projectArea;
 		this.fWorkItemCommon = workItemCommon;
 		this.fMonitor = monitor;
+	}
+
+	public ColumnHeaderMappingHelper(IProjectAreaHandle projectArea, IWorkItemCommon workItemCommon,
+			IProgressMonitor monitor, boolean ignoreErrors) {
+		super();
+		this.fProjectArea = projectArea;
+		this.fWorkItemCommon = workItemCommon;
+		this.fMonitor = monitor;
+		this.ignoreErrors = ignoreErrors;
 	}
 
 	/**
@@ -72,6 +82,7 @@ public class ColumnHeaderMappingHelper {
 		ColumnHeaderAttributeNameMapper nameToIdMapper = new ColumnHeaderAttributeNameMapper(fProjectArea,
 				fWorkItemCommon, fMonitor);
 		int size = exportColumns.length;
+		List<String> messages = new ArrayList<String>(size);
 		List<String> header = new ArrayList<String>(size);
 
 		for (int i = 0; i < size; i++) {
@@ -92,13 +103,25 @@ public class ColumnHeaderMappingHelper {
 			} else {
 				String name = nameToIdMapper.getDisplayNameForID(id);
 				if (name == null) {
-					throw new WorkItemCommandLineException(
-							"Column header '" + col + "' can not be mapped from ID '" + id + "' in column " + i);
+					messages.add("\tColumn header '" + col + "' can not be mapped from ID '" + id + "' in column " + i
+							+ "\n");
+					continue;
+				} else {
+					header.add(name);
 				}
-				header.add(name);
 			}
 			ParameterValue columnParameter = new ParameterValue(id, null, fProjectArea, fMonitor);
-			addColumnParameter(i, columnParameter);
+			addColumnParameter(columnParameter);
+		}
+		if (messages.size() > 0) {
+			StringBuilder mesg = new StringBuilder("Verify columns= option:\n");
+			for (String message : messages) {
+				mesg.append(message);
+			}
+			if (ignoreErrors)
+				System.out.println(mesg);
+			else
+				throw new WorkItemCommandLineException(mesg.toString());
 		}
 		return header;
 	}
@@ -109,8 +132,8 @@ public class ColumnHeaderMappingHelper {
 	 * @param i
 	 * @param columnParameter
 	 */
-	private void addColumnParameter(int i, ParameterValue columnParameter) {
-		getParameters().add(i, columnParameter);
+	private void addColumnParameter(ParameterValue columnParameter) {
+		getParameters().add(columnParameter);
 	}
 
 	/**
