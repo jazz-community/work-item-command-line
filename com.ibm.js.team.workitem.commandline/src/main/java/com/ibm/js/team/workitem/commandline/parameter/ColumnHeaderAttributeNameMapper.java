@@ -67,10 +67,16 @@ public class ColumnHeaderAttributeNameMapper {
 			// It is possible to have whitespaces in display names
 			String displayName = attribute.getDisplayName().trim();
 			String id = attribute.getIdentifier().trim();
-			nameIDMap.put(displayName, id);
-			idNameMap.put(id, displayName);
-			attributeIdNameMap.put(id, displayName);
-			attributeMap.put(id, attribute);
+			String object = nameIDMap.get(displayName);
+			if (object == null || object.isEmpty()) {
+				nameIDMap.put(displayName, id);
+				idNameMap.put(id, displayName);
+				attributeIdNameMap.put(id, displayName);
+				attributeMap.put(id, attribute);
+			} else {
+				System.err.println("Attribute: " + displayName + " with id: " + id + " already exists with id: "
+						+ object);
+			}
 		}
 		// Add all the pseudo attribute attachments
 		idNameMap.put(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS, ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS);
@@ -79,10 +85,14 @@ public class ColumnHeaderAttributeNameMapper {
 		// Add all the links
 		Set<String> linkNames = ParameterLinkIDMapper.getLinkNames();
 		for (String linkName : linkNames) {
-			String linkID = ParameterLinkIDMapper.getinternalID(linkName);
-			nameIDMap.put(linkName, linkID);
-			idNameMap.put(linkID, linkName);
-			linkMap.put(linkID, ReferenceUtil.getReferenceEndpointDescriptor(linkID));
+			if (nameIDMap.get(linkName) == null) { // Resolved By is both an
+													// attribute and link name,
+													// ignore link
+				String linkID = ParameterLinkIDMapper.getinternalID(linkName);
+				nameIDMap.put(linkName, linkID);
+				idNameMap.put(linkID, linkName);
+				linkMap.put(linkID, ReferenceUtil.getReferenceEndpointDescriptor(linkID));
+			}
 		}
 	}
 

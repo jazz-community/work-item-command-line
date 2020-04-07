@@ -218,13 +218,13 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 		ParameterManager parameterManager = new ParameterManager(ParameterParser.parseParameters(args));
 		if (parameterManager.hasSwitch(IWorkItemCommandLineConstants.SWITCH_RMISERVER)) {
 			// Started as RMI server
-			Parameter rmiInfo = parameterManager.getArguments()
-					.getParameter(IWorkItemCommandLineConstants.SWITCH_RMISERVER);
+			Parameter rmiInfo = parameterManager.getArguments().getParameter(
+					IWorkItemCommandLineConstants.SWITCH_RMISERVER);
 			return startRMIServer(rmiInfo);
 		} else if (parameterManager.hasSwitch(IWorkItemCommandLineConstants.SWITCH_RMICLIENT)) {
 			// Started as RMI client
-			Parameter rmiInfo = parameterManager.getArguments()
-					.getParameter(IWorkItemCommandLineConstants.SWITCH_RMICLIENT);
+			Parameter rmiInfo = parameterManager.getArguments().getParameter(
+					IWorkItemCommandLineConstants.SWITCH_RMICLIENT);
 			return runRMIClient(rmiInfo, args);
 		}
 		// direct call, we are not running in RMI mode

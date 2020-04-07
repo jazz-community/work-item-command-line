@@ -189,6 +189,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 
 		ITeamRepository teamRepository = TeamPlatform.getTeamRepositoryService().getTeamRepository(repository);
 		teamRepository.registerLoginHandler(new LoginHandler(user, password));
+		teamRepository.setAutoLogin(true);
 		teamRepository.login(getMonitor());
 		return teamRepository;
 	}
@@ -202,8 +203,8 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	 */
 	protected ITeamRepository login(String repository) throws TeamRepositoryException {
 		String user = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY);
-		String password = getParameterManager()
-				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY);
+		String password = getParameterManager().consumeParameter(
+				IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY);
 
 		ITeamRepository teamRepository = TeamPlatform.getTeamRepositoryService().getTeamRepository(repository);
 		teamRepository.registerLoginHandler(new LoginHandler(user, password));

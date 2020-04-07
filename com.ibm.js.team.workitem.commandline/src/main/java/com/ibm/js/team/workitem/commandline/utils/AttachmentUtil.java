@@ -63,15 +63,24 @@ public class AttachmentUtil {
 			throws TeamRepositoryException {
 		String attachmentFileName = folder.getAbsolutePath() + File.separator + attachment.getName();
 		try {
+			int retry = 0;
 			File save = new File(attachmentFileName);
 
-			OutputStream out = new FileOutputStream(save);
-			try {
-				((ITeamRepository) attachment.getOrigin()).contentManager().retrieveContent(attachment.getContent(),
-						out, monitor);
-				return attachment;
-			} finally {
-				out.close();
+			OutputStream out;
+			while (true) {
+				out = new FileOutputStream(save);
+				try {
+					((ITeamRepository) attachment.getOrigin()).contentManager().retrieveContent(
+							attachment.getContent(), out, monitor);
+					return attachment;
+				} catch (TeamRepositoryException e) {
+					retry++;
+					if (retry > 4)
+						throw e;
+					System.out.println("Retry (" + retry + ") file: " + attachmentFileName);
+				} finally {
+					out.close();
+				}
 			}
 		} catch (FileNotFoundException e) {
 			throw new WorkItemCommandLineException("Attach File - File not found: " + attachmentFileName, e);
@@ -90,15 +99,37 @@ public class AttachmentUtil {
 			IProgressMonitor monitor) throws TeamRepositoryException {
 		List<IAttachment> foundAttachments = new ArrayList<IAttachment>();
 		// get all the references
-		IWorkItemReferences references = workItemCommon.resolveWorkItemReferences(workItem, monitor);
+		int retry = 0;
+		IWorkItemReferences references = null;
+		while (references == null) {
+			try {
+				references = workItemCommon.resolveWorkItemReferences(workItem, monitor);
+			} catch (TeamRepositoryException e) {
+				retry++;
+				if (retry > 4)
+					throw e;
+				System.out.println("Retry (" + retry + ") find attachments for: " + workItem.getId());
+			}
+		}
 		// narrow down to the attachments
 		List<IReference> attachments = references.getReferences(WorkItemEndPoints.ATTACHMENT);
 		for (IReference aReference : attachments) {
 			Object resolvedReference = aReference.resolve();
 			if (resolvedReference instanceof IAttachmentHandle) {
 				IAttachmentHandle handle = (IAttachmentHandle) resolvedReference;
-				IAttachment attachment = workItemCommon.getAuditableCommon().resolveAuditable(handle,
-						IAttachment.DEFAULT_PROFILE, monitor);
+				retry = 0;
+				IAttachment attachment = null;
+				while (attachment == null) {
+					try {
+						attachment = workItemCommon.getAuditableCommon().resolveAuditable(handle,
+								IAttachment.DEFAULT_PROFILE, monitor);
+					} catch (TeamRepositoryException e) {
+						retry++;
+						if (retry > 4)
+							throw e;
+						System.out.println("Retry (" + retry + ") find attachment.");
+					}
+				}
 				foundAttachments.add(attachment);
 			}
 		}
@@ -110,8 +141,8 @@ public class AttachmentUtil {
 	 * 
 	 * @throws TeamRepositoryException
 	 */
-	public static void removeAllAttachments(IWorkItem workItem, IWorkItemCommon workItemCommon,
-			IProgressMonitor monitor) throws TeamRepositoryException {
+	public static void removeAllAttachments(IWorkItem workItem, IWorkItemCommon workItemCommon, IProgressMonitor monitor)
+			throws TeamRepositoryException {
 		List<IAttachment> allAttachments = findAttachments(workItem, workItemCommon, monitor);
 		for (IAttachment anAttachment : allAttachments) {
 			workItemCommon.deleteAttachment(anAttachment, monitor);
@@ -130,8 +161,7 @@ public class AttachmentUtil {
 		File thisFile = new File(fileName);
 		List<IAttachment> allAttachments = findAttachments(workItem, workItemCommon, monitor);
 		for (IAttachment anAttachment : allAttachments) {
-			if (anAttachment.getName().equals(thisFile.getName())
-					&& anAttachment.getDescription().equals(description)) {
+			if (anAttachment.getName().equals(thisFile.getName()) && anAttachment.getDescription().equals(description)) {
 				workItemCommon.deleteAttachment(anAttachment, monitor);
 			}
 		}
