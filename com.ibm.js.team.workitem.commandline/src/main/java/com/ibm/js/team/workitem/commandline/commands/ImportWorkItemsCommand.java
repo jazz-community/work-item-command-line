@@ -379,16 +379,10 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			// data.
 			// Try to create or update work items based on the data read
 			// @see http://opencsv.sourceforge.net/
-//    <<<<<<< HEAD
-//
-//			@SuppressWarnings("deprecation")
-//			CSVReader reader = new CSVReader(
-//					new InputStreamReader(new FileInputStream(getImportFile()), getFileEncoding()), getDelimiter(),
-//					getQuoteChar());
-//           =======
-			CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(getImportFile()),
-					getFileEncoding()), getDelimiter(), getQuoteChar());
-//           >>>>>>> cc1c7a2c6cb9bd848fa6fa4537aef6412f1d04e8
+			@SuppressWarnings("deprecation")
+			CSVReader reader = new CSVReader(
+					new InputStreamReader(new FileInputStream(getImportFile()), getFileEncoding()), getDelimiter(),
+					getQuoteChar());
 
 			ColumnHeaderAttributeNameMapper attributeNameMapper = new ColumnHeaderAttributeNameMapper(projectArea,
 					getWorkItemCommon(), getMonitor());
@@ -1221,14 +1215,12 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		if (StringUtil.hasPrefix(idval, ExportWorkItemsCommand.PREFIX_EXISTINGWORKITEM)) {
 			workItemID = StringUtil.removePrefix(idval, ExportWorkItemsCommand.PREFIX_EXISTINGWORKITEM);
 		}
-		String urlprefix = null;
 		String tempWorkItemID = null;
 		if (workItemID.startsWith(WorkItemUpdateHelper.HTTP_PROTOCOL_PREFIX)) {
 			try {
 				// Try to get the work item id from the URL and keep the prefix
 				int length = workItemID.length();
 				int lastindex = workItemID.lastIndexOf(HTML_PATH_SLASH);
-				urlprefix = workItemID.substring(0, lastindex + 1);
 				tempWorkItemID = workItemID.substring(lastindex + 1, length);
 				foundURIbasedWI = true;
 			} catch (IndexOutOfBoundsException e) {
