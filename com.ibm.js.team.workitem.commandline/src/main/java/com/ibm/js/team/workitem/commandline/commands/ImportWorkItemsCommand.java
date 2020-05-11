@@ -750,18 +750,15 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	private void processAttribute(ColumnHeaderAttributeNameMapper headerMapping, ParameterList parameters,
 			String attributeID, String targetValue) {
 
-		// Allow for a mode that ignores empty colum values.
-//<<<<<<< HEAD
-		if (isIgnoreEmptyTargetValues())
-//=======
-		if(isIgnoreEmptyTargetValues())
-//>>>>>>> cc1c7a2c6cb9bd848fa6fa4537aef6412f1d04e8
+		// Allow for a mode that ignores empty column values.
+		if (isIgnoreEmptyTargetValues()){
 			// If the parameter has no value, we don't process it.
 			if (targetValue.equals("")) {
 				// @see
 				// https://github.com/jazz-community/work-item-command-line/issues/16
 				return;
 			}
+		}
 
 		// Try to get the attribute from the header mapping
 		IAttribute attribute = headerMapping.getAttribute(attributeID);
