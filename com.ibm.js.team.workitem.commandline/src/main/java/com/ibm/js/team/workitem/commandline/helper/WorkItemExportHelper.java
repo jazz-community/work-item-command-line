@@ -299,8 +299,8 @@ public class WorkItemExportHelper {
 				// Handle all Enumeration List Types
 				return calculateEnumerationLiteralListAsString(value, attribute);
 			}
-			throw new WorkItemCommandLineException(
-					"Type not recognized - type not yet supported: " + attribType + " ID " + attribute.getIdentifier());
+			throw new WorkItemCommandLineException("Type not recognized - type not yet supported: " + attribType
+					+ " ID " + attribute.getIdentifier());
 		} else {
 			// Handle non list types - the simple ones first.
 
@@ -317,8 +317,8 @@ public class WorkItemExportHelper {
 				if (value instanceof Boolean) {
 					return ((Boolean) value).toString();
 				}
-				throw new WorkItemCommandLineException(
-						"Type not expected - expected boolean: " + attribType + " ID " + attribute.getIdentifier());
+				throw new WorkItemCommandLineException("Type not expected - expected boolean: " + attribType + " ID "
+						+ attribute.getIdentifier());
 			}
 			if (AttributeTypes.NUMBER_TYPES.contains(attribType)) {
 				// different number types
@@ -387,8 +387,8 @@ public class WorkItemExportHelper {
 			}
 
 			// In case we forgot something or a new type gets implemented
-			throw new WorkItemCommandLineException(
-					"AttributeType not yet supported: " + attribType + " ID " + attribute.getIdentifier());
+			throw new WorkItemCommandLineException("AttributeType not yet supported: " + attribType + " ID "
+					+ attribute.getIdentifier());
 		}
 	}
 
@@ -404,7 +404,11 @@ public class WorkItemExportHelper {
 		IWorkflowInfo workflowInfo;
 		workflowInfo = getWorkItemCommon().getWorkflow(workItem.getWorkItemType(), workItem.getProjectArea(),
 				getMonitor());
-		return workflowInfo.getResolutionName(resolution);
+		String name = workflowInfo.getResolutionName(resolution);
+		if (name == null) {
+			return name = "";
+		}
+		return name;
 	}
 
 	/**
@@ -466,7 +470,18 @@ public class WorkItemExportHelper {
 			throw new WorkItemCommandLineException("Linktype not yet supported: ID " + linkTypeID);
 		}
 		IEndPointDescriptor endpoint = ReferenceUtil.getReferenceEndpointDescriptor(linkTypeID);
-		IWorkItemReferences wiReferences = getWorkItemCommon().resolveWorkItemReferences(workItem, getMonitor());
+		IWorkItemReferences wiReferences = null;
+		int retry = 0;
+		while (wiReferences == null) {
+			try {
+				wiReferences = getWorkItemCommon().resolveWorkItemReferences(workItem, getMonitor());
+			} catch (TeamRepositoryException e) {
+				retry++;
+				if (retry > 2)
+					throw e;
+				System.out.println("Retry(" + retry + ") get linkTypeID: " + linkTypeID);
+			}
+		}
 		List<String> referenceRepresentations = new ArrayList<String>();
 		List<IReference> references = wiReferences.getReferences(endpoint);
 		for (IReference aReference : references) {
@@ -481,8 +496,8 @@ public class WorkItemExportHelper {
 						referenceRepresentations.add(getExistingWorkitemPrefix() + Integer.toString(item.getId()));
 					}
 				} else {
-					throw new WorkItemCommandLineException(
-							"Unexpected reference type ItemReference expected: " + linkTypeID);
+					throw new WorkItemCommandLineException("Unexpected reference type ItemReference expected: "
+							+ linkTypeID);
 				}
 			} else if (linkType.equals(ReferenceUtil.CATEGORY_LINKTYPE_CLM_WORKITEM)) {
 				referenceRepresentations.add(getURIReferenceAsString(aReference, linkTypeID));
@@ -587,8 +602,8 @@ public class WorkItemExportHelper {
 				}
 			}
 			if (referencedItem instanceof IWorkItemHandle) {
-				IWorkItem item = WorkItemUtil.resolveWorkItem((IWorkItemHandle) referencedItem, IWorkItem.SMALL_PROFILE,
-						getWorkItemCommon(), getMonitor());
+				IWorkItem item = WorkItemUtil.resolveWorkItem((IWorkItemHandle) referencedItem,
+						IWorkItem.SMALL_PROFILE, getWorkItemCommon(), getMonitor());
 				return getExistingWorkitemPrefix() + Integer.toString(item.getId());
 			}
 		}
@@ -736,8 +751,8 @@ public class WorkItemExportHelper {
 		String approvalAsText = "";
 		approvalAsText += approvalDescriptor.getName() + ": ";
 		// colon as separator
-		IApprovalState approvalOverAllState = WorkItemApprovals
-				.getState(approvalDescriptor.getCumulativeStateIdentifier());
+		IApprovalState approvalOverAllState = WorkItemApprovals.getState(approvalDescriptor
+				.getCumulativeStateIdentifier());
 		approvalAsText += approvalOverAllState.getDisplayName();
 		int approvalStateCount = 0;
 		int approverCount = 0;
@@ -797,7 +812,8 @@ public class WorkItemExportHelper {
 		@SuppressWarnings("unchecked")
 		Identifier<? extends ILiteral> currentIdentifier = (Identifier<? extends ILiteral>) value;
 		ILiteral literal = enumeration.findEnumerationLiteral(currentIdentifier);
-		return literal.getName();
+		String name = (literal == null) ? "" : literal.getName();
+		return name;
 	}
 
 	/**
@@ -885,8 +901,8 @@ public class WorkItemExportHelper {
 			return CONSTANT_NO_VALUE;
 		}
 		if (!(value instanceof IWorkItemHandle)) {
-			throw new WorkItemCommandLineException(
-					"Calculate work item - Incompatible Type Exception: " + value.toString());
+			throw new WorkItemCommandLineException("Calculate work item - Incompatible Type Exception: "
+					+ value.toString());
 		}
 		// Resolve handle
 		IWorkItem workItem = (IWorkItem) getTeamRepository().itemManager().fetchCompleteItem((IWorkItemHandle) value,
@@ -910,8 +926,8 @@ public class WorkItemExportHelper {
 			return CONSTANT_NO_VALUE;
 		}
 		if (!(value instanceof IProcessAreaHandle)) {
-			throw new WorkItemCommandLineException(
-					"Convert process area - Incompatible Type Exception: " + value.toString());
+			throw new WorkItemCommandLineException("Convert process area - Incompatible Type Exception: "
+					+ value.toString());
 		}
 		if (isRTCEclipseExport()) {
 			return ProcessAreaUtil.getName((IProcessAreaHandle) value, getMonitor());
@@ -943,8 +959,8 @@ public class WorkItemExportHelper {
 				Timestamp timestamp = (Timestamp) value;
 				return SimpleDateFormatUtil.getDate(timestamp, getSimpleDateTimeFormatPattern());
 			}
-			throw new WorkItemCommandLineException(
-					"Convert timestamp - Incompatible Type Exception: " + value.toString());
+			throw new WorkItemCommandLineException("Convert timestamp - Incompatible Type Exception: "
+					+ value.toString());
 		}
 		return CONSTANT_NO_VALUE;
 	}
@@ -961,12 +977,12 @@ public class WorkItemExportHelper {
 			return CONSTANT_NO_VALUE;
 		}
 		if ((value instanceof IContributorHandle)) {
-			IContributor contributor = (IContributor) getTeamRepository().itemManager()
-					.fetchCompleteItem((IContributorHandle) value, IItemManager.DEFAULT, getMonitor());
-			return contributor.getName();
+			IContributor contributor = (IContributor) getTeamRepository().itemManager().fetchCompleteItem(
+					(IContributorHandle) value, IItemManager.DEFAULT, getMonitor());
+			if (contributor != null)
+				return contributor.getUserId();
 		}
-		throw new WorkItemCommandLineException(
-				"Convert Contributor - Incompatible Type Exception: " + value.toString());
+		throw new WorkItemCommandLineException("Convert Contributor - Incompatible Type Exception: " + value.toString());
 	}
 
 	/**
@@ -992,8 +1008,8 @@ public class WorkItemExportHelper {
 					return dh.getIterationAsFullPath((IIterationHandle) value, DevelopmentLineHelper.BYLABEL);
 				}
 			}
-			throw new WorkItemCommandLineException(
-					"Convert iteration - Incompatible Type Exception: " + value.toString());
+			throw new WorkItemCommandLineException("Convert iteration - Incompatible Type Exception: "
+					+ value.toString());
 		}
 		return CONSTANT_NO_VALUE;
 	}
@@ -1010,8 +1026,8 @@ public class WorkItemExportHelper {
 			if (value instanceof ICategoryHandle) {
 				return getWorkItemCommon().resolveHierarchicalName((ICategoryHandle) value, getMonitor());
 			}
-			throw new WorkItemCommandLineException(
-					"Convert Category - Incompatible Type Exception: " + value.toString());
+			throw new WorkItemCommandLineException("Convert Category - Incompatible Type Exception: "
+					+ value.toString());
 		}
 		return CONSTANT_NO_VALUE;
 	}
@@ -1026,12 +1042,12 @@ public class WorkItemExportHelper {
 	private String calculateDeliverableAsString(Object value) throws TeamRepositoryException {
 		if (value != null) {
 			if (value instanceof IDeliverableHandle) {
-				IDeliverable deliverable = (IDeliverable) getTeamRepository().itemManager()
-						.fetchCompleteItem((IDeliverableHandle) value, IItemManager.DEFAULT, getMonitor());
+				IDeliverable deliverable = (IDeliverable) getTeamRepository().itemManager().fetchCompleteItem(
+						(IDeliverableHandle) value, IItemManager.DEFAULT, getMonitor());
 				return deliverable.getName();
 			}
-			throw new WorkItemCommandLineException(
-					"Calculate deliverable - Incompatible Type Exception: " + value.toString());
+			throw new WorkItemCommandLineException("Calculate deliverable - Incompatible Type Exception: "
+					+ value.toString());
 		}
 		return CONSTANT_NO_VALUE;
 	}
@@ -1075,8 +1091,8 @@ public class WorkItemExportHelper {
 				Long milliseconds = (Long) value;
 				return SimpleDateFormatUtil.convertToTimeSpent(milliseconds);
 			}
-			throw new WorkItemCommandLineException(
-					"Calculate Duration - Incompatible Type Exception: " + value.toString());
+			throw new WorkItemCommandLineException("Calculate Duration - Incompatible Type Exception: "
+					+ value.toString());
 		}
 		return CONSTANT_NO_VALUE;
 	}
@@ -1090,6 +1106,9 @@ public class WorkItemExportHelper {
 	private String calculateString(Object value) {
 		if (value != null) {
 			if (value instanceof String) {
+				// TODO KMW check that last character is not a backslash so that
+				// it doesn't escape the double quote in
+				// the CSV file.
 				return (String) value;
 			}
 			throw new WorkItemCommandLineException("Convert string - Incompatible Type Exception: " + value.toString());

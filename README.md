@@ -137,7 +137,7 @@ Available commands:
     /importmultipass
     /ignoreemptycolumnvalues
     [mappingFile="C:\temp\mapping.xml"] 
-    [encoding="UTF_16LE"] 
+    [encoding="UTF-8"] 
     [timestampFormat="MMM d, yyyy hh:mm a"] 
     [delimiter=","]
 ```
@@ -155,7 +155,7 @@ Available commands:
     /suppressAttributeExceptions 
     /headerIDs 
     /ignoreErrors 
-    [encoding="UTF_16LE"] 
+    [encoding="UTF-8"] 
     [delimiter=","] 
     [columns="Type,Id,Planned For,Filed Against,Description,Found In"] 
     [querysource="JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters"] 
@@ -409,7 +409,7 @@ A pseudo parameter `@attachFile` can be used to upload attachments. This attribu
 Where:
 `<IDString>` must be unique for multiple attachments in one command. If only one attachment is uploaded, the `IDString` can be left empty. `ContentTypeID` is `text/plain` or `application/unknown` or `application/xml`
 
-`EncodingID` is `UTF-8` or `UTF-16LE` or `UTF-16BE` or `us-ascii`.
+`EncodingID` is `UTF-8` (default) or `UTF-16LE` or `UTF-16BE` or `us-ascii`.
 
 The file must be accessible and in the correct encoding.
 
@@ -511,7 +511,7 @@ Example:
 
     @link_reportAgainstBuild=@_IjluoH-oEeSHhcw_WFU6CQ|P20141208-1713
 
-### Delete all links of a link type 
+#### Delete all links of a link type 
 Delete all links of a link type.
 
 ##### Format is:
@@ -521,6 +521,20 @@ Delete all links of a link type.
 Example:
 
     @deleteLinks_includedInBuild=yes
+
+#### Encoding
+
+Importing from a CSV file can fail if the file encoding does not match the expected encodig. An encoding can be provided for the CSV import and export. The default encoding is: UTF-8
+
+#### Format is: 
+
+	encoding=encodingID
+
+		Where encodingID is UTF-8 or UTF-16LE or UTF-16BE or us-ascii.
+
+Example:
+
+		encoding=UTF-8
 
 ## Attribute ID Aliases
 

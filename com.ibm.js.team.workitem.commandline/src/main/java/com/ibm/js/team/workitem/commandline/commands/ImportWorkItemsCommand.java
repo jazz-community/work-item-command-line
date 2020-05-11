@@ -114,6 +114,9 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	public static final String PARAMETER_CUSTOM_MAPPING_FILE = "mappingFile";
 	public static final String PARAMETER_CUSTOM_MAPPING_FILE_EXAMPLE = "\"C:\\temp\\mapping.xml\"";
 
+	// The max length of Large HTML is 32769
+	private static final int MAX_COMMENT_LENGTH = (int) (IWorkItem.MAX_LARGE_STRING_BYTES - 100);
+
 	// To determine if we are in debug mode
 	private boolean fDebug;
 
@@ -248,15 +251,15 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		setIgnoreEmptyTargetValues(getParameterManager().hasSwitch(SWITCH_IGNORE_EMPTY_TARGET_VALUES));
 		setMultiPass(getParameterManager().hasSwitch(SWITCH_MULTI_PASS_IMPORT));
 		this.setForceLinkCreation(getParameterManager().hasSwitch(SWITCH_FORCE_LINK_CREATION));
-		this.setEnforceSizeJimits(
-				getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS));
+		this.setEnforceSizeLimits(getParameterManager().hasSwitch(
+				IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS));
 		this.setIgnoreErrors(getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS));
 		this.setImportDebug(getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_IMPORT_DEBUG));
-		this.setSuppressMailNotification(
-				getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION));
+		this.setSuppressMailNotification(getParameterManager().hasSwitch(
+				IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION));
 
-		String projectAreaName = getParameterManager()
-				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY).trim();
+		String projectAreaName = getParameterManager().consumeParameter(
+				IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY).trim();
 		// Find the project area
 		IProjectArea projectArea = ProcessAreaUtil.findProjectAreaByFQN(projectAreaName, getProcessClientService(),
 				getMonitor());
@@ -278,8 +281,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		}
 
 		// Read if there is a special date time format pattern provided
-		String dateTimeFormatPattern = getParameterManager()
-				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING);
+		String dateTimeFormatPattern = getParameterManager().consumeParameter(
+				IWorkItemCommandLineConstants.PARAMETER_TIMESTAMP_ENCODING);
 		if (dateTimeFormatPattern != null) {
 			setSimpleDateTimeFormatPattern(dateTimeFormatPattern.trim());
 		}
@@ -369,18 +372,23 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 */
-	private boolean performImport(IProjectArea projectArea, boolean result)
-			throws TeamRepositoryException, WorkItemCommandLineException {
+	private boolean performImport(IProjectArea projectArea, boolean result) throws TeamRepositoryException,
+			WorkItemCommandLineException {
 		try {
 			// Read the input data with encoding and try to iterate through the
 			// data.
 			// Try to create or update work items based on the data read
 			// @see http://opencsv.sourceforge.net/
-
-			@SuppressWarnings("deprecation")
-			CSVReader reader = new CSVReader(
-					new InputStreamReader(new FileInputStream(getImportFile()), getFileEncoding()), getDelimiter(),
-					getQuoteChar());
+//    <<<<<<< HEAD
+//
+//			@SuppressWarnings("deprecation")
+//			CSVReader reader = new CSVReader(
+//					new InputStreamReader(new FileInputStream(getImportFile()), getFileEncoding()), getDelimiter(),
+//					getQuoteChar());
+//           =======
+			CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(getImportFile()),
+					getFileEncoding()), getDelimiter(), getQuoteChar());
+//           >>>>>>> cc1c7a2c6cb9bd848fa6fa4537aef6412f1d04e8
 
 			ColumnHeaderAttributeNameMapper attributeNameMapper = new ColumnHeaderAttributeNameMapper(projectArea,
 					getWorkItemCommon(), getMonitor());
@@ -388,6 +396,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			debug("Importing File: " + getImportFile().getAbsolutePath());
 			debug("Dumping rows - using ',' as seperator during print.");
 			List<String[]> myEntries = reader.readAll();
+			reader.close();
 
 			boolean skiptitle = true;
 			String[] header = null;
@@ -458,17 +467,18 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		// mapping provided
 		ParameterList parameters = processRow(header, row, rowID, attributeMapping);
 		if (parameters.isEmpty()) {
-			getResult().appendResultString("No attributes or columns found for row " + rowID
-					+ ". Check the import file format or delimiter. Delimiter is '" + getDelimiter() + "'");
+			getResult().appendResultString(
+					"No attributes or columns found for row " + rowID
+							+ ". Check the import file format or delimiter. Delimiter is '" + getDelimiter() + "'");
 		}
 		if (getPassNumber() > 0) {
 			if (null == parameters.getParameter(ORIGINAL_WORK_ITEM_ID)) {
-				throw new WorkItemCommandLineException(
-						"Multi Pass import requires column with work item ID's nanmed " + ORIGINAL_WORK_ITEM_ID);
+				throw new WorkItemCommandLineException("Multi Pass import requires column with work item ID's nanmed "
+						+ ORIGINAL_WORK_ITEM_ID);
 			}
 		}
 		parameters.addSwitch(IWorkItemCommandLineConstants.SWITCH_BULK_OPERATION, "");
-		if (isEnforceSizeJimits()) {
+		if (isEnforceSizeLimits()) {
 			parameters.addSwitch(IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS, "");
 		}
 		if (isIgnoreErrors()) {
@@ -495,8 +505,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				for (String val : row) {
 					System.out.print(val + ",");
 				}
-				throw new WorkItemCommandLineException(
-						"Original Work Item ID not provided in 2nd import pass in row: " + rowID + "! Row value: \n");
+				throw new WorkItemCommandLineException("Original Work Item ID not provided in 2nd import pass in row: "
+						+ rowID + "! Row value: \n");
 			}
 			wiID = getMappedWorkItemID(originalWorkItemID);
 		}
@@ -525,8 +535,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 					projectArea.getProjectArea(), getWorkItemCommon(), getMonitor());
 			if (workItemType == null) {
 				// If we have no type we can't create the work item
-				throw new WorkItemCommandLineException(
-						"Work item type " + workItemTypeIDorName + " not found in project area. ");
+				throw new WorkItemCommandLineException("Work item type " + workItemTypeIDorName
+						+ " not found in project area. ");
 			}
 			// Create the work item
 			return createWorkItem(workItemType, originalWorkItemID);
@@ -580,8 +590,9 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			// Do we have to change the type?
 			String workItemTypeIDOrName = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY);
 			if (workItemTypeIDOrName == null) {
-				workItemTypeIDOrName = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY
-						+ ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE + ParameterValue.MODE_SET);
+				workItemTypeIDOrName = getParameterManager().consumeParameter(
+						IWorkItem.TYPE_PROPERTY + ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
+								+ ParameterValue.MODE_SET);
 			}
 			// There is a type provided
 			if (workItemTypeIDOrName != null) {
@@ -590,8 +601,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				// If we can't find the type we can't change it
 				if (newType == null) {
 					// If we have no type we can't create the work item
-					throw new WorkItemCommandLineException(
-							"Work item type " + workItemTypeIDOrName + " not found in project area. ");
+					throw new WorkItemCommandLineException("Work item type " + workItemTypeIDOrName
+							+ " not found in project area. ");
 				}
 				// For output purposes
 				IWorkItemType oldType = WorkItemTypeHelper.findWorkItemType(workItem.getWorkItemType(),
@@ -740,7 +751,11 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			String attributeID, String targetValue) {
 
 		// Allow for a mode that ignores empty colum values.
+//<<<<<<< HEAD
 		if (isIgnoreEmptyTargetValues())
+//=======
+		if(isIgnoreEmptyTargetValues())
+//>>>>>>> cc1c7a2c6cb9bd848fa6fa4537aef6412f1d04e8
 			// If the parameter has no value, we don't process it.
 			if (targetValue.equals("")) {
 				// @see
@@ -799,8 +814,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		if (attribType.equals(ATTRIBUTE_STATE) || attribute.getIdentifier().equals(IWorkItem.STATE_PROPERTY)) {
 			if (StringUtil.isEmpty(targetValue)) {
 				// In case we forgot something or a new type gets implemented
-				throw new WorkItemCommandLineException(
-						"Attribute value must not be empty ID: " + attribute.getIdentifier());
+				throw new WorkItemCommandLineException("Attribute value must not be empty ID: "
+						+ attribute.getIdentifier());
 			}
 			targetValue = WorkItemUpdateHelper.STATECHANGE_FORCESTATE + WorkItemUpdateHelper.FORCESTATE_SEPARATOR
 					+ targetValue;
@@ -928,8 +943,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				setParameter(parameters, attributeID, contributorList);
 				return;
 			}
-			throw new WorkItemCommandLineException(
-					"Type not recognized - type not yet supported: " + attribType + " ID " + attribute.getIdentifier());
+			throw new WorkItemCommandLineException("Type not recognized - type not yet supported: " + attribType
+					+ " ID " + attribute.getIdentifier());
 		} else {
 			// Handle non list types - the simple ones first.
 			if (attribType.equals(AttributeTypes.WIKI)) {
@@ -1026,8 +1041,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				return;
 			}
 			// In case we forgot something or a new type gets implemented
-			throw new WorkItemCommandLineException(
-					"AttributeType not yet supported: " + attribType + " ID " + attribute.getIdentifier());
+			throw new WorkItemCommandLineException("AttributeType not yet supported: " + attribType + " ID "
+					+ attribute.getIdentifier());
 		}
 	}
 
@@ -1217,7 +1232,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				int length = workItemID.length();
 				int lastindex = workItemID.lastIndexOf(HTML_PATH_SLASH);
 				urlprefix = workItemID.substring(0, lastindex + 1);
-				tempWorkItemID = workItemID.substring(lastindex + 2, length);
+				tempWorkItemID = workItemID.substring(lastindex + 1, length);
 				foundURIbasedWI = true;
 			} catch (IndexOutOfBoundsException e) {
 				// Nothing to do
@@ -1225,12 +1240,15 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		}
 		if (getPassNumber() == MULTI_PASS_LINKMAPPING) {
 			// Try the mapping of the old work item id to the new work item id
+			// TODO KMW Need to handle case where URI is found and
+			// ForceLinkCreation is off. A link not found should be
+			// logged as a recoverable error to be handled manually.
 			if (foundURIbasedWI) {
 				workItemID = tempWorkItemID;
 			}
 			String newID = getMappedWorkItemID(workItemID);
 			if (workItemID.equals(newID)) {
-				if (!isForceLinkCreation())// Use the original ID provided in
+				if (!isForceLinkCreation() && !foundURIbasedWI)// Use the original ID provided in
 											// the import
 				{
 					System.out.println("Could not find new ID for item " + workItemID);
@@ -1240,7 +1258,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			}
 			// Create a new work item link target
 			if (foundURIbasedWI) {
-				workItemID = urlprefix + newID;
+				workItemID = idval;
 			} else {
 				workItemID = newID;
 			}
@@ -1399,6 +1417,10 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @param comment
 	 */
 	private void addComment(String title, String comment) {
+		if (isEnforceSizeLimits()) {
+			if ((comment.length() + title.length()) > MAX_COMMENT_LENGTH)
+				comment = comment.substring(0, MAX_COMMENT_LENGTH - title.length());
+		}
 		fComment += "<b>" + title + "</b><br/><br/>" + comment + "<br/><br/>";
 	}
 
@@ -1447,8 +1469,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 */
 	private void setDelimiter(String delimiter) {
 		if (delimiter.length() != 1) {
-			throw new WorkItemCommandLineException(
-					"Can not convert delimiter. Delimiter must have size 1 >" + delimiter + "<");
+			throw new WorkItemCommandLineException("Can not convert delimiter. Delimiter must have size 1 >"
+					+ delimiter + "<");
 		}
 		fDelimiter = delimiter.charAt(0);
 	}
@@ -1477,14 +1499,14 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * 
 	 * @param flag
 	 */
-	private void setEnforceSizeJimits(boolean flag) {
+	private void setEnforceSizeLimits(boolean flag) {
 		this.fEnforceSizeLimits = flag;
 	}
 
 	/**
 	 * See if size limits are enforced.
 	 */
-	private boolean isEnforceSizeJimits() {
+	private boolean isEnforceSizeLimits() {
 		return fEnforceSizeLimits;
 	}
 
