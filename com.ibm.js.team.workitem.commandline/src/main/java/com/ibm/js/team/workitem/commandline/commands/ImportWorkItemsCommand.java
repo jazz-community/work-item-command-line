@@ -114,7 +114,6 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	public static final String PARAMETER_CUSTOM_MAPPING_FILE = "mappingFile";
 	public static final String PARAMETER_CUSTOM_MAPPING_FILE_EXAMPLE = "\"C:\\temp\\mapping.xml\"";
 
-
 	// To determine if we are in debug mode
 	private boolean fDebug;
 
@@ -122,8 +121,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	private String fComment = "";
 
 	/**
-	 * The string attributes have a size limit. This flag forces cutting the input
-	 * data down to the limit and truncates the value if necessary
+	 * The string attributes have a size limit. This flag forces cutting the
+	 * input data down to the limit and truncates the value if necessary
 	 */
 	private boolean fEnforceSizeLimits = false;
 	/**
@@ -144,31 +143,35 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	private String fSimpleDateTimeFormatPattern = IWorkItemCommandLineConstants.TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A;
 
 	/**
-	 * A hashMap, to map the original work item ID to a new work item ID in order to
-	 * be able to map work item links
+	 * A hashMap, to map the original work item ID to a new work item ID in
+	 * order to be able to map work item links
 	 */
 	private HashMap<String, String> workItemIDMap = new HashMap<String, String>();
 
 	/**
-	 * A counter to count the passes in multi pass import to allow work item link
-	 * mapping
+	 * A counter to count the passes in multi pass import to allow work item
+	 * link mapping
 	 */
 	private int passCount = 0;
+	// A counter to create unique parameter ID's to allow passing
+	// multiple values for one attribute e.g. for approvals
+	private int uniqueParamCount = 0;
 
-	// The delimiter to be used
+	// The default delimiter to be used to separate columns in the CSV file
 	private char fDelimiter = IWorkItemCommandLineConstants.DEFAULT_DELIMITER;
 
 	// The default encoding
-	private String fEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_16LE;
+	private String fEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_8;
 
 	// Multi pass mode
 	private boolean fMultipass = false;
 	// Use original ID if no mapping was found
 	private boolean fForceLinkCreation = false;
 	// Compatibility mode. In the past during import empty attribute values
-	// was ignored. Since 5.0 it is handled as override. The attribute gets deleted
-	// if this is allowed.
+	// was ignored. Since 5.0 it is handled as override. The attribute gets
+	// deleted if this is allowed.
 	private boolean fIgnoreEmptyTargetValues = false;
+	private boolean fSetApprovals = true;
 
 	/**
 	 * The constructor
@@ -213,8 +216,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * A way to add help to a command. This allows for specific parameters e.g. not
-	 * required ones
+	 * A way to add help to a command. This allows for specific parameters e.g.
+	 * not required ones
 	 * 
 	 * (non-Javadoc)
 	 * 
@@ -373,6 +376,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			// data.
 			// Try to create or update work items based on the data read
 			// @see http://opencsv.sourceforge.net/
+
 			@SuppressWarnings("deprecation")
 			CSVReader reader = new CSVReader(
 					new InputStreamReader(new FileInputStream(getImportFile()), getFileEncoding()), getDelimiter(),
@@ -382,6 +386,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 					getWorkItemCommon(), getMonitor());
 
 			debug("Importing File: " + getImportFile().getAbsolutePath());
+			debug("Dumping rows - using ',' as seperator during print.");
 			List<String[]> myEntries = reader.readAll();
 
 			boolean skiptitle = true;
@@ -414,7 +419,12 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 					}
 				}
 			}
-			debug("Imported");
+			if (rowID < 2) {
+				result = false;
+				getResult().appendResultString("No useable data found in the import file.");
+				getResult().appendResultString("Use the flag /importdebug and check the encoding of the import file.");
+			}
+			debug("Import finished.");
 		} catch (FileNotFoundException e) {
 			result = false;
 			throw new WorkItemCommandLineException("Import File not found: " + getImportFile().getAbsolutePath(), e);
@@ -430,8 +440,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * This creates or updates a work item from the information found in a row of
-	 * data. The header is used to find the attributes to map to
+	 * This creates or updates a work item from the information found in a row
+	 * of data. The header is used to find the attributes to map to
 	 * 
 	 * @param projectArea
 	 * @param header
@@ -468,7 +478,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			parameters.addSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION, "");
 		}
 		parameters.addSwitch(IWorkItemCommandLineConstants.SWITCH_IMPORT_IGNORE_MISSING_ATTTRIBUTES, "");
-
+		parameters.addSwitch(IWorkItemCommandLineConstants.SWITCH_ENABLE_DELETE_APPROVALS, "");
 		// For each work item we create a new parameter manager that is then
 		// used in the subsequent call to update or create the work item
 		ParameterManager newParameterManager = new ParameterManager(parameters);
@@ -600,8 +610,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * Based on the header, the row and the mapping, construct a list of parameters
-	 * that we can use to create or update a work item
+	 * Based on the header, the row and the mapping, construct a list of
+	 * parameters that we can use to create or update a work item
 	 * 
 	 * Mappings with mapping for the attribute value
 	 * 
@@ -622,11 +632,14 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * <attribute sourceId="Filed Against" targetId=
 	 * "com.ibm.team.workitem.attribute.category"> </attribute>
 	 * 
-	 * @param header           - The header row of the CSV file
-	 * @param row              - The current row we are processing
-	 * @param customMapping    - The mapping or null
-	 * @param attributeMapping - an internal mapping that maps attributeNames to
-	 *                         ID's
+	 * @param header
+	 *            - The header row of the CSV file
+	 * @param row
+	 *            - The current row we are processing
+	 * @param customMapping
+	 *            - The mapping or null
+	 * @param attributeMapping
+	 *            - an internal mapping that maps attributeNames to ID's
 	 * 
 	 * @return a list of parameters
 	 */
@@ -687,8 +700,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				processAttribute(attributeMapping, parameters, targetAttribute, targetValue);
 			} catch (Exception e) {
 				if (isIgnoreErrors()) {
-						this.appendResultString("Exception! " + e.getMessage());
-						this.appendResultString("Ignored....... ");
+					this.appendResultString("Exception! " + e.getMessage());
+					this.appendResultString("Ignored....... ");
 					continue;
 				}
 			}
@@ -715,8 +728,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * Process an attribute and try to create a parameter with the data needed to
-	 * create the work item
+	 * Process an attribute and try to create a parameter with the data needed
+	 * to create the work item
 	 * 
 	 * @param headerMapping
 	 * @param parameters
@@ -726,12 +739,13 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	private void processAttribute(ColumnHeaderAttributeNameMapper headerMapping, ParameterList parameters,
 			String attributeID, String targetValue) {
 
-    // Allow for a mode that ignores empty colum values.
-		if(isIgnoreEmptyTargetValues())
+		// Allow for a mode that ignores empty colum values.
+		if (isIgnoreEmptyTargetValues())
 			// If the parameter has no value, we don't process it.
 			if (targetValue.equals("")) {
-				// @see https://github.com/jazz-community/work-item-command-line/issues/16
-				return;  
+				// @see
+				// https://github.com/jazz-community/work-item-command-line/issues/16
+				return;
 			}
 
 		// Try to get the attribute from the header mapping
@@ -761,14 +775,14 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				addAttachmentParameters(parameters, attributeID, targetValue);
 				return;
 			}
-			getResult().appendResultString("No matching attribute found: '" + attributeID+"'");
+			getResult().appendResultString("No matching attribute found: '" + attributeID + "'");
 			return;
 		}
 		// Ignore everything else in the second pass
 		if (getPassNumber() == MULTI_PASS_LINKMAPPING) {
 			return;
 		}
-		// Handle attributes we must detect 
+		// Handle attributes we must detect
 		if (attributeID.trim().equals(IWorkItem.ID_PROPERTY)) {
 			addDefaultParameter(parameters, attributeID, targetValue);
 			return;
@@ -777,12 +791,12 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			addDefaultParameter(parameters, attributeID, targetValue);
 			return;
 		}
-		
+
 		// Get the attribute type
 		String attribType = attribute.getAttributeType();
 		// If the mapping is for the state attribute, we want to force the state
 		// as work items might not have an action to the state.
-		if (attribType.equals(ATTRIBUTE_STATE) || attribute.getIdentifier().equals(IWorkItem.STATE_PROPERTY)) {	
+		if (attribType.equals(ATTRIBUTE_STATE) || attribute.getIdentifier().equals(IWorkItem.STATE_PROPERTY)) {
 			if (StringUtil.isEmpty(targetValue)) {
 				// In case we forgot something or a new type gets implemented
 				throw new WorkItemCommandLineException(
@@ -816,26 +830,33 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		}
 		if (attribute.getIdentifier().equals(IWorkItem.CUSTOM_ATTRIBUTES_PROPERTY)) {
 			// Ignore
-			getResult().appendResultString("Ignored: Attribute can not be set: " + attributeID
-					+ " mapped to: " + attribute.getIdentifier());
+			getResult().appendResultString(
+					"Ignored: Attribute can not be set: " + attributeID + " mapped to: " + attribute.getIdentifier());
 			return;
 		}
 		if (attribute.getIdentifier().equals(IWorkItem.ESIGNATURE_RECORD_PROPERTY)) {
 			// Ignore
-			getResult().appendResultString("Ignored: Attribute can not be set: " + attributeID
-					+ " mapped to: " + attribute.getIdentifier());
+			getResult().appendResultString(
+					"Ignored: Attribute can not be set: " + attributeID + " mapped to: " + attribute.getIdentifier());
 			return;
 		}
 		if (attribute.getIdentifier().equals(IWorkItem.STATE_TRANSITIONS_PROPERTY)) {
 			// Ignore
-			getResult().appendResultString("Ignored: Attribute can not be set: " + attributeID
-					+ " mapped to: " + attribute.getIdentifier());
+			getResult().appendResultString(
+					"Ignored: Attribute can not be set: " + attributeID + " mapped to: " + attribute.getIdentifier());
 			return;
 		}
 		if (attribType.equals(AttributeTypes.APPROVALS)) {
 			// handle Approvals
 			// For now we basically create a comment with the content.
-			addComment("Approval data from import", targetValue);
+			// addComment("Approval data from import", targetValue);
+
+			boolean imortable = processApprovals(parameters, attributeID, targetValue);
+			if (!imortable) {
+				if (targetValue.length() > 0) {
+					addComment("Approval data from import", targetValue);
+				}
+			}
 			return;
 		}
 		if (attribType.equals(AttributeTypes.COMMENTS)) {
@@ -956,7 +977,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			if (attribType.equals(AttributeTypes.TIMESTAMP)) {
 				// Timestamp types e.g. dates
 				String timestamp = convertTimestamp(targetValue);
-					setParameter(parameters, attributeID, timestamp);
+				setParameter(parameters, attributeID, timestamp);
 				return;
 			}
 			if (attribType.equals(AttributeTypes.PROJECT_AREA)) {
@@ -1010,11 +1031,65 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		}
 	}
 
-	public boolean isIgnoreEmptyTargetValues() {
+	/**
+	 * Parse Approval Data so that approvals can be created
+	 * 
+	 * @param parameters
+	 * @param attributeID
+	 * @param targetValue
+	 * @return
+	 */
+	private boolean processApprovals(ParameterList parameters, String attributeID, String targetValue) {
+		boolean result = false;
+		String approvalsMode = ParameterValue.MODE_ADD;
+		if (fSetApprovals) {
+			approvalsMode = ParameterValue.MODE_SET;
+		}
+
+		List<String> approvals = StringUtil.splitStringToList(targetValue, ExportWorkItemsCommand.SEPERATOR_NEWLINE);
+		if (approvals == null) {
+			return result;
+		}
+		for (String approval : approvals) {
+			List<String> approvalData = StringUtil.splitStringToList(approval, ":");
+			if (approvalData.size() < 2) {
+				return result;
+			}
+			String approvalType = approvalData.get(0);
+			if (!(WorkItemUpdateHelper.APPROVAL_TYPE_APPROVAL.equalsIgnoreCase(approvalType)
+					|| WorkItemUpdateHelper.APPROVAL_TYPE_REVIEW.equalsIgnoreCase(approvalType)
+					|| WorkItemUpdateHelper.APPROVAL_TYPE_VERIFICATION.equalsIgnoreCase(approvalType))) {
+				// Invalid approval type -treat as comment
+				return false;
+			}
+			// Add multiple approvals with a unique ID to be able to pass it to
+			// the parameter list.
+			addParameterMode(parameters, attributeID + getNextUniqueParameterId().toString(), approvalsMode,
+					approval);
+		}
+		return true;
+	}
+
+	/**
+	 * Create a unique parameter ID.
+	 * 
+	 * @return
+	 */
+	private Integer getNextUniqueParameterId() {
+		return new Integer(uniqueParamCount++);
+	}
+
+	private boolean isIgnoreEmptyTargetValues() {
 		return fIgnoreEmptyTargetValues;
 	}
 
-	public void setIgnoreEmptyTargetValues(boolean ignoreEmptyTargetValues) {
+	/**
+	 * Control, if an empty target value is treated as delete.
+	 * True: an empty cell is considered an empty value and removes an existing value.
+	 *  
+	 * @param ignoreEmptyTargetValues
+	 */
+	private void setIgnoreEmptyTargetValues(boolean ignoreEmptyTargetValues) {
 		this.fIgnoreEmptyTargetValues = ignoreEmptyTargetValues;
 	}
 
@@ -1121,8 +1196,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * Try to get a work item from a link In a multi pass scenario, try to find the
-	 * work item that was created from the import.
+	 * Try to get a work item from a link In a multi pass scenario, try to find
+	 * the work item that was created from the import.
 	 * 
 	 * @param idval
 	 * @return
@@ -1174,8 +1249,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * Convert the timestamp format from the one used to export to the one used in
-	 * the creation of the work item
+	 * Convert the timestamp format from the one used to export to the one used
+	 * in the creation of the work item
 	 * 
 	 * @param date
 	 * @return
@@ -1191,8 +1266,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * Converts an item list from the export format used by RTC into the one needed
-	 * in WCL. Replace line breaks with other separator
+	 * Converts an item list from the export format used by RTC into the one
+	 * needed in WCL. Replace line breaks with other separator
 	 * 
 	 * @param targetValue
 	 * @return
@@ -1263,8 +1338,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * Create a mapping between the original ID and the new ID, in order to be able
-	 * to modify the link ID's for work item links.
+	 * Create a mapping between the original ID and the new ID, in order to be
+	 * able to modify the link ID's for work item links.
 	 * 
 	 * @param originalWorkItemID
 	 * @param newWorkItemID

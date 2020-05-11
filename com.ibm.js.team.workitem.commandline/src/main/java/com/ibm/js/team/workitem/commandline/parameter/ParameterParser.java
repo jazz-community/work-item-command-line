@@ -51,7 +51,8 @@ public class ParameterParser {
 	/**
 	 * Create a parser and parse the arguments
 	 * 
-	 * @param args - Array of arguments
+	 * @param args
+	 *            - Array of arguments
 	 * @return the parameter list with the parameters
 	 */
 	public static ParameterList parseParameters(String[] args) {
@@ -60,8 +61,8 @@ public class ParameterParser {
 	}
 
 	/**
-	 * Parses an input string and tries to split it into a parameter name and value
-	 * and store it in the hashmap
+	 * Parses an input string and tries to split it into a parameter name and
+	 * value and store it in the hashmap
 	 * 
 	 * Accepts forms like -testparameter testparameter=value testparameter
 	 * 
@@ -121,8 +122,10 @@ public class ParameterParser {
 	/**
 	 * Add a parameter with value
 	 * 
-	 * @param parameterName  - the name of the parameter
-	 * @param parameterValue - the value of the parameter
+	 * @param parameterName
+	 *            - the name of the parameter
+	 * @param parameterValue
+	 *            - the value of the parameter
 	 */
 	private void addParameterValue(String parameterName, String parameterValue) {
 		if (getParameterList().getParameter(parameterName) != null) {
@@ -134,7 +137,8 @@ public class ParameterParser {
 	/**
 	 * Add a switch
 	 * 
-	 * @param name - the name of the switch
+	 * @param name
+	 *            - the name of the switch
 	 */
 	private void addSwitch(String name, String value) {
 		if (getParameterList().getParameter(name) != null) {
@@ -147,7 +151,8 @@ public class ParameterParser {
 	/**
 	 * Add a command
 	 * 
-	 * @param name - the name of the command
+	 * @param name
+	 *            - the name of the command
 	 */
 	private void addCommand(String name) {
 		if (getParameterList().getCommand() != null) {

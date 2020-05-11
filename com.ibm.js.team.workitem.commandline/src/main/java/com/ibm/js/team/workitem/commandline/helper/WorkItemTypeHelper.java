@@ -159,8 +159,8 @@ public class WorkItemTypeHelper {
 	}
 
 	/**
-	 * Print the attributes and their type information from IAttributeTypes from a
-	 * list of attributes.
+	 * Print the attributes and their type information from IAttributeTypes from
+	 * a list of attributes.
 	 * 
 	 * @param items
 	 * @param monitor
@@ -181,13 +181,18 @@ public class WorkItemTypeHelper {
 	}
 
 	/**
-	 * Find a work item type by its ID provided as string. This is public static and
-	 * can be used without initializing the helper. Only search by ID is supported.
+	 * Find a work item type by its ID provided as string. This is public static
+	 * and can be used without initializing the helper. Only search by ID is
+	 * supported.
 	 * 
-	 * @param workItemTypeID    - the ID to find
-	 * @param projectAreaHandle - the project area to look into
-	 * @param workitemCommon    - the IWorkItemCommon client library
-	 * @param monitor           - a progress monitor or null
+	 * @param workItemTypeID
+	 *            - the ID to find
+	 * @param projectAreaHandle
+	 *            - the project area to look into
+	 * @param workitemCommon
+	 *            - the IWorkItemCommon client library
+	 * @param monitor
+	 *            - a progress monitor or null
 	 * @return the work item type
 	 * @throws TeamRepositoryException
 	 */
@@ -210,13 +215,18 @@ public class WorkItemTypeHelper {
 	}
 
 	/**
-	 * Find a work item type by its ID provided as string. This is public static and
-	 * can be used without initializing the helper. Only search by ID is supported.
+	 * Find a work item type by its ID provided as string. This is public static
+	 * and can be used without initializing the helper. Only search by ID is
+	 * supported.
 	 * 
-	 * @param workItemTypeID    - the ID to find
-	 * @param projectAreaHandle - the project area to look into
-	 * @param workitemCommon    - the IWorkItemCommon client library
-	 * @param monitor           - a progress monitor or null
+	 * @param workItemTypeID
+	 *            - the ID to find
+	 * @param projectAreaHandle
+	 *            - the project area to look into
+	 * @param workitemCommon
+	 *            - the IWorkItemCommon client library
+	 * @param monitor
+	 *            - a progress monitor or null
 	 * @return the work item type
 	 * @throws TeamRepositoryException
 	 */
@@ -231,13 +241,18 @@ public class WorkItemTypeHelper {
 	}
 
 	/**
-	 * Find a work item type by its ID provided as string. This is public static and
-	 * can be used without initializing the helper. Only search by ID is supported.
+	 * Find a work item type by its ID provided as string. This is public static
+	 * and can be used without initializing the helper. Only search by ID is
+	 * supported.
 	 * 
-	 * @param workItemTypeID    - the ID to find
-	 * @param projectAreaHandle - the project area to look into
-	 * @param workitemCommon    - the IWorkItemCommon client library
-	 * @param monitor           - a progress monitor or null
+	 * @param workItemTypeID
+	 *            - the ID to find
+	 * @param projectAreaHandle
+	 *            - the project area to look into
+	 * @param workitemCommon
+	 *            - the IWorkItemCommon client library
+	 * @param monitor
+	 *            - a progress monitor or null
 	 * @return the work item type
 	 * @throws TeamRepositoryException
 	 */

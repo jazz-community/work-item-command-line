@@ -42,8 +42,9 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	}
 
 	/**
-	 * Overriding classes should call super to get the parameters added These are
-	 * the basic parameters that are always needed to interact with the repository
+	 * Overriding classes should call super to get the parameters added These
+	 * are the basic parameters that are always needed to interact with the
+	 * repository
 	 * 
 	 * (non-Javadoc)
 	 * 
@@ -89,7 +90,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 		} catch (TeamRepositoryException e) {
 			e.printStackTrace();
 			this.appendResultString("TeamRepositoryException: Unable to process!");
-			this.appendResultString("This is often due to a link creation making the target work item invalid. ");
+			this.appendResultString("This is often due to permissions or link creation making the target work item invalid. ");
 			this.appendResultString(
 					"For example creating a parent child relationship to a work item that already has a parent.");
 			this.appendResultString(
@@ -174,8 +175,8 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	}
 
 	/**
-	 * Log into the teamrepository. Get the parameters from the parameter managers
-	 * list and use the values.
+	 * Log into the teamrepository. Get the parameters from the parameter
+	 * managers list and use the values.
 	 * 
 	 * @return
 	 * @throws TeamRepositoryException
@@ -194,8 +195,8 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	}
 
 	/**
-	 * Log into the teamrepository. Get the parameters from the parameter managers
-	 * list and use the values.
+	 * Log into the teamrepository. Get the parameters from the parameter
+	 * managers list and use the values.
 	 * 
 	 * @return
 	 * @throws TeamRepositoryException

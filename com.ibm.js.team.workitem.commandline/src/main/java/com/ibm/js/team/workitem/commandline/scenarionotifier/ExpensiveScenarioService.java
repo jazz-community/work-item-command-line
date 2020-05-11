@@ -55,8 +55,10 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 	 * scenario counter in a file or pass it as string. See option
 	 * persistStartAsFile.
 	 * 
-	 * @param teamRepository Team repository
-	 * @param scenarioName   the name of the scenario
+	 * @param teamRepository
+	 *            Team repository
+	 * @param scenarioName
+	 *            the name of the scenario
 	 * @throws URISyntaxException
 	 */
 	public ExpensiveScenarioService(final ITeamRepository teamRepository, final String scenarioName)
@@ -78,9 +80,12 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 	 * scenario counter in a file or pass it as string. See option
 	 * persistStartAsFile.
 	 * 
-	 * @param teamRepository Team repository
-	 * @param publicURI      Public URI of the target CLM server
-	 * @param scenarioName   the name of the scenario
+	 * @param teamRepository
+	 *            Team repository
+	 * @param publicURI
+	 *            Public URI of the target CLM server
+	 * @param scenarioName
+	 *            the name of the scenario
 	 * @throws URISyntaxException
 	 */
 	public ExpensiveScenarioService(final ITeamRepository teamRepository, final String publicURI,
@@ -109,9 +114,8 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ibm.js.team.monitoring.custom.expensivescenario.IExpensiveScenarioService
-	 * #start()
+	 * @see com.ibm.js.team.monitoring.custom.expensivescenario.
+	 * IExpensiveScenarioService #start()
 	 */
 	public String start() throws Exception {
 		Response response = null;
@@ -157,9 +161,8 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ibm.js.team.monitoring.custom.expensivescenario.IExpensiveScenarioService
-	 * #stop(java.lang.String)
+	 * @see com.ibm.js.team.monitoring.custom.expensivescenario.
+	 * IExpensiveScenarioService #stop(java.lang.String)
 	 */
 	public void stop(String startRequestResponse)
 			throws URISyntaxException, TeamServiceException, TeamRepositoryException, IOException, Exception {
@@ -171,7 +174,8 @@ public class ExpensiveScenarioService implements IExpensiveScenarioService {
 				throw new Exception("Missing Scenario Start Request");
 			}
 			try {
-				// Parse as JSON to get the scenario ID and the scenario name from the file
+				// Parse as JSON to get the scenario ID and the scenario name
+				// from the file
 				JSONObject json = JSONObject.parse(new StringReader(startRequest));
 				String scenarioName = null;
 				if (json.containsKey(SCENARIO_NAME)) {

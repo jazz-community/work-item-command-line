@@ -39,7 +39,8 @@ public class PrintTypesCommand extends AbstractTeamRepositoryCommand implements 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
+	 * @see
+	 * com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
 	 * #setRequiredParameters()
 	 */
 	public void setRequiredParameters() {
@@ -53,7 +54,8 @@ public class PrintTypesCommand extends AbstractTeamRepositoryCommand implements 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
+	 * @see
+	 * com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
 	 * #process()
 	 */
 	@Override

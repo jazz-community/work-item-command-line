@@ -60,15 +60,16 @@ public class ReferenceUtil {
 	public static final String LINKTYPE_TRACKS_CHANGES = "scm_tracks_scm_changes";
 	public static final String LINKTYPE_TRACKS_REQUIREMENT = "tracks_requirement";
 	public static final String LINKTYPE_BLOCKS_TEST_EXECUTION = "blocks_test_execution";
-	//public static final String LINKTYPE_GIT_COMMIT = "git_commit";
-	
+	// public static final String LINKTYPE_GIT_COMMIT = "git_commit";
+
 	// work Item to work item links across repositories named location based
 	public static final String LINKTYPE_AFFECTS_PLAN_ITEM = "affects_plan_item";
 	// // the reverse to affects plan item
 	public static final String LINKTYPE_AFFECTED_BY_DEFECT = "affected_by_defect";
 	public static final String LINKTYPE_RELATED_CHANGE_MANAGEMENT = "related_change_management";
 	public static final String LINKTYPE_TRACKS_WORK_ITEM = "tracks_workitem";
-//	public static final String LINKTYPE_CONTRIBUTES_TO_WORK_ITEM = "contributes_to_workitem";
+	// public static final String LINKTYPE_CONTRIBUTES_TO_WORK_ITEM =
+	// "contributes_to_workitem";
 	// SCM change set link, can only be set by the SCM component
 	// public static final String LINKTYPE_CHANGESET = "scm_changeset";
 	// Designmanager
@@ -83,8 +84,8 @@ public class ReferenceUtil {
 	// null;
 
 	/**
-	 * Creates a map with string to IEndPointDescriptor values to create links to
-	 * local work items
+	 * Creates a map with string to IEndPointDescriptor values to create links
+	 * to local work items
 	 * 
 	 * @return the map created
 	 */
@@ -112,8 +113,8 @@ public class ReferenceUtil {
 	}
 
 	/**
-	 * Creates a map with string to IEndPointDescriptor values to create links to
-	 * CLM URI's (not work items)
+	 * Creates a map with string to IEndPointDescriptor values to create links
+	 * to CLM URI's (not work items)
 	 * 
 	 * @return the map created
 	 */
@@ -155,8 +156,9 @@ public class ReferenceUtil {
 	}
 
 	/**
-	 * Creates a map with string to IEndPointDescriptor values to create CLM links
-	 * to local and remote work items (e.g. located on a different CCM server)
+	 * Creates a map with string to IEndPointDescriptor values to create CLM
+	 * links to local and remote work items (e.g. located on a different CCM
+	 * server)
 	 * 
 	 * @return the map created
 	 */
@@ -179,8 +181,8 @@ public class ReferenceUtil {
 	}
 
 	/**
-	 * Creates a map with string to IEndPointDescriptor values to create CLM links
-	 * to build results
+	 * Creates a map with string to IEndPointDescriptor values to create CLM
+	 * links to build results
 	 * 
 	 * @return the map created
 	 */

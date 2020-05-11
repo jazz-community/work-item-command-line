@@ -6,6 +6,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-printworkitem /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph id=108 /allColumns /suppressAttributeExceptions attachmentFolder=&quot;c:\aaTemp\export&quot; /attribute_NamesAsIDs /asrt_ceclipse"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-exportworkitems /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot;  user=ralph password=ralph projectArea=&quot;JKE Banking (Change Management)&quot; exportFile=&quot;C:\Temp\exporttest\ralphTest2.csv&quot; query=&quot;All&quot; delimiter=&quot;;&quot; /allColumns -columns=&quot;Id,Type,Summary,Approvals,Description,Filed Against,Found In,Owned By,Planned For,Priority,Severity,Status&quot;&#13;&#10;  /suppressAttributeExceptions"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
 </launchConfiguration>

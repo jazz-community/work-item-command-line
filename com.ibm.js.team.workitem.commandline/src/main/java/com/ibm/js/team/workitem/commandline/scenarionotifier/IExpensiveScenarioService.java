@@ -26,7 +26,8 @@ public interface IExpensiveScenarioService {
 	/**
 	 * Stop the expensive scenario.
 	 * 
-	 * @param startRequestResponse the response string from the start command
+	 * @param startRequestResponse
+	 *            the response string from the start command
 	 * @throws Exception
 	 */
 	public void stop(String startRequestResponse) throws Exception;

@@ -28,8 +28,9 @@ public class SimpleDateFormatUtil {
 
 	/**
 	 * 
-	 * Uses java.text.SimpleDateFormat to parse the string using a pattern Create a
-	 * new timeStamp from a String using a pattern 'yyyy/MM/dd hh:mm:ss z'
+	 * Uses java.text.SimpleDateFormat to parse the string using a pattern
+	 * Create a new timeStamp from a String using a pattern 'yyyy/MM/dd hh:mm:ss
+	 * z'
 	 * 
 	 * @see http
 	 *      ://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
@@ -45,12 +46,13 @@ public class SimpleDateFormatUtil {
 
 	/**
 	 * 
-	 * Uses java.text.SimpleDateFormat to parse the string using a pattern Create a
-	 * new timeStamp from a String using a pattern
+	 * Uses java.text.SimpleDateFormat to parse the string using a pattern
+	 * Create a new timeStamp from a String using a pattern
 	 * 
 	 * @param aDate
-	 * @param timeFormatPattern A SimpleDateFormat pattern to parse the string, a
-	 *                          default pattern 'yyyy/MM/dd hh:mm:ss z' if null.
+	 * @param timeFormatPattern
+	 *            A SimpleDateFormat pattern to parse the string, a default
+	 *            pattern 'yyyy/MM/dd hh:mm:ss z' if null.
 	 * 
 	 * @return
 	 * @throws IllegalArgumentException
@@ -98,8 +100,8 @@ public class SimpleDateFormatUtil {
 
 	/**
 	 * Takes a duration and converts it into a long containing the miliseconds.
-	 * Input format: 3 hours 3 minutes Input format: 3 hours Input format: 3 minutes
-	 * Input format: 3600000
+	 * Input format: 3 hours 3 minutes Input format: 3 hours Input format: 3
+	 * minutes Input format: 3600000
 	 * 
 	 * @param duration
 	 * @return
@@ -130,8 +132,8 @@ public class SimpleDateFormatUtil {
 	}
 
 	/**
-	 * Creates a presentation in hours, minutes example result format: 1 hours, 20
-	 * minutes
+	 * Creates a presentation in hours, minutes example result format: 1 hours,
+	 * 20 minutes
 	 * 
 	 * @param milliseconds
 	 * @return

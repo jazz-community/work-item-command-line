@@ -29,7 +29,8 @@ public class BuildUtil {
 	/**
 	 * Finds a build result with a given label ID
 	 * 
-	 * @param buildResultID - the string representation of the build result ID
+	 * @param buildResultID
+	 *            - the string representation of the build result ID
 	 * @param monitor
 	 * @return the buildresult that was found
 	 * @throws TeamRepositoryException
@@ -74,7 +75,8 @@ public class BuildUtil {
 	 * 
 	 * @param monitor
 	 * 
-	 * @param buildResultID - the string representation of the build result ID
+	 * @param buildResultID
+	 *            - the string representation of the build result ID
 	 * @return the buildresult that was found
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException

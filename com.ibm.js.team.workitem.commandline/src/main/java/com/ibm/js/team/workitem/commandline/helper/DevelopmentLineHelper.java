@@ -63,12 +63,13 @@ public class DevelopmentLineHelper {
 	 * 
 	 * @param projectArea
 	 * @param path
-	 * @param byId        search by id or name
+	 * @param byId
+	 *            search by id or name
 	 * @return a development line found or null.
 	 * @throws TeamRepositoryException
 	 */
-	public IDevelopmentLine findDevelopmentLine(IProjectAreaHandle projectAreaHandle, List<String> path, Mode comparemode)
-			throws TeamRepositoryException {
+	public IDevelopmentLine findDevelopmentLine(IProjectAreaHandle projectAreaHandle, List<String> path,
+			Mode comparemode) throws TeamRepositoryException {
 		int level = 0;
 		String fookFor = path.get(level);
 		IProjectArea projectArea = ProcessAreaUtil.resolveProjectArea(projectAreaHandle, fMonitor);
@@ -118,7 +119,7 @@ public class DevelopmentLineHelper {
 	}
 
 	private IAuditableClient getAuditableClient() {
-		if(this.fAuditableClient==null) {
+		if (this.fAuditableClient == null) {
 			this.fAuditableClient = (IAuditableClient) fTeamRepository.getClientLibrary(IAuditableClient.class);
 		}
 		return this.fAuditableClient;
@@ -139,8 +140,8 @@ public class DevelopmentLineHelper {
 		String lookFor = path.get(level);
 		for (IIterationHandle iIterationHandle : iterations) {
 
-			IIteration iteration = getAuditableClient().resolveAuditable(iIterationHandle, ItemProfile.ITERATION_DEFAULT,
-					fMonitor);
+			IIteration iteration = getAuditableClient().resolveAuditable(iIterationHandle,
+					ItemProfile.ITERATION_DEFAULT, fMonitor);
 			String compare = "";
 			switch (comparemode) {
 			case BYID:
@@ -221,9 +222,9 @@ public class DevelopmentLineHelper {
 	}
 
 	/**
-	 * Get the iteration as string (Label, id or name). The mode chosen determines
-	 * what value is returned. This returns only the iteration related data and not
-	 * the path from the development line to the iteration.
+	 * Get the iteration as string (Label, id or name). The mode chosen
+	 * determines what value is returned. This returns only the iteration
+	 * related data and not the path from the development line to the iteration.
 	 * 
 	 * @param handle
 	 * @param mode
@@ -244,8 +245,8 @@ public class DevelopmentLineHelper {
 	}
 
 	/**
-	 * Get the iteration as full path string (Label, id or name) This includes the
-	 * development line and all the iterations above.
+	 * Get the iteration as full path string (Label, id or name) This includes
+	 * the development line and all the iterations above.
 	 * 
 	 * @param handle
 	 * @param mode

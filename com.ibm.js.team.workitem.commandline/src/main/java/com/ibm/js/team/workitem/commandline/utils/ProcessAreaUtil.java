@@ -71,9 +71,9 @@ public class ProcessAreaUtil {
 	}
 
 	/**
-	 * Find a TeamArea by fully qualified name The name has to be a fully qualified
-	 * name with the full path e.g. "JKE Banking(Change Management)/Business
-	 * Recovery Matters"
+	 * Find a TeamArea by fully qualified name The name has to be a fully
+	 * qualified name with the full path e.g. "JKE Banking(Change
+	 * Management)/Business Recovery Matters"
 	 * 
 	 * @param name
 	 * @param processClient

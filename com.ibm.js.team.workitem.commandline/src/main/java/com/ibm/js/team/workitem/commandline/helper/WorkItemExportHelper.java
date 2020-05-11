@@ -205,11 +205,11 @@ public class WorkItemExportHelper {
 	}
 
 	/**
-	 * This method tries to get the matching representation of the value to be set
-	 * for a work item attribute. It basically goes through a list of properties an
-	 * attribute can have and locates the target type. Based on that type it tries
-	 * to create a matching value. The value is returned if it was possible to
-	 * create it.
+	 * This method tries to get the matching representation of the value to be
+	 * set for a work item attribute. It basically goes through a list of
+	 * properties an attribute can have and locates the target type. Based on
+	 * that type it tries to create a matching value. The value is returned if
+	 * it was possible to create it.
 	 * 
 	 * @param workItem
 	 * @param attributeID
@@ -329,7 +329,7 @@ public class WorkItemExportHelper {
 					return calculateNumberAsString(value, attribType);
 				} catch (NumberFormatException e) {
 					throw new WorkItemCommandLineException(
-							"Attribute Value not valid - Number format exception: '" + value+"'", e);
+							"Attribute Value not valid - Number format exception: '" + value + "'", e);
 				}
 			}
 			if (attribType.equals(AttributeTypes.DELIVERABLE)) {
@@ -477,7 +477,7 @@ public class WorkItemExportHelper {
 					IItemHandle referencedItem = ((IItemReference) aReference).getReferencedItem();
 					if (referencedItem instanceof IWorkItemHandle) {
 						IWorkItem item = WorkItemUtil.resolveWorkItem((IWorkItemHandle) referencedItem,
-								IWorkItem.SMALL_PROFILE, getWorkItemCommon(), getMonitor());
+								IWorkItem.ID_PROFILE, getWorkItemCommon(), getMonitor());
 						referenceRepresentations.add(getExistingWorkitemPrefix() + Integer.toString(item.getId()));
 					}
 				} else {
@@ -507,8 +507,8 @@ public class WorkItemExportHelper {
 	}
 
 	/**
-	 * For a given value from the restricted access attribute, compute the name of
-	 * the object. First try if this is a project area, then try a team area,
+	 * For a given value from the restricted access attribute, compute the name
+	 * of the object. First try if this is a project area, then try a team area,
 	 * finally search through the groups.
 	 * 
 	 * @param uuid
@@ -539,8 +539,8 @@ public class WorkItemExportHelper {
 	}
 
 	/**
-	 * Create the presentation for a URI Reference such as tracks links and other
-	 * items in other applications
+	 * Create the presentation for a URI Reference such as tracks links and
+	 * other items in other applications
 	 * 
 	 * @param uriReference
 	 * @param linkTypeID
@@ -561,7 +561,8 @@ public class WorkItemExportHelper {
 	}
 
 	/**
-	 * Create the presentation for an item reference - Work Item and build result
+	 * Create the presentation for an item reference - Work Item and build
+	 * result
 	 * 
 	 * @param reference
 	 * @param linkTypeID
@@ -626,7 +627,8 @@ public class WorkItemExportHelper {
 	}
 
 	/**
-	 * Get the name of the object described by the UUID as a string representation
+	 * Get the name of the object described by the UUID as a string
+	 * representation
 	 * 
 	 * @param value
 	 * @param attribute
@@ -969,8 +971,8 @@ public class WorkItemExportHelper {
 
 	/**
 	 * For a given iteration, calculate the value to export. Two modes are
-	 * supported, - one exports only the label of the iteration - one exports the
-	 * full path including the timeline
+	 * supported, - one exports only the label of the iteration - one exports
+	 * the full path including the timeline
 	 * 
 	 * @param value
 	 * @return

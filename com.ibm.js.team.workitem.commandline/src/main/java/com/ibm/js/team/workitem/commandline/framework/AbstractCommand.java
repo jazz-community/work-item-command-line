@@ -31,7 +31,8 @@ public abstract class AbstractCommand implements IWorkItemCommand {
 	/**
 	 * Delegate to add to the operation result
 	 * 
-	 * @param operationResult the result we want to add
+	 * @param operationResult
+	 *            the result we want to add
 	 */
 	protected void addOperationResult(OperationResult operationResult) {
 		this.result.addOperationResult(operationResult);
@@ -103,25 +104,26 @@ public abstract class AbstractCommand implements IWorkItemCommand {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ibm.js.team.workitem.commandline.framework.IWorkItemCommandLineCommand #
-	 * initialize(com.ibm.js.team.workitem.commandline.parameter.ParameterManager )
+	 * @see com.ibm.js.team.workitem.commandline.framework.
+	 * IWorkItemCommandLineCommand #
+	 * initialize(com.ibm.js.team.workitem.commandline.parameter.
+	 * ParameterManager )
 	 */
 	public void initialize() {
 		setRequiredParameters();
 	}
 
 	/**
-	 * Inheriting classes need to provide the required parameters, if no additional
-	 * parameters are required this can be left blank.
+	 * Inheriting classes need to provide the required parameters, if no
+	 * additional parameters are required this can be left blank.
 	 */
 	public abstract void setRequiredParameters();
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ibm.js.team.workitem.commandline.framework.IWorkItemCommandLineCommand
+	 * @see com.ibm.js.team.workitem.commandline.framework.
+	 * IWorkItemCommandLineCommand
 	 * #execute(com.ibm.team.repository.client.ITeamRepository, boolean,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
@@ -133,9 +135,8 @@ public abstract class AbstractCommand implements IWorkItemCommand {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ibm.js.team.workitem.commandline.framework.IWorkItemCommandLineCommand
-	 * #helpUsage()
+	 * @see com.ibm.js.team.workitem.commandline.framework.
+	 * IWorkItemCommandLineCommand #helpUsage()
 	 */
 	@Override
 	public String helpUsage() {

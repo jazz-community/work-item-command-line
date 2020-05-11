@@ -25,9 +25,12 @@ public class AttributeUtil {
 	/**
 	 * Find the attribute type (IAttribute) from the process
 	 * 
-	 * @param attributeID - the ID of the attribute we are working at
-	 * @param projectArea - must not be null
-	 * @param monitor     - an IProgressMonitor or null
+	 * @param attributeID
+	 *            - the ID of the attribute we are working at
+	 * @param projectArea
+	 *            - must not be null
+	 * @param monitor
+	 *            - an IProgressMonitor or null
 	 * @return the IAttribute found or null, in case it can not be found
 	 * @throws TeamRepositoryException
 	 */

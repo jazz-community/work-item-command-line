@@ -92,17 +92,17 @@ public interface IWorkItemCommandLineConstants {
 	public static final String HTTP_PROTOCOL_PREFIX = "http";
 
 	// Import/Export work items
-	public static final char DEFAULT_DELIMITER = ',';
+	public static final char DEFAULT_DELIMITER = ';';
 
 	// The default encoding
-	public static final String DEFAULT_ENCODING_UTF_16LE = "UTF-16LE";
+	public static final String DEFAULT_ENCODING_UTF_8 = "UTF-8";
 
 	// The default Quote character
 	public static final char DEFAULT_QUOTE_CHAR = '"';
 
 	// parameter to specify the encoding
 	public static final String PARAMETER_ENCODING = "encoding";
-	public static final String PARAMETER_ENCODING_EXAMPLE = "\"UTF_16LE\"";
+	public static final String PARAMETER_ENCODING_EXAMPLE = "\"UTF-8\"";
 
 	// Parameter to specify the delimiter character
 	public static final String PARAMETER_DELIMITER = "delimiter";

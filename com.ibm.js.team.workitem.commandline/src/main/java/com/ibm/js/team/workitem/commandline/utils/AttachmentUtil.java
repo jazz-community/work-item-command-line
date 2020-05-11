@@ -33,8 +33,10 @@ public class AttachmentUtil {
 	/**
 	 * Save all attachments of a work item to disk
 	 * 
-	 * @param workItem - the work item
-	 * @param folder   - the folder to save to
+	 * @param workItem
+	 *            - the work item
+	 * @param folder
+	 *            - the folder to save to
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
@@ -55,8 +57,10 @@ public class AttachmentUtil {
 	/**
 	 * Saves one attachment to disk
 	 * 
-	 * @param attachment - the attachment to save
-	 * @param folder     - the folder name to save into
+	 * @param attachment
+	 *            - the attachment to save
+	 * @param folder
+	 *            - the folder name to save into
 	 * @throws TeamRepositoryException
 	 */
 	public static IAttachment saveAttachmentToDisk(IAttachment attachment, File folder, IProgressMonitor monitor)
@@ -121,8 +125,10 @@ public class AttachmentUtil {
 	/**
 	 * Remove an attachment if the filename and the description are the same
 	 * 
-	 * @param fileName    - the filename of the attachment
-	 * @param description - the description of the attachment
+	 * @param fileName
+	 *            - the filename of the attachment
+	 * @param description
+	 *            - the description of the attachment
 	 * @throws TeamRepositoryException
 	 */
 	public static void removeAttachment(String fileName, String description, IWorkItem workItem,

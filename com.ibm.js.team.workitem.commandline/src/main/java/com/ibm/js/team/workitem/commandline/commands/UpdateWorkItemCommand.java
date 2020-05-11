@@ -42,7 +42,8 @@ public class UpdateWorkItemCommand extends AbstractWorkItemModificationCommand {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
+	 * @see
+	 * com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
 	 * #setRequiredParameters()
 	 */
 	public void setRequiredParameters() {
@@ -61,7 +62,8 @@ public class UpdateWorkItemCommand extends AbstractWorkItemModificationCommand {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
+	 * @see
+	 * com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
 	 * #process()
 	 */
 	@Override
@@ -95,10 +97,12 @@ public class UpdateWorkItemCommand extends AbstractWorkItemModificationCommand {
 		try {
 			this.appendResultString("Updating work item " + workItem.getId() + ".");
 			String workItemTypeID = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY);
-//			if (workItemTypeID == null) {
-//				workItemTypeID = getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY
-//						+ ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE + ParameterValue.MODE_SET);
-//			}
+			// if (workItemTypeID == null) {
+			// workItemTypeID =
+			// getParameterManager().consumeParameter(IWorkItem.TYPE_PROPERTY
+			// + ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE +
+			// ParameterValue.MODE_SET);
+			// }
 			if (workItemTypeID != null) {
 				IWorkItemType newType = WorkItemTypeHelper.findWorkItemTypeByIDAndDisplayName(workItemTypeID,
 						workItem.getProjectArea(), getWorkItemCommon(), getMonitor());

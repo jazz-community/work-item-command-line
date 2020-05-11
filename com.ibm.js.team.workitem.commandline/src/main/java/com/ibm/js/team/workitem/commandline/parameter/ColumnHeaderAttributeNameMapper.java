@@ -87,10 +87,11 @@ public class ColumnHeaderAttributeNameMapper {
 	}
 
 	/**
-	 * Check if there is an attribute/link with the matching display name and get
-	 * its ID.
+	 * Check if there is an attribute/link with the matching display name and
+	 * get its ID.
 	 * 
-	 * @param propertyName - the display name of the property
+	 * @param propertyName
+	 *            - the display name of the property
 	 * @return the id of the attribute or null
 	 */
 	private String getIDForName(String propertyName) {
@@ -102,8 +103,8 @@ public class ColumnHeaderAttributeNameMapper {
 	}
 
 	/**
-	 * Check if there is an alias available for a property ID and pass it back if
-	 * available.
+	 * Check if there is an alias available for a property ID and pass it back
+	 * if available.
 	 * 
 	 * @param attributeName
 	 * @return
@@ -189,8 +190,8 @@ public class ColumnHeaderAttributeNameMapper {
 	}
 
 	/**
-	 * Get the names of all the available attributes and supported links 
-	 * in a sorted way.
+	 * Get the names of all the available attributes and supported links in a
+	 * sorted way.
 	 * 
 	 * @param projectArea
 	 * @return
@@ -215,7 +216,14 @@ public class ColumnHeaderAttributeNameMapper {
 		allAttribs.addAll(attributeNameMap.values());
 		Collections.sort(allAttribs);
 		sortedAttribs.addAll(allAttribs);
-		sortedAttribs.add(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS); // This is not a property add the artificial
+		sortedAttribs.add(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS); // This
+																			// is
+																			// not
+																			// a
+																			// property
+																			// add
+																			// the
+																			// artificial
 																			// one
 
 		Set<String> linkNames = ParameterLinkIDMapper.getLinkNames();

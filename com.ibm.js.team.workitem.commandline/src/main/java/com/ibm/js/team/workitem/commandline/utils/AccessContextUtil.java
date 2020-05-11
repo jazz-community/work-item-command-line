@@ -32,8 +32,8 @@ public class AccessContextUtil {
 	public static final String PUBLIC_ACCESS = "Public";
 
 	/**
-	 * For a given value from the restricted access attribute, compute the name of
-	 * the object. First try if this is a project area, then try a team area,
+	 * For a given value from the restricted access attribute, compute the name
+	 * of the object. First try if this is a project area, then try a team area,
 	 * finally search through the groups.
 	 * 
 	 * @param uuid
@@ -76,8 +76,8 @@ public class AccessContextUtil {
 	}
 
 	/**
-	 * Get an UUID from a process area or access group name - this is typically used
-	 * for restricted access
+	 * Get an UUID from a process area or access group name - this is typically
+	 * used for restricted access
 	 * 
 	 * @param value
 	 * @param teamRepository

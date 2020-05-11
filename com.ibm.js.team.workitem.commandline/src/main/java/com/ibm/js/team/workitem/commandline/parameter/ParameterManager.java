@@ -24,8 +24,8 @@ public class ParameterManager {
 	private ParameterList fParsedParameters = null;
 
 	/**
-	 * Constructor for the ParameterManager. Pass a parameter list parsed from the
-	 * input arguments.
+	 * Constructor for the ParameterManager. Pass a parameter list parsed from
+	 * the input arguments.
 	 * 
 	 * @param arguments
 	 */
@@ -44,8 +44,10 @@ public class ParameterManager {
 	/**
 	 * Delegate to create a required parameter
 	 * 
-	 * @param name    - Name of the parameter
-	 * @param example - An example for the parameter usage
+	 * @param name
+	 *            - Name of the parameter
+	 * @param example
+	 *            - An example for the parameter usage
 	 */
 	public void syntaxAddRequiredParameter(String name, String example) {
 		getRequiredParameters().addParameter(Parameter.createRequiredParameter(name, example));
@@ -54,7 +56,8 @@ public class ParameterManager {
 	/**
 	 * Add a supported switch
 	 * 
-	 * @param name name of the switch
+	 * @param name
+	 *            name of the switch
 	 */
 	public void syntaxAddSwitch(String name, String value) {
 		getRequiredParameters().addParameter(Parameter.createSwitch(name, value));
@@ -63,7 +66,8 @@ public class ParameterManager {
 	/**
 	 * Add a supported switch
 	 * 
-	 * @param name name of the switch
+	 * @param name
+	 *            name of the switch
 	 */
 	public void syntaxAddSwitch(String name) {
 		getRequiredParameters().addParameter(Parameter.createSwitch(name, null));
@@ -80,10 +84,11 @@ public class ParameterManager {
 	}
 
 	/**
-	 * Delegate to find a parameter, return the value and to mark the parameter as
-	 * consumed
+	 * Delegate to find a parameter, return the value and to mark the parameter
+	 * as consumed
 	 * 
-	 * @param name - name of the parameter
+	 * @param name
+	 *            - name of the parameter
 	 * 
 	 * @return the value of the parameter or null
 	 */
@@ -117,7 +122,8 @@ public class ParameterManager {
 	 * Validate if all the parameters required are available. If not throw an
 	 * exception with a list of missing parameters.
 	 * 
-	 * @throws WorkItemCommandLineException with a description of what is missing
+	 * @throws WorkItemCommandLineException
+	 *             with a description of what is missing
 	 */
 	public void validateRequiredParameters() throws WorkItemCommandLineException {
 		ParameterList missingParameters = new ParameterList();
@@ -148,9 +154,11 @@ public class ParameterManager {
 	/**
 	 * Create a help test for a given parameter list
 	 * 
-	 * @param parameters - the parameters to be printed
-	 * @param detailled  - if true, the parameters come in one line each and have an
-	 *                   example provided.
+	 * @param parameters
+	 *            - the parameters to be printed
+	 * @param detailled
+	 *            - if true, the parameters come in one line each and have an
+	 *            example provided.
 	 * @return a string with help info
 	 */
 	private String getParameterHelp(ParameterList parameters, boolean detailled) {

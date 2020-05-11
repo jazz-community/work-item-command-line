@@ -88,8 +88,8 @@ public class BulkUpdateWorkItemsCommand extends AbstractWorkItemModificationComm
 	}
 
 	/**
-	 * A way to add help to a command. This allows for specific parameters e.g. not
-	 * required ones
+	 * A way to add help to a command. This allows for specific parameters e.g.
+	 * not required ones
 	 * 
 	 * (non-Javadoc)
 	 * 

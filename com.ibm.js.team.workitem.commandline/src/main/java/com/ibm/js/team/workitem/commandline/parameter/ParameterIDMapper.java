@@ -73,8 +73,8 @@ public class ParameterIDMapper {
 	}
 
 	/**
-	 * Create the mapping of aliases/display names for attributes to the internal
-	 * representation
+	 * Create the mapping of aliases/display names for attributes to the
+	 * internal representation
 	 * 
 	 */
 	private void setMappings() {
@@ -144,10 +144,11 @@ public class ParameterIDMapper {
 	}
 
 	/**
-	 * Check if there is an alias available for a property ID and pass it back if
-	 * available.
+	 * Check if there is an alias available for a property ID and pass it back
+	 * if available.
 	 * 
-	 * @param propertyID - the ID of the property
+	 * @param propertyID
+	 *            - the ID of the property
 	 * @return the alias or the original property
 	 */
 	public static String getAlias(String propertyID) {
@@ -183,8 +184,8 @@ public class ParameterIDMapper {
 	}
 
 	/**
-	 * Check if there is an alias available for a property ID and pass it back if
-	 * available.
+	 * Check if there is an alias available for a property ID and pass it back
+	 * if available.
 	 * 
 	 * @param propertyID
 	 * @return

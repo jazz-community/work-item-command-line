@@ -33,12 +33,18 @@ public class Parameter {
 	 * The constructor is hidden, use the static methods provided. Create a new
 	 * parameter with its properties.
 	 * 
-	 * @param name      - the name of the parameter
-	 * @param value     - the value of the parameter
-	 * @param required  - true if the parameter is required
-	 * @param isSwitch  - true if the parameter is a switch
-	 * @param isCommand - true if the parameter is a command
-	 * @param example   - An example for the parameter value format
+	 * @param name
+	 *            - the name of the parameter
+	 * @param value
+	 *            - the value of the parameter
+	 * @param required
+	 *            - true if the parameter is required
+	 * @param isSwitch
+	 *            - true if the parameter is a switch
+	 * @param isCommand
+	 *            - true if the parameter is a command
+	 * @param example
+	 *            - An example for the parameter value format
 	 */
 	private Parameter(String name, String value, boolean required, boolean isSwitch, boolean isCommand,
 			String example) {
@@ -54,11 +60,13 @@ public class Parameter {
 
 	/**
 	 * The constructor is hidden, use the static methods provided. Create a new
-	 * parameter with its properties. the parameter is not a switch, command, and
-	 * not required
+	 * parameter with its properties. the parameter is not a switch, command,
+	 * and not required
 	 * 
-	 * @param name  - the name of the parameter
-	 * @param value - the value of the parameter
+	 * @param name
+	 *            - the name of the parameter
+	 * @param value
+	 *            - the value of the parameter
 	 */
 	private Parameter(String name, String value) {
 		super();
@@ -152,8 +160,10 @@ public class Parameter {
 	/**
 	 * Create a required parameter with name and example value
 	 * 
-	 * @param name    - the parameter name
-	 * @param example - an example for the parameter value
+	 * @param name
+	 *            - the parameter name
+	 * @param example
+	 *            - an example for the parameter value
 	 * @return the parameter created
 	 */
 	public static Parameter createRequiredParameter(String name, String example) {
@@ -163,8 +173,10 @@ public class Parameter {
 	/**
 	 * Create a parameter with name and value
 	 * 
-	 * @param name  - the parameter name
-	 * @param value - an example for the parameter value
+	 * @param name
+	 *            - the parameter name
+	 * @param value
+	 *            - an example for the parameter value
 	 * @return the parameter created
 	 */
 	public static Parameter createParameterValue(String name, String value) {
@@ -176,7 +188,8 @@ public class Parameter {
 	/**
 	 * Create a command parameter
 	 * 
-	 * @param name the name of the command
+	 * @param name
+	 *            the name of the command
 	 * @return the parameter created
 	 */
 	public static Parameter createCommand(String name) {
@@ -186,7 +199,8 @@ public class Parameter {
 	/**
 	 * Create a switch
 	 * 
-	 * @param name - the name of the switch
+	 * @param name
+	 *            - the name of the switch
 	 * @return the parameter created
 	 */
 	public static Parameter createSwitch(String name, String value) {

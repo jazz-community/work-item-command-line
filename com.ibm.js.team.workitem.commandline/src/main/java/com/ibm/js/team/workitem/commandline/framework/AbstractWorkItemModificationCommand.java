@@ -38,7 +38,8 @@ public abstract class AbstractWorkItemModificationCommand extends AbstractTeamRe
 
 	public final static String UPDATE_BACK_LINKS = IAdditionalSaveParameters.UPDATE_BACKLINKS;
 	// 6.0 iFix3
-	// private final static String SKIP_MAIL = IAdditionalSaveParameters.SKIP_MAIL;
+	// private final static String SKIP_MAIL =
+	// IAdditionalSaveParameters.SKIP_MAIL;
 	public final static String SKIP_MAIL = "com.ibm.team.workitem.common.internal.skipMail"; //$NON-NLS-1$
 
 	// in some modes we want to be able to ignore an error e.g. when setting
@@ -56,7 +57,8 @@ public abstract class AbstractWorkItemModificationCommand extends AbstractTeamRe
 	/**
 	 * Set the flag
 	 * 
-	 * @param value true or false
+	 * @param value
+	 *            true or false
 	 */
 	public void setIgnoreErrors(boolean value) {
 		this.fIgnoreErrors = value;
@@ -92,8 +94,8 @@ public abstract class AbstractWorkItemModificationCommand extends AbstractTeamRe
 	/**
 	 * The constructor that initializes the class.
 	 * 
-	 * @param parametermanager Used to pass the parameters and manage required
-	 *                         parameters.
+	 * @param parametermanager
+	 *            Used to pass the parameters and manage required parameters.
 	 */
 	protected AbstractWorkItemModificationCommand(ParameterManager parametermanager) {
 		super(parametermanager);
@@ -109,15 +111,18 @@ public abstract class AbstractWorkItemModificationCommand extends AbstractTeamRe
 		/**
 		 * Constructor
 		 * 
-		 * @param The title message for the operation
+		 * @param The
+		 *            title message for the operation
 		 */
 		public ModifyWorkItem(String message) {
 			super(message, IWorkItem.FULL_PROFILE);
 		}
 
 		/**
-		 * @param message The title message for the operation
-		 * @param profile The item load profile to be used for the operation.
+		 * @param message
+		 *            The title message for the operation
+		 * @param profile
+		 *            The item load profile to be used for the operation.
 		 */
 		public ModifyWorkItem(String message, ItemProfile<IWorkItem> profile) {
 			super(message, profile);
@@ -128,7 +133,8 @@ public abstract class AbstractWorkItemModificationCommand extends AbstractTeamRe
 		 * 
 		 * (non-Javadoc)
 		 * 
-		 * @see com.ibm.team.workitem.client.WorkItemOperation#execute(com.ibm.team
+		 * @see
+		 * com.ibm.team.workitem.client.WorkItemOperation#execute(com.ibm.team
 		 * .workitem.client.WorkItemWorkingCopy,
 		 * org.eclipse.core.runtime.IProgressMonitor)
 		 */
@@ -142,7 +148,8 @@ public abstract class AbstractWorkItemModificationCommand extends AbstractTeamRe
 			if (isSuppressMailNotification()) {
 				workingCopy.getAdditionalSaveParameters().add(SKIP_MAIL);
 			}
-			// If desired create backlinks - this can be also added to the workingcopy
+			// If desired create backlinks - this can be also added to the
+			// workingcopy
 			// elsewhere
 			if (isCreateBackLinks()) {
 				workingCopy.getAdditionalSaveParameters().add(UPDATE_BACK_LINKS);
@@ -154,7 +161,8 @@ public abstract class AbstractWorkItemModificationCommand extends AbstractTeamRe
 	/**
 	 * This operation does the main task of updating the work item
 	 * 
-	 * @param workingCopy the workingcopy of the workitem to be updated.
+	 * @param workingCopy
+	 *            the workingcopy of the workitem to be updated.
 	 * 
 	 * @throws RuntimeException
 	 * @throws TeamRepositoryException
@@ -228,7 +236,8 @@ public abstract class AbstractWorkItemModificationCommand extends AbstractTeamRe
 		/**
 		 * Constructor
 		 * 
-		 * @param The title message for the operation
+		 * @param The
+		 *            title message for the operation
 		 */
 		public ChangeType(String message, IWorkItemType oldType, IWorkItemType newType) {
 			super(message, IWorkItem.FULL_PROFILE);
@@ -241,7 +250,8 @@ public abstract class AbstractWorkItemModificationCommand extends AbstractTeamRe
 		 * 
 		 * (non-Javadoc)
 		 * 
-		 * @see com.ibm.team.workitem.client.WorkItemOperation#execute(com.ibm.team
+		 * @see
+		 * com.ibm.team.workitem.client.WorkItemOperation#execute(com.ibm.team
 		 * .workitem.client.WorkItemWorkingCopy,
 		 * org.eclipse.core.runtime.IProgressMonitor)
 		 */

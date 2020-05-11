@@ -87,7 +87,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	/**
 	 * To set server mode
 	 * 
-	 * @param value - true, if in server mode
+	 * @param value
+	 *            - true, if in server mode
 	 */
 	private static void setServer(boolean value) {
 		isServer = value;
@@ -99,8 +100,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	 * @param parameterManager
 	 */
 	private void addSupportedCommands(ParameterManager parameterManager) {
-//		addSupportedCommand(new ExportCommand(new ParameterManager(
-//				parameterManager.getArguments())));
+		// addSupportedCommand(new ExportCommand(new ParameterManager(
+		// parameterManager.getArguments())));
 		addSupportedCommand(new PrintWorkItemCommand(new ParameterManager(parameterManager.getArguments())));
 		addSupportedCommand(new ValidateOSLCLinksCommand(new ParameterManager(parameterManager.getArguments())));
 		addSupportedCommand(new PrintTypesCommand(new ParameterManager(parameterManager.getArguments())));
@@ -144,7 +145,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	/**
 	 * Add a command to the list.
 	 * 
-	 * @param command - the command implementation
+	 * @param command
+	 *            - the command implementation
 	 */
 	private void addSupportedCommand(IWorkItemCommand command) {
 		command.initialize();
@@ -154,7 +156,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	/**
 	 * Find a command from its name
 	 * 
-	 * @param commandName - the name of the command
+	 * @param commandName
+	 *            - the name of the command
 	 * 
 	 * @return the command or null, if it was not found
 	 */
@@ -165,7 +168,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	/**
 	 * The main entry point into the work item commandline
 	 * 
-	 * @param args - the arguments to be used by the commandline
+	 * @param args
+	 *            - the arguments to be used by the commandline
 	 * @throws RemoteException
 	 */
 	public static void main(String[] args) {
@@ -206,8 +210,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	 * commandline.
 	 * 
 	 * It determines if we are called as RMI server or RMI client and if so,
-	 * prepares the related workflow by calling the methods to setup and run the RMI
-	 * server or client
+	 * prepares the related workflow by calling the methods to setup and run the
+	 * RMI server or client
 	 * 
 	 * If we are not running in RMI mode, the code to run this locally is used
 	 * 
@@ -234,8 +238,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	/**
 	 * The interface if I am running in RMI Server mode. The client calls this
 	 * method and passes all the arguments. The operation returns an @see
-	 * {@link OperationResult} that contains the commandline output, as well as if
-	 * the operation succeeded.
+	 * {@link OperationResult} that contains the commandline output, as well as
+	 * if the operation succeeded.
 	 * 
 	 * (non-Javadoc)
 	 * 
@@ -248,17 +252,17 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	}
 
 	/**
-	 * This method sets up the commands to be called. It tries to find a matching
-	 * command for the input parameters If it does, it tries to validate if
-	 * parameters required by that command are available. In case of problems, it
-	 * prints the help message.
+	 * This method sets up the commands to be called. It tries to find a
+	 * matching command for the input parameters If it does, it tries to
+	 * validate if parameters required by that command are available. In case of
+	 * problems, it prints the help message.
 	 * 
 	 * If there are no issues, try to run the operation and return the result.
 	 * 
 	 * Exceptions thrown are handled and the messages appended to the result.
 	 * 
-	 * @param parameterManager - the parametermanager that contains the parsed
-	 *                         arguments.
+	 * @param parameterManager
+	 *            - the parametermanager that contains the parsed arguments.
 	 * @return
 	 */
 	private OperationResult runCommands(ParameterManager parameterManager) {
@@ -310,8 +314,8 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	}
 
 	/**
-	 * Operation to prepare and run the work item command line as RMI server. This
-	 * sets us in server mode, so the command will not terminate
+	 * Operation to prepare and run the work item command line as RMI server.
+	 * This sets us in server mode, so the command will not terminate
 	 * 
 	 * @param rmiInfo
 	 * @return
@@ -329,7 +333,9 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 			}
 			// Create and install a security manager
 			if (System.getSecurityManager() == null) {
-				System.setSecurityManager(new SecurityManager()); // Oracle security patches
+				System.setSecurityManager(new SecurityManager()); // Oracle
+																	// security
+																	// patches
 				result.appendResultString("Security manager installed...");
 			} else {
 				result.appendResultString("Security manager already exists...");
@@ -407,8 +413,9 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	}
 
 	/**
-	 * Compose a new URI for the RMI connection info. We have to fake it with a http
-	 * protocol to make it work, but after that it is easy to work with the result.
+	 * Compose a new URI for the RMI connection info. We have to fake it with a
+	 * http protocol to make it work, but after that it is easy to work with the
+	 * result.
 	 * 
 	 * @param rmiInfo
 	 * @return

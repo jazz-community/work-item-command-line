@@ -89,7 +89,8 @@ public class ParameterLinkIDMapper {
 	}
 
 	/**
-	 * Creates a map from an external name (alias) to the internal representation
+	 * Creates a map from an external name (alias) to the internal
+	 * representation
 	 * 
 	 * putMap("key", "Value");
 	 */
@@ -133,8 +134,10 @@ public class ParameterLinkIDMapper {
 	/**
 	 * Put an entry into the map
 	 * 
-	 * @param key   - The external name or alias of the link (attribute)
-	 * @param value - The internal representation
+	 * @param key
+	 *            - The external name or alias of the link (attribute)
+	 * @param value
+	 *            - The internal representation
 	 */
 	protected void putMap(String key, String value) {
 		getMap().put(key, value);
@@ -150,8 +153,8 @@ public class ParameterLinkIDMapper {
 	}
 
 	/**
-	 * Check if there is an alias available for a property ID and pass it back if
-	 * available.
+	 * Check if there is an alias available for a property ID and pass it back
+	 * if available.
 	 * 
 	 * @param linkName
 	 * @return
@@ -189,10 +192,11 @@ public class ParameterLinkIDMapper {
 	}
 
 	/**
-	 * Check if there is an alias available for a link name and pass the ID it back
-	 * if available.
+	 * Check if there is an alias available for a link name and pass the ID it
+	 * back if available.
 	 * 
-	 * @param linkName - the ID of the property
+	 * @param linkName
+	 *            - the ID of the property
 	 * @return the alias or the original property
 	 */
 	public static String getinternalID(String linkName) {

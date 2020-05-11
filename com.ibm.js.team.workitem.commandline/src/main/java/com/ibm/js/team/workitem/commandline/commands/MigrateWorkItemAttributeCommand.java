@@ -172,7 +172,8 @@ public class MigrateWorkItemAttributeCommand extends AbstractTeamRepositoryComma
 		if (!AttributeTypes.isEnumerationListAttributeType(targetIAttribute.getAttributeType())) {
 			throw new WorkItemCommandLineException("Target Attribute is not an EnumerationList: " + targetAttributeID);
 		}
-		// Since 6.0 iFix3 there is an additional save parameter to avoid sending
+		// Since 6.0 iFix3 there is an additional save parameter to avoid
+		// sending
 		// E-Mail notification to users (e.g. during automated updates).
 		this.setSuppressMailNotification(
 				getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION));
@@ -314,7 +315,8 @@ public class MigrateWorkItemAttributeCommand extends AbstractTeamRepositoryComma
 		/**
 		 * Constructor
 		 * 
-		 * @param The             title message for the operation
+		 * @param The
+		 *            title message for the operation
 		 * @param message
 		 * @param profile
 		 * @param sourceAttribute
@@ -388,11 +390,13 @@ public class MigrateWorkItemAttributeCommand extends AbstractTeamRepositoryComma
 		}
 
 		/**
-		 * Gets an enumeration literal for an attribute that has the specific literal
-		 * ID.
+		 * Gets an enumeration literal for an attribute that has the specific
+		 * literal ID.
 		 * 
-		 * @param enumeration     - the enumeration to look for
-		 * @param literalIDString - the literal ID name to look for
+		 * @param enumeration
+		 *            - the enumeration to look for
+		 * @param literalIDString
+		 *            - the literal ID name to look for
 		 * @return the literal or null
 		 * @throws TeamRepositoryException
 		 */

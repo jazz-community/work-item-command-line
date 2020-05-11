@@ -131,7 +131,8 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 					new OSLC_TYPE("http://open-services.net/ns/cm#relatedTestScript", SystemType.QM));
 
 			/*
-			 * CCM to CCM links are not checked because they don't use link index
+			 * CCM to CCM links are not checked because they don't use link
+			 * index
 			 */
 			// put(WorkItemLinkTypes.AFFECTED_BY_DEFECT /*
 			// "com.ibm.team.workitem.linktype.cm.affectedByDefect" */,
@@ -180,7 +181,8 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
+	 * @see
+	 * com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
 	 * #setRequiredParameters()
 	 */
 	public void setRequiredParameters() {
@@ -198,7 +200,8 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
+	 * @see
+	 * com.ibm.js.team.workitem.commandline.framework.AbstractWorkItemCommand
 	 * #process()
 	 */
 	@Override
@@ -295,11 +298,13 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 								getMonitor());
 
 						/*
-						 * The GC could be defined in the Found In attribute or the Planned For
-						 * attribute Since a non Defect may not have a Found In attribute need to choose
-						 * a type that will use the Planned For Attribute. The Attribute chosen is
-						 * defined in the Process Configuration of the Project Area. The if statement
-						 * below is using the default configuration.
+						 * The GC could be defined in the Found In attribute or
+						 * the Planned For attribute Since a non Defect may not
+						 * have a Found In attribute need to choose a type that
+						 * will use the Planned For Attribute. The Attribute
+						 * chosen is defined in the Process Configuration of the
+						 * Project Area. The if statement below is using the
+						 * default configuration.
 						 */
 						if (gcUriString == null || gcUriString.isEmpty()) {
 							switch (linkTypeId) {
@@ -323,7 +328,8 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 						if (gcUriString != null && !gcUriString.isEmpty()) {
 							validateGCLink(gcUriString, workItem.getId(), currentWorkItemURI, reference);
 						} else {
-							// TODO validateLink(workItem, currentWorkItemURI, endPoint, reference);
+							// TODO validateLink(workItem, currentWorkItemURI,
+							// endPoint, reference);
 							logger.warn("No GlobalConfiguration for work item: " + workItem.getId() + " link type: "
 									+ linkType.getLinkTypeId());
 						}
@@ -334,8 +340,8 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	}
 
 	/**
-	 * Validate that the GC link is known by the target server and that the artifact
-	 * exists.
+	 * Validate that the GC link is known by the target server and that the
+	 * artifact exists.
 	 * 
 	 * @param gcUriString
 	 * @param workItemId
@@ -456,7 +462,8 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 				connection.addRequestHeader(header.getKey(), header.getValue());
 			}
 			String encoding = CharsetEncoding.UTF8.name();
-			String content = "{" + NLS.bind(QUERY_JSON, targetUri.toString(), linkType, gcUrl) + "}"; // add braces
+			String content = "{" + NLS.bind(QUERY_JSON, targetUri.toString(), linkType, gcUrl) + "}"; // add
+																										// braces
 			logger.debug("\n... LDX (REST) POST: " + ldxUri + " content:\n" + content + "\n Accept: "
 					+ headers.getValue(HttpUtil.ACCEPT) + " encoding: " + MediaType.JSON.toString());
 

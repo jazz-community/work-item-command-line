@@ -1,4 +1,5 @@
 
+
 WorkItemCommandLine Version 5.1
 
 Usage (See https://rsjazz.wordpress.com/2019/07/03/work-item-command-line-5-0/ for a more complete description) :
@@ -14,8 +15,8 @@ Available commands:
 -migrateattribute sourceAttributeID="value" password="value" /skipEmailNotification projectArea="value" targetAttributeID="value" workItemType="value" repository="value" /ignoreErrors user="value"  
 -validateoslclinks password="value" /trace /debug projectArea="value" query="value" repository="value" user="value"  
 -bulkupdate password="value" /skipEmailNotification projectArea="value" query="value" /enableDeleteApprovals repository="value" /ignoreErrors user="value" /enableDeleteAttachment   [querysource="JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters"]
--exportworkitems exportFile="value" password="value" /headerIDs /suppressAttributeExceptions projectArea="value" query="value" /asrtceclipse /disableAttachmentExport /allColumns repository="value" /ignoreErrors user="value"   [encoding="UTF_16LE"] [delimiter=","] [columns="Type,Id,Planned For,Filed Against,Description,Found In"] [querysource="JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters"][timestampFormat="MMM d, yyyy hh:mm a"]
--importworkitems /importdebug password="value" /skipEmailNotification projectArea="value" /importmultipass /ignoreemptycolumnvalues importFile="value" /forcelinkcreation /enforceSizeLimits repository="value" /ignoreErrors user="value"   [mappingFile="C:\temp\mapping.xml"] [encoding="UTF_16LE"][timestampFormat="MMM d, yyyy hh:mm a"] [delimiter=","]
+-exportworkitems exportFile="value" password="value" /headerIDs /suppressAttributeExceptions projectArea="value" query="value" /asrtceclipse /disableAttachmentExport /allColumns repository="value" /ignoreErrors user="value"   [encoding="UTF-8"] [delimiter=","] [columns="Type,Id,Planned For,Filed Against,Description,Found In"] [querysource="JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters"][timestampFormat="MMM d, yyyy hh:mm a"]
+-importworkitems /importdebug password="value" /skipEmailNotification projectArea="value" /importmultipass /ignoreemptycolumnvalues importFile="value" /forcelinkcreation /enforceSizeLimits repository="value" /ignoreErrors user="value"   [mappingFile="C:\temp\mapping.xml"] [encoding="UTF-8"][timestampFormat="MMM d, yyyy hh:mm a"] [delimiter=","]
 -create password="value" projectArea="value" workItemType="value" /enableDeleteApprovals /enforceSizeLimits repository="value" /ignoreErrors user="value" /enableDeleteAttachment  {parameter[:mode]=value}
 -update password="value" /skipEmailNotification /ignoreMissingAttributes /enableDeleteApprovals id="value" /enforceSizeLimits repository="value" /ignoreErrors user="value" /enableDeleteAttachment  {parameter[:mode]=value}
 -printtypeattributes password="value" projectArea="value" workItemType="value" repository="value" user="value"  
@@ -281,6 +282,16 @@ Format is:
 
 		@deleteLinks_includedInBuild=yes
 
+Encoding:
+Importing from a CSV file can fail if the file encoding does not match the expected encodig. An encoding can be provided for the CSV import and export. The default is UTF-8.
+Format is: 
+	encoding=encodingID
+
+		Where encodingID is UTF-8 or UTF-16LE or UTF-16BE or us-ascii.
+
+	Example:
+
+		encoding=UTF-8
 
 Aliases for attribute ID's:
 Available mappings:
@@ -332,6 +343,4 @@ Available mappings:
 	TAGS: internalTags
 	com.ibm.team.workitem.attribute.duedate: dueDate
 	com.ibm.team.workitem.attribute.target: target
-
-
-EndTime: 05.02.2020 16:53:19
+	

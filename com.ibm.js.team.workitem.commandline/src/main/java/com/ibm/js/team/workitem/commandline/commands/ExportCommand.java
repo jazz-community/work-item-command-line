@@ -82,7 +82,7 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	// "\"id,workItemType,internalState,internalPriority,internalSeverity,summary,owner,creator\"";
 
 	// The encoding to be used when saving the file
-	private String fFileEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_16LE;
+	private String fFileEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_8;
 	// Delimiter to be used for columns
 	private char fDelimiter = IWorkItemCommandLineConstants.DEFAULT_DELIMITER;
 	// Export headers as ID's?
@@ -90,7 +90,7 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	// Ignore minor errors?
 	private boolean fIgnoreErrors = true;
 	// The output file
-//	private File fOutputFile = null;
+	// private File fOutputFile = null;
 	// Suppress Attribute Not found Exception
 	private boolean fSuppressAttributeErrors = false;
 	private WorkItemExportHelper fWorkItemExportHelper;
@@ -118,9 +118,8 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ibm.js.team.workitem.commandline.framework.AbstractTeamRepositoryCommand
-	 * #setRequiredParameters()
+	 * @see com.ibm.js.team.workitem.commandline.framework.
+	 * AbstractTeamRepositoryCommand #setRequiredParameters()
 	 */
 	@Override
 	public void setRequiredParameters() {
@@ -168,7 +167,8 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.js.team.workitem.commandline.framework.AbstractCommand#process()
+	 * @see
+	 * com.ibm.js.team.workitem.commandline.framework.AbstractCommand#process()
 	 */
 	@Override
 	public OperationResult process() throws TeamRepositoryException {
@@ -408,14 +408,16 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	}
 
 	/**
-	 * This method tries to get the matching representation of the value to be set
-	 * for a work item attribute. It basically goes through a list of properties an
-	 * attribute can have and locates the target type. Based on that type it tries
-	 * to create a matching value. The value is returned if it was possible to
-	 * create it.
+	 * This method tries to get the matching representation of the value to be
+	 * set for a work item attribute. It basically goes through a list of
+	 * properties an attribute can have and locates the target type. Based on
+	 * that type it tries to create a matching value. The value is returned if
+	 * it was possible to create it.
 	 * 
-	 * @param column - the IAttribute to find the representation for
-	 * @param value  - the string value that is to be transformed.
+	 * @param column
+	 *            - the IAttribute to find the representation for
+	 * @param value
+	 *            - the string value that is to be transformed.
 	 * @param value2
 	 * @return
 	 * @throws TeamRepositoryException

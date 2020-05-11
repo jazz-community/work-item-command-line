@@ -25,10 +25,14 @@ public class WorkItemUtil {
 	/**
 	 * Find a work item by its ID provided as string.
 	 * 
-	 * @param id             - the work item ID as string
-	 * @param profile        - the load profile to use
-	 * @param workitemCommon - the IWorkItemCommon client library
-	 * @param monitor        - a progress monitor or null
+	 * @param id
+	 *            - the work item ID as string
+	 * @param profile
+	 *            - the load profile to use
+	 * @param workitemCommon
+	 *            - the IWorkItemCommon client library
+	 * @param monitor
+	 *            - a progress monitor or null
 	 * @return
 	 * @throws TeamRepositoryException
 	 */

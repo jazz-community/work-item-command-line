@@ -28,8 +28,10 @@ public class ParameterList implements Iterable<Parameter> {
 	/**
 	 * Adds a new parameter with name and value to the list.
 	 * 
-	 * @param name  - the name of the parameter
-	 * @param value - the value of the parameter
+	 * @param name
+	 *            - the name of the parameter
+	 * @param value
+	 *            - the value of the parameter
 	 */
 	public void addParameterValue(String name, String value) {
 		if (value != null) {
@@ -42,7 +44,8 @@ public class ParameterList implements Iterable<Parameter> {
 	/**
 	 * Adds a new command with name to the list.
 	 * 
-	 * @param name - the name of the command
+	 * @param name
+	 *            - the name of the command
 	 */
 	public void addCommand(String name) {
 		Parameter command = Parameter.createCommand(name);
@@ -53,7 +56,8 @@ public class ParameterList implements Iterable<Parameter> {
 	/**
 	 * Adds a parameter to the list
 	 * 
-	 * @param parameter - the parameter to be aded
+	 * @param parameter
+	 *            - the parameter to be aded
 	 */
 	public void addParameter(Parameter parameter) {
 		fParameterList.put(parameter.getName(), parameter);
@@ -82,7 +86,8 @@ public class ParameterList implements Iterable<Parameter> {
 	/**
 	 * Tests if the parameter list contains a switch
 	 * 
-	 * @param name - the name of the switch
+	 * @param name
+	 *            - the name of the switch
 	 * @return true if the switch was found, false otherwise
 	 */
 	public boolean hasSwitch(String name) {
@@ -93,7 +98,8 @@ public class ParameterList implements Iterable<Parameter> {
 	/**
 	 * Get the parameterValue amd consume the parameter
 	 * 
-	 * @param name - the name of the parameter
+	 * @param name
+	 *            - the name of the parameter
 	 * @return the value of the parameter if it exists, null otherwise
 	 */
 	public String consumeParameter(String name) {
@@ -108,7 +114,8 @@ public class ParameterList implements Iterable<Parameter> {
 	/**
 	 * Return a parameter with a given name
 	 * 
-	 * @param name - the name of the parameter
+	 * @param name
+	 *            - the name of the parameter
 	 * @return the parameter that was found or null if none was found
 	 */
 	public Parameter getParameter(String name) {

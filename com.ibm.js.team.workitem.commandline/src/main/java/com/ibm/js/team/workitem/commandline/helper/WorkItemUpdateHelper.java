@@ -237,7 +237,8 @@ public class WorkItemUpdateHelper {
 
 	/**
 	 * This constructor should only be used for accessing the help text. The
-	 * constructor misses several core fields that are used for normal operation.
+	 * constructor misses several core fields that are used for normal
+	 * operation.
 	 */
 	public WorkItemUpdateHelper() {
 	}
@@ -245,9 +246,12 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Use this constructor to update attribute values.
 	 * 
-	 * @param workingCopy of the work item to be updated
-	 * @param parameters  - the parameters passed e.g. for finding flags
-	 * @param monitor     a progress monitor or null
+	 * @param workingCopy
+	 *            of the work item to be updated
+	 * @param parameters
+	 *            - the parameters passed e.g. for finding flags
+	 * @param monitor
+	 *            a progress monitor or null
 	 */
 	public WorkItemUpdateHelper(WorkItemWorkingCopy workingCopy, ParameterList parameters, IProgressMonitor monitor) {
 		super();
@@ -308,8 +312,8 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Some operations require the work items IWorkItem interface. This is provided
-	 * here.
+	 * Some operations require the work items IWorkItem interface. This is
+	 * provided here.
 	 * 
 	 * @return the IWorkItem interface
 	 */
@@ -334,12 +338,14 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * The main entry point for the helper. Call this method to update a property
-	 * for a work item. Provide the property ID and the attribute value. Property ID
-	 * and value can be encoded.
+	 * The main entry point for the helper. Call this method to update a
+	 * property for a work item. Provide the property ID and the attribute
+	 * value. Property ID and value can be encoded.
 	 * 
-	 * @param propertyID - the property ID this is for; this can be encoded
-	 * @param value      - the value to sat
+	 * @param propertyID
+	 *            - the property ID this is for; this can be encoded
+	 * @param value
+	 *            - the value to sat
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 * @throws IOException
@@ -377,11 +383,11 @@ public class WorkItemUpdateHelper {
 			 * Syntax:
 			 * 
 			 * "Plain Text <b>Bold Text</b> <i>Italic Text</i> <a
-			 * href=\"https://rsjazz.wordpress.com\">External RSJazz Link</a> <b>@ralph
-			 * </b>Defect 3 "  
+			 * href=\"https://rsjazz.wordpress.com\">External RSJazz Link</a>
+			 * <b>@ralph </b>Defect 3 "  
 			 * 
-			 * Important: Escape additional quotes in input string as \" line breaks are
-			 * ignored.
+			 * Important: Escape additional quotes in input string as \" line
+			 * breaks are ignored.
 			 */
 
 			String summary = enforceSizeLimits(
@@ -398,7 +404,8 @@ public class WorkItemUpdateHelper {
 			 * "Plain Text<br/>
 			 * <b>Bold Text</b><br/>
 			 * <i>Italic Text</i><br/>
-			 * <a href=\"https://rsjazz.wordpress.com\">External RSJazz Link</a> <br/>
+			 * <a href=\"https://rsjazz.wordpress.com\">External RSJazz Link</a>
+			 * <br/>
 			 * <b>@ralph </b><br/>
 			 * Defect 3 <br/>
 			 * " 
@@ -462,8 +469,8 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Update all attributes that don't need special handling - basically these are
-	 * all attribute based values
+	 * Update all attributes that don't need special handling - basically these
+	 * are all attribute based values
 	 * 
 	 * @param parameter
 	 * @throws TeamRepositoryException
@@ -507,14 +514,16 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * This method tries to get the matching representation of the value to be set
-	 * for a work item attribute. It basically goes through a list of properties an
-	 * attribute can have and locates the target type. Based on that type it tries
-	 * to create a matching value. The value is returned if it was possible to
-	 * create it.
+	 * This method tries to get the matching representation of the value to be
+	 * set for a work item attribute. It basically goes through a list of
+	 * properties an attribute can have and locates the target type. Based on
+	 * that type it tries to create a matching value. The value is returned if
+	 * it was possible to create it.
 	 * 
-	 * @param attribute - the IAttribute to find the representation for
-	 * @param value     - the string value that is to be transformed.
+	 * @param attribute
+	 *            - the IAttribute to find the representation for
+	 * @param value
+	 *            - the string value that is to be transformed.
 	 * @return
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
@@ -574,8 +583,8 @@ public class WorkItemUpdateHelper {
 			 * HTML, use HTML tags example
 			 * 
 			 * "Plain Text <b>Bold Text</b> <i>Italic Text</i> <a
-			 * href=\"https://rsjazz.wordpress.com\">External RSJazz Link</a> <b>@ralph
-			 * </b>Defect 3 "
+			 * href=\"https://rsjazz.wordpress.com\">External RSJazz Link</a>
+			 * <b>@ralph </b>Defect 3 "
 			 * 
 			 * Use </br>
 			 * or <br>
@@ -589,8 +598,8 @@ public class WorkItemUpdateHelper {
 			 *      "<br>
 			 *      = Heading1<br>
 			 *      <br>
-			 *      normal Text\n==Heading 2\n\nNormalText\n===Heading 3\n\nNormal Text
-			 *      **bold text** <br>
+			 *      normal Text\n==Heading 2\n\nNormalText\n===Heading
+			 *      3\n\nNormal Text **bold text** <br>
 			 *      **bold text**<br>
 			 *      //Italics//"
 			 * 
@@ -628,10 +637,10 @@ public class WorkItemUpdateHelper {
 			if (AttributeTypes.NUMBER_TYPES.contains(attribType)) {
 				// different number types
 				try {
-					String value=parameter.getValue(); 
-					boolean isEmpty=false; 
+					String value = parameter.getValue();
+					boolean isEmpty = false;
 					if (StringUtil.isEmpty(value)) {
-						isEmpty=true; 
+						isEmpty = true;
 					}
 					if (attribType.equals(AttributeTypes.INTEGER)) {
 						return new Integer(value);
@@ -646,8 +655,8 @@ public class WorkItemUpdateHelper {
 						return new BigDecimal(value);
 					}
 					if (attribType.equals(AttributeTypes.DURATION)) {
-						if(isEmpty) {
-							value="-1";
+						if (isEmpty) {
+							value = "-1";
 						}
 						return getDurationFromString(value);
 					}
@@ -717,8 +726,8 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Make sure strings in a string list are not longer than the maximum size that
-	 * can be stored in the attribute.
+	 * Make sure strings in a string list are not longer than the maximum size
+	 * that can be stored in the attribute.
 	 * 
 	 * @param input
 	 * @param attribType
@@ -737,8 +746,8 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Make sure strings are not longer than the maximum size that can be stored in
-	 * the attribute.
+	 * Make sure strings are not longer than the maximum size that can be stored
+	 * in the attribute.
 	 * 
 	 * @param input
 	 * @param attribType
@@ -778,11 +787,13 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Composes an exception form multiple exceptions that happened during e.g. item
-	 * lookup and wraps it into one exception
+	 * Composes an exception form multiple exceptions that happened during e.g.
+	 * item lookup and wraps it into one exception
 	 * 
-	 * @param parameter  - the parameter worked on at this time
-	 * @param exceptions - the list of exceptions that happened
+	 * @param parameter
+	 *            - the parameter worked on at this time
+	 * @param exceptions
+	 *            - the list of exceptions that happened
 	 * @throws WorkItemCommandLineException
 	 */
 	private void throwComplexException(ParameterValue parameter, List<Exception> exceptions)
@@ -802,13 +813,15 @@ public class WorkItemUpdateHelper {
 	 * 
 	 * Mode Default same as mode add - adds an approval
 	 * 
-	 * Mode set removes approvals first and then adds the new approval This modes
-	 * needs to be enabled with a switch
+	 * Mode set removes approvals first and then adds the new approval This
+	 * modes needs to be enabled with a switch
 	 * 
 	 * Mode remove removes an approval and needs to be enabled with a switch
 	 * 
-	 * @param parameter  - the parameter passed
-	 * @param exceptions - a list to pass exceptions back
+	 * @param parameter
+	 *            - the parameter passed
+	 * @param exceptions
+	 *            - a list to pass exceptions back
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 */
@@ -871,10 +884,12 @@ public class WorkItemUpdateHelper {
 	 * Update the attachments of a workitem.
 	 * 
 	 * Supports all modes, however, needs a switch to enable the set mode Mode -
-	 * Default same as Add, adds an attachment - Set removes all attachments first
-	 * and then adds a new one - Remove removes an attachment, if it can be found
+	 * Default same as Add, adds an attachment - Set removes all attachments
+	 * first and then adds a new one - Remove removes an attachment, if it can
+	 * be found
 	 * 
-	 * @param parameter - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @throws TeamRepositoryException
 	 */
 	private void updateAttachments(ParameterValue parameter) throws TeamRepositoryException {
@@ -916,11 +931,12 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Update the built in tags attribute
 	 * 
-	 * Supports all modes Mode - Default same as Add, adds a tag - Set removes all
-	 * tag first and then adds the new ones - Remove removes a tag, if it can be
-	 * found
+	 * Supports all modes Mode - Default same as Add, adds a tag - Set removes
+	 * all tag first and then adds the new ones - Remove removes a tag, if it
+	 * can be found
 	 * 
-	 * @param parameter - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 */
 	private void updateBuiltInTags(ParameterValue parameter) {
 		List<String> newTags = getTags(parameter.getValue());
@@ -941,16 +957,18 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Update the comments - only adding is supported
 	 * 
-	 * @param parameter - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @throws WorkItemCommandLineException
 	 * @throws TeamRepositoryException
 	 */
 	private void updateComments(ParameterValue parameter) throws WorkItemCommandLineException, TeamRepositoryException {
 		// Only add comments
 		if (!(parameter.isDefault() || parameter.isAdd())) {
-			throw modeNotSupportedException(parameter, "Mode not supported. Comments only supports the default and the "
-					+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
-					+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD + " modes. ");
+			throw modeNotSupportedException(parameter,
+					"Mode not supported. Comments only supports the default and the "
+							+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
+							+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_ADD + " modes. ");
 		}
 
 		XMLString commentContent = XMLString
@@ -966,13 +984,15 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Update Links to work items, build results, clm links
 	 * 
-	 * Supports all modes Mode - Default same as Add, adds a tag - Set removes all
-	 * tag first and then adds the new ones - Remove removes a tag, if it can be
-	 * found
+	 * Supports all modes Mode - Default same as Add, adds a tag - Set removes
+	 * all tag first and then adds the new ones - Remove removes a tag, if it
+	 * can be found
 	 * 
 	 * 
-	 * @param parameter  - the parameter passed
-	 * @param exceptions - a list to pass exceptions back
+	 * @param parameter
+	 *            - the parameter passed
+	 * @param exceptions
+	 *            - a list to pass exceptions back
 	 * @throws TeamRepositoryException
 	 */
 	private void updateLinks(ParameterValue parameter, List<Exception> exceptions) throws TeamRepositoryException {
@@ -1055,8 +1075,10 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Delete all links of a certain link type
 	 * 
-	 * @param parameter  - the parameter passed
-	 * @param exceptions - a list to pass exceptions back
+	 * @param parameter
+	 *            - the parameter passed
+	 * @param exceptions
+	 *            - a list to pass exceptions back
 	 * @throws TeamRepositoryException
 	 */
 	private void deleteLinks(ParameterValue parameter, List<Exception> exceptions) throws TeamRepositoryException {
@@ -1132,7 +1154,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Removes all approvals from the approvals collection
 	 * 
-	 * @param approvalData the data with the approval type to remove
+	 * @param approvalData
+	 *            the data with the approval type to remove
 	 * @return
 	 */
 	private void updateRemoveAllApprovalsOfSameType(ApprovalInputData approvalData) {
@@ -1149,8 +1172,8 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Tries to find a an approval from the approval data and deletes it if it can
-	 * be found Removes only the first instance found that matches.
+	 * Tries to find a an approval from the approval data and deletes it if it
+	 * can be found Removes only the first instance found that matches.
 	 * 
 	 * @param approvalData
 	 * @return
@@ -1200,13 +1223,15 @@ public class WorkItemUpdateHelper {
 
 	/**
 	 * Update the subscriptions to a work item Mode set: Clear the current
-	 * subscribers and set the given list Mode default and mode add: add a list of
-	 * subscribers Mode remove: remove the specified subscribers.
+	 * subscribers and set the given list Mode default and mode add: add a list
+	 * of subscribers Mode remove: remove the specified subscribers.
 	 * 
 	 * Subscriptions make sure no duplicates are set.
 	 * 
-	 * @param parameter  - the parameter passed
-	 * @param exceptions - a list to pass exceptions back
+	 * @param parameter
+	 *            - the parameter passed
+	 * @param exceptions
+	 *            - a list to pass exceptions back
 	 * @throws TeamRepositoryException
 	 */
 	private void updateSubscribers(ParameterValue parameter, List<Exception> exceptions)
@@ -1238,7 +1263,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Update the state of a work item - only setting a state is supported
 	 * 
-	 * @param parameter - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @throws WorkItemCommandLineException
 	 * @throws TeamRepositoryException
 	 */
@@ -1256,7 +1282,8 @@ public class WorkItemUpdateHelper {
 	 * Update the state of a work item using a workflow action - only setting a
 	 * state is supported
 	 * 
-	 * @param parameter - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @throws WorkItemCommandLineException
 	 * @throws TeamRepositoryException
 	 */
@@ -1275,7 +1302,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find the category specified in the value
 	 * 
-	 * @param parameter - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @return the category found
 	 * @throws TeamRepositoryException
 	 */
@@ -1291,7 +1319,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find a contributor for a given ID
 	 * 
-	 * @param parameter - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @return the contributor
 	 * @throws TeamRepositoryException
 	 */
@@ -1304,13 +1333,15 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Calculates a list of contributors from a list of ID's and adjusts the value
-	 * content as needed.
+	 * Calculates a list of contributors from a list of ID's and adjusts the
+	 * value content as needed.
 	 * 
-	 * @param parameter  - the parameter passed
-	 * @param exceptions - a list to pass exceptions back
-	 * @return a list of IContributors as object as a side effect it also returns a
-	 *         list of errors if an argument could not be processed
+	 * @param parameter
+	 *            - the parameter passed
+	 * @param exceptions
+	 *            - a list to pass exceptions back
+	 * @return a list of IContributors as object as a side effect it also
+	 *         returns a list of errors if an argument could not be processed
 	 * @throws TeamRepositoryException
 	 */
 	private Object calculateContributorList(ParameterValue parameter, List<Exception> exceptions)
@@ -1366,7 +1397,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find a deliverable from the string representation.
 	 * 
-	 * @param parameter - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @return the deliverable that was found
 	 * @throws TeamRepositoryException
 	 */
@@ -1385,7 +1417,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find an enumeration literal for a value
 	 * 
-	 * @param parameter - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @return the enumeration literal found
 	 * @throws TeamRepositoryException
 	 */
@@ -1404,11 +1437,13 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Tries to find a list of enumeration literals for a list of values encoded in
-	 * a string.
+	 * Tries to find a list of enumeration literals for a list of values encoded
+	 * in a string.
 	 * 
-	 * @param parameter  - the parameter passed
-	 * @param exceptions - a list to pass exceptions back
+	 * @param parameter
+	 *            - the parameter passed
+	 * @param exceptions
+	 *            - a list to pass exceptions back
 	 * @return a list of enumeration literals
 	 * @throws TeamRepositoryException
 	 */
@@ -1468,11 +1503,13 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Tries to find an item for an unspecified item attribute type and returns the
-	 * object, if found.
+	 * Tries to find an item for an unspecified item attribute type and returns
+	 * the object, if found.
 	 * 
-	 * @param parameter  - the parameter passed
-	 * @param exceptions - a list to pass exceptions back
+	 * @param parameter
+	 *            - the parameter passed
+	 * @param exceptions
+	 *            - a list to pass exceptions back
 	 * @return the IItem found
 	 * @throws WorkItemCommandLineException
 	 * @throws TeamRepositoryException
@@ -1481,7 +1518,7 @@ public class WorkItemUpdateHelper {
 			throws WorkItemCommandLineException, TeamRepositoryException {
 		if (StringUtil.isEmpty(parameter.getValue())) {
 			return null; // Unassigned
-		}		
+		}
 		List<String> value = StringUtil.splitStringToList(parameter.getValue(), ITEMTYPE_SEPARATOR);
 		if (value.size() != 2) {
 			throw new WorkItemCommandLineException(
@@ -1521,8 +1558,10 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Calculates the items in an unspecified ItemList
 	 * 
-	 * @param parameter  - the parameter passed
-	 * @param exceptions - a list to pass exceptions back
+	 * @param parameter
+	 *            - the parameter passed
+	 * @param exceptions
+	 *            - a list to pass exceptions back
 	 * @return returns a list with the values
 	 * @throws TeamRepositoryException
 	 */
@@ -1588,7 +1627,7 @@ public class WorkItemUpdateHelper {
 		}
 		return results;
 	}
-	
+
 	/**
 	 * Find an timelinen from a string encoding the value
 	 * 
@@ -1597,7 +1636,7 @@ public class WorkItemUpdateHelper {
 	 * @throws TeamRepositoryException
 	 */
 	private Object calculateTimeline(ParameterValue parameter) throws TeamRepositoryException {
-		String timeline=parameter.getValue(); 
+		String timeline = parameter.getValue();
 		if (StringUtil.isEmpty(timeline)) {
 			return null; // Unassigned
 		}
@@ -1618,7 +1657,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find an iteration from a string encoding the value
 	 * 
-	 * @param parameter - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @return the iteration found
 	 * @throws TeamRepositoryException
 	 */
@@ -1648,7 +1688,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find a process area from the name in the value string.
 	 * 
-	 * @param parameter - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @return the process area that was found
 	 * @throws TeamRepositoryException
 	 */
@@ -1686,12 +1727,14 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Find a list of process areas from the names in the value string. What type of
-	 * process area, Team Area/Project Area/both is determined from the attribute
-	 * type
+	 * Find a list of process areas from the names in the value string. What
+	 * type of process area, Team Area/Project Area/both is determined from the
+	 * attribute type
 	 * 
-	 * @param parameter  - the parameter passed
-	 * @param exceptions - a list to pass exceptions back
+	 * @param parameter
+	 *            - the parameter passed
+	 * @param exceptions
+	 *            - a list to pass exceptions back
 	 * @return a list of process areas
 	 * @throws TeamRepositoryException
 	 */
@@ -1784,8 +1827,10 @@ public class WorkItemUpdateHelper {
 	 * 
 	 * If components with the same name exist, it returns the first one found
 	 * 
-	 * @param parameter  - the parameter passed
-	 * @param exceptions - a list to pass exceptions back
+	 * @param parameter
+	 *            - the parameter passed
+	 * @param exceptions
+	 *            - a list to pass exceptions back
 	 * @return the component found
 	 * @throws TeamRepositoryException
 	 */
@@ -1810,7 +1855,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Calculates a string value to return to set string based attributes.
 	 * 
-	 * @param parameter  - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @param stringType
 	 * @return the string to return
 	 * @throws TeamRepositoryException
@@ -1836,8 +1882,10 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Calculate a string list from input variables and the current value
 	 * 
-	 * @param parameter  - the parameter passed
-	 * @param exceptions - a list to pass exceptions back
+	 * @param parameter
+	 *            - the parameter passed
+	 * @param exceptions
+	 *            - a list to pass exceptions back
 	 * @return a list with strings to be set
 	 * @throws TeamRepositoryException
 	 */
@@ -1881,7 +1929,8 @@ public class WorkItemUpdateHelper {
 	 * Calculate a list of tags from an attribute value and a list of tag names
 	 * encoded in a string.
 	 * 
-	 * @param parameter - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @return the list of tags
 	 * @throws TeamRepositoryException
 	 */
@@ -1907,7 +1956,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Calculates a timestamp from a string. Format @see SimpleDateFormatUtil
 	 * 
-	 * @param parameter - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @return the timestamp that was calculated
 	 * @throws TeamRepositoryException
 	 */
@@ -1930,8 +1980,8 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Get an UUID from a process area or access group - this is typically used for
-	 * restricted access
+	 * Get an UUID from a process area or access group - this is typically used
+	 * for restricted access
 	 * 
 	 * @param parameter
 	 * @param exceptions
@@ -1953,7 +2003,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find a work item from an ID
 	 * 
-	 * @param parameter - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @return the work item found
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
@@ -1980,8 +2031,10 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Find the work items for a list of ID's
 	 * 
-	 * @param parameter  - the parameter passed
-	 * @param exceptions - a list to pass exceptions back
+	 * @param parameter
+	 *            - the parameter passed
+	 * @param exceptions
+	 *            - a list to pass exceptions back
 	 * @return the list of work items
 	 * @throws TeamRepositoryException
 	 */
@@ -2047,7 +2100,8 @@ public class WorkItemUpdateHelper {
 	 * Defect 3 <br/>
 	 *  
 	 * 
-	 * @param parameter  - the parameter passed
+	 * @param parameter
+	 *            - the parameter passed
 	 * @param stringType
 	 * @return the XML string
 	 */
@@ -2070,8 +2124,9 @@ public class WorkItemUpdateHelper {
 	 * Create an approval on the work item.
 	 * 
 	 * @param parameter
-	 * @param approvalData - the value with the data to be set. This parameter is
-	 *                     encoded.
+	 * @param approvalData
+	 *            - the value with the data to be set. This parameter is
+	 *            encoded.
 	 * @throws TeamRepositoryException
 	 */
 	private void createApproval(ParameterValue parameter, ApprovalInputData approvalData)
@@ -2100,8 +2155,10 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Gets a list of work items from a list of ID's
 	 * 
-	 * @param value        - a list of work item ID's
-	 * @param notFoundList - A list to pass work item ID's with no work item found
+	 * @param value
+	 *            - a list of work item ID's
+	 * @param notFoundList
+	 *            - A list to pass work item ID's with no work item found
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
@@ -2128,7 +2185,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Finds a build result with a given label
 	 * 
-	 * @param buildResultLabel - the string representation of the build result label
+	 * @param buildResultLabel
+	 *            - the string representation of the build result label
 	 * @return the buildresult that was found
 	 * @throws WorkItemCommandLineException
 	 * @see https://jazz.net/library/article/1229
@@ -2147,7 +2205,8 @@ public class WorkItemUpdateHelper {
 		query.orderByDsc(buildResultQueryModel.buildStartTime());
 		try {
 			/*
-			 * Query for items using the build definition's item ID as the argument.
+			 * Query for items using the build definition's item ID as the
+			 * argument.
 			 */
 			IItemQueryPage queryPage = buildClient.queryItems(query, new Object[] { buildResultLabel },
 					IQueryService.ITEM_QUERY_MAX_PAGE_SIZE, monitor);
@@ -2168,7 +2227,8 @@ public class WorkItemUpdateHelper {
 	 * Find the category from the string. Categories don't have ID's, so you can
 	 * only search for the value.
 	 * 
-	 * @param value - the category path
+	 * @param value
+	 *            - the category path
 	 * @return the category handle
 	 * @throws TeamRepositoryException
 	 */
@@ -2176,20 +2236,22 @@ public class WorkItemUpdateHelper {
 		List<String> path = StringUtil.splitStringToList(value, PATH_SEPARATOR);
 		ICategoryHandle category = getWorkItemCommon().findCategoryByNamePath(getWorkItem().getProjectArea(), path,
 				monitor);
-		if(category==null && value!=null) {
-			if(value.equals("Unassigned")) {
-				//category=ICategory.DEFAULT_CATEGORY_PROPERTY;
-				category=getWorkItemCommon().findUnassignedCategory(getWorkItem().getProjectArea(), ICategory.SMALL_PROFILE, monitor);
+		if (category == null && value != null) {
+			if (value.equals("Unassigned")) {
+				// category=ICategory.DEFAULT_CATEGORY_PROPERTY;
+				category = getWorkItemCommon().findUnassignedCategory(getWorkItem().getProjectArea(),
+						ICategory.SMALL_PROFILE, monitor);
 			}
 		}
 		return category;
 	}
 
 	/**
-	 * Find a contributor from a given user ID string representation. Search by ID
-	 * or name first search for implemented.
+	 * Find a contributor from a given user ID string representation. Search by
+	 * ID or name first search for implemented.
 	 * 
-	 * @param userID - the user ID string encoded
+	 * @param userID
+	 *            - the user ID string encoded
 	 * @return the contributor object or null if the user ID could not be found
 	 * @throws TeamRepositoryException
 	 */
@@ -2198,7 +2260,7 @@ public class WorkItemUpdateHelper {
 		String userTrimmed = userID.trim();
 		IContributor foundUser = null;
 		if (userTrimmed.isEmpty()) {
-			userTrimmed=IWorkItemCommandLineConstants.UNASSIGNED_USER;
+			userTrimmed = IWorkItemCommandLineConstants.UNASSIGNED_USER;
 		}
 		try {
 			foundUser = getTeamRepository().contributorManager().fetchContributorByUserId(userTrimmed, monitor);
@@ -2220,7 +2282,8 @@ public class WorkItemUpdateHelper {
 	 * Find a deliverable (release) object from its name Deliverables don't have
 	 * ID's, so you can only search for the value.
 	 * 
-	 * @param value - the name of the deliverable
+	 * @param value
+	 *            - the name of the deliverable
 	 * @return the deliverable object
 	 * @throws TeamRepositoryException
 	 */
@@ -2230,13 +2293,16 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Find a resolution from a given string representation. Note, this looks into
-	 * all resolutions and does not look into the specific resolutions related to a
-	 * state. Search is by name and by ID of the resolution.
+	 * Find a resolution from a given string representation. Note, this looks
+	 * into all resolutions and does not look into the specific resolutions
+	 * related to a state. Search is by name and by ID of the resolution.
 	 * 
-	 * @param value - the resolution display text or "" or null;
-	 * @return the resolution object that was found or null if the value is empty
-	 * @throws TeamRepositoryException, WorkItemCommandLineException
+	 * @param value
+	 *            - the resolution display text or "" or null;
+	 * @return the resolution object that was found or null if the value is
+	 *         empty
+	 * @throws TeamRepositoryException,
+	 *             WorkItemCommandLineException
 	 */
 	private Identifier<IResolution> findResolution(String value)
 			throws TeamRepositoryException, WorkItemCommandLineException {
@@ -2260,11 +2326,12 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Try to find an action that leads from the current state of the work item to
-	 * the desires target state. Searches by string display value first and then by
-	 * ID of the state.
+	 * Try to find an action that leads from the current state of the work item
+	 * to the desires target state. Searches by string display value first and
+	 * then by ID of the state.
 	 * 
-	 * @param value - the string representation of the target state.
+	 * @param value
+	 *            - the string representation of the target state.
 	 * @return the workflow action identifier.
 	 * @throws TeamRepositoryException
 	 */
@@ -2284,11 +2351,12 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Try to find an action with a given name, that leads from the current state of
-	 * the work item. Searches by string display value first and then by ID of the
-	 * action.
+	 * Try to find an action with a given name, that leads from the current
+	 * state of the work item. Searches by string display value first and then
+	 * by ID of the action.
 	 * 
-	 * @param value - the string representation of the action.
+	 * @param value
+	 *            - the string representation of the action.
 	 * @return the workflow action identifier.
 	 * @throws TeamRepositoryException
 	 */
@@ -2307,10 +2375,11 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Find the state represented by its name as string. Searches by string display
-	 * value first and then by ID.
+	 * Find the state represented by its name as string. Searches by string
+	 * display value first and then by ID.
 	 * 
-	 * @param value - the string representation of the target state.
+	 * @param value
+	 *            - the string representation of the target state.
 	 * @return - the state identifier
 	 * @throws TeamRepositoryException
 	 */
@@ -2329,12 +2398,13 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Tests if a work item is in a certain state Searches by string display value
-	 * first and then by ID.
+	 * Tests if a work item is in a certain state Searches by string display
+	 * value first and then by ID.
 	 * 
-	 * @param value - the name of the state
-	 * @return true if the current state of the work item has the name of the value
-	 *         provided
+	 * @param value
+	 *            - the name of the state
+	 * @return true if the current state of the work item has the name of the
+	 *         value provided
 	 * @throws TeamRepositoryException
 	 */
 	private boolean isInState(IWorkItem workItem, IWorkItemCommon workItemCommon, String value)
@@ -2355,14 +2425,17 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Set the state of the work item. Dependent on the input the method either uses
-	 * an action to the state - if that exists, or directly sets the state, even if
-	 * the action does not exist. To do the latter, it uses a deprecated method.
+	 * Set the state of the work item. Dependent on the input the method either
+	 * uses an action to the state - if that exists, or directly sets the state,
+	 * even if the action does not exist. To do the latter, it uses a deprecated
+	 * method.
 	 * 
-	 * @param propertyID - the property to access the attribute. this is encoded to
-	 *                   deliver the approval type
-	 * @param value      - the value with the data to be set. This parameter is
-	 *                   encoded.
+	 * @param propertyID
+	 *            - the property to access the attribute. this is encoded to
+	 *            deliver the approval type
+	 * @param value
+	 *            - the value with the data to be set. This parameter is
+	 *            encoded.
 	 * @throws TeamRepositoryException
 	 */
 	@SuppressWarnings("deprecation")
@@ -2407,8 +2480,10 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Creates links from the current work item to a list of target work items.
 	 * 
-	 * @param linkType the type of the link as defined in the map.
-	 * @param value    the list of work items specified by work item ID's.
+	 * @param linkType
+	 *            the type of the link as defined in the map.
+	 * @param value
+	 *            the list of work items specified by work item ID's.
 	 * @throws TeamRepositoryException
 	 */
 	private List<ReferenceData> createReferences(String linkType, ParameterValue parameter, List<Exception> exceptions)
@@ -2436,12 +2511,15 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Create CLM links between work items. The work item can be provided using its
-	 * ID or by using the location URI
+	 * Create CLM links between work items. The work item can be provided using
+	 * its ID or by using the location URI
 	 * 
-	 * @param parameter  - the parameter passed
-	 * @param endpoint   the endpoint used for the links
-	 * @param exceptions - a list to pass exceptions back
+	 * @param parameter
+	 *            - the parameter passed
+	 * @param endpoint
+	 *            the endpoint used for the links
+	 * @param exceptions
+	 *            - a list to pass exceptions back
 	 * @return a list of references managed in a special class
 	 * @throws TeamRepositoryException
 	 */
@@ -2486,9 +2564,12 @@ public class WorkItemUpdateHelper {
 	 * Creates a reference to a work item. the work items must be in the same
 	 * repository and only ID's are alloewd
 	 * 
-	 * @param parameter  - the parameter with the values
-	 * @param endpoint   - the endpoint for the reference
-	 * @param exceptions - exceptions that will be passed back
+	 * @param parameter
+	 *            - the parameter with the values
+	 * @param endpoint
+	 *            - the endpoint for the reference
+	 * @param exceptions
+	 *            - exceptions that will be passed back
 	 * @return a list of references that can be used later
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
@@ -2520,9 +2601,12 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Creates a URI based reference to an object that is defined by an URI
 	 * 
-	 * @param parameter  - the parameter with the values
-	 * @param endpoint   - the endpoint for the reference
-	 * @param exceptions - exceptions that will be passed back
+	 * @param parameter
+	 *            - the parameter with the values
+	 * @param endpoint
+	 *            - the endpoint for the reference
+	 * @param exceptions
+	 *            - exceptions that will be passed back
 	 * @return a list of references that can be used later
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
@@ -2549,11 +2633,15 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Creates links from the current work item to a list of target build results.
+	 * Creates links from the current work item to a list of target build
+	 * results.
 	 * 
-	 * @param parameter  - the parameter with the values
-	 * @param endpoint   - the endpoint for the reference
-	 * @param exceptions - exceptions that will be passed back
+	 * @param parameter
+	 *            - the parameter with the values
+	 * @param endpoint
+	 *            - the endpoint for the reference
+	 * @param exceptions
+	 *            - exceptions that will be passed back
 	 * @return
 	 */
 	private List<ReferenceData> createBuildResultReferences(ParameterValue parameter, IEndPointDescriptor endpoint,
@@ -2616,7 +2704,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Get a duration in long from a string representation.
 	 * 
-	 * @param value - the duration
+	 * @param value
+	 *            - the duration
 	 * @return the value of the duration (in milliseconds) or as string
 	 *         representation like "1 hour 3 minutes"
 	 */
@@ -2642,11 +2731,13 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Gets a list of tags to be added from a string, and creates a tag list without
-	 * duplicates.
+	 * Gets a list of tags to be added from a string, and creates a tag list
+	 * without duplicates.
 	 * 
-	 * @param value   - a string list of tags
-	 * @param oldTags - a list of old tags
+	 * @param value
+	 *            - a string list of tags
+	 * @param oldTags
+	 *            - a list of old tags
 	 * @return - a list of tags that can be set
 	 */
 	private List<String> getTagsList(List<String> oldTags, List<String> newTags) {
@@ -2699,13 +2790,15 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Get a list of contributors from a string of separated user ID's, separated by
-	 * a specific separator.
+	 * Get a list of contributors from a string of separated user ID's,
+	 * separated by a specific separator.
 	 * 
-	 * @param value        - the string representation with a list of user ID's
-	 * @param separator    - the separator to split the user ID's
-	 * @param notFoundList - a string list to contain the user Id's that where not
-	 *                     found
+	 * @param value
+	 *            - the string representation with a list of user ID's
+	 * @param separator
+	 *            - the separator to split the user ID's
+	 * @param notFoundList
+	 *            - a string list to contain the user Id's that where not found
 	 * @return a Map of contributor UUID's and the found contributor objects
 	 * @throws TeamRepositoryException
 	 */
@@ -2734,8 +2827,10 @@ public class WorkItemUpdateHelper {
 	 * Gets an enumeration literal for an attribute that starts with a specific
 	 * literal name.
 	 * 
-	 * @param attributeHandle   - the attribute handle
-	 * @param literalNamePrefix - the prefix literal to look for
+	 * @param attributeHandle
+	 *            - the attribute handle
+	 * @param literalNamePrefix
+	 *            - the prefix literal to look for
 	 * @return the literal ID or null
 	 * @throws TeamRepositoryException
 	 */
@@ -2775,8 +2870,10 @@ public class WorkItemUpdateHelper {
 	 * Gets an enumeration literal for an attribute that starts with a specific
 	 * literal name.
 	 * 
-	 * @param attributeHandle - the attribute handle
-	 * @param literalName     - the literal display name to look for
+	 * @param attributeHandle
+	 *            - the attribute handle
+	 * @param literalName
+	 *            - the literal display name to look for
 	 * @return the literal ID or null
 	 * @throws TeamRepositoryException
 	 */
@@ -2804,8 +2901,10 @@ public class WorkItemUpdateHelper {
 	 * Gets an enumeration literal for an attribute that starts with a specific
 	 * literal name.
 	 * 
-	 * @param attributeHandle - the attribute handle
-	 * @param literalName     - the literal display name to look for
+	 * @param attributeHandle
+	 *            - the attribute handle
+	 * @param literalName
+	 *            - the literal display name to look for
 	 * @return the literal ID or null
 	 * @throws TeamRepositoryException
 	 * @Deprecated
@@ -2830,10 +2929,14 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Utility method to upload and attach a file to a work item
 	 * 
-	 * @param fileName    - the file name of the file to upload
-	 * @param description - the description of the attachment
-	 * @param contentType - the content type of the file
-	 * @param encoding    - the encoding of the file
+	 * @param fileName
+	 *            - the file name of the file to upload
+	 * @param description
+	 *            - the description of the attachment
+	 * @param contentType
+	 *            - the content type of the file
+	 * @param encoding
+	 *            - the encoding of the file
 	 * 
 	 * @throws TeamRepositoryException
 	 */
@@ -2892,8 +2995,8 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Create an exception if the type of the expected value and the value found is
-	 * incompatible
+	 * Create an exception if the type of the expected value and the value found
+	 * is incompatible
 	 * 
 	 * @param parameter
 	 * @param message
@@ -2935,7 +3038,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * Utility method to print a help screen
 	 * 
-	 * @param attribType - the attribute type as string.
+	 * @param attribType
+	 *            - the attribute type as string.
 	 * @return a help description
 	 */
 	private String helpGetTypeProperties(String attribType) {
@@ -2952,7 +3056,8 @@ public class WorkItemUpdateHelper {
 	/**
 	 * concatenates the elements in a list to create a help text
 	 * 
-	 * @param list - list of string elements to be concatenated
+	 * @param list
+	 *            - list of string elements to be concatenated
 	 * @return a help description
 	 */
 	private String helpGetDisplayStringFromList(List<String> list) {
@@ -2990,6 +3095,19 @@ public class WorkItemUpdateHelper {
 				+ "\n\tLinks support the modes default (same as) add, set and remove. "
 				+ "\n\tSet removes all links of the specified type before creating the new links. "
 				+ helpUsageAllLinks();
+		usage += "\nCSV Export/Import:";
+				usage += "\nEncoding:"
+				+ "\nImporting from a CSV file can fail if the file encoding does not match the expected encodig. "
+				+ "An encoding can be provided for the CSV import and export. The default is " + IContent.ENCODING_UTF_8 +"."
+				+ "\nFormat is: "
+				+ "\n\t" + IWorkItemCommandLineConstants.PARAMETER_ENCODING
+				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR + "encodingID"
+				+ "\n\n\t\tWhere encodingID is " + IContent.ENCODING_UTF_8 + " or " + IContent.ENCODING_UTF_16LE + " or "
+				+ IContent.ENCODING_UTF_16BE + " or " + IContent.ENCODING_US_ASCII + "."
+				+ "\n\n\tExample:" 
+				+ "\n\n\t\t" + IWorkItemCommandLineConstants.PARAMETER_ENCODING
+				+ IWorkItemCommandLineConstants.INFIX_PARAMETER_VALUE_SEPARATOR + IContent.ENCODING_UTF_8; 
+
 		return usage;
 	}
 
@@ -3267,7 +3385,8 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Creates the help output for linking this work item to other local work items
+	 * Creates the help output for linking this work item to other local work
+	 * items
 	 * 
 	 * @return a help description
 	 */
@@ -3290,8 +3409,8 @@ public class WorkItemUpdateHelper {
 	}
 
 	/**
-	 * Creates the help output for linking this work item to other work items using
-	 * CLM links
+	 * Creates the help output for linking this work item to other work items
+	 * using CLM links
 	 * 
 	 * @return a help description
 	 */
