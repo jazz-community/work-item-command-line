@@ -19,7 +19,7 @@ Press Finish
 
 6. Select the folder, for example C:\Temp\wcl\ and compress the file
 
-7. Rename the archive file to wcl-Vx-YYYYMMDD.zip, 
+7. Rename the archive file to WCL-Vx-YYYYMMDD.zip, 
    where YYYY is the year, MM is the month and DD is the day
 
 8. The file is now ready for publishing 
