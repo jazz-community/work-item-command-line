@@ -544,7 +544,7 @@ The attribute IDs available to a work item type can be listed with the pryttypea
 Available mappings:
 
 | From                                              | To                    |
-| ------------------------------------------------  | --------------------- |
+| ------------------------------------------------- | --------------------- |
 | CORRECTED_ESTIMATE                                | correctedEstimate     |
 | CREATION_DATE                                     | creationDate          |
 | CREATOR                                           | creator               |
@@ -597,43 +597,38 @@ Available mappings:
 
 The following link types are supported. Please note that some link types might only be supported in some of the commands or use cases.
 
-| Display name                                      | Id                    |
-| ------------------------------------------------  | --------------------- |
-| Affected by Defect                                | affected_by_defect     |
-| Affects Plan Item                                 | affects_plan_item          |
-| Affects Requirement                                           | affects_requirement               |
-| Affects Test Result                                       | affects_execution_result           |
-| Blocks                                          | blocks               |
-| Blocks Test Execution                                          | blocks_test_execution               |
-| Children                                                | child                    |
-| Contributes To                                          | contributes_to_workitem              |
-| Copied From                                       | copied_from            |
-| Copies                                             | copied                 |
-| Depends On | depends_on |
-| Duplicate Of | duplicate_of |
-| Duplicated By | duplicate |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
+| Display name                  | Id                       |
+| ----------------------------- | ------------------------ |
+| Affected by Defect            | affected_by_defect       |
+| Affects Plan Item             | affects_plan_item        |
+| Affects Requirement           | affects_requirement      |
+| Affects Test Result           | affects_execution_result |
+| Blocks                        | blocks                   |
+| Blocks Test Execution         | blocks_test_execution    |
+| Children                      | child                    |
+| Contributes To                | contributes_to_workitem  |
+| Copied From                   | copied_from              |
+| Copies                        | copied                   |
+| Depends On                    | depends_on               |
+| Duplicate Of                  | duplicate_of             |
+| Duplicated By                 | duplicate                |
+| Implements Requirement        | implements_requirement   |
+| Included in Builds            | includedInBuild          |
+| Parent                        | parent                   |
+| Predecessor                   | predecessor              |
+| Related                       | related                  |
+| Related Artifacts             | related_artifact         |
+| Related Test Case             | related_test_case        |
+| Related Test Execution Record | related_execution_record |
+| Related Test Plan             | related_test_plan        |
+| Reported Against Builds       | reportAgainstBuild       |
+| Resolved By                   | resolved_by              |
+| Resolves                      | resolves                 |
+| Successor                     | successor                |
+| Tested By Test Case           | tested_by_test_case      |
+| Tracks                        | tracks_workitem          |
+| Tracks Requirement            | tracks_requirement       |
+
 
 
 
