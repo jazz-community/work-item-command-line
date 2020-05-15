@@ -593,5 +593,49 @@ Available mappings:
 | com.ibm.team.workitem.attribute.version           | foundIn               |
 | com.ibm.team.workitem.attribute.workitemtype      | workItemType          |
 
+## Link types
+
+The following link types are supported. Please note that some link types might only be supported in some of the commands or use cases.
+
+| Display name                                      | Id                    |
+| ------------------------------------------------  | --------------------- |
+| Affected by Defect                                | affected_by_defect     |
+| Affects Plan Item                                 | affects_plan_item          |
+| Affects Requirement                                           | affects_requirement               |
+| Affects Test Result                                       | affects_execution_result           |
+| Blocks                                          | blocks               |
+| Blocks Test Execution                                          | blocks_test_execution               |
+| Children                                                | child                    |
+| Contributes To                                          | contributes_to_workitem              |
+| Copied From                                       | copied_from            |
+| Copies                                             | copied                 |
+| Depends On | depends_on |
+| Duplicate Of | duplicate_of |
+| Duplicated By | duplicate |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+|  |  |
+
+
+
 # License
 Licensed under the MIT License.
