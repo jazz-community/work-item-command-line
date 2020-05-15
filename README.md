@@ -593,6 +593,8 @@ Available mappings:
 | com.ibm.team.workitem.attribute.version           | foundIn               |
 | com.ibm.team.workitem.attribute.workitemtype      | workItemType          |
 
+
+
 ## Link types
 
 The following link types are supported. Please note that some link types might only be supported in some of the commands or use cases.
@@ -630,7 +632,6 @@ The following link types are supported. Please note that some link types might o
 | Tracks Requirement            | tracks_requirement       |
 
 
-
-
 # License
 Licensed under the MIT License.
+
