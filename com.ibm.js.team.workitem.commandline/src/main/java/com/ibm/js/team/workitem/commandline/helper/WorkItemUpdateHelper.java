@@ -3372,11 +3372,12 @@ public class WorkItemUpdateHelper {
 		}
 		String usage = "\n\nWork Item Links - links between this work item and another work item within the same repository:"
 				+ helpUsageWorkItemLinks();
+		usage += "\n\n\tPlease note that the link \"Mentions\" can not directly be created during import or update operations. They can only be created indirectly by referring to work items and users in the description or comments.";
 		usage += "\n\nCLM Work Item Links - CLM links between this work item and another work item within the same or acoross repositories"
 				+ helpUsageCLMWorkItemLink();
 		usage += "\n\nCLM URI Links - CLM links between this work item and another item, described by a valid URI, in a different repository"
 				+ helpUsageCLMItemURILink();
-		usage += "\n\n\tPlease note that the link \"Associate Work Item\" between a change set and the work item can only be created by the SCM component.";
+		usage += "\n\n\tPlease note that the link \"Associate Work Item\" between a change set and the work item can only be created by the SCM component and not by this application.";
 		usage += "\n\tThe link created here is the looser CLM link. Create the work item change set link using the SCM command line.";
 		usage += "\n\nBuild result Links - Links from a work item to a build result in the same repository."
 				+ helpUsageBuildResultLink();
