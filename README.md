@@ -470,6 +470,8 @@ Example:
 
     @link_tracks_workitem="https://clm.example.com:9443/ccm/resource/itemName/com.ibm.team.workitem.WorkItem/80|120|150"
 
+Please note that the link "Mentions" can not directly be created during import or update operations. They can only be created indirectly by referring to work items and users in the description or comments. 
+
 #### CLM URI Links 
 CLM links between this work item and another item, described by a valid URI, in a different repository
 
@@ -493,8 +495,8 @@ The parameter value is a list of one or more CLM URI's for elements that support
 Example:
     @link_affects_requirement=https://clm.example.com:9443/rm/resources/_848a30e315524069854f55e1d35a402d|https://clm.example.com:9443/rm/resources/_6c96bedb0e9a490494273eefc6e1f7c5
 
-Please note that the link "Associate Work Item" between a change set and the work item can only be created by the SCM component. The link created here is the looser CLM link. Create the work item change set link using the SCM command line.
-
+Please note that the link "Associate Work Item" between a change set and the work item can only be created by the SCM component and therefore not by the WCL. The link created here is the looser CLM link. Create the work item change set link using the SCM command line.
+ 
 #### Build result Links 
 Links from a work item to a build result in the same repository.
 
