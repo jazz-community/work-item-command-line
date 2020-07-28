@@ -806,7 +806,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			if (StringUtil.isEmpty(targetValue)) {
 				// In case we forgot something or a new type gets implemented
 				throw new WorkItemCommandLineException("Attribute value must not be empty ID: "
-						+ attribute.getIdentifier());
+						+ printAttribute(attribute));
 			}
 			targetValue = WorkItemUpdateHelper.STATECHANGE_FORCESTATE + WorkItemUpdateHelper.FORCESTATE_SEPARATOR
 					+ targetValue;
@@ -818,39 +818,46 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		if (attribute.getIdentifier().equals(IWorkItem.PROJECT_AREA_PROPERTY)) {
 			// Ignore
 			getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
-					+ " mapped to: " + attribute.getIdentifier());
+					+ " mapped to: " + printAttribute(attribute));
 			return;
 		}
 		// Ignore attributes that can not be set
 		if (attribute.getIdentifier().equals(IWorkItem.CREATION_DATE_PROPERTY)) {
 			// Ignore
 			getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
-					+ " mapped to: " + attribute.getIdentifier());
+					+ " mapped to: " + printAttribute(attribute));
 			return;
 		}
 		if (attribute.getIdentifier().equals(IWorkItem.CREATOR_PROPERTY)) {
 			// Ignore
-			getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
-					+ " mapped to: " + attribute.getIdentifier());
+			getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID + " mapped to: " + printAttribute(attribute));
 			return;
 		}
 		if (attribute.getIdentifier().equals(IWorkItem.CUSTOM_ATTRIBUTES_PROPERTY)) {
 			// Ignore
 			getResult().appendResultString(
-					"Ignored: Attribute can not be set: " + attributeID + " mapped to: " + attribute.getIdentifier());
+					"Ignored: Attribute can not be set: " + attributeID + " mapped to: " + printAttribute(attribute));
 			return;
 		}
 		if (attribute.getIdentifier().equals(IWorkItem.ESIGNATURE_RECORD_PROPERTY)) {
 			// Ignore
 			getResult().appendResultString(
-					"Ignored: Attribute can not be set: " + attributeID + " mapped to: " + attribute.getIdentifier());
+					"Ignored: Attribute can not be set with empty value: " + attributeID + " mapped to: " + printAttribute(attribute));
 			return;
 		}
 		if (attribute.getIdentifier().equals(IWorkItem.STATE_TRANSITIONS_PROPERTY)) {
 			// Ignore
 			getResult().appendResultString(
-					"Ignored: Attribute can not be set: " + attributeID + " mapped to: " + attribute.getIdentifier());
+					"Ignored: Attribute can not be set: " + attributeID + " mapped to: " + printAttribute(attribute));
 			return;
+		}
+		if (attribute.getIdentifier().equals(IWorkItem.ESIGNATURE_RECORD_PROPERTY)) {
+			if(targetValue.equals("")){
+				// Ignore
+				getResult().appendResultString(
+						"Ignored: Attribute can not be empty: " + attributeID + " mapped to: " + printAttribute(attribute));
+				return;
+			}
 		}
 		if (attribType.equals(AttributeTypes.APPROVALS)) {
 			// handle Approvals
@@ -1033,8 +1040,22 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			}
 			// In case we forgot something or a new type gets implemented
 			throw new WorkItemCommandLineException("AttributeType not yet supported: " + attribType + " ID "
-					+ attribute.getIdentifier());
+					+ printAttribute(attribute));
 		}
+	}
+
+	/**
+	 * Utility to print the attribute ID and name in error messages.
+	 * @param attribute
+	 * @return
+	 */
+	private String printAttribute(IAttribute attribute) {
+		String displayname = attribute.getDisplayName();
+		String identifier = attribute.getIdentifier(); 
+		if(displayname!=null){
+			return identifier + " '" + displayname +"' ";
+		}
+		return identifier;
 	}
 
 	/**
