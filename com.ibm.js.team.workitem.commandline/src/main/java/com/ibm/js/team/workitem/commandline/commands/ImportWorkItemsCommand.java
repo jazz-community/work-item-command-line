@@ -97,6 +97,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 
 	public static final String SWITCH_IGNORE_EMPTY_TARGET_VALUES = "ignoreemptycolumnvalues";
 
+	private static final String SWITCH_SUPPRESS_IGNORED_ATTRIBUTE_WARNINGS = "suppressIgnoredAttributeWarnings";
+
 	// Multi pass import to recreate work item links
 	public static final String SWITCH_MULTI_PASS_IMPORT = "importmultipass";
 	// If no target work item was found in the map, use the original ID from the
@@ -144,6 +146,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 
 	// The pattern to export time stamps
 	private String fSimpleDateTimeFormatPattern = IWorkItemCommandLineConstants.TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A;
+
+	private boolean fSuppressAttributeWarnings = false;
 
 	/**
 	 * A hashMap, to map the original work item ID to a new work item ID in
@@ -216,6 +220,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		getParameterManager().syntaxAddSwitch(SWITCH_FORCE_LINK_CREATION);
 		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION);
 		getParameterManager().syntaxAddSwitch(SWITCH_IGNORE_EMPTY_TARGET_VALUES);
+		getParameterManager().syntaxAddSwitch(SWITCH_SUPPRESS_IGNORED_ATTRIBUTE_WARNINGS);
 	}
 
 	/**
@@ -250,6 +255,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	public OperationResult process() throws TeamRepositoryException {
 		setIgnoreEmptyTargetValues(getParameterManager().hasSwitch(SWITCH_IGNORE_EMPTY_TARGET_VALUES));
 		setMultiPass(getParameterManager().hasSwitch(SWITCH_MULTI_PASS_IMPORT));
+		setSuppressAttributeWarnings(getParameterManager().hasSwitch(SWITCH_SUPPRESS_IGNORED_ATTRIBUTE_WARNINGS));
 		this.setForceLinkCreation(getParameterManager().hasSwitch(SWITCH_FORCE_LINK_CREATION));
 		this.setEnforceSizeLimits(getParameterManager().hasSwitch(
 				IWorkItemCommandLineConstants.SWITCH_ENFORCE_SIZE_LIMITS));
@@ -817,45 +823,59 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		// attributes
 		if (attribute.getIdentifier().equals(IWorkItem.PROJECT_AREA_PROPERTY)) {
 			// Ignore
-			getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
-					+ " mapped to: " + printAttribute(attribute));
+			if(!isSuppressAttributeWarnings()){
+				getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
+						+ " mapped to: " + printAttribute(attribute));
+			}
 			return;
 		}
 		// Ignore attributes that can not be set
 		if (attribute.getIdentifier().equals(IWorkItem.CREATION_DATE_PROPERTY)) {
 			// Ignore
-			getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
-					+ " mapped to: " + printAttribute(attribute));
+			if(!isSuppressAttributeWarnings()){
+				getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
+						+ " mapped to: " + printAttribute(attribute));
+			}
 			return;
 		}
 		if (attribute.getIdentifier().equals(IWorkItem.CREATOR_PROPERTY)) {
 			// Ignore
-			getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID + " mapped to: " + printAttribute(attribute));
+			if(!isSuppressAttributeWarnings()){
+				getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID + " mapped to: " + printAttribute(attribute));
+			}
 			return;
 		}
 		if (attribute.getIdentifier().equals(IWorkItem.CUSTOM_ATTRIBUTES_PROPERTY)) {
 			// Ignore
-			getResult().appendResultString(
-					"Ignored: Attribute can not be set: " + attributeID + " mapped to: " + printAttribute(attribute));
+			if(!isSuppressAttributeWarnings()){
+				getResult().appendResultString(
+						"Ignored: Attribute can not be set: " + attributeID + " mapped to: " + printAttribute(attribute));
+			}
 			return;
 		}
 		if (attribute.getIdentifier().equals(IWorkItem.ESIGNATURE_RECORD_PROPERTY)) {
 			// Ignore
-			getResult().appendResultString(
-					"Ignored: Attribute can not be set with empty value: " + attributeID + " mapped to: " + printAttribute(attribute));
+			if(!isSuppressAttributeWarnings()){
+				getResult().appendResultString(
+						"Ignored: Attribute can not be set with empty value: " + attributeID + " mapped to: " + printAttribute(attribute));
+			}
 			return;
 		}
 		if (attribute.getIdentifier().equals(IWorkItem.STATE_TRANSITIONS_PROPERTY)) {
 			// Ignore
-			getResult().appendResultString(
-					"Ignored: Attribute can not be set: " + attributeID + " mapped to: " + printAttribute(attribute));
+			if(!isSuppressAttributeWarnings()){
+				getResult().appendResultString(
+						"Ignored: Attribute can not be set: " + attributeID + " mapped to: " + printAttribute(attribute));
+			}
 			return;
 		}
 		if (attribute.getIdentifier().equals(IWorkItem.ESIGNATURE_RECORD_PROPERTY)) {
 			if(targetValue.equals("")){
 				// Ignore
-				getResult().appendResultString(
-						"Ignored: Attribute can not be empty: " + attributeID + " mapped to: " + printAttribute(attribute));
+				if(!isSuppressAttributeWarnings()){
+					getResult().appendResultString(
+							"Ignored: Attribute can not be empty: " + attributeID + " mapped to: " + printAttribute(attribute));
+				}
 				return;
 			}
 		}
@@ -942,7 +962,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				return;
 			}
 			throw new WorkItemCommandLineException("Type not recognized - type not yet supported: " + attribType
-					+ " ID " + attribute.getIdentifier());
+					+ " ID/Name " + printAttribute(attribute));
 		} else {
 			// Handle non list types - the simple ones first.
 			if (attribType.equals(AttributeTypes.WIKI)) {
@@ -1039,8 +1059,10 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 				return;
 			}
 			// In case we forgot something or a new type gets implemented
-			throw new WorkItemCommandLineException("AttributeType not yet supported: " + attribType + " ID "
-					+ printAttribute(attribute));
+			if(!isSuppressAttributeWarnings()){
+				throw new WorkItemCommandLineException("AttributeType not yet supported: " + attribType + " ID "
+						+ printAttribute(attribute));
+			}
 		}
 	}
 
@@ -1585,5 +1607,17 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	private void setSimpleDateTimeFormatPattern(String simpleDateTimeFormatPattern) {
 		this.fSimpleDateTimeFormatPattern = simpleDateTimeFormatPattern;
 	}
+	
+	private boolean isSuppressAttributeWarnings() {
+		return fSuppressAttributeWarnings;
+	}
+
+	/**
+	 * @param fSuppressAttributeWarnings
+	 */
+	private void setSuppressAttributeWarnings(boolean fSuppressAttributeWarnings) {
+		this.fSuppressAttributeWarnings = fSuppressAttributeWarnings;
+	}
+
 
 }
