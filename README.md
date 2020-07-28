@@ -136,6 +136,7 @@ Available commands:
     /enforceSizeLimits 
     /importmultipass
     /ignoreemptycolumnvalues
+    /suppressIgnoredAttributeWarnings
     [mappingFile="C:\temp\mapping.xml"] 
     [encoding="UTF-8"] 
     [timestampFormat="MMM d, yyyy hh:mm a"] 
