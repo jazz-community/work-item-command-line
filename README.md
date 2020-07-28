@@ -1,6 +1,6 @@
 # RTC Work Item Command Line
 
-Work Item Command Line Version 5.2
+Work Item Command Line Version 5.3
 
 See [Work Item Command Line 5.0](https://rsjazz.wordpress.com/2019/07/03/work-item-command-line-5-0/) for instructions how to setup and install WCL.
 
@@ -136,6 +136,7 @@ Available commands:
     /enforceSizeLimits 
     /importmultipass
     /ignoreemptycolumnvalues
+    /suppressIgnoredAttributeWarnings
     [mappingFile="C:\temp\mapping.xml"] 
     [encoding="UTF-8"] 
     [timestampFormat="MMM d, yyyy hh:mm a"] 
