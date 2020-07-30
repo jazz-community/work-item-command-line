@@ -643,15 +643,15 @@ The following link types are supported. Please note that some link types might o
 | Tracks Requirement            | tracks_requirement       |
 
 
-# Import/Export 
+## Import/Export 
 
 The import and export capabilities of the Work Item Command Line have some special behavior that are not obvious. Here a summary of those topics.
 
-## Export Modes
+### Export Modes
 
 By default, the WCL RTC Export exports the attribute data in a format that is compatile with the WCL work item operations. It is possible to use the switch /asrtceclipse for the export. In this mode attachments are not downloaded and the attachment information is provided similar to the built in CSV export.
 
-## Attachments
+### Attachments
 
 The export to CSV can be used to download and store attachments. In the default mode, if the attachments column is detected in the exported attributes, the attachments are stored in a folder structure in the folder used to export the CSV file. In the CSV file, the exported attachment is referenced as path to the download location. This information can be used during import as well. 
 
