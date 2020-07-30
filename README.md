@@ -30,6 +30,13 @@ All of the following examples use bash multiline syntax for legibility. Leave th
         -   [Attachments](#attachments)
         -   [Links](#links)
     -   [Attribute ID Aliases](#attribute-id-aliases)
+    -   [Link types](#link-types)
+    -   [Import/Export](#importexport)
+        -   [Export Modes](#export-modes)
+        -   [Import/Export](#importexport)
+        -   [Attachments](#attachments-1)
+    -   [License](#license)
+    
  
 ## Usage 
 `-[command] {switch} {parameter[:mode]=value}`
