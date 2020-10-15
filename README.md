@@ -409,7 +409,11 @@ Example: `@workflowAction="Stop working"`
 
 ### Attachments
 
-A pseudo parameter `@attachFile` can be used to upload attachments. This attribute supports the modes `default` (same as) `add`, `set` and `remove`. `Set` removes all attachments, `remove` only removes attachments with the specified file path and description. 
+Attachments are not stored in an attribute, therefore there is no attribute name or ID. WCL solves that by using pseudo attributes.
+
+CSV export and import support attachments. The pseudo attribute name and type `Attachment` or `attachment` is used as column header representing the attachments.   
+
+For work item creation and update operations, a pseudo parameter `@attachFile` can be used to upload attachments. This attribute supports the modes `default` (same as) `add`, `set` and `remove`. `Set` removes all attachments, `remove` only removes attachments with the specified file path and description. 
 
 #### Format
     @attachFile[<IDString>][:<mode>]="SomeFilePath,Some Description,ContentTypeID,EncodingID"
