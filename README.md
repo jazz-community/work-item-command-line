@@ -409,7 +409,11 @@ Example: `@workflowAction="Stop working"`
 
 ### Attachments
 
-A pseudo parameter `@attachFile` can be used to upload attachments. This attribute supports the modes `default` (same as) `add`, `set` and `remove`. `Set` removes all attachments, `remove` only removes attachments with the specified file path and description. 
+Attachments are not stored in an attribute, therefore there is no attribute name or ID. WCL solves that by using pseudo attributes.
+
+CSV export and import support attachments. The pseudo attribute name and type `Attachment` or `attachment` is used as column header representing the attachments.   
+
+For work item creation and update operations, a pseudo parameter `@attachFile` can be used to upload attachments. This attribute supports the modes `default` (same as) `add`, `set` and `remove`. `Set` removes all attachments, `remove` only removes attachments with the specified file path and description. 
 
 #### Format
     @attachFile[<IDString>][:<mode>]="SomeFilePath,Some Description,ContentTypeID,EncodingID"
@@ -549,7 +553,7 @@ Example:
 
 ## Attribute ID Aliases
 
-The attribute IDs available to a work item type can be listed with the pryttypeattributes command. It is also possible to look into the process specification. The attribute type ID's can be looked up in the RTC project area administration Web UI. Note that the Eclipse project area administation UI does not show the correct ID. For example for the category attribute, the Eclipse project area admin UI shows com.ibm.team.workitem.attribute.category but the correct value of the attribute is category. For Severity the correct ID is internalSeverity and not com.ibm.team.workitem.attribute.severity as the Eclipse Admin UI shows. To mitigate this problem and to allow to use the values similar to the constants shown in attribute customization, WCL provides a mapping for additional strings representing the same attribute ID. The table below shows which attribute ID aliases map to the predefined values. 
+The attribute IDs available to a work item type can be listed with the printtypeattributes command. It is also possible to look into the process specification. The attribute type ID's can be looked up in the RTC project area administration Web UI. Note that the Eclipse project area administation UI does not show the correct ID. For example for the category attribute, the Eclipse project area admin UI shows com.ibm.team.workitem.attribute.category but the correct value of the attribute is category. For Severity the correct ID is internalSeverity and not com.ibm.team.workitem.attribute.severity as the Eclipse Admin UI shows. To mitigate this problem and to allow to use the values similar to the constants shown in attribute customization, WCL provides a mapping for additional strings representing the same attribute ID. The table below shows which attribute ID aliases map to the predefined values. 
 
 
 Available mappings:
