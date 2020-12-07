@@ -6,6 +6,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-bulkupdate /ignoreErrors /enableDeleteAttachment repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph &#13;&#10;projectArea=&quot;JKE Banking (Change Management)&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-create /ignoreErrors repository=&quot;https://elm.example.com:9443/ccm&quot; user=ralph password=ralph projectArea=&quot;JKE Banking (Change Management)&quot; workItemType=task summary=&quot;New Item&quot; category=JKE owner=ralph target=&quot;Main Development/Release 1.0/Sprint 3&quot; internalSeverity=Major foundIn=&quot;Sprint 2 Development&quot; internalPriority=High creator=myadmin @link_successor=12|13  @link_predecessor=27"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
 </launchConfiguration>

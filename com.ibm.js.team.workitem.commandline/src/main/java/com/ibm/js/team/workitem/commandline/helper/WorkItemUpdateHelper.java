@@ -2528,7 +2528,7 @@ public class WorkItemUpdateHelper {
 		List<ReferenceData> found = new ArrayList<ReferenceData>();
 		List<String> workItems = StringUtil.splitStringToList(parameter.getValue(), LINK_SEPARATOR);
 		for (String value : workItems) {
-			if (value.startsWith(HTTP_PROTOCOL_PREFIX)) {
+			if (value.startsWith(HTTP_PROTOCOL_PREFIX)) { // This covers https as well
 				// We have an URI
 				IReference reference;
 				try {

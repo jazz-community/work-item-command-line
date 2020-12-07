@@ -6,6 +6,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-bulkupdate /ignoreErrors /enableDeleteAttachment repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph &#13;&#10;projectArea=&quot;JKE Banking (Change Management)&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-bulkupdate /ignoreErrors repository=&quot;https://elm.example.com:9443/ccm&quot; user=ralph password=ralph &#13;&#10;projectArea=&quot;JKE Banking (Change Management)&quot;  query=&quot;Test&quot; internalComments=&quot;This is a comment: special Plain text&lt;br/&gt;&lt;b&gt;bold text&lt;/b&gt;&lt;br/&gt;&lt;i&gt;italic text&lt;/i&gt;&lt;br/&gt;&lt;a href=&quot;https://rsjazz.wordpress.com&quot;&gt;External RSJazz Link&lt;/a&gt;&lt;br/&gt;User link to &lt;b&gt;@ralph &lt;/b&gt;&lt;br/&gt;Work Item link to Defect 3 &lt;br/&gt;&quot; internalState=&quot;Done&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
 </launchConfiguration>
