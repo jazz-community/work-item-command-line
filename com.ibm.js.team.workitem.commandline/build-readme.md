@@ -7,7 +7,7 @@
 2. in the Runnable JAR File Specification select 
 Launch Configuration: WorkitemCommandLine - runnable JAR
 Export destination: C:\Temp\WCL\WCL.jar 
-Library Handling: copy required libraries into a sub filder next to the generated JAR 
+Library Handling: copy required libraries into a sub folder next to the generated JAR 
 Press Finish
 
 3. Open the folder C:\Temp\WCL\ delete the folder WCL_lib.
