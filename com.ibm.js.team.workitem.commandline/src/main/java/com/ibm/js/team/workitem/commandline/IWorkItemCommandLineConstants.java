@@ -13,7 +13,7 @@ package com.ibm.js.team.workitem.commandline;
  */
 public interface IWorkItemCommandLineConstants {
 
-	public static final String VERSIONINFO = "5.3";
+	public static final String VERSIONINFO = "5.3.1";
  
 	// Commands available
 	public static final String COMMAND_CREATE = "create";
