@@ -4,9 +4,19 @@ Work Item Command Line Version 5.3.1
 
 See [Work Item Command Line 5.0](https://rsjazz.wordpress.com/2019/07/03/work-item-command-line-5-0/) for instructions how to setup and install WCL.
 
+**License**
+
 This software is licensed under the MIT license which is as follows: [MIT License](com.ibm.js.team.workitem.commandline/LICENSE.txt)
 
+All content is provided "as is" and without warranties. I am not responsible for any harm or damage caused by this material to you, your computer, your software, or anything else.
+
+**Disclaimer**
+
+This software is open source and not supported by IBM. Do not open support cases at IBM against this software. If you have questions open an issue here and/or ask a question in the [Jazz.net Forum](https://jazz.net/forum/questions/).
+
+
 **Note:**
+
 All of the following examples use bash multiline syntax for legibility. Leave them out when using single line commands, or replace them with a backtick (`) if you are using powershell.
 
 # Table of Contents
