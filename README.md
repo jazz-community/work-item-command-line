@@ -8,9 +8,9 @@ See the [Prerequisites](https://github.com/jazz-community/work-item-command-line
 
 This software is licensed under the MIT license which is as follows: [MIT License](com.ibm.js.team.workitem.commandline/LICENSE.txt)
 
-All content is provided "as is" and without warranties. I am not responsible for any harm or damage caused by this material to you, your computer, your software, or anything else.
-
 **Disclaimer**
+
+All content is provided "as is" and without warranties. I am not responsible for any harm or damage caused by this material to you, your computer, your software, or anything else.
 
 This software is open source and not supported by IBM. Do not open support cases at IBM against this software. If you have questions open an issue here and/or ask a question in the [Jazz.net Forum](https://jazz.net/forum/questions/).
 
