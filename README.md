@@ -21,6 +21,7 @@ All of the following examples use bash multiline syntax for legibility. Leave th
 
 # Table of Contents
 -   [RTC Work Item Command Line](#rtc-work-item-command-line)
+    -   [Prerequisites](#prerequisites)
     -   [Usage](#usage)
     -   [Start in RMI server mode](#start-in-rmi-server-mode)
     - [Command Parameters](#command-parameters)
@@ -47,7 +48,19 @@ All of the following examples use bash multiline syntax for legibility. Leave th
         -   [Attachments](#attachments-1)
     -   [License](#license)
     
- 
+## Prerequisites
+
+- The EWM SCM Utils require an up to date working Java 8.  
+- The EWM SCM Utils require the RTC/EWM Plain Java Client Libraries.
+
+Download the Plain Java Client Libraries from the 'All Downloads' tab of the download page for your version of EWM.
+Unzip the Plain Java Client Libraries into a folder on your local disc for example C:\ELM702\PlainJavaAPI. 
+The JAR files are supposed to be in this specific folder.  
+
+To run the EWM SCM Utils, edit the wcl.bat or wcl.sh and change the environment variables JAVA_HOME and PLAIN_JAVA to your Java JRE and the Plain Java Client Libraries you installed e.g. our values e.g.
+
+PLAIN_JAVA=C:\ELM702\PlainJavaAPI
+
 ## Usage 
 `-[command] {switch} {parameter[:mode]=value}`
 
