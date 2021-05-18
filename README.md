@@ -2,7 +2,7 @@
 
 Work Item Command Line Version 5.3.1
 
-See [Work Item Command Line 5.0](https://rsjazz.wordpress.com/2019/07/03/work-item-command-line-5-0/) for instructions how to setup and install WCL.
+See the [Prerequisites](https://github.com/jazz-community/work-item-command-line/blob/master/README.md#prerequisites) and [Work Item Command Line 5.0](https://rsjazz.wordpress.com/2019/07/03/work-item-command-line-5-0/) for instructions how to setup and install WCL.
 
 **License**
 
