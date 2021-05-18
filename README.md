@@ -57,7 +57,7 @@ Download the Plain Java Client Libraries from the 'All Downloads' tab of the dow
 Unzip the Plain Java Client Libraries into a folder on your local disc for example C:\ELM702\PlainJavaAPI. 
 The JAR files are supposed to be in this specific folder.  
 
-To run the EWM SCM Utils, edit the wcl.bat or wcl.sh and change the environment variables JAVA_HOME and PLAIN_JAVA to your Java JRE and the Plain Java Client Libraries you installed e.g. our values e.g.
+To run the EWM SCM Utils, edit the wcl.bat or wcl.sh and change the environment variables JAVA_HOME and PLAIN_JAVA to your Java JRE and the Plain Java Client Libraries you installed to your values e.g.
 
 PLAIN_JAVA=C:\ELM702\PlainJavaAPI
 
