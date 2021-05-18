@@ -1,9 +1,27 @@
 
+WorkItemCommandLine Version 5.3.1
 
-WorkItemCommandLine Version 5.1
+Rrerequisites
 
-Usage (See https://rsjazz.wordpress.com/2019/07/03/work-item-command-line-5-0/ for a more complete description) :
+- WCL requires an up to date working Java 8.  
+- WCL requires the RTC/EWM Plain Java Client Libraries.
+
+Download the Plain Java Client Libraries from the 'All Downloads' tab of the download page for your version of EWM.
+Unzip the Plain Java Client Libraries into a folder on your local disc for example C:\ELM702\PlainJavaAPI. 
+The JAR files are supposed to be in this specific folder.  
+
+To run WCL, edit the wcl.bat or wcl.sh and change the environment variables JAVA_HOME and PLAIN_JAVA to 
+your Java JRE and the Plain Java Client Libraries you installed to your values e.g.
+
+PLAIN_JAVA=C:\ELM702\PlainJavaAPI
+
+See https://rsjazz.wordpress.com/2019/07/03/work-item-command-line-5-0/ for a more complete description.
+
+Usage 
+
 -command {switch} {parameter[:mode]=value}
+
+See https://rsjazz.wordpress.com/2019/07/03/work-item-command-line-5-0/ for a more complete description.
 
 Multiple parameter/value pairs and switches can be provided separated by spaces.
 Commands might require specific parameters to be mandatory.

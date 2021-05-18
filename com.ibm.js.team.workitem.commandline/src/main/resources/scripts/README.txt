@@ -1,8 +1,27 @@
 
-WorkItemCommandLine Version 5.1
+WorkItemCommandLine Version 5.3.1
 
-Usage (See http://wp.me/p2DlHq-s9 for a more complete description) :
+Rrerequisites
+
+- WCL requires an up to date working Java 8.  
+- WCL requires the RTC/EWM Plain Java Client Libraries.
+
+Download the Plain Java Client Libraries from the 'All Downloads' tab of the download page for your version of EWM.
+Unzip the Plain Java Client Libraries into a folder on your local disc for example C:\ELM702\PlainJavaAPI. 
+The JAR files are supposed to be in this specific folder.  
+
+To run WCL, edit the wcl.bat or wcl.sh and change the environment variables JAVA_HOME and PLAIN_JAVA to 
+your Java JRE and the Plain Java Client Libraries you installed to your values e.g.
+
+PLAIN_JAVA=C:\ELM702\PlainJavaAPI
+
+See https://rsjazz.wordpress.com/2019/07/03/work-item-command-line-5-0/ for a more complete description.
+
+Usage 
+
 -command {switch} {parameter[:mode]=value}
+
+See https://rsjazz.wordpress.com/2019/07/03/work-item-command-line-5-0/ for a more complete description.
 
 Multiple parameter/value pairs and switches can be provided separated by spaces.
 Commands might require specific parameters to be mandatory.
@@ -281,6 +300,16 @@ Format is:
 
 		@deleteLinks_includedInBuild=yes
 
+Encoding:
+Importing from a CSV file can fail if the file encoding does not match the expected encodig. An encoding can be provided for the CSV import and export. The default is UTF-8.
+Format is: 
+	encoding=encodingID
+
+		Where encodingID is UTF-8 or UTF-16LE or UTF-16BE or us-ascii.
+
+	Example:
+
+		encoding=UTF-8
 
 Aliases for attribute ID's:
 Available mappings:
@@ -332,6 +361,4 @@ Available mappings:
 	TAGS: internalTags
 	com.ibm.team.workitem.attribute.duedate: dueDate
 	com.ibm.team.workitem.attribute.target: target
-
-
-EndTime: 05.02.2020 16:53:19
+	
