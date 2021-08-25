@@ -218,15 +218,11 @@ Available commands:
 ```
 ## Command parameters
 
-### Query 
+## RMI Mode - Optional
 
-Provide a query name. The query by default is searched as a personal query owned by the logged in contributor. Provide a Query Source using the parameter `querysource`. The query source can contain a list of project area and team area names.   
+WCL supports to be run in RMI mode. This allows to run WCL as a server and avoid to have to log in repeqatedly. In RMI mode a WCL has to be started as RMI server and anothe instance is called as RMI client.
 
-### Query Source
-
-Provide a list of project area and team area names. 
-
-## Start in RMI server mode
+### Start in RMI server mode
 Use the switch `/rmiServer` to start an instance as RMI server. In this mode, the process will not terminate, but wait for RMI requests to perform commands. It will service commands requested by other client instances that are started with the additional switch `/rmiClient`. It is not necessary to provide a command or any other input values, when starting the server as they will be ignored. Since the TeamPlatform needs to be initialized only once in this mode, the performance is considerably increased for multiple subsequent client calls.
 
 By default, the RMI server uses the name `//localhost/RemoteWorkitemCommandLineServer` on port `1099`.
@@ -237,6 +233,8 @@ The client command must be started with the same name and port as the server usi
 Example start as an RMI server: 
 
 `/rmiServer=//clm.example.com:1199/WorkItemCommandLine`
+
+### Start in RMI client mode
 
 Example start as an RMI client with a command: 
 
@@ -683,6 +681,15 @@ By default, the WCL RTC Export exports the attribute data in a format that is co
 The export to CSV can be used to download and store attachments. In the default mode, if the attachments column is detected in the exported attributes, the attachments are stored in a folder structure in the folder used to export the CSV file. In the CSV file, the exported attachment is referenced as path to the download location. This information can be used during import as well. 
 
 In the mode /asrtceclipse, attachment download is not supported. The exported data in the CSV file shows the same information that is provided in the RTC CSV export format.
+	
+	
+### Query 
+
+Provide a query name. The query by default is searched as a personal query owned by the logged in contributor. Provide a Query Source using the parameter `querysource`. The query source can contain a list of project area and team area names.   
+
+### Query Source
+
+Provide a list of project area and team area names. 
 
 # License
 
