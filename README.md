@@ -75,7 +75,7 @@ Multiple parameter/value pairs and switches can be provided separated by spaces.
 Commands might require specific parameters to be mandatory.
 
 Switches influence the behavior of the operation.
-The switch /ignoreErrors ignores errors such as attributes or values not available.
+The switch /ignoreErrors ignores errors such as attributes or values not available and keeps WCL running.
 
 
 ## Available commands:
