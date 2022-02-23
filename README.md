@@ -186,7 +186,7 @@ Available commands:
     [delimiter=","]
 ```
 
-### Exports work items from a CSV file
+### Exports work items to a CSV file
 
 ```bash
 -exportworkitems
