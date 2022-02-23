@@ -64,9 +64,12 @@ To run WCL, edit the wcl.bat or wcl.sh and **change** the environment variables 
 PLAIN_JAVA=C:\ELM702\PlainJavaAPI
 
 ## Usage 
+
+The general syntax is:
+
 `-[command] {switch} {parameter[:mode]=value}`
 
-(See [A RTC WorkItem Command Line Version 2](http://wp.me/p2DlHq-s9) for a more complete description):
+See [A RTC WorkItem Command Line Version 2](http://wp.me/p2DlHq-s9) for a more complete description. There are also newer blog posts about WCL on the [RSJazz blog](https://rsjazz.wordpress.com/).
 
 Multiple parameter/value pairs and switches can be provided separated by spaces.
 Commands might require specific parameters to be mandatory.
@@ -75,7 +78,8 @@ Switches influence the behavior of the operation.
 The switch /ignoreErrors ignores errors such as attributes or values not available.
 
 
-Available commands:
+## Available commands:
+
 ### Print the work item types of a project area
 
 ```bash
