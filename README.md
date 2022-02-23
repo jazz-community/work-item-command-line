@@ -50,7 +50,7 @@ All of the following examples use bash multiline syntax for legibility. Leave th
     
 ## Prerequisites
 
-- WCL requires an up to date working **Java 8**.  
+- WCL requires an up to date working Java. Currently **Java 8** is known to work. Some newer Java versions might cause Class Not found and other exceptions.  
 - WCL requires the **RTC/EWM Plain Java Client Libraries**.
 
 **Download** the Plain Java Client Libraries from the 'All Downloads' tab of the download page **for your version of EWM**.
