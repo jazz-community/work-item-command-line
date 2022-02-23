@@ -568,7 +568,6 @@ Example:
     @link_reportAgainstBuild=@_IjluoH-oEeSHhcw_WFU6CQ|P20141208-1713
 
 #### Delete all links of a link type 
-Delete all links of a link type.
 
 ##### Format is:
 
