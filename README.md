@@ -146,7 +146,7 @@ Available commands:
     {parameter[:mode]=value}
 ```
 
-### Update the values of a bulk of work item work items provided by a query
+### Update the values of a bulk of work items provided by a query
 
 ```bash
 -bulkupdate 
