@@ -74,6 +74,7 @@ The switch /ignoreErrors ignores errors such as attributes or values not availab
 
 
 Available commands:
+### Print the work item types of a project area
 
 ```bash
 -printtypes 
@@ -83,6 +84,8 @@ Available commands:
     projectArea="value" 
 ```
 
+### Print the attributes of a work work item type in a project area
+
 ```bash
 -printtypeattributes 
     repository="value" 
@@ -91,6 +94,8 @@ Available commands:
     projectArea="value" 
     workItemType="value"  
 ```
+
+### Print a work item.
 
 ```bash
 -printworkitem
@@ -109,6 +114,8 @@ Available commands:
     [columns="Type,Id,Planned For,Filed Against,Description,Found In"]
 ```
 
+### Create a work item of a specific work item type in a project area
+
 ```bash
 -create 
     repository="value" 
@@ -122,6 +129,8 @@ Available commands:
     /enableDeleteApprovals 
     {parameter[:mode]=value}
 ```
+
+### Update the values of the work item with a specific ID
 
 ```bash
 -update 
@@ -137,6 +146,8 @@ Available commands:
     {parameter[:mode]=value}
 ```
 
+### Update the values of a bulk of work item work items provided by a query
+
 ```bash
 -bulkupdate 
     repository="value" 
@@ -151,6 +162,8 @@ Available commands:
     /ignoreErrors 
     {parameter[:mode]=value}
 ```
+
+### Imports work items from a CSV file
 
 ```bash
 -importworkitems 
@@ -173,6 +186,8 @@ Available commands:
     [delimiter=","]
 ```
 
+### Exports work items from a CSV file
+
 ```bash
 -exportworkitems
     repository="value" 
@@ -193,6 +208,9 @@ Available commands:
     [timestampFormat="MMM d, yyyy hh:mm a"]
 ```
 
+### Migrates/copies the value of one attribute into another attribute for all work items of the specified type in the project area.
+
+
 ```bash
  -migrateattribute 
     repository="value"  
@@ -205,6 +223,8 @@ Available commands:
     /ignoreErrors 
     /skipEmailNotification
 ```
+
+### Validates OSLC links on work items in a project area.
 
 ```bash
 -validateoslclinks
