@@ -697,9 +697,13 @@ The following link types are supported. Please note that some link types might o
 
 The import and export capabilities of the Work Item Command Line have some special behavior that are not obvious. Here a summary of those topics.
 
+### Import Modes
+
+By default, the WCL RTC import expects attribute data in a form that is compatible to the parameter it uses in the command line parameters. The format deviates from the export/import format of the built in CSV operations for EWM. It is possible to use the switch **/asrtceclipse** for the import. WCL tries to mimic importing the built in CSV format. Due to complexity of parsing not all data can be imported.
+	
 ### Export Modes
 
-By default, the WCL RTC Export exports the attribute data in a format that is compatile with the WCL work item operations. It is possible to use the switch /asrtceclipse for the export. In this mode attachments are not downloaded and the attachment information is provided similar to the built in CSV export.
+By default, the WCL RTC Export exports the attribute data in a format that is compatile with the WCL work item operations. The format deviates from the export/import format of the built in CSV operations for EWM. It is possible to use the switch **/asrtceclipse** for the export. This format mimics the built in CSV format. In this mode attachments are not downloaded and the attachment information is provided similar to the built in CSV format.
 
 ### Attachments
 
