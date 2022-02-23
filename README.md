@@ -246,7 +246,7 @@ The switch /ignoreErrors ignores errors such as attributes or values not availab
 
 ## RMI Mode - Optional
 
-WCL supports to be run in RMI mode. This allows to run WCL as a server and avoid to have to log in repeqatedly. In RMI mode a WCL has to be started as RMI server and anothe instance is called as RMI client.
+WCL supports to be run in RMI mode. This allows to run WCL as a server and avoid to have to log in repeatedly. In RMI mode a WCL has to be started as RMI server and anothe instance is called as RMI client.
 
 ### Start in RMI server mode
 Use the switch `/rmiServer` to start an instance as RMI server. In this mode, the process will not terminate, but wait for RMI requests to perform commands. It will service commands requested by other client instances that are started with the additional switch `/rmiClient`. It is not necessary to provide a command or any other input values, when starting the server as they will be ignored. Since the TeamPlatform needs to be initialized only once in this mode, the performance is considerably increased for multiple subsequent client calls.
