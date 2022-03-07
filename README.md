@@ -268,7 +268,7 @@ WCL /rmiServer=//clm.example.com:1199/WorkItemCommandLine`
 ```
 #### Start in RMI client mode and run a command
 
-To run against a running WCL RMI server, start WCL as an RMI client. To run WCL as RMI client, provide the command you want to run and provide the flag /rmiClient flag with the RMI server URI and the parameters for the desired command. E.g. to create a work item use: 
+To run against a running WCL RMI server, start WCL as an RMI client. To run WCL as RMI client, provide the command you want to run and provide the flag `/rmiClient` flag with the RMI server URI and the parameters for the desired command. E.g. to create a work item use: 
 
 ```bash
 WCL -create 
