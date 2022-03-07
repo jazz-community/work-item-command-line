@@ -23,8 +23,9 @@ All of the following examples use bash multiline syntax for legibility. Leave th
 -   [RTC Work Item Command Line](#rtc-work-item-command-line)
     -   [Prerequisites](#prerequisites)
     -   [Usage](#usage)
-    -   [Optional - Start in RMI server mode](#start-in-rmi-server-mode)
-    - [Command Parameters](#command-parameters)
+    -   [Optional RMI server mode](#rmi-mode---optional)
+        -   [Start WCL as RMI server mode](#start-in-rmi-server-mode)
+        -   [Start in RMI client mode and run a command](#start-in-rmi-client-mode-and-run-a-command)
     -   [WorkItem attribute parameter and value
         examples](#workitem-attribute-parameter-and-value-examples)
         -   [Parameters](#parameters)
@@ -242,13 +243,17 @@ The switch /ignoreErrors ignores errors such as attributes or values not availab
     /trace
     /debug
 ```
-## Command parameters
 
 ### RMI Mode - Optional
 
-WCL supports to be run in RMI mode. This allows to run WCL as a RMI server that can be accessed from WCL RMI clients. The WCL server keeps running logged in to the repository and the time to repeatedly login to the repository is saved. If you do not knbow what RMI is, you should likely not use this mode. Note that using this mode incorrectly, can cause errors that are hard to understand.
+WCL supports to be run in RMI mode. This allows to run WCL as a RMI server that can be accessed from WCL RMI clients. The WCL server keeps running connected to the teamrepository and the time to repeatedly connect to the repository is saved. If you do not know what RMI is, you should likely not use this mode. Note that using this mode incorrectly, can cause errors that are hard to understand. Running in RMI mode requires two commands to be executed.
 
-#### Optional - Start in RMI server mode
+1. Run WCL as RMI Server and start it in RMI server mode.
+2. Run a WCL as RMI client, with the parameters for the specific command you want to run.
+
+See details below.
+
+#### Start in RMI server mode
 If desired, use the switch `/rmiServer` to start an instance as RMI server. In this mode, the process will not terminate, but wait for RMI requests to perform commands. It will service commands requested by other client instances that are started with the additional switch `/rmiClient`. It is not necessary to provide a command or any other input values, when starting the server as they will be ignored. Since the TeamPlatform needs to be initialized only once in this mode, the performance is considerably increased for multiple subsequent client calls.
 
 By default, the RMI server uses the name `//localhost/RemoteWorkitemCommandLineServer` on port `1099`.
@@ -258,14 +263,15 @@ The client command must be started with the same name and port as the server usi
 
 Example start as an RMI server: 
 
-`/rmiServer=//clm.example.com:1199/WorkItemCommandLine`
-
+```bash
+WCL /rmiServer=//clm.example.com:1199/WorkItemCommandLine`
+```
 #### Start in RMI client mode and run a command
 
-To run against a running WCL RMI server, start WCL as an RMI client, providing the /rmiClient flag with the RMI server URI and the parameters for the desired command. E.g. to create a work item use: 
+To run against a running WCL RMI server, start WCL as an RMI client. To run WCL as RMI client, provide the command you want to run and provide the flag /rmiClient flag with the RMI server URI and the parameters for the desired command. E.g. to create a work item use: 
 
 ```bash
--create 
+WCL -create 
     /rmiClient=//clm.example.com:1199/WorkItemCommandLine 
     repository="https://clm.example.com:9443/ccm" 
     user=functional 
