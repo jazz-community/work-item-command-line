@@ -23,6 +23,7 @@ All of the following examples use bash multiline syntax for legibility. Leave th
 -   [RTC Work Item Command Line](#rtc-work-item-command-line)
     -   [Prerequisites](#prerequisites)
     -   [Usage](#usage)
+        - [Available Commands](#available-commands)  
     -   [Optional RMI server mode](#rmi-mode---optional)
         -   [Start WCL as RMI server mode](#start-in-rmi-server-mode)
         -   [Start in RMI client mode and run a command](#start-in-rmi-client-mode-and-run-a-command)
