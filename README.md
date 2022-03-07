@@ -244,12 +244,12 @@ The switch /ignoreErrors ignores errors such as attributes or values not availab
 ```
 ## Command parameters
 
-## RMI Mode - Optional
+### RMI Mode - Optional
 
-WCL supports to be run in RMI mode. This allows to run WCL as a RMI server that can be accessed from WCL RMI clients. The WCL server keeps running logged in to the repository and the time to repeatedly login to the repository is saved.
+WCL supports to be run in RMI mode. This allows to run WCL as a RMI server that can be accessed from WCL RMI clients. The WCL server keeps running logged in to the repository and the time to repeatedly login to the repository is saved. If you do not knbow what RMI is, you should likely not use this mode. Note that using this mode incorrectly, can cause errors that are hard to understand.
 
-### Start in RMI server mode
-Use the switch `/rmiServer` to start an instance as RMI server. In this mode, the process will not terminate, but wait for RMI requests to perform commands. It will service commands requested by other client instances that are started with the additional switch `/rmiClient`. It is not necessary to provide a command or any other input values, when starting the server as they will be ignored. Since the TeamPlatform needs to be initialized only once in this mode, the performance is considerably increased for multiple subsequent client calls.
+#### Start in RMI server mode
+If desired, use the switch `/rmiServer` to start an instance as RMI server. In this mode, the process will not terminate, but wait for RMI requests to perform commands. It will service commands requested by other client instances that are started with the additional switch `/rmiClient`. It is not necessary to provide a command or any other input values, when starting the server as they will be ignored. Since the TeamPlatform needs to be initialized only once in this mode, the performance is considerably increased for multiple subsequent client calls.
 
 By default, the RMI server uses the name `//localhost/RemoteWorkitemCommandLineServer` on port `1099`.
 It is possible to specify a different name and port by providing a value to the switch.
@@ -260,9 +260,9 @@ Example start as an RMI server:
 
 `/rmiServer=//clm.example.com:1199/WorkItemCommandLine`
 
-### Start in RMI client mode
+#### Start in RMI client mode and run a command
 
-Example start as an RMI client with a command: 
+To run against a running WCL RMI server, start WCL as an RMI client, providing the /rmiClient flag with the RMI server URI and the parameters for the desired command. E.g. to create a work item use: 
 
 ```bash
 -create 
