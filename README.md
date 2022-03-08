@@ -282,7 +282,7 @@ WCL -create
     summary="New Item"
 ```
 
-Please note, that the server and the client require a policy file for the security manager. A Policy file `rmi_no.policy` is shipped with the download. Rename and modify the file to your requirements. To enable security Java requires to call the class with the additional vm argument `-Djava.security.policy=no.policy` where the policy file name must exist.
+Please note, that the server and the client require a policy file for the security manager. A Policy file `rmi_no.policy` is shipped with the download. Rename and modify the file to your requirements. To enable security Java requires to call the class with the additional vm argument `-Djava.security.policy=no.policy` where the policy file name must exist. The WCL shell scripts are prepared for the default values shown here.
 
 ## WorkItem attribute parameter and value examples
 
