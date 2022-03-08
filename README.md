@@ -25,8 +25,8 @@ All of the following examples use bash multiline syntax for legibility. Leave th
     -   [Usage](#usage)
         - [Available Commands](#available-commands)  
     -   [Optional RMI server mode](#rmi-mode---optional)
-        -   [Start WCL in RMI server mode](#start-in-rmi-server-mode)
-        -   [Start in RMI client mode and run a command](#start-in-rmi-client-mode-and-run-a-command)
+        -   [Start WCL in RMI server mode](#start-wcl-in-rmi-server-mode)
+        -   [Start WCL in RMI client mode and run a command](#start-wcl-in-rmi-client-mode-and-run-a-command)
     -   [WorkItem attribute parameter and value
         examples](#workitem-attribute-parameter-and-value-examples)
         -   [Parameters](#parameters)
@@ -254,7 +254,7 @@ WCL supports to be run in RMI mode. This allows to run WCL as a RMI server that 
 
 See details below.
 
-#### Start in RMI server mode
+#### Start WCL in RMI server mode
 If desired, use the switch `/rmiServer` to start an instance as RMI server. In this mode, the process will not terminate, but wait for RMI requests to perform commands. It will service commands requested by other client instances that are started with the additional switch `/rmiClient`. It is not necessary to provide a command or any other input values, when starting the server as they will be ignored. Since the TeamPlatform needs to be initialized only once in this mode, the performance is considerably increased for multiple subsequent client calls.
 
 By default, the RMI server uses the name `//localhost/RemoteWorkitemCommandLineServer` on port `1099`.
@@ -267,7 +267,7 @@ Example start as an RMI server:
 ```bash
 WCL /rmiServer=//clm.example.com:1199/WorkItemCommandLine`
 ```
-#### Start in RMI client mode and run a command
+#### Start WCL in RMI client mode and run a command
 
 To run against a running WCL RMI server, start WCL as an RMI client. To run WCL as RMI client, provide the command you want to run and provide the flag `/rmiClient` flag with the RMI server URI and the parameters for the desired command. E.g. to create a work item use: 
 
