@@ -255,7 +255,7 @@ WCL supports to be run in RMI mode. This allows to run WCL as a RMI server that 
 See details below.
 
 #### Start WCL in RMI server mode
-If desired, use the switch `/rmiServer` to start an instance as RMI server. In this mode, the process will not terminate, but wait for RMI requests to perform commands. It will service commands requested by other client instances that are started with the additional switch `/rmiClient`. It is not necessary to provide a command or any other input values, when starting the server as they will be ignored. Since the TeamPlatform needs to be initialized only once in this mode, the performance is considerably increased for multiple subsequent client calls.
+If desired, use the switch `/rmiServer` to start an instance as RMI server. In this mode, the process will not terminate, but wait for RMI requests to perform commands. It will service commands requested by other WCL run as RMI client instances that run with the additional switch `/rmiClient`. It is not necessary to provide a command or any other input values, when starting the server as they will be ignored. Since the TeamPlatform needs to be initialized only once in this mode, the performance is considerably increased for multiple subsequent client calls.
 
 By default, the RMI server uses the name `//localhost/RemoteWorkitemCommandLineServer` on port `1099`.
 It is possible to specify a different name and port by providing a value to the switch.
