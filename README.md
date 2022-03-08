@@ -65,6 +65,10 @@ To run WCL, edit the wcl.bat or wcl.sh and **change** the environment variables 
 
 PLAIN_JAVA=C:\ELM702\PlainJavaAPI
 
+Some commands use special libraries that I can not bundle with the download. The libraries and how to get them can be found in the [ReadMe.txt](https://github.com/jazz-community/work-item-command-line/blob/master/com.ibm.js.team.workitem.commandline/lib/ReadMe.txt).
+
+It is possible to import the code of WCL into Eclipse and build your own WCL. The WCL requires the Plain Java Client Libraries to be accessible in the project area. See the [RTC Extensions Workshop](https://jazz.net/library/article/1000) especially Lab 1 that helps setting up the EWM SDK and the Plain Java Client Libraries. Follow the Lab 1 to setup the SDK and development environmnet. Import WCL into this environment. Follow [the build README](https://github.com/jazz-community/work-item-command-line/blob/master/com.ibm.js.team.workitem.commandline/build-readme.md) to package WCL for shipping.
+
 ## Usage 
 
 The general syntax is:
