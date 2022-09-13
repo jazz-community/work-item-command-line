@@ -20,8 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 
 import com.ibm.js.team.workitem.commandline.IWorkItemCommandLineConstants;
 import com.ibm.js.team.workitem.commandline.OperationResult;
@@ -75,7 +77,9 @@ import com.ibm.team.workitem.common.query.ResultSize;
  */
 public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand implements IWorkItemCommand {
 
-	private Logger logger = Logger.getLogger(ValidateOSLCLinksCommand.class);
+	// Get the logger. Changed for Log4J2
+	private static final Logger logger = LogManager.getLogger();
+
 	// Parameter to specify the query
 	private static final String SWITCH_TRACE = "trace";
 	private static final String SWITCH_DEBUG = "debug";
@@ -206,11 +210,12 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	 */
 	@Override
 	public OperationResult process() throws TeamRepositoryException {
-		logger.setLevel(Level.WARN);
+		// Set the logging level. Changed for Log4J2
+		Configurator.setLevel(LogManager.getLogger(logger).getName(),Level.WARN);
 		if (getParameterManager().hasSwitch(SWITCH_DEBUG))
-			logger.setLevel(Level.DEBUG);
+			Configurator.setLevel(LogManager.getLogger(logger).getName(),Level.DEBUG);
 		if (getParameterManager().hasSwitch(SWITCH_TRACE))
-			logger.setLevel(Level.TRACE);
+			Configurator.setLevel(LogManager.getLogger(logger).getName(),Level.TRACE);
 
 		// Get the parameters such as project area name and
 		// run the operation
