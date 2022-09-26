@@ -1486,7 +1486,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * Getter for the quote character
+	 * Getter for the delimiter
 	 * 
 	 * @return
 	 */
@@ -1495,16 +1495,20 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	/**
-	 * setter for the quote character
+	 * Setter for the delimiter
 	 * 
-	 * @return
 	 */
 	private void setDelimiter(String delimiter) {
-		if (delimiter.length() != 1) {
-			throw new WorkItemCommandLineException("Can not convert delimiter. Delimiter must have size 1 >"
-					+ delimiter + "<");
+		if (delimiter.length() == 1) {
+			fDelimiter = delimiter.charAt(0);
+			return;
 		}
-		fDelimiter = delimiter.charAt(0);
+		if (delimiter.length() == 2 && delimiter.equals("\\t")) {
+			fDelimiter = '\t';
+			return;
+		}
+		
+		throw new WorkItemCommandLineException("Can not recognize delimiter. Delimiter must have size 1 or be the tab escape chracter. Delimiter is >"+ delimiter + "<");
 	}
 
 	/**
