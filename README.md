@@ -1,6 +1,6 @@
 # EWM/RTC Work Item Command Line
 
-Work Item Command Line Version 5.3.1
+Work Item Command Line Version 5.3.2
 
 See the [Prerequisites](https://github.com/jazz-community/work-item-command-line/blob/master/README.md#prerequisites) and [Work Item Command Line 5.0](https://rsjazz.wordpress.com/2019/07/03/work-item-command-line-5-0/) for instructions how to setup and install WCL.
 
@@ -417,6 +417,8 @@ String values such as HTML, Summary, Wiki type attributes support `default` (sam
 **Work Item ID:** Parameter `"id"` can not be changed.
 
 **Project Area:** Parameter `"projectArea"` can only be specified when creating the work item. It can not be set to a different value later.
+
+**Creation Date:** Parameter `"creationDate"` can only be specified when creating the work item. It can not be set to a different value later. This is true for the importWorkitem command as well.
 
 ### Comments
 Parameter `"internalComments"` can be used to add a comment. This attribute only supports the default and add mode. Comments can not be removed.
