@@ -418,6 +418,8 @@ String values such as HTML, Summary, Wiki type attributes support `default` (sam
 
 **Project Area:** Parameter `"projectArea"` can only be specified when creating the work item. It can not be set to a different value later.
 
+**Creation Date:** Parameter `"creationDate"` can only be specified when creating the work item. It can not be set to a different value later. This is true for the importWorkitem command as well.
+	
 ### Comments
 Parameter `"internalComments"` can be used to add a comment. This attribute only supports the default and add mode. Comments can not be removed.
 
