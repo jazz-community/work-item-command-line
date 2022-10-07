@@ -829,22 +829,22 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			}
 			return;
 		}
+//			if (attribute.getIdentifier().equals(IWorkItem.CREATION_DATE_PROPERTY)) {
+//				// Ignore
+//				if(!isSuppressAttributeWarnings()){
+//					getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
+//							+ " mapped to: " + printAttribute(attribute));
+//				}
+//				return;
+//			}
+//			if (attribute.getIdentifier().equals(IWorkItem.CREATOR_PROPERTY)) {
+//				// Ignore
+//				if(!isSuppressAttributeWarnings()){
+//					getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID + " mapped to: " + printAttribute(attribute));
+//				}
+//				return;
+//			}
 		// Ignore attributes that can not be set
-		if (attribute.getIdentifier().equals(IWorkItem.CREATION_DATE_PROPERTY)) {
-			// Ignore
-			if(!isSuppressAttributeWarnings()){
-				getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID
-						+ " mapped to: " + printAttribute(attribute));
-			}
-			return;
-		}
-		if (attribute.getIdentifier().equals(IWorkItem.CREATOR_PROPERTY)) {
-			// Ignore
-			if(!isSuppressAttributeWarnings()){
-				getResult().appendResultString("Ignored: Attribute is calculated and can not be set: " + attributeID + " mapped to: " + printAttribute(attribute));
-			}
-			return;
-		}
 		if (attribute.getIdentifier().equals(IWorkItem.CUSTOM_ATTRIBUTES_PROPERTY)) {
 			// Ignore
 			if(!isSuppressAttributeWarnings()){
