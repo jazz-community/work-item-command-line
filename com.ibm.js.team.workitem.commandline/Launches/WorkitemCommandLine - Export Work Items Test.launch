@@ -6,6 +6,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-exportworkitems /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=myadmin password=myadmin projectArea=&quot;JKE Banking (Change Management)&quot; exportFile=&quot;C:\Temp\RTCExport\Test.csv&quot; query=&quot;First&quot; columns=&quot;category,workItemType,internalState,internalPriority,internalSeverity,summary,owner,creator,description,dueDate,duration,foundIn,parent,child,tracks_workitem,contributes_to_workitem&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-exportworkitems /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=myadmin password=myadmin projectArea=&quot;JKE Banking (Change Management)&quot; exportFile=&quot;C:\Temp\RTCExport\Test.csv&quot; query=&quot;First&quot; columns=&quot;category,workItemType,internalState,internalPriority,internalSeverity,summary,owner,creator,creationDate,description,dueDate,duration,foundIn,parent,child,tracks_workitem,contributes_to_workitem&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
 </launchConfiguration>
