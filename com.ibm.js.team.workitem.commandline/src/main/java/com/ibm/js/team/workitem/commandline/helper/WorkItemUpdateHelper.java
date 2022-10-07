@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -364,10 +365,17 @@ public class WorkItemUpdateHelper {
 			// The ID of the work item - this can not be modified.
 			throw new WorkItemCommandLineException("ID of work item can not be changed: '" + parameter.getAttributeID()
 					+ "' Value: '" + parameter.getValue() + "'.");
+		} else if (parameter.getAttributeID().equals(IWorkItem.CREATOR_PROPERTY)) {
+			Object creator = calculateContributor(parameter);
+			getWorkItem().setCreator((IContributorHandle) creator);
 		} else if (parameter.getAttributeID().equals(IWorkItem.CREATION_DATE_PROPERTY)) {
-			// The creationDate of the work item - this can not be modified.
-			throw new WorkItemCommandLineException("Creation date of work item can not be changed: "
-					+ parameter.getAttributeID() + " Value: " + parameter.getValue());
+			Timestamp cDate = getWorkItem().getCreationDate();
+			if(cDate==null){ // CreationDate can only be set during work item creation.
+				Object creationDate = calculateTimestamp(parameter);
+				if(creationDate!=null){
+					getWorkItem().setCreationDate((Timestamp) creationDate);
+				}
+			}
 		} else if (parameter.getAttributeID().equals(IWorkItem.TYPE_PROPERTY)) {
 			// Update the type
 			throw new WorkItemCommandLineException(
