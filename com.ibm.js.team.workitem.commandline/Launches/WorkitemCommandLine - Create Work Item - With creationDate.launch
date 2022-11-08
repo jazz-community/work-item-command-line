@@ -6,6 +6,7 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-exportworkitems /ignoreErrors  repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph projectArea=&quot;JKE Banking (Change Management)&quot;  exportFile=&quot;c:\aaTemp\export\exportEx.csv&quot; query=&quot;All&quot; delimiter=&quot;;&quot; /allColumns"/>
+<stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="com.ibm.js.team.workitem.commandline"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-create /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=deb password=deb projectArea=&quot;JKE Banking (Change Management)&quot; workItemType=task summary=&quot;New Item CreationDate&quot; category=JKE owner=ralph target=&quot;Main Development/Release 1.0/Sprint 3&quot; internalSeverity=Major foundIn=&quot;Sprint 2 Development&quot; internalPriority=High creator=myadmin creationDate:set=&quot;2015/02/01 12:30:00 GMT+01:00&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
 </launchConfiguration>

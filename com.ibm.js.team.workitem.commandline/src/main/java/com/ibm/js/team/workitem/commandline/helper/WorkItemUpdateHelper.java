@@ -1212,7 +1212,7 @@ public class WorkItemUpdateHelper {
 			throws WorkItemCommandLineException, TeamRepositoryException {
 		Identifier<IResolution> resolution = null;
 		if (!(parameter.isDefault() || parameter.isSet())) {
-			throw new WorkItemCommandLineException("Comments only supports the default and the "
+			throw new WorkItemCommandLineException("Attribute only supports the default and the "
 					+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.POSTFIX_PARAMETER_MANIPULATION_MODE
 					+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET + " modes: "
 					+ parameter.getAttributeID() + " !");

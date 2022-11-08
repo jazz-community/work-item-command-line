@@ -19,9 +19,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.config.DefaultConfiguration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
@@ -174,9 +174,10 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	 */
 	public static void main(String[] args) {
 		// The next two lines are needed to prevent error message from API
-		BasicConfigurator.configure();
-		Logger.getRootLogger().setLevel(Level.FATAL);
-
+		// This was ported from Log4j1 to Log4j2
+		Configurator.initialize(new DefaultConfiguration() );
+		Configurator.setRootLevel(Level.FATAL);
+		
 		System.out.println("StartTime: " + DateFormat.getDateTimeInstance().format(new Date()));
 
 		OperationResult result = new OperationResult();

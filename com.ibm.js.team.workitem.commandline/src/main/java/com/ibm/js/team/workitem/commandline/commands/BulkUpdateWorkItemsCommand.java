@@ -9,7 +9,8 @@ package com.ibm.js.team.workitem.commandline.commands;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.ibm.js.team.workitem.commandline.IWorkItemCommandLineConstants;
 import com.ibm.js.team.workitem.commandline.OperationResult;
@@ -40,8 +41,9 @@ import com.ibm.team.workitem.common.query.ResultSize;
  */
 public class BulkUpdateWorkItemsCommand extends AbstractWorkItemModificationCommand {
 
-	private Logger logger = Logger.getLogger(BulkUpdateWorkItemsCommand.class);
-
+	// Get the logger. Changed for Log4J2
+	private static final Logger logger = LogManager.getLogger();
+	
 	// To determine if we are in debug mode
 	private boolean fDebug;
 
