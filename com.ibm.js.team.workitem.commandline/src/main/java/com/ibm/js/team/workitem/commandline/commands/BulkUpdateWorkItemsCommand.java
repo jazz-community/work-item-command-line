@@ -113,6 +113,10 @@ public class BulkUpdateWorkItemsCommand extends AbstractWorkItemModificationComm
 
 		this.setUpdateDebug(true);
 
+		this.setIgnoreErrors(getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS));
+		this.setSuppressMailNotification(
+				getParameterManager().hasSwitch(IWorkItemCommandLineConstants.SWITCH_SUPPRESS_MAIL_NOTIFICATION));
+
 		String projectAreaName = getParameterManager()
 				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_PROJECT_AREA_NAME_PROPERTY).trim();
 		// Find the project area
