@@ -168,7 +168,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	private char fDelimiter = IWorkItemCommandLineConstants.DEFAULT_DELIMITER;
 
 	// The default encoding
-	private String fEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_8;
+	private String fEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_16LE;
 
 	// Multi pass mode
 	private boolean fMultipass = false;
@@ -380,13 +380,14 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 */
 	private boolean performImport(IProjectArea projectArea, boolean result) throws TeamRepositoryException,
 			WorkItemCommandLineException {
+		CSVReader reader;
 		try {
 			// Read the input data with encoding and try to iterate through the
 			// data.
 			// Try to create or update work items based on the data read
 			// @see http://opencsv.sourceforge.net/
 			@SuppressWarnings("deprecation")
-			CSVReader reader = new CSVReader(
+			reader = new CSVReader(
 					new InputStreamReader(new FileInputStream(getImportFile()), getFileEncoding()), getDelimiter(),
 					getQuoteChar());
 
@@ -396,7 +397,6 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			debug("Importing File: " + getImportFile().getAbsolutePath());
 			debug("Dumping rows - using ',' as seperator during print.");
 			List<String[]> myEntries = reader.readAll();
-			reader.close();
 
 			boolean skiptitle = true;
 			String[] header = null;
@@ -422,10 +422,6 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 						throw e;
 					}
 					e.printStackTrace();
-				} finally {
-					if (reader != null) {
-						reader.close();
-					}
 				}
 			}
 			if (rowID < 2) {
@@ -444,6 +440,9 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			result = false;
 			throw new WorkItemCommandLineException(e);
 		} finally {
+			if (reader != null) {
+				reader.close();
+			}
 		}
 		return result;
 	}

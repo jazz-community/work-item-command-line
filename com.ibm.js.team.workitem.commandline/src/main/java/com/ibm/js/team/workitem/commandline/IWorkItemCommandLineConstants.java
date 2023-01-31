@@ -52,10 +52,20 @@ public interface IWorkItemCommandLineConstants {
 	public static final String PARAMETER_USER_ID_PROPERTY_EXAMPLE = "user";
 	public static final String PARAMETER_PASSWORD_PROPERTY = "password";
 	public static final String PARAMETER_PASSWORD_PROPERTY_EXAMPLE = "password";
+	
+	/*
+	 * Password File format:
+	 * <url fragment> userid password
+	 * Example:
+	 * clm.example.com user234 password234
+	 * qm.example.com user456 password456
+	 */
+	public static final String PARAMETER_PASSWORD_FILE_PROPERTY = "passwordFile";
+	public static final String PARAMETER_PASSWORD_FILE_PROPERTY_EXAMPLE = "pw.txt";
 
 	// Special parameter constants needed by several commands
 	public static final String PARAMETER_WORKITEM_ID_PROPERTY = "id";
-	public static final String PROPERTY_WORKITEM_ID_PROPERTY_EXAMPLE = "123";
+	public static final String PARAMETER_WORKITEM_ID_PROPERTY_EXAMPLE = "123";
 
 	// The project area
 	public static final String PARAMETER_PROJECT_AREA_NAME_PROPERTY = "projectArea";
@@ -92,10 +102,13 @@ public interface IWorkItemCommandLineConstants {
 	public static final String HTTP_PROTOCOL_PREFIX = "http";
 
 	// Import/Export work items
-	public static final char DEFAULT_DELIMITER = ';';
+	public static final char DEFAULT_DELIMITER = ',';
 
-	// The default encoding
+	// The default UTF-8 encoding
 	public static final String DEFAULT_ENCODING_UTF_8 = "UTF-8";
+	
+	// The default UTF-16 encoding
+	public static final String DEFAULT_ENCODING_UTF_16LE = "UTF-16LE";
 
 	// The default Quote character
 	public static final char DEFAULT_QUOTE_CHAR = '"';

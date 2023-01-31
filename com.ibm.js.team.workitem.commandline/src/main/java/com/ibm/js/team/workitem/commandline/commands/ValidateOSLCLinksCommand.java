@@ -135,24 +135,19 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 					new OSLC_TYPE("http://open-services.net/ns/cm#relatedTestScript", SystemType.QM));
 
 			/*
-			 * CCM to CCM links are not checked because they don't use link
-			 * index
+			 * CCM to CCM links are not checked because they don't use link index
 			 */
-			// put(WorkItemLinkTypes.AFFECTED_BY_DEFECT /*
-			// "com.ibm.team.workitem.linktype.cm.affectedByDefect" */,
-			// "http://open-services.net/ns/cm#affectedByDefect");
-			// put(WorkItemLinkTypes.AFFECTS_PLAN_ITEM /*
-			// "com.ibm.team.workitem.linktype.cm.affectsPlanItem" */,
-			// "http://open-services.net/ns/cm#affectsPlanItem");
+			 put(WorkItemLinkTypes.AFFECTED_BY_DEFECT /* "com.ibm.team.workitem.linktype.cm.affectedByDefect" */,
+					 new OSLC_TYPE("http://open-services.net/ns/cm#affectedByDefect", SystemType.CCM));
+			 put(WorkItemLinkTypes.AFFECTS_PLAN_ITEM /* "com.ibm.team.workitem.linktype.cm.affectsPlanItem" */,
+					 new OSLC_TYPE("http://open-services.net/ns/cm#affectsPlanItem", SystemType.CCM));
 
 			/* Tracks/Contributes To are external ccm link types not oslc */
-			// put(WorkItemLinkTypes.CONTRIBUTES_TO_WORK_ITEM /*
-			// "com.ibm.team.workitem.linktype.trackedworkitem" */,
-			// "http://open-services.net/ns/cm#trackedWorkItem");
-			// put(WorkItemLinkTypes.TRACKS_WORK_ITEM /*
-			// "com.ibm.team.workitem.linktype.tracksworkitem" */,
-			// "http://open-services.net/ns/cm#tracksWorkItem");
-
+			 put(WorkItemLinkTypes.CONTRIBUTES_TO_WORK_ITEM /* "com.ibm.team.workitem.linktype.trackedworkitem" */,
+					 new OSLC_TYPE("http://open-services.net/ns/cm#trackedWorkItem", SystemType.CCM));
+			 put(WorkItemLinkTypes.TRACKS_WORK_ITEM /* "com.ibm.team.workitem.linktype.tracksworkitem" */,
+					 new OSLC_TYPE("http://open-services.net/ns/cm#tracksWorkItem", SystemType.CCM));
+			 
 			// TODO: add more backlinks
 			// put("none", "http://open-services.net/ns/cm#ChangeRequest");
 			// put("none",
