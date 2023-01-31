@@ -496,32 +496,6 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 		return result;
 	}
 
-	private ITeamRawRestServiceClient getRestClient(URI targetUri) throws TeamRepositoryException {
-		String repoUri = getRepositoryUri(targetUri);
-		ITeamRawRestServiceClient restClient = repoClients.get(repoUri);
-		if (restClient == null) {
-			ITeamRepository repo = login(repoUri);
-			restClient = repo.getRawRestServiceClient();
-			repoClients.put(repoUri, restClient);
-		}
-		return restClient;
-	}
-
-	private String getRepositoryUri(URI targetUri) {
-		String repositoryUri = null;
-		String path[] = targetUri.getPath().split("/");
-		if (path.length >= 2) {
-			String newPath = path[0] + "/" + path[1];
-			repositoryUri = targetUri.toString().replace(targetUri.getPath(), newPath);
-		}
-		return repositoryUri;
-	}
-
-	private IResponse createResponse(IRawRestClientConnection.Response rawResponse) throws TeamRepositoryException {
-		return new Response(rawResponse.getStatusCode(), new HttpHeaders(rawResponse.getAllResponseHeaders()),
-				rawResponse.getResponseStream());
-	}
-
 	// https://<yourhostname>/<applicationContext>/linkIndex (e.g.
 	// https://rqmple2.rtp.raleigh.ibm.com:9443/qm/linkIndex)
 	private String getLinkIndexProviderUri(URI targetUri) throws TeamRepositoryException, MalformedURLException {

@@ -25,6 +25,13 @@ public interface IWorkItemCommandLineConstants {
 	public static final String COMMAND_EXPORT_WORKITEMS = "exportworkitems";
 	public static final String COMMAND_PRINT_WORKITEM = "printworkitem";
 	public static final String COMMAND_VALIDATE_OSLC_LINKS = "validateoslclinks";
+	public static final String COMMAND_VALIDATE_USER_ALLOCATIONS = "validateuserallocations";       // unfinished
+	public static final String COMMAND_VALIDATE_USER_ALLOCATIONS_REST = "validateuserallocations2"; // unfinished
+
+	public static final String COMMAND_VALIDATE_WORKITEM_STATES= "validateworkitems";
+	public static final String COMMAND_FIND_ID_CONFLICTS = "findidconflicts";
+	public static final String COMMAND_FIND_IN_PROJECT_AREAS = "findinprojectareas";
+
 
 	// Switch to ignore single errors and trying to perform operation even if
 	// some parameters and values are not recognizable
@@ -52,7 +59,8 @@ public interface IWorkItemCommandLineConstants {
 	public static final String PARAMETER_USER_ID_PROPERTY_EXAMPLE = "user";
 	public static final String PARAMETER_PASSWORD_PROPERTY = "password";
 	public static final String PARAMETER_PASSWORD_PROPERTY_EXAMPLE = "password";
-	
+	public static final String PARAMETER_SEARCH_STRING = "search";
+	public static final String PARAMETER_SEARCH_STRING_EXAMPLE = "MyWorkItemType";
 	/*
 	 * Password File format:
 	 * <url fragment> userid password
@@ -80,9 +88,12 @@ public interface IWorkItemCommandLineConstants {
 
 	// the mapping file
 	public static final String PARAMETER_TIMESTAMP_ENCODING = "timestampFormat";
-	public static final String PARAMETER_TIMESTAMP_ENCODING_EXAMPLE = "\""
-			+ TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A + "\"";
+	public static final String PARAMETER_TIMESTAMP_ENCODING_EXAMPLE = "\"" + TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A + "\"";
 
+	// Include history in state validation
+	public static final String PARAMETER_INCLUDE_HISTORY_PROPERTY = "includehistory";
+	public static final String PARAMETER_INCLUDE_HISTORY_PROPERTY_EXAMPLE = "true";	
+	
 	// Parsing
 	public static final String INFIX_PARAMETER_VALUE_SEPARATOR = "=";
 	public static final String PREFIX_COMMAND = "-";
