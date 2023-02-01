@@ -20,7 +20,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.Logger;
 
 import org.w3c.dom.Document;
@@ -55,6 +55,7 @@ import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient.IRawRe
  * Class helps with accessing OSLC Link
  * 
  */
+@SuppressWarnings({ "deprecation", "restriction" })
 public class ProcessAreaOslcHelper {
 	public static final String CONFIGURATION_MANAGEMENT_CONTEXT_HEADER_NAME = "X-OLSC-Configuration-Context"; //$NON-NLS-1$
 	public static final String OSLC_CATALOG_URI_PATH = "/oslc/workitems/catalog"; //$NON-NLS-1$

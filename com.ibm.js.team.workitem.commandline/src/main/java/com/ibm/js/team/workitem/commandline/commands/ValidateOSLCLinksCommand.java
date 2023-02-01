@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2018 IBM Corporation
+ * Copyright (c) 2015-2023 IBM Corporation
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -30,6 +30,7 @@ import com.ibm.js.team.workitem.commandline.OperationResult;
 import com.ibm.js.team.workitem.commandline.framework.AbstractTeamRepositoryCommand;
 import com.ibm.js.team.workitem.commandline.framework.IWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.framework.WorkItemCommandLineException;
+import com.ibm.js.team.workitem.commandline.helper.WorkItemOslcLinkHelper;
 import com.ibm.js.team.workitem.commandline.parameter.ParameterManager;
 import com.ibm.js.team.workitem.commandline.utils.ProcessAreaUtil;
 import com.ibm.js.team.workitem.commandline.utils.QueryUtil;
@@ -159,6 +160,10 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	private IWorkItemClient workItemService;
 	private HashMap<String, ITeamRawRestServiceClient> repoClients = new HashMap<String, ITeamRawRestServiceClient>();
 
+	public IWorkItemClient getWorkItemService() {
+		return workItemService;
+	}
+	
 	public static final class GetRDFResourceParams {
 		public String resourceURL;
 		public String oslcCoreVersion;
@@ -326,7 +331,7 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 						logger.trace("gcUriString: " + gcUriString);
 
 						if (gcUriString != null && !gcUriString.isEmpty()) {
-							logger.debug(message+" \nGlobal Configuraiton Uri: " + gcUriString 
+							logger.debug("\nGlobal Configuration Uri: " + gcUriString 
 									+ "\nfor work item: " + workItem.getId() + " link type: " + linkType.getLinkTypeId());
 							validateGCLink(gcUriString, workItem.getId(), currentWorkItemURI, reference);
 						} else {
@@ -451,7 +456,7 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 																															// not
 
 	/* gcUrl can be empty */
-	private JSONArray getLDXBackLinkViaRest(URI targetUri, String gcUrl, String linkType)
+	public JSONArray getLDXBackLinkViaRest(URI targetUri, String gcUrl, String linkType)
 			throws NotLoggedInException, IOException, TeamRepositoryException {
 		JSONArray result = null;
 		try {
@@ -547,7 +552,7 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	private static final String LINK_TYPE = "linkType";
 	private static final String TRIPLE_TARGET_URL = "targetURL";
 
-	private boolean isLinkInTripleEqual(JSONObject triple, String sourceURL, String linkType, String targetURL) {
+	public boolean isLinkInTripleEqual(JSONObject triple, String sourceURL, String linkType, String targetURL) {
 		if (triple == null) {
 			logger.warn("\n... *** null triple"); // should not happen
 			return false;

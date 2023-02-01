@@ -14,7 +14,7 @@ import java.net.URI;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -43,6 +43,7 @@ import com.ibm.team.workitem.client.IWorkItemClient;
  * Each project area must be manually modified by the administrator to change
  * the reference.
  */
+@SuppressWarnings("deprecation")
 public class FindEnumerationIdConflictsCommand extends AbstractTeamRepositoryCommand implements IWorkItemCommand {
 
 	private Logger logger = LogManager.getLogger(FindEnumerationIdConflictsCommand.class);

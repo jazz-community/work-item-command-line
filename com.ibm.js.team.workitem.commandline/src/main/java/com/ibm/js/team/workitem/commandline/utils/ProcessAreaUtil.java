@@ -7,7 +7,11 @@
  *******************************************************************************/
 package com.ibm.js.team.workitem.commandline.utils;
 
+import java.net.IDN;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 

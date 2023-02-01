@@ -180,7 +180,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	/**
 	 * @return the IAuditableCommon
 	 */
-	protected IAuditableCommon getAuditableCommon() {
+	public IAuditableCommon getAuditableCommon() {
 		return (IAuditableCommon) getTeamRepository().getClientLibrary(IAuditableCommon.class);
 	}
 

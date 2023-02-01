@@ -380,7 +380,6 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 */
 	private boolean performImport(IProjectArea projectArea, boolean result) throws TeamRepositoryException,
 			WorkItemCommandLineException {
-		CSVReader reader;
 		try {
 			// Read the input data with encoding and try to iterate through the
 			// data.

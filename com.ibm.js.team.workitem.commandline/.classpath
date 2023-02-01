@@ -7,5 +7,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PlainJavaApi"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenCSV"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Commons-lang"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JenaCore"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JunoAll"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

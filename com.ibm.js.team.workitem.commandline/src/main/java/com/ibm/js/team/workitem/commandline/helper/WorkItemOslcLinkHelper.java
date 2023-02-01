@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019-2022 IBM
+ * Copyright (c) 2019-2023 IBM Corporation
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -311,13 +311,13 @@ public class WorkItemOslcLinkHelper {
 	private URI getWorkItemUri(ValidateOSLCLinksCommand command, IWorkItem workItem, Logger logger) {
 		// ItemURI.createWorkItemURI(workItemService.getAuditableCommon(),
 		// workItem.getId());
-		URI currentWorkItemURI = ItemURI.createWorkItemURI(command.getAuditableCommon2(), workItem.getId());
+		URI currentWorkItemURI = ItemURI.createWorkItemURI(command.getAuditableCommon(), workItem.getId());
 
 		return currentWorkItemURI; 
 	}
 
 	private IWorkItemReferences getWorkItemTargetReferences(ValidateOSLCLinksCommand command, IWorkItem workItem, Logger logger) throws TeamRepositoryException {
-		return command.workItemClient.resolveWorkItemReferences(workItem, command.getMonitor2()); 
+		return command.getWorkItemService().resolveWorkItemReferences(workItem, command.getMonitor()); 
 	}
 
 //	private String getConfigurationManagementUriByLinkType(IEndPointDescriptor endPointDescriptor, IWorkItem workItem,

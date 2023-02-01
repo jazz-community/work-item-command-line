@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2018 IBM Corporation
+ * Copyright (c) 2015-2023 IBM Corporation
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -233,7 +233,7 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 			return runRMIClient(rmiInfo, args);
 		}
 		// direct call, we are not running in RMI mode
-		return runCommands(parameterManager);
+		return runCommands(parameterManager, args);
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	@Override
 	public OperationResult runOperation(String[] args) throws TeamRepositoryException, RemoteException {
 		ParameterManager parameterManager = new ParameterManager(ParameterParser.parseParameters(args));
-		return runCommands(parameterManager);
+		return runCommands(parameterManager, args);
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	 *            - the parametermanager that contains the parsed arguments.
 	 * @return
 	 */
-	private OperationResult runCommands(ParameterManager parameterManager) {
+	private OperationResult runCommands(ParameterManager parameterManager, String[] args) {
 		IProgressMonitor monitor = new NullProgressMonitor();
 		OperationResult result = new OperationResult();
 		addSupportedCommands(parameterManager);
