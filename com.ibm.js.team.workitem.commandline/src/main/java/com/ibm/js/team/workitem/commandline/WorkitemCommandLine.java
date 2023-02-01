@@ -289,7 +289,14 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 		// The command adds its required parameters to the list
 		try {
 			// Do we have all parameters?
-			result.appendResultString("Executing command: " + command + "\n");
+			String argString= "";
+			if(args != null && args.length > 0) {
+				for (int i=1;i<args.length;i++) { // 0 is the command
+					argString += (args[i].indexOf("password") != -1 ? " password=****" : " " + args[i]);
+				}
+			}
+			result.appendResultString("\nExecuting command: " + command + argString);
+			
 			toRun.validateRequiredParameters();
 		} catch (WorkItemCommandLineException e) {
 			result.appendResultString(e.getMessage());

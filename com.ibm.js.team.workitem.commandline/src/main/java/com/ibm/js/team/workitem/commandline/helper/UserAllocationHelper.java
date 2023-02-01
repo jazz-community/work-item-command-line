@@ -37,7 +37,12 @@ import com.ibm.team.repository.common.IContributorHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.repository.common.UUID;
 import com.ibm.team.repository.common.json.JSONObject;
+import com.ibm.team.repository.common.model.ItemType;
 import com.ibm.team.repository.common.transport.IParameterWrapper;
+import com.ibm.team.tpt.internal.common.rest.dto.AllocationBucket;
+import com.ibm.team.tpt.internal.common.rest.dto.AvailabilitySearchResultDTO;
+import com.ibm.team.tpt.internal.common.rest.dto.ContributorAvailabilityDetails;
+import com.ibm.team.tpt.internal.common.rest.dto.RestFactory;
 
 	public class UserAllocationHelper extends WorkItemUpdateHelper {
 		IProjectArea projectArea;
@@ -163,6 +168,27 @@ public OperationReportDTO saveWorkAssignments(List<AllocationDTOParser> parsedAl
 	private IResourcePlanningService getResourcePlanningService() {
 		return (IResourcePlanningService) getTeamRepository().getClientLibrary(
 				IResourcePlanningService.class);
+	}
+	
+	private ContributorAvailabilityDetails createContributorAvailabilityDetails(
+			final DTO_ContributorInfo contributorDTO, Timestamp finishDate, List<AllocationBucket> allocationBuckets)
+			throws TeamRepositoryException {
+//		IContributor contributor = resolveItem(contributorDTO.getContributor());
+//		
+//		String stateId = contributor.getStateId().getUuidValue();
+//		String itemId = contributor.getItemId().getUuidValue();
+//		String contribHandle = UIItemHandle.stateHandleFrom(ItemType.Contributor, itemId, stateId).getHandleValue();
+//		
+//		ContributorAvailabilityDetails cad = RestFactory.eINSTANCE.createContributorAvailabilityDetails();
+//		cad.setContributorUserId(contributor.getUserId());
+//		cad.setContributorItemId(itemId);
+//		cad.setContributorHandle(contribHandle);
+//		cad.setContributorName(contributor.getName());
+//		cad.setFinishDate(finishDate);
+//		
+//		cad.getAllocationDetails().addAll(allocationBuckets);
+//		return cad;
+		return null;
 	}
 	
 	private static final class ParmsSearchUsers implements IParameterWrapper {

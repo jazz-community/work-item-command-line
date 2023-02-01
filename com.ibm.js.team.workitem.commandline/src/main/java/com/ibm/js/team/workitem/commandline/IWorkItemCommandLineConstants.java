@@ -31,6 +31,8 @@ public interface IWorkItemCommandLineConstants {
 	public static final String COMMAND_VALIDATE_WORKITEM_STATES= "validateworkitems";
 	public static final String COMMAND_FIND_ID_CONFLICTS = "findidconflicts";
 	public static final String COMMAND_FIND_IN_PROJECT_AREAS = "findinprojectareas";
+	
+	public static final String COMMAND_IMPORT_WORKITEM_STATES= "importstates";
 
 
 	// Switch to ignore single errors and trying to perform operation even if

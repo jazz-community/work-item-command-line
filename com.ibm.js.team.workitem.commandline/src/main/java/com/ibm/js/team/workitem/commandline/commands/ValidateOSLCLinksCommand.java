@@ -326,19 +326,28 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 						logger.trace("gcUriString: " + gcUriString);
 
 						if (gcUriString != null && !gcUriString.isEmpty()) {
+							logger.debug(message+" \nGlobal Configuraiton Uri: " + gcUriString 
+									+ "\nfor work item: " + workItem.getId() + " link type: " + linkType.getLinkTypeId());
 							validateGCLink(gcUriString, workItem.getId(), currentWorkItemURI, reference);
 						} else {
 							// TODO validateLink(workItem, currentWorkItemURI,
 							// endPoint, reference);
 							logger.warn("No GlobalConfiguration for work item: " + workItem.getId() + " link type: "
 									+ linkType.getLinkTypeId());
+							validateLdxWithoutGCLinks(workItem, endPoint, reference, logger);
 						}
 					}
 				}
 			}
 		}
 	}
-
+	
+	private void validateLdxWithoutGCLinks(IWorkItem workItem, IEndPointDescriptor endPointDescriptor, IReference reference, Logger logger)
+			throws NotLoggedInException, IOException, TeamRepositoryException, URISyntaxException {
+		 WorkItemOslcLinkHelper helper= new WorkItemOslcLinkHelper();
+		 helper.validateLdxWithoutGCLinks(this, workItem, endPointDescriptor, reference, logger);
+	}
+	
 	/**
 	 * Validate that the GC link is known by the target server and that the
 	 * artifact exists.

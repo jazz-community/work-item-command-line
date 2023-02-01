@@ -387,7 +387,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			// Try to create or update work items based on the data read
 			// @see http://opencsv.sourceforge.net/
 			@SuppressWarnings("deprecation")
-			reader = new CSVReader(
+			CSVReader reader = new CSVReader(
 					new InputStreamReader(new FileInputStream(getImportFile()), getFileEncoding()), getDelimiter(),
 					getQuoteChar());
 
@@ -422,6 +422,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 						throw e;
 					}
 					e.printStackTrace();
+				} finally {
+					reader.close();
 				}
 			}
 			if (rowID < 2) {
@@ -440,9 +442,6 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			result = false;
 			throw new WorkItemCommandLineException(e);
 		} finally {
-			if (reader != null) {
-				reader.close();
-			}
 		}
 		return result;
 	}

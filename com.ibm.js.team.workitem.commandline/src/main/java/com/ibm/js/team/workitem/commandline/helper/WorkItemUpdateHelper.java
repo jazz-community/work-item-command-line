@@ -1433,17 +1433,24 @@ public class WorkItemUpdateHelper {
 	 * @return the enumeration literal found
 	 * @throws TeamRepositoryException
 	 */
-	private Object calculateEnumerationLiteral(ParameterValue parameter) throws TeamRepositoryException {
-		if (StringUtil.isEmpty(parameter.getValue())) {
-			return null; // Unassigned
-		}
-		Identifier<? extends ILiteral> result = getEnumerationLiteralEqualsStringOrID(parameter.getIAttribute(),
-				parameter.getValue());
-		if (null == result) {
-			throw new WorkItemCommandLineException("Enumeration literal could not be resolved: '"
-					+ parameter.getIAttribute().getIdentifier() + "' Value: '" + parameter.getValue() + "'.");
-		} else {
-			return result;
+	private Object calculateEnumerationLiteral(ParameterValue parameter)
+			throws TeamRepositoryException {
+		try {
+			Identifier<? extends ILiteral> result = getEnumerationLiteralEqualsStringOrID(
+					parameter.getIAttribute(), parameter.getValue());
+			if (null == result) {
+				throw new WorkItemCommandLineException(
+						"Enumeration literal could not be resolved: "
+								+ parameter.getIAttribute().getIdentifier()
+								+ " Value: " + parameter.getValue());
+			} else {
+				return result;
+			}
+		} catch (RuntimeException e) {
+			throw new WorkItemCommandLineException(
+					"Type could not be identified - Enumeration could not be resolved: "
+							+ parameter.getIAttribute().getIdentifier()
+							+ " Value: " + parameter.getValue());
 		}
 	}
 

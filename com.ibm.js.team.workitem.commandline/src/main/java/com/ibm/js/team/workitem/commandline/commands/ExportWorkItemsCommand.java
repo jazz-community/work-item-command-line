@@ -82,7 +82,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	// "\"id,workItemType,internalState,internalPriority,internalSeverity,summary,owner,creator\"";
 
 	// The encoding to be used when saving the file
-	private String fFileEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_8;
+	private String fFileEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_16LE;
 	// Delimiter to be used for columns
 	private char fDelimiter = IWorkItemCommandLineConstants.DEFAULT_DELIMITER;
 	// Export headers as ID's?
