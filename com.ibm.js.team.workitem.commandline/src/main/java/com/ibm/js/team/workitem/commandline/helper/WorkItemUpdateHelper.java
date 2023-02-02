@@ -161,11 +161,11 @@ public class WorkItemUpdateHelper {
 	private static final String VALUE_TRUNCATED_POSTFIX = ".. Truncated";
 
 	// The fields needed
-	private IProgressMonitor monitor = null;
+	protected IProgressMonitor monitor = null;
 	private IWorkItem fItem = null;
 	private WorkItemWorkingCopy fWorkingCopy = null;
-	private ITeamRepository fTeamRepository = null;
-	private ParameterList fParameters = new ParameterList();
+	protected ITeamRepository fTeamRepository = null;
+	protected ParameterList fParameters = new ParameterList();
 	private boolean fEnforceSizeLimits = false;
 	private boolean fBulkupdate = false;
 	private boolean fupdateBacklinks = false;
@@ -327,14 +327,14 @@ public class WorkItemUpdateHelper {
 	 * 
 	 * @return the WorkItemWorkingCopy
 	 */
-	private WorkItemWorkingCopy getWorkingCopy() {
+	public WorkItemWorkingCopy getWorkingCopy() {
 		return fWorkingCopy;
 	}
 
 	/**
 	 * @return the parameters passed to this class - mainly for getting flags
 	 */
-	private ParameterList getParameters() {
+	public ParameterList getParameters() {
 		return fParameters;
 	}
 
@@ -2768,42 +2768,42 @@ public class WorkItemUpdateHelper {
 	/**
 	 * @return the teamrepository
 	 */
-	private ITeamRepository getTeamRepository() {
+	public ITeamRepository getTeamRepository() {
 		return fTeamRepository;
 	}
 
 	/**
 	 * @return the IWorkItemCommon client library
 	 */
-	private IWorkItemCommon getWorkItemCommon() {
+	public IWorkItemCommon getWorkItemCommon() {
 		return (IWorkItemCommon) getTeamRepository().getClientLibrary(IWorkItemCommon.class);
 	}
 
 	/**
 	 * @return the IAuditableCommon client library
 	 */
-	private IAuditableCommon getAuditableCommon() {
+	public IAuditableCommon getAuditableCommon() {
 		return (IAuditableCommon) getTeamRepository().getClientLibrary(IAuditableCommon.class);
 	}
 
 	/**
 	 * @return the IProcessClientService client library
 	 */
-	private IProcessClientService getProcessClientService() {
+	public IProcessClientService getProcessClientService() {
 		return (IProcessClientService) getTeamRepository().getClientLibrary(IProcessClientService.class);
 	}
 
 	/**
 	 * @return the IWorkItemClient client library
 	 */
-	private IWorkItemClient getWorkItemClient() {
+	public IWorkItemClient getWorkItemClient() {
 		return (IWorkItemClient) getTeamRepository().getClientLibrary(IWorkItemClient.class);
 	}
 
 	/**
 	 * @return the ITeamBuildClient client library
 	 */
-	private ITeamBuildClient getBuildClient() {
+	public ITeamBuildClient getBuildClient() {
 		return (ITeamBuildClient) getTeamRepository().getClientLibrary(ITeamBuildClient.class);
 	}
 
@@ -2820,7 +2820,7 @@ public class WorkItemUpdateHelper {
 	 * @return a Map of contributor UUID's and the found contributor objects
 	 * @throws TeamRepositoryException
 	 */
-	private HashMap<String, IContributor> getContributors(String value, String separator, List<String> notFoundList)
+	public HashMap<String, IContributor> getContributors(String value, String separator, List<String> notFoundList)
 			throws TeamRepositoryException {
 
 		HashMap<String, IContributor> contributorList = new HashMap<String, IContributor>();
@@ -2854,7 +2854,7 @@ public class WorkItemUpdateHelper {
 	 */
 	@SuppressWarnings("unused")
 	// Used if no exact match possible
-	private Identifier<? extends ILiteral> getEnumerationLiteralStartsWithString(IAttributeHandle attributeHandle,
+	public Identifier<? extends ILiteral> getEnumerationLiteralStartsWithString(IAttributeHandle attributeHandle,
 			String literalNamePrefix) throws TeamRepositoryException {
 		Identifier<? extends ILiteral> literalID = null;
 		IEnumeration<? extends ILiteral> enumeration = getWorkItemCommon().resolveEnumeration(attributeHandle, null);

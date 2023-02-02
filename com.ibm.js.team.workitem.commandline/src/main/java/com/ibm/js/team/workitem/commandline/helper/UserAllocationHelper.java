@@ -37,12 +37,9 @@ import com.ibm.team.repository.common.IContributorHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.repository.common.UUID;
 import com.ibm.team.repository.common.json.JSONObject;
-import com.ibm.team.repository.common.model.ItemType;
 import com.ibm.team.repository.common.transport.IParameterWrapper;
 import com.ibm.team.tpt.internal.common.rest.dto.AllocationBucket;
-import com.ibm.team.tpt.internal.common.rest.dto.AvailabilitySearchResultDTO;
 import com.ibm.team.tpt.internal.common.rest.dto.ContributorAvailabilityDetails;
-import com.ibm.team.tpt.internal.common.rest.dto.RestFactory;
 
 	public class UserAllocationHelper extends WorkItemUpdateHelper {
 		IProjectArea projectArea;
