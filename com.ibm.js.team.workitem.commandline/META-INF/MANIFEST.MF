@@ -13,25 +13,6 @@ Require-Bundle: com.ibm.team.workitem.common,
  com.ibm.team.build.client,
  com.ibm.team.scm.common,
  com.ibm.team.scm.client,
- com.ibm.team.workitem.rcp.core,
- org.eclipse.core.runtime,
- org.apache.commons.lang,
- com.ibm.team.calm.foundation.common,
- com.ibm.team.repository.common.json,
- org.selenium.java.client,
- com.hp.hpl.jena.rdf,
- org.apache.http,
- com.ibm.team.repository.service,
- com.ibm.team.repository.common.transport
+ org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: com.ibm.icu.util,
- com.ibm.team.apt.common.resource,
- com.ibm.team.apt.internal.common.resource.model,
- com.ibm.team.apt.internal.common.resource.dto,
- com.ibm.team.apt.internal.common.rest.resource.dto,
- com.ibm.team.apt.internal.common.util,
- com.ibm.team.calm.foundation.server,
- com.ibm.team.tpt.internal.common.rest.dto,
- org.apache.commons.lang;version="2.6.0",
- org.apache.http
-Export-Package: com.ibm.js.team.workitem.commandline
+Multi-Release: true

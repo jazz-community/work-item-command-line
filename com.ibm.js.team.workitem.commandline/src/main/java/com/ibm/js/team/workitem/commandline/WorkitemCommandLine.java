@@ -28,6 +28,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import com.ibm.js.team.workitem.commandline.commands.BulkUpdateWorkItemsCommand;
 import com.ibm.js.team.workitem.commandline.commands.CreateWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.commands.ExportWorkItemsCommand;
+import com.ibm.js.team.workitem.commandline.commands.FindEnumerationIdConflictsCommand;
+import com.ibm.js.team.workitem.commandline.commands.FindInProjectAreasCommand;
+import com.ibm.js.team.workitem.commandline.commands.ImportItemStatesCommand;
 import com.ibm.js.team.workitem.commandline.commands.ImportWorkItemsCommand;
 import com.ibm.js.team.workitem.commandline.commands.MigrateWorkItemAttributeCommand;
 import com.ibm.js.team.workitem.commandline.commands.PrintTypeAttributesCommand;
@@ -35,6 +38,9 @@ import com.ibm.js.team.workitem.commandline.commands.PrintTypesCommand;
 import com.ibm.js.team.workitem.commandline.commands.PrintWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.commands.UpdateWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.commands.ValidateOSLCLinksCommand;
+import com.ibm.js.team.workitem.commandline.commands.ValidateUserAllocationsCommand;
+import com.ibm.js.team.workitem.commandline.commands.ValidateUserAllocationsRESTCommand;
+import com.ibm.js.team.workitem.commandline.commands.ValidateWorkItemStatesCommand;
 import com.ibm.js.team.workitem.commandline.framework.IWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.framework.WorkItemCommandLineException;
 import com.ibm.js.team.workitem.commandline.helper.WorkItemUpdateHelper;
@@ -100,18 +106,23 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	 * @param parameterManager
 	 */
 	private void addSupportedCommands(ParameterManager parameterManager) {
-		// addSupportedCommand(new ExportCommand(new ParameterManager(
-		// parameterManager.getArguments())));
-		addSupportedCommand(new PrintWorkItemCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new ValidateOSLCLinksCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new PrintTypesCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new PrintTypeAttributesCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new CreateWorkItemCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new UpdateWorkItemCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new MigrateWorkItemAttributeCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new ImportWorkItemsCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new ExportWorkItemsCommand(new ParameterManager(parameterManager.getArguments())));
 		addSupportedCommand(new BulkUpdateWorkItemsCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new CreateWorkItemCommand(new ParameterManager(parameterManager.getArguments())));
+		// addSupportedCommand(new ExportCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new ExportWorkItemsCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new FindEnumerationIdConflictsCommand(parameterManager));
+		addSupportedCommand(new FindInProjectAreasCommand(parameterManager));
+		addSupportedCommand(new ImportItemStatesCommand(parameterManager));
+		addSupportedCommand(new ImportWorkItemsCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new MigrateWorkItemAttributeCommand(parameterManager));
+		addSupportedCommand(new PrintTypeAttributesCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new PrintTypesCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new PrintWorkItemCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new UpdateWorkItemCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new ValidateOSLCLinksCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new ValidateUserAllocationsCommand(parameterManager));
+		addSupportedCommand(new ValidateUserAllocationsRESTCommand(parameterManager));
+		addSupportedCommand(new ValidateWorkItemStatesCommand(parameterManager));
 	}
 
 	/**
