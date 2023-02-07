@@ -7,7 +7,11 @@
  *******************************************************************************/
 package com.ibm.js.team.workitem.commandline.utils;
 
+import java.net.IDN;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -134,8 +138,33 @@ public class ProcessAreaUtil {
 	 * @param name
 	 * @return
 	 */
+	public static String getEncodedName(String name) {
+		String encodedName = ">> ERROR: See Log <<";
+		String urlStr = "http://not-used?name=" + name;		
+		try {
+			URL url= new URL(urlStr); 
+			URI nameUri = new URI(url.getProtocol(), url.getUserInfo(), IDN.toASCII(url.getHost()), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+			String nameEncodedURLQuery=nameUri.toASCIIString().split("\\?")[1];
+		    encodedName =  nameEncodedURLQuery.split("=")[1];
+			System.out.println("URL Encoded Project Area Name: " + encodedName);
+		} catch (MalformedURLException e) {
+			// will never happen
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			// will never happen
+			e.printStackTrace();
+		}
+		return encodedName;
+	}
+	
+	/**
+	 * URI conversion to be able to find from a URI
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public static URI getURIFromName(String name) {
-		URI uri = URI.create(name.replaceAll(" ", "%20"));
+		URI uri = URI.create(getEncodedName(name));
 		return uri;
 	}
 
@@ -145,8 +174,8 @@ public class ProcessAreaUtil {
 	 * @param name
 	 * @return
 	 */
-	public static URI getNameFromURI(String name) {
-		URI uri = URI.create(name.replaceAll("%20", " "));
+	public static URI getNameFromURI(String uriString) {
+		URI uri = URI.create(getEncodedName(uriString));
 		return uri;
 	}
 

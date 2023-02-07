@@ -81,7 +81,7 @@ public abstract class AbstractCommand implements IWorkItemCommand {
 	/**
 	 * @return a progress monitor or null
 	 */
-	protected IProgressMonitor getMonitor() {
+	public IProgressMonitor getMonitor() {
 		return monitor;
 	}
 

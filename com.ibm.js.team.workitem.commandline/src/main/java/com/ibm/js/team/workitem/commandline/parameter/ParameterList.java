@@ -106,6 +106,10 @@ public class ParameterList implements Iterable<Parameter> {
 		Parameter param = fParameterList.get(name);
 		if (param != null) {
 			param.setConsumed();
+			// Some users report that project area names including underscore or dash are not loading
+			if (name.equals("projectarea")) {
+				return param.getValue().replaceAll(">", "-").replaceAll("<","_");
+			}
 			return param.getValue();
 		}
 		return null;

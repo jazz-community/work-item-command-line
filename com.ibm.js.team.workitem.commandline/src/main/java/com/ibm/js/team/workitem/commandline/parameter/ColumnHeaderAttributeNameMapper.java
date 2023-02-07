@@ -226,6 +226,8 @@ public class ColumnHeaderAttributeNameMapper {
 		allAttribs.addAll(attributeNameMap.values());
 		Collections.sort(allAttribs);
 		sortedAttribs.addAll(allAttribs);
+		sortedAttribs.add(ParameterIDMapper.PSEUDO_ATTRIBUTE_ATTACHMENTS); // This is not a property add the artificial
+																			// one
 
 		Set<String> linkNames = ParameterLinkIDMapper.getLinkNames();
 		ArrayList<String> sortedLinks = new ArrayList<String>(linkNames.size());

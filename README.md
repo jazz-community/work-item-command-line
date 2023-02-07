@@ -245,10 +245,77 @@ The switch /ignoreErrors ignores errors such as attributes or values not availab
     repository="value"
     user="value"
     password="value"
+    passwordFile="value"
     projectArea="value"
     query="value"
     /trace
     /debug
+```
+
+### Find if there are attribute Id's that conflict with enumeration literal id's.
+
+```bash
+-findidconflicts
+  repository="value"
+  user="value" 
+  password="value"
+  passwordFile="value"
+  projectArea="value"
+  /showProjects
+  /showCatalog
+  /verbose
+  /trace
+  /debug
+```
+
+### Find any string in the project area states.
+
+```bash
+-findinprojectareas 
+  repository="value"
+  user="value" 
+  password="value"
+  passwordFile="value"
+  projectArea="value"
+  search="value"
+  /trace
+  /debug
+```
+
+### Validate work item states and write them to files if exportFolder provided.
+IMPORTANT: The user must have JAZZADMIN rights and the Repodebug Advanced Property must be enabled to run some tools.
+The validateworkitems uses the Repodebug service.  
+
+```bash
+-validateworkitems
+  repository="value"
+  user="value" 
+  password="value"
+  passwordFile="value"
+  projectArea="value"
+  query="value"
+  search="value"
+  exportFolder="value"
+  /trimHtml
+  /local 
+  /linksOnly
+  /statesOnly
+  /trace
+  /debug
+```
+
+### Import Work Item States.
+importstates is used to replace the states in the repository. This command should be used with great care.
+
+```bash
+-importstates
+  repository="value"
+  user="value" 
+  password="value"
+  passwordFile="value"
+  importStatesFolder="value"
+  /trace
+  /debug
 ```
 
 ### RMI Mode - Optional
@@ -733,7 +800,33 @@ Provide a query name. The query by default is searched as a personal query owned
 
 ### Query Source
 
-Provide a list of project area and team area names. 
+Provide a list of project area and team area names.
+	
+### exportFolder
+    Folder to export work item states.
+
+### passwordFile
+    The command can use a password file to give user id and password to the remote servers. 
+    passwordFile="pw.txt" 
+    The content of the password file is a subset of the server url and the user id and password.
+	
+### search
+    The string to search for in project areas and states. 
+	
+### /debug
+    Show extra logging which helps with debug analysis.
+  
+### /trace
+    Show very detailed logging and log any read states.
+	
+### /statesOnly
+      Only check states, not links.
+    
+### /linksOnly
+      Only check links, not states.
+      
+### /local
+      Only check local links, not OSLC links.
 
 # License
 
