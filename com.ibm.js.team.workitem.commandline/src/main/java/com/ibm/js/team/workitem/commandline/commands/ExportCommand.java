@@ -51,6 +51,7 @@ import com.opencsv.CSVWriter;
  * This command uses opencsv-2.3jar @see http://opencsv.sourceforge.net/ as
  * external library to read the CSV file.
  * 
+ * @deprecated
  */
 public class ExportCommand extends AbstractTeamRepositoryCommand {
 

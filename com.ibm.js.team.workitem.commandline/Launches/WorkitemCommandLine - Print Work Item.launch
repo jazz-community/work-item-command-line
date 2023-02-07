@@ -1,11 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
-<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/com.ibm.js.team.workitem.commandline/src/main/java/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
-</listAttribute>
-<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
-<listEntry value="1"/>
-</listAttribute>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-printworkitem /ignoreErrors repository=&quot;https://elm.example.com:9443/ccm&quot; user=ralph password=ralph id=236 /allColumns /suppressAttributeExceptions attachmentFolder=&quot;c:\aaTemp\export&quot; /attribute_NamesAsIDs /asrt_ceclipse"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/com.ibm.js.team.workitem.commandline/src/main/java/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="com.ibm.js.team.workitem.commandline"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-printworkitem /ignoreErrors repository=&quot;https://elm.example.com:9443/ccm&quot; user=ralph password=ralph id=15 /allColumns /suppressAttributeExceptions attachmentFolder=&quot;c:\aaTemp\export&quot; /attribute_NamesAsIDs /asrt_ceclipse"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
 </launchConfiguration>
