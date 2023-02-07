@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2018 IBM Corporation
+ * Copyright (c) 2015-2023 IBM Corporation
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -30,6 +30,7 @@ import com.ibm.js.team.workitem.commandline.OperationResult;
 import com.ibm.js.team.workitem.commandline.framework.AbstractTeamRepositoryCommand;
 import com.ibm.js.team.workitem.commandline.framework.IWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.framework.WorkItemCommandLineException;
+import com.ibm.js.team.workitem.commandline.helper.WorkItemOslcLinkHelper;
 import com.ibm.js.team.workitem.commandline.parameter.ParameterManager;
 import com.ibm.js.team.workitem.commandline.utils.ProcessAreaUtil;
 import com.ibm.js.team.workitem.commandline.utils.QueryUtil;
@@ -135,24 +136,19 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 					new OSLC_TYPE("http://open-services.net/ns/cm#relatedTestScript", SystemType.QM));
 
 			/*
-			 * CCM to CCM links are not checked because they don't use link
-			 * index
+			 * CCM to CCM links are not checked because they don't use link index
 			 */
-			// put(WorkItemLinkTypes.AFFECTED_BY_DEFECT /*
-			// "com.ibm.team.workitem.linktype.cm.affectedByDefect" */,
-			// "http://open-services.net/ns/cm#affectedByDefect");
-			// put(WorkItemLinkTypes.AFFECTS_PLAN_ITEM /*
-			// "com.ibm.team.workitem.linktype.cm.affectsPlanItem" */,
-			// "http://open-services.net/ns/cm#affectsPlanItem");
+			 put(WorkItemLinkTypes.AFFECTED_BY_DEFECT /* "com.ibm.team.workitem.linktype.cm.affectedByDefect" */,
+					 new OSLC_TYPE("http://open-services.net/ns/cm#affectedByDefect", SystemType.CCM));
+			 put(WorkItemLinkTypes.AFFECTS_PLAN_ITEM /* "com.ibm.team.workitem.linktype.cm.affectsPlanItem" */,
+					 new OSLC_TYPE("http://open-services.net/ns/cm#affectsPlanItem", SystemType.CCM));
 
 			/* Tracks/Contributes To are external ccm link types not oslc */
-			// put(WorkItemLinkTypes.CONTRIBUTES_TO_WORK_ITEM /*
-			// "com.ibm.team.workitem.linktype.trackedworkitem" */,
-			// "http://open-services.net/ns/cm#trackedWorkItem");
-			// put(WorkItemLinkTypes.TRACKS_WORK_ITEM /*
-			// "com.ibm.team.workitem.linktype.tracksworkitem" */,
-			// "http://open-services.net/ns/cm#tracksWorkItem");
-
+			 put(WorkItemLinkTypes.CONTRIBUTES_TO_WORK_ITEM /* "com.ibm.team.workitem.linktype.trackedworkitem" */,
+					 new OSLC_TYPE("http://open-services.net/ns/cm#trackedWorkItem", SystemType.CCM));
+			 put(WorkItemLinkTypes.TRACKS_WORK_ITEM /* "com.ibm.team.workitem.linktype.tracksworkitem" */,
+					 new OSLC_TYPE("http://open-services.net/ns/cm#tracksWorkItem", SystemType.CCM));
+			 
 			// TODO: add more backlinks
 			// put("none", "http://open-services.net/ns/cm#ChangeRequest");
 			// put("none",
@@ -164,6 +160,10 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	private IWorkItemClient workItemService;
 	private HashMap<String, ITeamRawRestServiceClient> repoClients = new HashMap<String, ITeamRawRestServiceClient>();
 
+	public IWorkItemClient getWorkItemService() {
+		return workItemService;
+	}
+	
 	public static final class GetRDFResourceParams {
 		public String resourceURL;
 		public String oslcCoreVersion;
@@ -331,19 +331,28 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 						logger.trace("gcUriString: " + gcUriString);
 
 						if (gcUriString != null && !gcUriString.isEmpty()) {
+							logger.debug("\nGlobal Configuration Uri: " + gcUriString 
+									+ "\nfor work item: " + workItem.getId() + " link type: " + linkType.getLinkTypeId());
 							validateGCLink(gcUriString, workItem.getId(), currentWorkItemURI, reference);
 						} else {
 							// TODO validateLink(workItem, currentWorkItemURI,
 							// endPoint, reference);
 							logger.warn("No GlobalConfiguration for work item: " + workItem.getId() + " link type: "
 									+ linkType.getLinkTypeId());
+							validateLdxWithoutGCLinks(workItem, endPoint, reference, logger);
 						}
 					}
 				}
 			}
 		}
 	}
-
+	
+	private void validateLdxWithoutGCLinks(IWorkItem workItem, IEndPointDescriptor endPointDescriptor, IReference reference, Logger logger)
+			throws NotLoggedInException, IOException, TeamRepositoryException, URISyntaxException {
+		 WorkItemOslcLinkHelper helper= new WorkItemOslcLinkHelper();
+		 helper.validateLdxWithoutGCLinks(this, workItem, endPointDescriptor, reference, logger);
+	}
+	
 	/**
 	 * Validate that the GC link is known by the target server and that the
 	 * artifact exists.
@@ -447,7 +456,7 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 																															// not
 
 	/* gcUrl can be empty */
-	private JSONArray getLDXBackLinkViaRest(URI targetUri, String gcUrl, String linkType)
+	public JSONArray getLDXBackLinkViaRest(URI targetUri, String gcUrl, String linkType)
 			throws NotLoggedInException, IOException, TeamRepositoryException {
 		JSONArray result = null;
 		try {
@@ -501,32 +510,6 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 		return result;
 	}
 
-	private ITeamRawRestServiceClient getRestClient(URI targetUri) throws TeamRepositoryException {
-		String repoUri = getRepositoryUri(targetUri);
-		ITeamRawRestServiceClient restClient = repoClients.get(repoUri);
-		if (restClient == null) {
-			ITeamRepository repo = login(repoUri);
-			restClient = repo.getRawRestServiceClient();
-			repoClients.put(repoUri, restClient);
-		}
-		return restClient;
-	}
-
-	private String getRepositoryUri(URI targetUri) {
-		String repositoryUri = null;
-		String path[] = targetUri.getPath().split("/");
-		if (path.length >= 2) {
-			String newPath = path[0] + "/" + path[1];
-			repositoryUri = targetUri.toString().replace(targetUri.getPath(), newPath);
-		}
-		return repositoryUri;
-	}
-
-	private IResponse createResponse(IRawRestClientConnection.Response rawResponse) throws TeamRepositoryException {
-		return new Response(rawResponse.getStatusCode(), new HttpHeaders(rawResponse.getAllResponseHeaders()),
-				rawResponse.getResponseStream());
-	}
-
 	// https://<yourhostname>/<applicationContext>/linkIndex (e.g.
 	// https://rqmple2.rtp.raleigh.ibm.com:9443/qm/linkIndex)
 	private String getLinkIndexProviderUri(URI targetUri) throws TeamRepositoryException, MalformedURLException {
@@ -569,7 +552,7 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	private static final String LINK_TYPE = "linkType";
 	private static final String TRIPLE_TARGET_URL = "targetURL";
 
-	private boolean isLinkInTripleEqual(JSONObject triple, String sourceURL, String linkType, String targetURL) {
+	public boolean isLinkInTripleEqual(JSONObject triple, String sourceURL, String linkType, String targetURL) {
 		if (triple == null) {
 			logger.warn("\n... *** null triple"); // should not happen
 			return false;

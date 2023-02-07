@@ -7,7 +7,11 @@
  *******************************************************************************/
 package com.ibm.js.team.workitem.commandline.framework;
 
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -16,12 +20,18 @@ import com.ibm.js.team.workitem.commandline.OperationResult;
 import com.ibm.js.team.workitem.commandline.parameter.ParameterManager;
 import com.ibm.js.team.workitem.commandline.scenarionotifier.ExpensiveScenarioService;
 import com.ibm.js.team.workitem.commandline.scenarionotifier.IExpensiveScenarioService;
+import com.ibm.js.team.workitem.commandline.utils.FileUtil;
+import com.ibm.team.calm.foundation.common.HttpHeaders;
+import com.ibm.team.calm.foundation.common.IHttpClient.IResponse;
+import com.ibm.team.calm.foundation.common.internal.Response;
 import com.ibm.team.process.client.IProcessClientService;
 import com.ibm.team.repository.client.ITeamRepository;
 import com.ibm.team.repository.client.ITeamRepository.ILoginHandler;
 import com.ibm.team.repository.client.ITeamRepository.ILoginHandler.ILoginInfo;
 import com.ibm.team.repository.client.TeamPlatform;
 import com.ibm.team.repository.common.TeamRepositoryException;
+import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient;
+import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient.IRawRestClientConnection;
 import com.ibm.team.workitem.common.IAuditableCommon;
 import com.ibm.team.workitem.common.IWorkItemCommon;
 
@@ -170,31 +180,98 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	/**
 	 * @return the IAuditableCommon
 	 */
-	protected IAuditableCommon getAuditableCommon() {
+	public IAuditableCommon getAuditableCommon() {
 		return (IAuditableCommon) getTeamRepository().getClientLibrary(IAuditableCommon.class);
 	}
 
 	/**
-	 * Log into the teamrepository. Get the parameters from the parameter
-	 * managers list and use the values.
+	 * Log into the teamrepository. Get the parameters from the parameter managers
+	 * list and use the values.
 	 * 
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
 	private ITeamRepository login() throws TeamRepositoryException {
-		String repository = getParameterManager()
+		String repositoryUrl = getParameterManager()
 				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_REPOSITORY_URL_PROPERTY);
-		String user = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY);
-		String password = getParameterManager()
-				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY);
 
-		ITeamRepository teamRepository = TeamPlatform.getTeamRepositoryService().getTeamRepository(repository);
-		teamRepository.registerLoginHandler(new LoginHandler(user, password));
-		teamRepository.setAutoLogin(true);
-		teamRepository.login(getMonitor());
-		return teamRepository;
+		return login(repositoryUrl);
+	}
+	
+	private static HashMap<String, String[]> fPasswordFileContent;
+	private HashMap<String, String[]> getPasswordFileContentMap(String passwordFile) {
+		if (fPasswordFileContent != null) {
+			return fPasswordFileContent;
+		}
+		
+		fPasswordFileContent= new HashMap<String, String[]>();
+		ArrayList<String> fileContent= FileUtil.getFileContent(passwordFile);
+		String key= null;
+		for (String line : fileContent) {
+			String[] elements= line.split(" ");
+			if (elements.length< 3) {
+				System.out.println("Invalid password file line: " + line);
+			} else {
+				key= elements[0];
+			}
+			if (key != null) {				
+				fPasswordFileContent.put(key, elements);
+				key= null;
+			}
+		
+		}
+		return fPasswordFileContent;
+	}
+	
+	private String[] getUserAndPasswordFromPasswordFile(String passwordFile, String repositoryUrl) {
+		HashMap<String, String[]> pwMap= getPasswordFileContentMap(passwordFile);
+		if(pwMap.get(repositoryUrl) != null) {
+			return new String[] { pwMap.get(repositoryUrl)[1],  pwMap.get(repositoryUrl)[1]}; 
+		}
+		
+		// Can't find exact match, check contains
+		Set<String> keys= pwMap.keySet();
+		for (String key : keys) {
+			if(repositoryUrl.indexOf(key) != -1) {
+				pwMap.put(repositoryUrl, pwMap.get(key));
+				return new String[] { pwMap.get(key)[1],  pwMap.get(key)[2]};
+			}
+		}		
+		System.out.println("No userid and password found for: " + repositoryUrl);
+		
+		return null;
+	}
+	
+	private HashMap<String, ITeamRawRestServiceClient> fRepoClients = new HashMap<String, ITeamRawRestServiceClient>();
+	public ITeamRawRestServiceClient getRestClient(URI targetUri) throws TeamRepositoryException {
+		String repoUri = getRepositoryUri(targetUri);
+		ITeamRawRestServiceClient restClient = fRepoClients.get(repoUri);
+		if (restClient == null) {
+			ITeamRepository repo = login(repoUri);
+			restClient = repo.getRawRestServiceClient();
+			fRepoClients.put(repoUri, restClient);
+		}
+		return restClient;
 	}
 
+	private String fRepoUrl= null;
+	protected String getRepositoryUri(URI targetUri) {
+		if (fRepoUrl != null) return fRepoUrl;
+		String repositoryUri = null;
+		String path[] = targetUri.getPath().split("/");
+		if (path.length >= 2) {
+			String newPath = path[0] + "/" + path[1];
+			repositoryUri = targetUri.toString().replace(targetUri.getPath(), newPath);
+		}
+		fRepoUrl= repositoryUri;
+		return repositoryUri;
+	}
+
+	public IResponse createResponse(IRawRestClientConnection.Response rawResponse) throws TeamRepositoryException {
+		return new Response(rawResponse.getStatusCode(), new HttpHeaders(rawResponse.getAllResponseHeaders()),
+				rawResponse.getResponseStream());
+	}
+	
 	/**
 	 * Log into the teamrepository. Get the parameters from the parameter
 	 * managers list and use the values.
@@ -202,22 +279,46 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
-	protected ITeamRepository login(String repository) throws TeamRepositoryException {
-		String user = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY);
-		String password = getParameterManager().consumeParameter(
-				IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY);
+	protected ITeamRepository login(String repositoryUrl) throws TeamRepositoryException {
+		String passwordFile = getParameterManager()
+				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_PASSWORD_FILE_PROPERTY);
 
-		ITeamRepository teamRepository = TeamPlatform.getTeamRepositoryService().getTeamRepository(repository);
+		String user= null;
+		String password= null;
+		if (passwordFile != null) {
+			String[] userAndPassword= getUserAndPasswordFromPasswordFile(passwordFile, repositoryUrl);
+			if (userAndPassword != null) {				
+				user= userAndPassword[0];
+				password= userAndPassword[1];
+			}
+		} 
+		
+		if (user == null) {			
+			user = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_USER_ID_PROPERTY);
+			password = getParameterManager()
+					.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_PASSWORD_PROPERTY);
+		}
+		
+		if (user == null) {
+			System.out.println("No user specified.");
+			System.exit(500);
+		}
+		if (password == null) {
+			System.out.println("No password specified.");
+			System.exit(500);
+		}
+		
+		ITeamRepository teamRepository = TeamPlatform.getTeamRepositoryService().getTeamRepository(repositoryUrl);
 		teamRepository.registerLoginHandler(new LoginHandler(user, password));
 		teamRepository.login(getMonitor());
 		return teamRepository;
 	}
-
+		
 	/**
 	 * Internal login handler to perform the login to the repository
 	 * 
 	 */
-	private static class LoginHandler implements ILoginHandler, ILoginInfo {
+	private class LoginHandler implements ILoginHandler, ILoginInfo {
 
 		private String fUserId;
 		private String fPassword;

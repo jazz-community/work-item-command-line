@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2019 IBM Corporation
+ * Copyright (c) 2015-2023 IBM Corporation
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -51,6 +51,7 @@ import com.opencsv.CSVWriter;
  * This command uses opencsv-2.3jar @see http://opencsv.sourceforge.net/ as
  * external library to read the CSV file.
  * 
+ * @deprecated
  */
 public class ExportCommand extends AbstractTeamRepositoryCommand {
 
@@ -82,7 +83,7 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	// "\"id,workItemType,internalState,internalPriority,internalSeverity,summary,owner,creator\"";
 
 	// The encoding to be used when saving the file
-	private String fFileEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_8;
+	private String fFileEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_16LE;
 	// Delimiter to be used for columns
 	private char fDelimiter = IWorkItemCommandLineConstants.DEFAULT_DELIMITER;
 	// Export headers as ID's?

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2018 IBM Corporation
+ * Copyright (c) 2015-2023 IBM Corporation
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -28,6 +28,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import com.ibm.js.team.workitem.commandline.commands.BulkUpdateWorkItemsCommand;
 import com.ibm.js.team.workitem.commandline.commands.CreateWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.commands.ExportWorkItemsCommand;
+import com.ibm.js.team.workitem.commandline.commands.FindEnumerationIdConflictsCommand;
+import com.ibm.js.team.workitem.commandline.commands.FindInProjectAreasCommand;
+import com.ibm.js.team.workitem.commandline.commands.ImportItemStatesCommand;
 import com.ibm.js.team.workitem.commandline.commands.ImportWorkItemsCommand;
 import com.ibm.js.team.workitem.commandline.commands.MigrateWorkItemAttributeCommand;
 import com.ibm.js.team.workitem.commandline.commands.PrintTypeAttributesCommand;
@@ -35,6 +38,9 @@ import com.ibm.js.team.workitem.commandline.commands.PrintTypesCommand;
 import com.ibm.js.team.workitem.commandline.commands.PrintWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.commands.UpdateWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.commands.ValidateOSLCLinksCommand;
+import com.ibm.js.team.workitem.commandline.commands.ValidateUserAllocationsCommand;
+import com.ibm.js.team.workitem.commandline.commands.ValidateUserAllocationsRESTCommand;
+import com.ibm.js.team.workitem.commandline.commands.ValidateWorkItemStatesCommand;
 import com.ibm.js.team.workitem.commandline.framework.IWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.framework.WorkItemCommandLineException;
 import com.ibm.js.team.workitem.commandline.helper.WorkItemUpdateHelper;
@@ -100,18 +106,23 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	 * @param parameterManager
 	 */
 	private void addSupportedCommands(ParameterManager parameterManager) {
-		// addSupportedCommand(new ExportCommand(new ParameterManager(
-		// parameterManager.getArguments())));
-		addSupportedCommand(new PrintWorkItemCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new ValidateOSLCLinksCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new PrintTypesCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new PrintTypeAttributesCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new CreateWorkItemCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new UpdateWorkItemCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new MigrateWorkItemAttributeCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new ImportWorkItemsCommand(new ParameterManager(parameterManager.getArguments())));
-		addSupportedCommand(new ExportWorkItemsCommand(new ParameterManager(parameterManager.getArguments())));
 		addSupportedCommand(new BulkUpdateWorkItemsCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new CreateWorkItemCommand(new ParameterManager(parameterManager.getArguments())));
+		// addSupportedCommand(new ExportCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new ExportWorkItemsCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new FindEnumerationIdConflictsCommand(parameterManager));
+		addSupportedCommand(new FindInProjectAreasCommand(parameterManager));
+		addSupportedCommand(new ImportItemStatesCommand(parameterManager));
+		addSupportedCommand(new ImportWorkItemsCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new MigrateWorkItemAttributeCommand(parameterManager));
+		addSupportedCommand(new PrintTypeAttributesCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new PrintTypesCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new PrintWorkItemCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new UpdateWorkItemCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new ValidateOSLCLinksCommand(new ParameterManager(parameterManager.getArguments())));
+		addSupportedCommand(new ValidateUserAllocationsCommand(parameterManager));
+		addSupportedCommand(new ValidateUserAllocationsRESTCommand(parameterManager));
+		addSupportedCommand(new ValidateWorkItemStatesCommand(parameterManager));
 	}
 
 	/**
@@ -233,7 +244,7 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 			return runRMIClient(rmiInfo, args);
 		}
 		// direct call, we are not running in RMI mode
-		return runCommands(parameterManager);
+		return runCommands(parameterManager, args);
 	}
 
 	/**
@@ -249,7 +260,7 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	@Override
 	public OperationResult runOperation(String[] args) throws TeamRepositoryException, RemoteException {
 		ParameterManager parameterManager = new ParameterManager(ParameterParser.parseParameters(args));
-		return runCommands(parameterManager);
+		return runCommands(parameterManager, args);
 	}
 
 	/**
@@ -266,7 +277,7 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	 *            - the parametermanager that contains the parsed arguments.
 	 * @return
 	 */
-	private OperationResult runCommands(ParameterManager parameterManager) {
+	private OperationResult runCommands(ParameterManager parameterManager, String[] args) {
 		IProgressMonitor monitor = new NullProgressMonitor();
 		OperationResult result = new OperationResult();
 		addSupportedCommands(parameterManager);
@@ -289,7 +300,14 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 		// The command adds its required parameters to the list
 		try {
 			// Do we have all parameters?
-			result.appendResultString("Executing command: " + command + "\n");
+			String argString= "";
+			if(args != null && args.length > 0) {
+				for (int i=1;i<args.length;i++) { // 0 is the command
+					argString += (args[i].indexOf("password") != -1 ? " password=****" : " " + args[i]);
+				}
+			}
+			result.appendResultString("\nExecuting command: " + command + argString);
+			
 			toRun.validateRequiredParameters();
 		} catch (WorkItemCommandLineException e) {
 			result.appendResultString(e.getMessage());

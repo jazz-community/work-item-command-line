@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2017 IBM Corporation
+ * Copyright (c) 2015-2023 IBM Corporation
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -25,6 +25,15 @@ public interface IWorkItemCommandLineConstants {
 	public static final String COMMAND_EXPORT_WORKITEMS = "exportworkitems";
 	public static final String COMMAND_PRINT_WORKITEM = "printworkitem";
 	public static final String COMMAND_VALIDATE_OSLC_LINKS = "validateoslclinks";
+	public static final String COMMAND_VALIDATE_USER_ALLOCATIONS = "validateuserallocations";       // unfinished
+	public static final String COMMAND_VALIDATE_USER_ALLOCATIONS_REST = "validateuserallocations2"; // unfinished
+
+	public static final String COMMAND_VALIDATE_WORKITEM_STATES= "validateworkitems";
+	public static final String COMMAND_FIND_ID_CONFLICTS = "findidconflicts";
+	public static final String COMMAND_FIND_IN_PROJECT_AREAS = "findinprojectareas";
+	
+	public static final String COMMAND_IMPORT_WORKITEM_STATES= "importstates";
+
 
 	// Switch to ignore single errors and trying to perform operation even if
 	// some parameters and values are not recognizable
@@ -52,10 +61,21 @@ public interface IWorkItemCommandLineConstants {
 	public static final String PARAMETER_USER_ID_PROPERTY_EXAMPLE = "user";
 	public static final String PARAMETER_PASSWORD_PROPERTY = "password";
 	public static final String PARAMETER_PASSWORD_PROPERTY_EXAMPLE = "password";
+	public static final String PARAMETER_SEARCH_STRING = "search";
+	public static final String PARAMETER_SEARCH_STRING_EXAMPLE = "MyWorkItemType";
+	/*
+	 * Password File format:
+	 * <url fragment> userid password
+	 * Example:
+	 * clm.example.com user234 password234
+	 * qm.example.com user456 password456
+	 */
+	public static final String PARAMETER_PASSWORD_FILE_PROPERTY = "passwordFile";
+	public static final String PARAMETER_PASSWORD_FILE_PROPERTY_EXAMPLE = "pw.txt";
 
 	// Special parameter constants needed by several commands
 	public static final String PARAMETER_WORKITEM_ID_PROPERTY = "id";
-	public static final String PROPERTY_WORKITEM_ID_PROPERTY_EXAMPLE = "123";
+	public static final String PARAMETER_WORKITEM_ID_PROPERTY_EXAMPLE = "123";
 
 	// The project area
 	public static final String PARAMETER_PROJECT_AREA_NAME_PROPERTY = "projectArea";
@@ -70,9 +90,12 @@ public interface IWorkItemCommandLineConstants {
 
 	// the mapping file
 	public static final String PARAMETER_TIMESTAMP_ENCODING = "timestampFormat";
-	public static final String PARAMETER_TIMESTAMP_ENCODING_EXAMPLE = "\""
-			+ TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A + "\"";
+	public static final String PARAMETER_TIMESTAMP_ENCODING_EXAMPLE = "\"" + TIMESTAMP_EXPORT_IMPORT_FORMAT_MMM_D_YYYY_HH_MM_A + "\"";
 
+	// Include history in state validation
+	public static final String PARAMETER_INCLUDE_HISTORY_PROPERTY = "includehistory";
+	public static final String PARAMETER_INCLUDE_HISTORY_PROPERTY_EXAMPLE = "true";	
+	
 	// Parsing
 	public static final String INFIX_PARAMETER_VALUE_SEPARATOR = "=";
 	public static final String PREFIX_COMMAND = "-";
@@ -92,10 +115,13 @@ public interface IWorkItemCommandLineConstants {
 	public static final String HTTP_PROTOCOL_PREFIX = "http";
 
 	// Import/Export work items
-	public static final char DEFAULT_DELIMITER = ';';
+	public static final char DEFAULT_DELIMITER = ',';
 
-	// The default encoding
+	// The default UTF-8 encoding
 	public static final String DEFAULT_ENCODING_UTF_8 = "UTF-8";
+	
+	// The default UTF-16 encoding
+	public static final String DEFAULT_ENCODING_UTF_16LE = "UTF-16LE";
 
 	// The default Quote character
 	public static final char DEFAULT_QUOTE_CHAR = '"';

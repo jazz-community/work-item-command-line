@@ -168,7 +168,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	private char fDelimiter = IWorkItemCommandLineConstants.DEFAULT_DELIMITER;
 
 	// The default encoding
-	private String fEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_8;
+	private String fEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_16LE;
 
 	// Multi pass mode
 	private boolean fMultipass = false;
@@ -396,7 +396,6 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			debug("Importing File: " + getImportFile().getAbsolutePath());
 			debug("Dumping rows - using ',' as seperator during print.");
 			List<String[]> myEntries = reader.readAll();
-			reader.close();
 
 			boolean skiptitle = true;
 			String[] header = null;
@@ -423,9 +422,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 					}
 					e.printStackTrace();
 				} finally {
-					if (reader != null) {
-						reader.close();
-					}
+					reader.close();
 				}
 			}
 			if (rowID < 2) {

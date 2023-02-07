@@ -95,7 +95,7 @@ public class PrintWorkItemCommand extends AbstractTeamRepositoryCommand {
 		super.setRequiredParameters();
 		// Add the parameters required to perform the operation
 		getParameterManager().syntaxAddRequiredParameter(IWorkItemCommandLineConstants.PARAMETER_WORKITEM_ID_PROPERTY,
-				IWorkItemCommandLineConstants.PROPERTY_WORKITEM_ID_PROPERTY_EXAMPLE);
+				IWorkItemCommandLineConstants.PARAMETER_WORKITEM_ID_PROPERTY_EXAMPLE);
 		getParameterManager().syntaxAddSwitch(IWorkItemCommandLineConstants.SWITCH_IGNOREERRORS);
 		getParameterManager().syntaxAddSwitch(SWITCH_PRINT_ATTRIBUTE_ID);
 		getParameterManager().syntaxAddSwitch(SWITCH_ALL_COLUMNS);
