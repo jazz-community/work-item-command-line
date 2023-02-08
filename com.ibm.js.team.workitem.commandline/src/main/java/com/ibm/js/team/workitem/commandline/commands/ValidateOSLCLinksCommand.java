@@ -211,11 +211,11 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	@Override
 	public OperationResult process() throws TeamRepositoryException {
 		// Set the logging level. Changed for Log4J2
-		Configurator.setLevel(LogManager.getLogger(logger).getName(),Level.WARN);
+		Configurator.setLevel(logger.getName(),Level.WARN);
 		if (getParameterManager().hasSwitch(SWITCH_DEBUG))
-			Configurator.setLevel(LogManager.getLogger(logger).getName(),Level.DEBUG);
+			Configurator.setLevel(logger.getName(),Level.DEBUG);
 		if (getParameterManager().hasSwitch(SWITCH_TRACE))
-			Configurator.setLevel(LogManager.getLogger(logger).getName(),Level.TRACE);
+			Configurator.setLevel(logger.getName(),Level.TRACE);
 
 		// Get the parameters such as project area name and
 		// run the operation
