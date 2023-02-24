@@ -61,7 +61,9 @@ All of the following examples use bash multiline syntax for legibility. Leave th
 Unzip the Plain Java Client Libraries into a folder on your local disc for example C:\ELM702\PlainJavaAPI. 
 The JAR files are supposed to be in this specific folder.  
 
-**Build** your own WCL using the source code or **download** a prebuilt WCL from the [Releases](https://github.com/jazz-community/work-item-command-line/releases) and **uncompress** the file. 
+**Build** your own WCL using the source code or **download** a prebuilt WCL from the [Releases](https://github.com/jazz-community/work-item-command-line/releases) and **uncompress** the file.
+
+For Linux or Mac, We'll need to set the appropriate permissions with 'chmod' for wcl.sh file.
 
 To run WCL, edit the wcl.bat or wcl.sh and **change** the environment variables **JAVA_HOME** and **PLAIN_JAVA** to your Java JRE and the Plain Java Client Libraries you installed to your values e.g.
 
