@@ -1,5 +1,5 @@
 #!/bin/sh
-JAVA_HOME=/usr/local/openjdk-8
+JAVA_HOME=/usr/bin/java
 export JAVA_HOME
 PLAIN_JAVA=/var/plainjava
 export PLAIN_JAVA
