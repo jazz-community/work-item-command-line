@@ -70,6 +70,7 @@ To run WCL, edit the wcl.bat or wcl.sh and **change** the environment variables 
 PLAIN_JAVA=C:\ELM702\PlainJavaAPI
 
 For Mac, if you're trying to run wcl.sh and are getting a message "/usr/bin/java/bin/java: Not a directory", then you need to update the JAVA_HOME value in the wcl.sh script.
+
 To locate potential Java installations on your Mac, execute the following command:
 /usr/libexec/java_home -V
 
