@@ -69,7 +69,8 @@ To run WCL, edit the wcl.bat or wcl.sh and **change** the environment variables 
 
 PLAIN_JAVA=C:\ELM702\PlainJavaAPI
 
-For Mac, you want to find java installation Path, execute the following command:
+For Mac, if you're trying to run wcl.sh and are getting a message "/usr/bin/java/bin/java: Not a directory", then you need to update the JAVA_HOME value in the wcl.sh script.
+To locate potential Java installations on your Mac, execute the following command:
 /usr/libexec/java_home -V
 
 Some commands use special libraries that I can not bundle with the download. The libraries and how to get them can be found in the [ReadMe.txt](https://github.com/jazz-community/work-item-command-line/blob/master/com.ibm.js.team.workitem.commandline/lib/ReadMe.txt).
