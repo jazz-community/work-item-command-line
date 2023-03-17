@@ -27,8 +27,6 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.shared.JenaException;
 import com.ibm.js.team.workitem.commandline.commands.ValidateOSLCLinksCommand;
 import com.ibm.js.team.workitem.commandline.commands.ValidateOSLCLinksCommand.GetRDFResourceParams;
-// import com.ibm.team.calm.foundation.common.IHttpClient.HttpAccessException;
-// import com.ibm.team.calm.foundation.common.IHttpClient.IResponse;
 import com.ibm.team.calm.foundation.common.XMLHelper.XMLSerializeException;
 import com.ibm.team.calm.foundation.common.internal.OSLCResourceAccess;
 import com.ibm.team.calm.foundation.common.internal.RDFUtils;
@@ -57,7 +55,6 @@ import com.ibm.team.workitem.common.model.WorkItemLinkTypes;
  * Class helps with accessing OSLC Link
  * 
  */
-@SuppressWarnings({ "deprecation" })
 public class WorkItemOslcLinkHelper {
 	public static final String CONFIGURATION_MANAGEMENT_CONTEXT_HEADER_NAME = "X-OLSC-Configuration-Context"; //$NON-NLS-1$
 	// In the LDX calls, the forward link is stored
@@ -219,7 +216,7 @@ public class WorkItemOslcLinkHelper {
 							
 							boolean isValid = false;
 							if (result != null && !result.isSetErrorMessage()) {
-								isValid = validateRDFBackLink(endPointDescriptor, result, currentWorkItemURI,
+								isValid = validateRDFBackLink(command, endPointDescriptor, result, currentWorkItemURI,
 										oslcResource, workItem); // log validation
 								backLinkMissing = backLinkMissing || !isValid;
 //								backLinkMessage += "\n RDF Linked resource " + oslcResource.resourceURL + " isValid:"
@@ -271,17 +268,20 @@ public class WorkItemOslcLinkHelper {
 														+ " |linkType: " + triple.get("linkType") + " |Target:"
 														+ triple.get("targetURL"));
 											} else {
-												getTracingLog().trace("\n... Skipping LDX link with source: "
+												getTracingLog().debug("\n... Skipping LDX link with source: "
 														+ triple.get("sourceURL") + " |linkType: "
 														+ triple.get("linkType") + " |Target: "
 														+ triple.get("targetURL"));
 											}
 										}
 										if (!wasFound) {
-											getTracingLog().warn("\n*** Warning *** Backlink not found for linkType: "
+											getTracingLog().trace("\n*** Warning *** Backlink not found for linkType: "
 													+ reference.getLink().getLinkTypeId() + " |target: "
 													+ reference.getLink().getTargetRef().createURI().toString()
 													+ "|gc: " + gcUri);
+											
+											command.addWorkitemWithoutBacklinks(reference.getLink().getLinkTypeId(), 
+													reference.getLink().getTargetRef().createURI().toString(), oslcResource.resourceURL);
 										}
 									}
 								}
@@ -291,8 +291,11 @@ public class WorkItemOslcLinkHelper {
 							} // end LDX Service plus REST
 						}
 					} catch (Exception e) {
-						getTracingLog().error("-Error 1:" + e + "\n Exception reading link: "
-								+ endPointDescriptor.getId() + " message: " + e.getMessage());
+						getTracingLog().error("Error: " + e
+								+ "\n Exception reading link type: " + endPointDescriptor.getId() 
+								+ "\n    from work item: " + currentWorkItemURI.toString()
+								+ "\n    reference: " + reference.toString()
+								+ "\n    message: " + e.getMessage());
 	//					backLinkUnreachable = true;
 					}
 				} else { // not applicable or excluded
@@ -454,7 +457,7 @@ public class WorkItemOslcLinkHelper {
 	 */
 	private static ArrayList<String> fMissingEndpointList = new ArrayList<String>();
 
-	private boolean validateRDFBackLink(IEndPointDescriptor targetEndPoint, ResourceResultDTO targetDTO, URI sourceUri,
+	private boolean validateRDFBackLink(ValidateOSLCLinksCommand command, IEndPointDescriptor targetEndPoint, ResourceResultDTO targetDTO, URI sourceUri,
 			GetRDFResourceParams resource, IWorkItem workItem) {
 		String sourceLinkTypeId = targetEndPoint.getLinkType().getLinkTypeId();
 		String targetOslcLinkTypeId = REVERSE_OSLC_MAP.get(sourceLinkTypeId);
@@ -484,10 +487,10 @@ public class WorkItemOslcLinkHelper {
 				Triple trip = statement.asTriple();
 				String linkType = trip.getPredicate().getURI();
 				if (linkType.indexOf("http://purl.org/dc/terms/title") != -1) {
-					itemTitle= (String)trip.getObject().getLiteralValue();
+					itemTitle = (String)trip.getObject().getLiteralValue();
 				} else {
 					if (linkType.indexOf("shortIdentifier") != -1) {
-						itemShortId=  (String)trip.getObject().getLiteralValue();
+						itemShortId = (String)trip.getObject().getLiteralValue();
 					}
 				}
 				
@@ -502,7 +505,8 @@ public class WorkItemOslcLinkHelper {
 			}
 			if (!backlinkFound) {
 				backlinkMessage= "*** Backlink not found: " + targetOslcLinkTypeId + " Source: "
-						+ sourceUri.toString() + " TargetDTO:\n" + targetDTO.getContent();
+						+ sourceUri.toString();
+				getTracingLog().debug(" TargetDTO:\n" + targetDTO.getContent());
 			} else {
 				backlinkMessage= "Found linked item " + itemShortId + ": " + itemTitle + "\n" + backlinkMessage;				
 			}
@@ -515,7 +519,9 @@ public class WorkItemOslcLinkHelper {
 					+ sourceUri + "\n... " + backlinkMessage);
 		} else {
 			getTracingLog().warn("\n*** Warning: backlink not found in work item " + sourceUri + " |target: "
-					+ targetEndPoint.getDisplayName() + "\n" + backlinkMessage);
+					+ targetEndPoint.getDisplayName() + "\n"); // + backlinkMessage);
+		
+			command.addWorkitemWithoutBacklinks(sourceUri.toString(), targetEndPoint.getDisplayName(), resource.resourceURL);
 		}
 		return backlinkFound;
 	}

@@ -8,6 +8,8 @@
 package com.ibm.js.team.workitem.commandline.commands;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -15,7 +17,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,17 +37,16 @@ import com.ibm.js.team.workitem.commandline.framework.IWorkItemCommand;
 import com.ibm.js.team.workitem.commandline.framework.WorkItemCommandLineException;
 import com.ibm.js.team.workitem.commandline.helper.WorkItemOslcLinkHelper;
 import com.ibm.js.team.workitem.commandline.parameter.ParameterManager;
+import com.ibm.js.team.workitem.commandline.utils.FileUtil;
 import com.ibm.js.team.workitem.commandline.utils.ProcessAreaUtil;
 import com.ibm.js.team.workitem.commandline.utils.QueryUtil;
 import com.ibm.js.team.workitem.commandline.utils.WorkItemUtil;
 import com.ibm.team.calm.foundation.common.HttpHeaders;
 import com.ibm.team.calm.foundation.common.IHttpClient.IResponse;
-import com.ibm.team.calm.foundation.common.internal.Response;
 import com.ibm.team.links.common.IReference;
 import com.ibm.team.links.common.registry.IEndPointDescriptor;
 import com.ibm.team.links.common.registry.ILinkType;
 import com.ibm.team.process.common.IProjectArea;
-import com.ibm.team.repository.client.ITeamRepository;
 import com.ibm.team.repository.common.NotLoggedInException;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.repository.common.json.JSONArray;
@@ -89,6 +93,10 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	private static final String ACCEPT_TYPE = "application/xml";
 	private static final String RM_CONFIG_CONTEXT = "oslc_config.context";
 
+	// General details
+	private String projectAreaName = "";
+	private String queryName = "";
+	
 	private static enum SystemType {
 		CCM, QM, RM
 	}
@@ -102,7 +110,23 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 			targetSystemType = sys;
 		}
 	}
-
+	
+	/*
+	 * Structure used to save affected workitems
+	 */
+	private static class AffectedWI {
+		
+		public AffectedWI(String affectedWI, String linkType, String affectedLink) {
+			this.affectedWI = affectedWI;
+			this.linkType = linkType;
+			this.backlink = affectedLink;
+		}
+		
+		String affectedWI;
+		String linkType;
+		String backlink;
+	}
+	
 	@SuppressWarnings("serial")
 	private static Map<String, OSLC_TYPE> OSLC_TYPE_MAP = new HashMap<String, OSLC_TYPE>() {
 		{
@@ -158,7 +182,20 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	};
 	private IProjectArea projectArea;
 	private IWorkItemClient workItemService;
-	private HashMap<String, ITeamRawRestServiceClient> repoClients = new HashMap<String, ITeamRawRestServiceClient>();
+	//private HashMap<String, ITeamRawRestServiceClient> repoClients = new HashMap<String, ITeamRawRestServiceClient>();
+	
+	
+	private ArrayList<AffectedWI> workitemsWithoutBacklinks = new ArrayList<AffectedWI>();
+	
+	
+	public ArrayList<AffectedWI> getWorkitemsWithoutBacklinks() {
+		return workitemsWithoutBacklinks;
+	}
+
+	public void addWorkitemWithoutBacklinks(String workitemURL, String missingType, String affectedLink) {
+		AffectedWI newElem = new AffectedWI(workitemURL, missingType, affectedLink);
+		this.workitemsWithoutBacklinks.add(newElem);
+	}
 
 	public IWorkItemClient getWorkItemService() {
 		return workItemService;
@@ -227,20 +264,50 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 			throw new WorkItemCommandLineException("Project Area not found: " + projectAreaName);
 		}
 		String queryName = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_QUERY_NAME);
+		
 		if (queryName == null || queryName.isEmpty()) {
 			throw new WorkItemCommandLineException("Query name must be provided.");
 		}
+		
+		this.projectAreaName = projectArea.getName();
+		this.queryName = queryName;
+		
 		workItemService = (IWorkItemClient) getTeamRepository().getClientLibrary(IWorkItemClient.class);
 		try {
 			validateOslcLinksFromQuery(projectArea, queryName);
+						
 		} catch (IOException | URISyntaxException e) {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}
+		
 		setSuccess();
+		printSummary();
+		
+		try {
+			saverResultsToFile("results");
+		} catch (TeamRepositoryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return getResult();
 	}
 
+	private void printSummary() {
+		System.out.println("\n --Summary--");
+		System.out.println(" Number of affected links: " + this.workitemsWithoutBacklinks.size());
+
+		for(int i=0; i < this.workitemsWithoutBacklinks.size(); i++) {
+			System.out.println(" " + (i+1) + "." + " affected WI:  " + this.workitemsWithoutBacklinks.get(i).affectedWI);
+			System.out.println("    " + "backlink:     " + this.workitemsWithoutBacklinks.get(i).backlink);
+			System.out.println("    " + "backlinkType: " + this.workitemsWithoutBacklinks.get(i).linkType);
+		}
+	}
+	
 	/**
 	 * Print the work item types available in a project area
 	 * 
@@ -337,7 +404,7 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 						} else {
 							// TODO validateLink(workItem, currentWorkItemURI,
 							// endPoint, reference);
-							logger.warn("No GlobalConfiguration for work item: " + workItem.getId() + " link type: "
+							logger.debug("No GlobalConfiguration for work item: " + workItem.getId() + " link type: "
 									+ linkType.getLinkTypeId());
 							validateLdxWithoutGCLinks(workItem, endPoint, reference, logger);
 						}
@@ -578,5 +645,48 @@ public class ValidateOSLCLinksCommand extends AbstractTeamRepositoryCommand impl
 	@Override
 	public String helpSpecificUsage() {
 		return "";
+	}
+	
+	/** 
+	 * Saves the ValidateOSLCLinks results to file
+	 * 
+	 * @param folderName
+	 * 			- a folder were results will be added
+	 * 
+	 * @throws TeamRepositoryException, IOException
+	 */
+	private void saverResultsToFile(String folderName) throws TeamRepositoryException, IOException {
+
+		if (folderName == null) {
+			throw new WorkItemCommandLineException("Folder can not be null: ");
+		}
+
+	    DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd_HH_mm_ss");
+	    Calendar cal = Calendar.getInstance();
+		
+		String fileName = "validateOSLCLinks_" + dateFormat.format(cal.getTime()) + ".log";
+		
+		FileUtil.createFolderWithParents(folderName);
+		File path = new File(folderName + File.separator + fileName);
+        FileWriter wr = new FileWriter(path);
+ 
+        wr.write("WCL ValidateOSLCLinks results\n");
+        wr.write(dateFormat.format(cal.getTime()));
+        wr.write("\nProjectArea: " + this.projectAreaName);
+        wr.write("\nQuery: " + this.queryName);
+
+        wr.write("\n\n--Summary--");
+        wr.write("\nNumber of affected links: " + this.workitemsWithoutBacklinks.size());
+
+		for(int i=0; i < this.workitemsWithoutBacklinks.size(); i++) {
+			wr.write("\n\t" + (i+1) + "." + " affected WI:  " + this.workitemsWithoutBacklinks.get(i).affectedWI);
+			wr.write("\n\t   " + "backlink:     " + this.workitemsWithoutBacklinks.get(i).backlink);
+			wr.write("\n\t   " + "backlinkType: " + this.workitemsWithoutBacklinks.get(i).linkType);
+		}
+
+        wr.flush();
+        wr.close();
+
+        System.out.println("\nThe log file was saved in path:\n" + path.getAbsolutePath());
 	}
 }

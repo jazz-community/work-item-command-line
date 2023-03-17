@@ -193,6 +193,7 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 
 		OperationResult result = new OperationResult();
 		System.out.println("WorkItemCommandLine Version " + IWorkItemCommandLineConstants.VERSIONINFO + "\n");
+		System.out.println("Current JVM version - " + System.getProperty("java.version"));
 		WorkitemCommandLine commandline;
 		try {
 			commandline = new WorkitemCommandLine();
