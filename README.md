@@ -4,7 +4,10 @@ Work Item Command Line Version 6.0.1
 
 See the [Prerequisites](https://github.com/jazz-community/work-item-command-line/blob/master/README.md#prerequisites) and [Work Item Command Line 5.0](https://rsjazz.wordpress.com/2019/07/03/work-item-command-line-5-0/) for instructions how to setup and install WCL.
 
-Latest changes: Version 6.0  removes Log4J1 and adds Log4J2. *The changes break compatibility to releases before 7.0.2SR1.* For EWM releases before 7.0.2SR1 [use this version](https://github.com/jazz-community/work-item-command-line/releases/tag/WCL-V5.3.3).
+**Version Comatibility**
+
+Version 6.0 and later support **7.0.2SR1 and later**. The changes remove Log4J1 and add Log4J2. The changes **break compatibility to releases before 7.0.2SR1**. 
+For EWM releases **before 7.0.2SR1** [**use this version**](https://github.com/jazz-community/work-item-command-line/releases/tag/WCL-V5.3.3).
 
 **License**
 
