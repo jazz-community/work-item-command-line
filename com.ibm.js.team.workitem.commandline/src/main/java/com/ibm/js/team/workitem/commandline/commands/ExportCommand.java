@@ -84,7 +84,12 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	// The encoding to be used when saving the file
 	private String fFileEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_16LE;
 	// Delimiter to be used for columns
-	private char fDelimiter = IWorkItemCommandLineConstants.DEFAULT_DELIMITER;
+	//private char fDelimiter = IWorkItemCommandLineConstants.DEFAULT_DELIMITER;
+	private char fCSVEscapeChar =  CSVWriter.NO_ESCAPE_CHARACTER;
+	private String fCSVLineEnding = IWorkItemCommandLineConstants.DEFAULT_CSV_LINE_ENDING;
+	// Delimiter to be used for columns
+	private char fCSVDefaultSeparator = IWorkItemCommandLineConstants.DEFAULT_CSV_SEPERATOR_CHAR;
+	private char fCSVDefaultQuoteChar = IWorkItemCommandLineConstants.DEFAULT_CSV_QUOTE_CHAR;
 	// Export headers as ID's?
 	private boolean fHeaderAsIDs = false;
 	// Ignore minor errors?
@@ -94,6 +99,7 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	// Suppress Attribute Not found Exception
 	private boolean fSuppressAttributeErrors = false;
 	private WorkItemExportHelper fWorkItemExportHelper;
+	private char fCSVDefaultQuote=IWorkItemCommandLineConstants.DEFAULT_CSV_QUOTE_CHAR;
 
 	/**
 	 * The constructor
@@ -335,15 +341,6 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 		return writer;
 	}
 
-	private String getLineEnding() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private char getSeparator() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	/**
 	 * Perform the export
@@ -464,7 +461,7 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 */
 	private char getQuoteChar() {
-		return IWorkItemCommandLineConstants.DEFAULT_QUOTE_CHAR;
+		return fCSVDefaultQuote;
 	}
 
 	/**
@@ -505,7 +502,7 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 			throw new WorkItemCommandLineException(
 					"Can not convert delimiter. Delimiter must have size 1 >" + delimiter + "<");
 		}
-		fDelimiter = delimiter.charAt(0);
+		fCSVDefaultSeparator = delimiter.charAt(0);
 	}
 
 	/**
@@ -514,7 +511,7 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 */
 	private char getDelimiter() {
-		return fDelimiter;
+		return fCSVDefaultSeparator;
 	}
 
 	/**
@@ -561,6 +558,14 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	 */
 	private void setSuppressAttributeErrors(boolean suppressAttributeErrors) {
 		this.fSuppressAttributeErrors = suppressAttributeErrors;
+	}
+
+	private String getLineEnding() {
+		return fCSVLineEnding ;
+	}
+
+	private char getSeparator() {
+		return fCSVDefaultSeparator;
 	}
 
 }

@@ -83,8 +83,12 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 
 	// The encoding to be used when saving the file
 	private String fFileEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_16LE;
+
+	private char fCSVEscapeChar =  CSVWriter.NO_ESCAPE_CHARACTER;
+	private String fCSVLineEnding = IWorkItemCommandLineConstants.DEFAULT_CSV_LINE_ENDING;
 	// Delimiter to be used for columns
-	private char fDelimiter = IWorkItemCommandLineConstants.DEFAULT_DELIMITER;
+	private char fCSVDefaultSeparator = IWorkItemCommandLineConstants.DEFAULT_CSV_SEPERATOR_CHAR;
+	private char fCSVDefaultQuoteChar = IWorkItemCommandLineConstants.DEFAULT_CSV_QUOTE_CHAR;
 	// Export headers as ID's?
 	private boolean fHeaderAsIDs = false;
 	// Ignore minor errors?
@@ -203,7 +207,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		// Can not "trim() to allow whitespace characters"
 		String delimiter = getParameterManager().consumeParameter(IWorkItemCommandLineConstants.PARAMETER_DELIMITER);
 		if (delimiter != null) {
-			setDelimiter(delimiter);
+			setCSVEscaleChar(delimiter);
 		}
 
 		ColumnHeaderMappingHelper columnHeaderMapping = new ColumnHeaderMappingHelper(projectArea, getWorkItemCommon(),
@@ -324,7 +328,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 			}
 			// @see http://opencsv.sourceforge.net/
 			writer = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputFile), getFileEncoding()),
-					getSeparator(), getDelimiter(), getQuoteChar(), getLineEnding());
+					getCSVSeparator(), getQuoteChar(), getCSVEscapeChar(), getCSVLineEnding());
 		} catch (UnsupportedEncodingException e) {
 			throw new WorkItemCommandLineException("Exception creating CSV output writer: " + filePath, e);
 		} catch (FileNotFoundException e) {
@@ -333,16 +337,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		return writer;
 	}
 
-	private String getLineEnding() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private char getSeparator() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
+	
 	/**
 	 * Perform the export
 	 * 
@@ -468,7 +463,7 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 */
 	private char getQuoteChar() {
-		return IWorkItemCommandLineConstants.DEFAULT_QUOTE_CHAR;
+		return fCSVDefaultQuoteChar;
 	}
 
 	/**
@@ -500,16 +495,16 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	}
 
 	/**
-	 * Setter for the delimiter
+	 * Setter for the setCSVEscaleChar
 	 * 
 	 */
-	private void setDelimiter(String delimiter) {
+	private void setCSVEscaleChar(String delimiter) {
 		if (delimiter.length() == 1) {
-			fDelimiter = delimiter.charAt(0);
+			fCSVEscapeChar = delimiter.charAt(0);
 			return;
 		}
 		if (delimiter.length() == 2 && delimiter.equals("\\t")) {
-			fDelimiter = '\t';
+			fCSVEscapeChar = '\t';
 			return;
 		}
 		
@@ -521,8 +516,8 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	 * 
 	 * @return
 	 */
-	private char getDelimiter() {
-		return fDelimiter;
+	private char getCSVEscapeChar() {
+		return fCSVEscapeChar;
 	}
 
 	/**
@@ -571,4 +566,12 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 		this.fSuppressAttributeErrors = suppressAttributeErrors;
 	}
 
+	private String getCSVLineEnding() {
+		return fCSVLineEnding ;
+	}
+
+	private char getCSVSeparator() {
+		return fCSVDefaultSeparator;
+	}	
+	
 }

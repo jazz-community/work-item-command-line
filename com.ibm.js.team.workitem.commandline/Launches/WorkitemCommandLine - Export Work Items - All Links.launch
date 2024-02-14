@@ -1,11 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?><launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
-<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/com.ibm.js.team.workitem.commandline/src/main/java/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
-</listAttribute>
-<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
-<listEntry value="1"/>
-</listAttribute>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-exportworkitems /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph projectArea=&quot;JKE Banking (Change Management)&quot; exportFile=&quot;C:\Temp\exporttest\TestExport.csv&quot; query=&quot;All&quot; columns=&quot;Type,Id,Planned For,Filed Against,Description,Found In,Affected by Defect,Affects Plan Item,Affects Requirement,Affects Test Result,Attachments,Blocks,Blocks Test Execution,Children,ClearCase Activities ,ClearCase Versions,Contributes To,Copied From,Copies,Depends On,Deployment Definition,Deployment Result,Duplicated By,Duplicate Of,Implements Requirement,importer dependency,Included in Builds,Included in Deployments,Included in Packages,Included in Promotions,Mentions,Packaging Definition,Packaging Result,Packaging Summary Work Item,Parent,Predecessor,Previously Promoted Change Sets,Promoted Build Maps,Promoted Change Sets,Promoted Work Items,Promotion Build Result,Promotion Definition,Related,Related Artifacts,Related Test Case,Related Test Execution Record,Related Test Plan,Related Test Script,Related Test Suite,Reported Against Builds,Resolved By,Resolves,Successor,SVN Revisions,Tested By Test Case,Time Sheet Entry,Tracks,Tracks Requirement,tracks UCM object,Work Items Included in Packages&quot; delimiter=&quot;;&quot;"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/com.ibm.js.team.workitem.commandline/src/main/java/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="com.ibm.js.team.workitem.commandline"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-exportworkitems /ignoreErrors repository=&quot;https://clm.example.com:9443/ccm&quot; user=ralph password=ralph projectArea=&quot;JKE Banking (Change Management)&quot; exportFile=&quot;C:\Temp\exporttest\TestExport.csv&quot; query=&quot;All&quot; columns=&quot;Type,Id,Planned For,Filed Against,Description,Found In,Affected by Defect,Affects Plan Item,Affects Requirement,Affects Test Result,Attachments,Blocks,Blocks Test Execution,Children,ClearCase Activities ,ClearCase Versions,Contributes To,Copied From,Copies,Depends On,Deployment Definition,Deployment Result,Duplicated By,Duplicate Of,Implements Requirement,importer dependency,Included in Builds,Included in Deployments,Included in Packages,Included in Promotions,Mentions,Packaging Definition,Packaging Result,Packaging Summary Work Item,Parent,Predecessor,Previously Promoted Change Sets,Promoted Build Maps,Promoted Change Sets,Promoted Work Items,Promotion Build Result,Promotion Definition,Related,Related Artifacts,Related Test Case,Related Test Execution Record,Related Test Plan,Related Test Script,Related Test Suite,Reported Against Builds,Resolved By,Resolves,Successor,SVN Revisions,Tested By Test Case,Time Sheet Entry,Tracks,Tracks Requirement,tracks UCM object,Work Items Included in Packages&quot; delimiter=&quot;;&quot;"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
 </launchConfiguration>
