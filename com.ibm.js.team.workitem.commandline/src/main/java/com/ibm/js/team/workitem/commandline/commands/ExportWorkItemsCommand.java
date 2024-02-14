@@ -324,13 +324,23 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 			}
 			// @see http://opencsv.sourceforge.net/
 			writer = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputFile), getFileEncoding()),
-					getDelimiter(), getQuoteChar());
+					getSeparator(), getDelimiter(), getQuoteChar(), getLineEnding());
 		} catch (UnsupportedEncodingException e) {
 			throw new WorkItemCommandLineException("Exception creating CSV output writer: " + filePath, e);
 		} catch (FileNotFoundException e) {
 			throw new WorkItemCommandLineException("Exception creating CSV output writer: " + filePath, e);
 		}
 		return writer;
+	}
+
+	private String getLineEnding() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private char getSeparator() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	/**

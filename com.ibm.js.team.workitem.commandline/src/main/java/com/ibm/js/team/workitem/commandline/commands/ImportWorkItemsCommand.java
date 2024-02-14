@@ -385,10 +385,8 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			// data.
 			// Try to create or update work items based on the data read
 			// @see http://opencsv.sourceforge.net/
-			@SuppressWarnings("deprecation")
 			CSVReader reader = new CSVReader(
-					new InputStreamReader(new FileInputStream(getImportFile()), getFileEncoding()), getDelimiter(),
-					getQuoteChar());
+					new InputStreamReader(new FileInputStream(getImportFile()), getFileEncoding())); //, getDelimiter(), getQuoteChar());
 
 			ColumnHeaderAttributeNameMapper attributeNameMapper = new ColumnHeaderAttributeNameMapper(projectArea,
 					getWorkItemCommon(), getMonitor());

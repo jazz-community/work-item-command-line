@@ -51,7 +51,6 @@ import com.opencsv.CSVWriter;
  * This command uses opencsv-2.3jar @see http://opencsv.sourceforge.net/ as
  * external library to read the CSV file.
  * 
- * @deprecated
  */
 public class ExportCommand extends AbstractTeamRepositoryCommand {
 
@@ -314,7 +313,6 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws WorkItemCommandLineException
 	 */
-	@SuppressWarnings("deprecation")
 	private CSVWriter createWriter(String filePath) throws WorkItemCommandLineException {
 		CSVWriter writer = null;
 		try {
@@ -328,13 +326,23 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 			}
 			// @see http://opencsv.sourceforge.net/
 			writer = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputFile), getFileEncoding()),
-					getDelimiter(), getQuoteChar());
+					getSeparator(), getDelimiter(), getQuoteChar(), getLineEnding());
 		} catch (UnsupportedEncodingException e) {
 			throw new WorkItemCommandLineException("Exception creating CSV output writer: " + filePath, e);
 		} catch (FileNotFoundException e) {
 			throw new WorkItemCommandLineException("Exception creating CSV output writer: " + filePath, e);
 		}
 		return writer;
+	}
+
+	private String getLineEnding() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private char getSeparator() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	/**
