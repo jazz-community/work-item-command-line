@@ -6,8 +6,10 @@
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
         <listEntry value="1"/>
     </listAttribute>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="com.ibm.js.team.workitem.commandline"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-update /ignoreErrors repository=&quot;https://elmratelimha11.fyre.ibm.com:9443/ccm&quot; user=ralph password=ralph id=175  @link_child:add=92"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-printworkitem /ignoreErrors repository=&quot;https://elmratelimha11.fyre.ibm.com:9443/ccm&quot; user=myadmin password=myadmin id=175 /allColumns /suppressAttributeExceptions attachmentFolder=&quot;c:\aaTemp\export&quot; /attribute_NamesAsIDs /asrt_ceclipse"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
 </launchConfiguration>
