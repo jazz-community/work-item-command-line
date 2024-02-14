@@ -38,7 +38,6 @@ import com.ibm.team.workitem.common.query.QueryTypes;
  * And Utility Class to get results from queries
  * 
  */
-@SuppressWarnings("restriction")
 public class QueryUtil {
 
 	/**

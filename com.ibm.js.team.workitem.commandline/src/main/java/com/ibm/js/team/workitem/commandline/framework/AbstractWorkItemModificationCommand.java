@@ -33,7 +33,6 @@ import com.ibm.team.workitem.common.model.ItemProfile;
  * does the error handling.
  * 
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractWorkItemModificationCommand extends AbstractTeamRepositoryCommand {
 
 	public final static String UPDATE_BACK_LINKS = IAdditionalSaveParameters.UPDATE_BACKLINKS;

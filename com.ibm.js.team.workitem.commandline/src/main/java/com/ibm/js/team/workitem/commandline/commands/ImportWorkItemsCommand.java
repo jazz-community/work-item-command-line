@@ -78,7 +78,6 @@ import com.opencsv.CSVReader;
  * com.ibm.team.workitem.rcp.core.internal.bugzilla.mappers.BugzillaMapping.ValueMapping;
  * 
  */
-@SuppressWarnings("restriction")
 public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand {
 
 	private static final String HTML_PATH_SLASH = "/";
@@ -565,7 +564,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 		} else {
 			IWorkItem workItem = WorkItemUtil.resolveWorkItem(handle, IWorkItem.SMALL_PROFILE, getWorkItemCommon(),
 					getMonitor());
-			String newWorkItemID = new Integer(workItem.getId()).toString();
+			String newWorkItemID = Integer.toString(workItem.getId());
 			this.appendResultString("Created work item " + newWorkItemID + ".");
 			mapNewWorkItemID(originalWorkItemID, newWorkItemID);
 		}
@@ -728,7 +727,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	}
 
 	private void resetUniqueID() {
-		fUniqueID = new Integer(0);
+		fUniqueID = 0;
 	}
 
 	private Integer getUniqueID() {
@@ -1122,7 +1121,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @return
 	 */
 	private Integer getNextUniqueParameterId() {
-		return new Integer(uniqueParamCount++);
+		return uniqueParamCount++;
 	}
 
 	private boolean isIgnoreEmptyTargetValues() {

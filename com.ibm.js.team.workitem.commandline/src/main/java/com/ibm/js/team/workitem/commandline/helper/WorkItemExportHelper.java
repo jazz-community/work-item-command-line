@@ -910,7 +910,7 @@ public class WorkItemExportHelper {
 		if (isRTCEclipseExport()) {
 			return getExistingWorkitemPrefix() + workItem.getId();
 		}
-		return new Integer(workItem.getId()).toString();
+		return Integer.toString(workItem.getId());
 	}
 
 	/**

@@ -5,14 +5,14 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PlainJavaApi"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/OpenCSV"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Commons-lang"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JenaCore"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SLF4J"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JunoAll"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EWMCommon"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JenaCore"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -47,7 +47,6 @@ import com.ibm.team.repository.common.transport.HttpUtil;
 import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient;
 import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient.IRawRestClientConnection;
 import com.ibm.team.workitem.common.model.IWorkItem;
-import com.ibm.team.workitem.common.model.IWorkItemReferences;
 import com.ibm.team.workitem.common.model.ItemURI;
 import com.ibm.team.workitem.common.model.WorkItemLinkTypes;
 
@@ -165,16 +164,18 @@ public class WorkItemOslcLinkHelper {
 		}
 	};
 	private static Map<String, Boolean> EXCLUDED_TYPES = new HashMap<String, Boolean>() {
+		private static final long serialVersionUID = 1543297740215627174L;
+
 		{
-			put("relatedArtifact", new Boolean(true));
-			put("com.ibm.team.workitem.linktype.relatedArtifact", new Boolean(true));
+			put("relatedArtifact", Boolean.TRUE);
+			put("com.ibm.team.workitem.linktype.relatedArtifact", Boolean.TRUE);
 //			put("com.ibm.team.workitem.linktype.cm.affectedByDefect", new Boolean(true)); // does not work? TODO: Test affectedByDefect
-			put("com.ibm.team.workitem.linktype.textualReference", new Boolean(true)); // not needed
+			put("com.ibm.team.workitem.linktype.textualReference", Boolean.TRUE); // not needed
 
 			// "com.ibm.team.workitem.linktype.qm.relatedExecutionRecord" not yet supported
 			put(WorkItemLinkTypes.RELATED_EXECUTION_RECORD /*
 															 * "com.ibm.team.workitem.linktype.qm.relatedExecutionRecord"
-															 */, new Boolean(true));
+															 */, Boolean.TRUE);
 		}
 	};
 
@@ -319,9 +320,9 @@ public class WorkItemOslcLinkHelper {
 		return currentWorkItemURI; 
 	}
 
-	private IWorkItemReferences getWorkItemTargetReferences(ValidateOSLCLinksCommand command, IWorkItem workItem, Logger logger) throws TeamRepositoryException {
-		return command.getWorkItemService().resolveWorkItemReferences(workItem, command.getMonitor()); 
-	}
+//	private IWorkItemReferences getWorkItemTargetReferences(ValidateOSLCLinksCommand command, IWorkItem workItem, Logger logger) throws TeamRepositoryException {
+//		return command.getWorkItemService().resolveWorkItemReferences(workItem, command.getMonitor()); 
+//	}
 
 //	private String getConfigurationManagementUriByLinkType(IEndPointDescriptor endPointDescriptor, IWorkItem workItem,
 //			Logger logger) {

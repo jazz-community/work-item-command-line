@@ -314,7 +314,6 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 * @throws WorkItemCommandLineException
 	 */
-	@SuppressWarnings("deprecation")
 	private CSVWriter createWriter(String filePath) throws WorkItemCommandLineException {
 		CSVWriter writer = null;
 		try {
