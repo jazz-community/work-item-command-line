@@ -34,6 +34,9 @@ import com.ibm.team.repository.client.TeamPlatform;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient;
 import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient.IRawRestClientConnection;
+import com.ibm.team.workitem.client.IAuditableClient;
+import com.ibm.team.workitem.client.IQueryClient;
+import com.ibm.team.workitem.client.IWorkItemClient;
 import com.ibm.team.workitem.common.IAuditableCommon;
 import com.ibm.team.workitem.common.IWorkItemCommon;
 
@@ -187,14 +190,25 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 		IWorkItemCommon workItemCommon = (IWorkItemCommon) getTeamRepository().getClientLibrary(IWorkItemCommon.class);
 		return workItemCommon;
 	}
-
+	
+	protected IWorkItemClient getWorkItemClient() {
+		return (IWorkItemClient) getTeamRepository().getClientLibrary(IWorkItemClient.class);
+	}
+	
 	/**
 	 * @return the IAuditableCommon
 	 */
 	public IAuditableCommon getAuditableCommon() {
 		return (IAuditableCommon) getTeamRepository().getClientLibrary(IAuditableCommon.class);
 	}
+	
+	protected IAuditableClient getAuditableClient() {
+		return (IAuditableClient) getTeamRepository().getClientLibrary(IAuditableClient.class);
+	}
 
+	protected IQueryClient getQueryClient() {
+		return (IQueryClient) getTeamRepository().getClientLibrary(IQueryClient.class);
+	}
 	/**
 	 * Log into the teamrepository. Get the parameters from the parameter managers
 	 * list and use the values.

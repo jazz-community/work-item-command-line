@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/com.ibm.js.team.workitem.commandline/src/com/ibm/js/team/workitem/commandline/WorkitemCommandLine.java"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.js.team.workitem.commandline.WorkitemCommandLine"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="com.ibm.js.team.workitem.commandline"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-deleteattribute repository=&quot;https://localhost:9443/ccm&quot; user=smurata password=smurata projectArea=&quot;Bad Attribute Project&quot; deleteAttributeId=&quot;bad&#9;attribute&quot; /debug"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.js.team.workitem.commandline"/>
+</launchConfiguration>
