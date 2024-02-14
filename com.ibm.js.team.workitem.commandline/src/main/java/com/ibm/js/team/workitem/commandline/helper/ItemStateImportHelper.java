@@ -280,7 +280,7 @@ public class ItemStateImportHelper {
 			
 			ByteArrayInputStream inStream = new ByteArrayInputStream((newContent).getBytes());
 			com.ibm.team.repository.transport.client.ITeamRawRestServiceClient.IRawRestClientConnection.Response response = connection
-					.doPost(inStream, new Long(newContent.length()), "application/x-www-form-urlencoded");
+					.doPost(inStream, Long.valueOf(newContent.length()), "application/x-www-form-urlencoded");
 
 			InputStream inputStream = response.getResponseStream();			
 			char[] resultCharArray = IOUtils.toCharArray(inputStream, StandardCharsets.UTF_8.toString());

@@ -299,7 +299,7 @@ public class MigrateWorkItemAttributeCommand extends AbstractTeamRepositoryComma
 	 * @return
 	 */
 	private String getWorkItemIDString(IWorkItem workItem) {
-		return new Integer(workItem.getId()).toString();
+		return Integer.toString(workItem.getId());
 	}
 
 	/**

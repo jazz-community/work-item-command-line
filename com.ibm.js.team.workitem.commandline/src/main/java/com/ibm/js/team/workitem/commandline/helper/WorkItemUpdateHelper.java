@@ -105,7 +105,6 @@ import com.ibm.team.workitem.common.workflow.IWorkflowInfo;
  * Class helps with manipulating work item attribute values.
  * 
  */
-@SuppressWarnings("restriction")
 public class WorkItemUpdateHelper {
 
 	private static final int XML_GROWTH_CONSTANT = 50;
@@ -643,7 +642,7 @@ public class WorkItemUpdateHelper {
 								+ com.ibm.js.team.workitem.commandline.framework.ParameterValue.MODE_SET + " modes.");
 			}
 			if (attribType.equals(AttributeTypes.BOOLEAN)) {
-				return new Boolean(parameter.getValue());
+				return Boolean.getBoolean(parameter.getValue());
 			}
 			if (AttributeTypes.NUMBER_TYPES.contains(attribType)) {
 				// different number types
@@ -654,13 +653,13 @@ public class WorkItemUpdateHelper {
 						isEmpty = true;
 					}
 					if (attribType.equals(AttributeTypes.INTEGER)) {
-						return new Integer(value);
+						return Integer.getInteger(value);
 					}
 					if (attribType.equals(AttributeTypes.LONG)) {
-						return new Long(value);
+						return Long.getLong(value);
 					}
 					if (attribType.equals(AttributeTypes.FLOAT)) {
-						return new Float(value);
+						return Float.parseFloat(value);
 					}
 					if (attribType.equals(AttributeTypes.DECIMAL)) {
 						return new BigDecimal(value);
@@ -2852,7 +2851,6 @@ public class WorkItemUpdateHelper {
 	 * @return the literal ID or null
 	 * @throws TeamRepositoryException
 	 */
-	@SuppressWarnings("unused")
 	// Used if no exact match possible
 	public Identifier<? extends ILiteral> getEnumerationLiteralStartsWithString(IAttributeHandle attributeHandle,
 			String literalNamePrefix) throws TeamRepositoryException {

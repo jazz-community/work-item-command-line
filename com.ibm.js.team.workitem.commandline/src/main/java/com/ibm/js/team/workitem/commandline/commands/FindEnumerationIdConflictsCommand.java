@@ -43,7 +43,6 @@ import com.ibm.team.workitem.client.IWorkItemClient;
  * Each project area must be manually modified by the administrator to change
  * the reference.
  */
-@SuppressWarnings("deprecation")
 public class FindEnumerationIdConflictsCommand extends AbstractTeamRepositoryCommand implements IWorkItemCommand {
 
 	private Logger logger = LogManager.getLogger(FindEnumerationIdConflictsCommand.class);

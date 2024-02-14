@@ -40,7 +40,7 @@ public class WorkItemUtil {
 			IProgressMonitor monitor) throws TeamRepositoryException {
 		Integer idVal;
 		try {
-			idVal = new Integer(id);
+			idVal = Integer.getInteger(id);
 		} catch (NumberFormatException e) {
 			throw new WorkItemCommandLineException(" WorkItem ID: Number format exception, ID is not a number: " + id);
 		}

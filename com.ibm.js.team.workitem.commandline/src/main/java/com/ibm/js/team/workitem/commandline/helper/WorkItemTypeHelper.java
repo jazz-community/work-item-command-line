@@ -167,7 +167,7 @@ public class WorkItemTypeHelper {
 	 */
 	private String printAttributesAndTypes(List<?> items, IProgressMonitor monitor) {
 		String message = "";
-		message = message + "\tNumber of attributes: " + new Integer(items.size()).toString() + "\n";
+		message = message + "\tNumber of attributes: " + Integer.toString(items.size()) + "\n";
 		for (@SuppressWarnings("rawtypes")
 		Iterator iterator = items.iterator(); iterator.hasNext();) {
 			Object object = iterator.next();

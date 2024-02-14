@@ -34,20 +34,15 @@ import com.ibm.js.team.workitem.commandline.commands.ValidateWorkItemStatesComma
 import com.ibm.js.team.workitem.commandline.utils.AttachmentUtil;
 import com.ibm.juno.core.utils.IOUtils;
 import com.ibm.team.calm.foundation.common.SecureDocumentBuilderFactory;
-import com.ibm.team.foundation.common.text.XMLString;
 import com.ibm.team.repository.client.ITeamRepository;
 import com.ibm.team.repository.common.IAuditable;
 import com.ibm.team.repository.common.IAuditableHandle;
-import com.ibm.team.repository.common.IItemType;
 import com.ibm.team.repository.common.transport.HttpUtil;
 import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient;
 import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient.IRawRestClientConnection;
 import com.ibm.team.workitem.common.IWorkItemCommon;
 import com.ibm.team.workitem.common.model.IAttributeHandle;
-import com.ibm.team.workitem.common.model.IComments;
-import com.ibm.team.workitem.common.model.IState;
 import com.ibm.team.workitem.common.model.IWorkItem;
-import com.ibm.team.workitem.common.model.Identifier;
 
 /**
  * Helper handling of conversion of work item properties into strings.
@@ -67,12 +62,8 @@ public class WorkItemStateHelper {
 	private IProgressMonitor fMonitor;
 	private ITeamRepository fTeamRepository;
 	private String fOutputFolder = null;
-	private String fWorkItemId = "000";
-
-
 	public WorkItemStateHelper(ITeamRepository fTeamRepository, String workItemId, IProgressMonitor fMonitor) {
 		super();
-		this.fWorkItemId= workItemId;
 		this.fMonitor = fMonitor;
 		this.fTeamRepository = fTeamRepository;
 	}
@@ -745,13 +736,13 @@ public class WorkItemStateHelper {
 				}
 				
 				
-				IItemType type = workItem.getItemType();
-				IComments comments = workItem.getComments();
-				XMLString description = workItem.getHTMLDescription();
-				XMLString summary = workItem.getHTMLSummary();
-				Identifier<IState> state = workItem.getState2();
-				List<String> tagList = workItem.getTags2();
-				String itemType= workItem.getWorkItemType();
+//				IItemType type = workItem.getItemType();
+//				IComments comments = workItem.getComments();
+//				XMLString description = workItem.getHTMLDescription();
+//				XMLString summary = workItem.getHTMLSummary();
+//				Identifier<IState> state = workItem.getState2();
+//				List<String> tagList = workItem.getTags2();
+//				String itemType= workItem.getWorkItemType();
 				
 				command.logger.trace("Work item verified via API.");
 				} catch (Exception e) {
@@ -762,6 +753,7 @@ public class WorkItemStateHelper {
 		}
 		
 		private List<String> visitedApiStates= new ArrayList<String>();
+		@SuppressWarnings("unchecked")
 		public void validateAttributeStateWithItemAPI(ValidateWorkItemStatesCommand command, IAuditableHandle attributeHandle, String attributeName, String searchString) throws Exception {
 			
 			if (attributeHandle == null || attributeHandle.getItemId() == null) {
@@ -823,7 +815,7 @@ public class WorkItemStateHelper {
 		private boolean madeFolder= false;
 		private boolean madeTrimmedFolder= false;
 		
-		private static final String REGEX_SPAN= "&lt;(span|SPAN)[^>]*>";
+//		private static final String REGEX_SPAN= "&lt;(span|SPAN)[^>]*>";
 		private static final String REGEX_ESPAN= "&lt;/(span|SPAN)[^>]*>";
 		private static final String REGEX_B= "&lt;(b|B)[^>]*>";
 		private static final String REGEX_EB= "&lt;/(b|B)[^>]*>";
