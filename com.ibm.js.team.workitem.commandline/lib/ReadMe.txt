@@ -12,10 +12,8 @@ Rename the jar file e.g. opencsv-3.7.jar to opencsv.jar
 1.a Copy the library file opencsv.jar into /com.ibm.js.team.workitem.commandline/lib to be able to run from Eclipse.
 1.b Place the library opencsv.jar into the folder lib in the WCL folder (see /com.ibm.js.team.workitem.commandline/ReadMe - HowToRelease.txt). 
 
-2. Download apache commons-lang from 
-https://commons.apache.org/proper/commons-lang/download_lang.cgi
-
-Version 3-3.1 works.
+2. Download apache commons-text from 
+https://commons.apache.org/proper/commons-text/download_text.cgi
 
 Rename the jar file e.g. commons-lang3-3.1.jar to commons-lang.jar
 The org.apache.commons.lang jar can also be found in the EWM server install.
