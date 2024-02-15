@@ -1,37 +1,25 @@
 WCL uses some libraries that don't ship with it to export and import.
 
-To run the the work item exporter and importer
+To run the the work item exporter and importer download and collect the following jar files. Place them all into a folder e.g. C:\Dev\WCL_ExternalLibs.
 
-1. Download opencsv from 
-http://sourceforge.net/projects/opencsv/files/opencsv/3.7/
+1. Download opencsv from https://mvnrepository.com/artifact/com.opencsv/opencsv
 
-It is possible to use the latest version 4.3.2 from https://sourceforge.net/projects/opencsv/files/opencsv/
+It is possible to use the version or later 
 
-Rename the jar file e.g. opencsv-3.7.jar to opencsv.jar 
+2.a Download apache commons-text 1.11 or later from https://commons.apache.org/proper/commons-text/download_text.cgi
+Extract the zip file and locate the file commons-text1-*.jar
 
-1.a Copy the library file opencsv.jar into /com.ibm.js.team.workitem.commandline/lib to be able to run from Eclipse.
-1.b Place the library opencsv.jar into the folder lib in the WCL folder (see /com.ibm.js.team.workitem.commandline/ReadMe - HowToRelease.txt). 
-
-2. Download apache commons-text from 
-https://commons.apache.org/proper/commons-text/download_text.cgi
-
-Rename the jar file e.g. commons-lang3-3.1.jar to commons-lang.jar
-The org.apache.commons.lang jar can also be found in the EWM server install.
-
-1.a Copy the library file commons-lang.jar into /com.ibm.js.team.workitem.commandline/lib to be able to run from Eclipse.
-1.b Place the library commons-lang.jar into the folder lib in the WCL folder (see /com.ibm.js.team.workitem.commandline/ReadMe - HowToRelease.txt). 
+2.b Download apache commons-lang 3.14 or later from https://commons.apache.org/lang/download_lang.cgi
+Extract the zip file and locate the file commons-lang3-*.jar
 
 3. Pull in juno-all jar from the EWM server install.
 
-3.a Copy the library file juno-all*.jar from /support/mxbean-datacollection/jarlib/ from the EWM server install into /com.ibm.js.team.workitem.commandline/lib to be able to run from Eclipse.
-3.b Place the library juno-all*.jar from /support/mxbean-datacollection/jarlib/ from the EWM server install into the folder lib in the WCL folder (see /com.ibm.js.team.workitem.commandline/ReadMe - HowToRelease.txt).
-
 4. Pull in jena-core jar from EWM server install.
-
-4.a Copy the library file jena-core*.jar or com.hp.hpl.jena*.jar from server/conf/ccm/sites/update-site/plugins/ from the EWM server install into /com.ibm.js.team.workitem.commandline/lib to be able to run from Eclipse.
-4.b Place the library jena-core*.jar from server/conf/ccm/sites/update-site/plugins/ from the EWM server install into the folder lib in the WCL folder (see /com.ibm.js.team.workitem.commandline/ReadMe - HowToRelease.txt).
 
 5. Pull in extra required EWM common jars
 
-5.a Copy the library file com.ibm.team.apt.common_*.jar and com.ibm.team.tpt.common_*.jar from server/conf/ccm/sites/update-site/plugins/ from the EWM server install into /com.ibm.js.team.workitem.commandline/lib to be able to run from Eclipse.
-5.b Place the library com.ibm.team.apt.common_*.jar and com.ibm.team.tpt.common_*.jar from server/conf/ccm/sites/update-site/plugins/ from the EWM server install into the folder lib in the WCL folder (see /com.ibm.js.team.workitem.commandline/ReadMe - HowToRelease.txt).
+Copy the library file com.ibm.team.apt.common_*.jar and com.ibm.team.tpt.common_*.jar from server/conf/ccm/sites/update-site/plugins/ from the EWM server install into your folder
+
+To use the files in a released WCL copy these files into the folder WCL/lib.
+
+To use the files in an Eclipse workspace with WCL follow https://github.com/jazz-community/work-item-command-line/blob/master/README.md#prerequisites and add the files to your class path.
