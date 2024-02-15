@@ -64,7 +64,7 @@ All of the following examples use bash multiline syntax for legibility. Leave th
 Unzip the Plain Java Client Libraries into a folder on your local disc for example C:\ELM702\PlainJavaAPI. 
 The JAR files are supposed to be in this specific folder.  
 
-**Build** your own WCL using the source code or **download** a prebuilt WCL from the [Releases](https://github.com/jazz-community/work-item-command-line/releases) and **uncompress** the file.
+**Download** a prebuilt WCL from the [Releases](https://github.com/jazz-community/work-item-command-line/releases) and **uncompress** the file.
 
 For Linux or Mac, We'll need to set the appropriate permissions with 'chmod' for wcl.sh file.
 
@@ -78,7 +78,16 @@ To locate potential Java installations on your Mac, execute the following comman
 
 Some commands use special libraries that I can not bundle with the download. The libraries and how to get them can be found in the [ReadMe.txt](https://github.com/jazz-community/work-item-command-line/blob/master/com.ibm.js.team.workitem.commandline/lib/ReadMe.txt).
 
-It is possible to import the code of WCL into Eclipse and build your own WCL. The WCL requires the Plain Java Client Libraries to be accessible in the project area. See the [RTC Extensions Workshop](https://jazz.net/library/article/1000) especially Lab 1 that helps setting up the EWM SDK and the Plain Java Client Libraries. Follow the Lab 1 to setup the SDK and development environmnet. Import WCL into this environment. Follow [the build README](https://github.com/jazz-community/work-item-command-line/blob/master/com.ibm.js.team.workitem.commandline/build-readme.md) to package WCL for shipping.
+**Build** your own WCL using the source code or 
+
+Working with the **WCL code**. It is possible to import the code of WCL into Eclipse and build your own WCL. The WCL requires the Plain Java Client Libraries to be accessible in the project area. See the [RTC Extensions Workshop](https://jazz.net/library/article/1000) especially Lab 1 that helps setting up the EWM SDK and the Plain Java Client Libraries. Follow the Lab 1 to setup the SDK and development environmnet. Import WCL into this environment. 
+
+To set up your own **WCL development environment**, download the GIT repository e.g. using GitHubDesktop. Import the code of the Eclipse projects. The code will likely not compile correctly yet.
+Download the supporting libaries as described in [ReadMe.txt](https://github.com/jazz-community/work-item-command-line/blob/master/com.ibm.js.team.workitem.commandline/lib/ReadMe.txt) and place them in a folder. e.g. C:/Dev/WCL_ExternalLibs.
+Open the Java Build Path editor. On the libraries tab make sure the Plain Java Client Libraries user library has a correct Plain Java Client Libraries folder selected.
+Add the path to each of the external JAR files in C:/Dev/WCL_ExternalLibs to one of the existing user library definitions, or define your own user libraries containing the external JAR files needed.
+Once you have successfully added the external JAR files, all compiler errors should be gone. You can now launch and debug WCL from your Eclipse workspace. 
+To **package WCL** from your own code for shipping follow [the build README](https://github.com/jazz-community/work-item-command-line/blob/master/com.ibm.js.team.workitem.commandline/build-readme.md).
 
 ## Usage 
 
