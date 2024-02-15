@@ -114,11 +114,11 @@ public class SimpleDateFormatUtil {
 		int hoursIndex = duration.indexOf(DURATION_HOURS);
 		int minsIndex = duration.indexOf(DURATION_MINUTES);
 		if (hoursIndex < 0 && minsIndex < 0) {
-			return new Long(duration);
+			return Long.getLong(duration);
 		}
 		if (hoursIndex > 0) {
 			String hours = duration.substring(0, hoursIndex - 1).trim();
-			time += TimeUnit.HOURS.toMillis(new Long(hours));
+			time += TimeUnit.HOURS.toMillis(Long.getLong(hours));
 		}
 		if (minsIndex > 0) {
 			int start = 0;
@@ -126,7 +126,7 @@ public class SimpleDateFormatUtil {
 				start = hoursIndex + DURATION_HOURS.length();
 			}
 			String minutes = duration.substring(start, duration.length() - DURATION_MINUTES.length()).trim();
-			time += TimeUnit.MINUTES.toMillis(new Long(minutes));
+			time += TimeUnit.MINUTES.toMillis(Long.getLong(minutes));
 		}
 		return time;
 	}

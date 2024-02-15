@@ -68,7 +68,6 @@ public class ValidateWorkItemStatesCommand extends AbstractTeamRepositoryCommand
 	private boolean isLocal= false;
 	private boolean isLinksOnly= false;
 	private boolean isStatesOnly= false;
-	private boolean isVerbose= false;
 	private boolean useRest= true;
 	private boolean isTrimHtml= false;
 	private int depth= 3;
@@ -192,7 +191,6 @@ public class ValidateWorkItemStatesCommand extends AbstractTeamRepositoryCommand
 		if (getParameterManager().hasSwitch(SWITCH_TRIM_HTML))
 			isTrimHtml= true;
 		if (getParameterManager().hasSwitch(SWITCH_VERBOSE)) {
-			isVerbose= true;
 		}
 		
 		String depthString = getParameterManager()

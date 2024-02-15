@@ -7,11 +7,8 @@
  *******************************************************************************/
 package com.ibm.js.team.workitem.commandline.commands;
 
-import java.util.HashMap;
-
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-
+import org.apache.logging.log4j.Logger;
 
 import com.ibm.js.team.workitem.commandline.IWorkItemCommandLineConstants;
 import com.ibm.js.team.workitem.commandline.OperationResult;
@@ -25,7 +22,6 @@ import com.ibm.js.team.workitem.commandline.utils.ProcessAreaUtil;
 import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.repository.common.IContributorHandle;
 import com.ibm.team.repository.common.TeamRepositoryException;
-import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient;
 
 /**
  * This command checks the user allocation of a project area.
@@ -40,8 +36,6 @@ public class ValidateUserAllocationsCommand extends AbstractTeamRepositoryComman
 	private static final String SWITCH_DEBUG = "debug";
 
 	private IProjectArea projectArea;
-	private HashMap<String, ITeamRawRestServiceClient> repoClients = new HashMap<String, ITeamRawRestServiceClient>();
-
 	/**
 	 * @param parameterManager
 	 */

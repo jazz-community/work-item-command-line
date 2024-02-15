@@ -284,22 +284,13 @@ public class MigrateWorkItemAttributeCommand extends AbstractTeamRepositoryComma
 	}
 
 	/**
-	 * We need this client libraries to run queries
-	 * 
-	 * @return
-	 */
-	private IWorkItemClient getWorkItemClient() {
-		return (IWorkItemClient) getTeamRepository().getClientLibrary(IWorkItemClient.class);
-	}
-
-	/**
 	 * Get the work item ID as string
 	 * 
 	 * @param workItem
 	 * @return
 	 */
 	private String getWorkItemIDString(IWorkItem workItem) {
-		return new Integer(workItem.getId()).toString();
+		return Integer.toString(workItem.getId());
 	}
 
 	/**

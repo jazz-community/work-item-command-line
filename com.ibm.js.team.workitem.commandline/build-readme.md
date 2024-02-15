@@ -5,12 +5,11 @@
 1. Right-click on the Project and select export. Select Runnable JAR
 
 2. in the Runnable JAR File Specification select 
-Launch Configuration: WorkitemCommandLine - runnable JAR
-Export destination: C:\Temp\WCL\WCL.jar 
-Library Handling: copy required libraries into a sub folder next to the generated JAR 
+Launch Configuration: WorkitemCommandLine - JAR
+Export destination: C:\Temp\WCL\wcl.jar 
 Press Finish
 
-3. Open the folder C:\Temp\WCL\ delete the folder WCL_lib.
+3. Open the folder C:\Temp\WCL\ 
 
 4. Copy the scripts wcl*.* and the other files from folder scripts into the export location for example C:\Temp\wcl\
 
