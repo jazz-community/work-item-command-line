@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2023 IBM Corporation
+ * Copyright (c) 2015-2024 IBM Corporation
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -108,6 +108,10 @@ public interface IWorkItemCommandLineConstants {
 	// Switches for RMI
 	public static final String SWITCH_RMISERVER = "rmiServer";
 	public static final String SWITCH_RMICLIENT = "rmiClient";
+	
+	public static final String SWITCH_DEBUG = "debug";
+	public static final String SWITCH_TRACE = "trace";
+
 
 	// Import, Export constants
 
@@ -154,4 +158,9 @@ public interface IWorkItemCommandLineConstants {
 	public static final String PARAMETER_SHARING_TARGETS_EXAMPLE = "\"JKE Banking(Change Management),JKE Banking(Change Management)/Business Recovery Matters\"";
 
 	public static final String UNASSIGNED_USER = "Unassigned";
+
+	//Logging category for the main command initialization.
+	public static final String GLOBAL_COMMAND_LOGGER = "global.command.logger";
+	//Logging category for all commands.
+	public static final String WORK_ITEM_COMMAND_LOGGER = "work.item.command.logger";
 }

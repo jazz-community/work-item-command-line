@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed Materials - Property of IBM
+    (c) Copyright IBM Corporation 2022. All Rights Reserved.
+   
+    Note to U.S. Government Users Restricted Rights:  
+    Use, duplication or disclosure restricted by GSA ADP Schedule 
+    Contract with IBM Corp. 
+ -->
+ <Configuration name="ApplicationLogging" status="error" monitorInterval="10">
+    <Properties>
+        <Property name="basePath">.</Property>
+    </Properties>
+    <Appenders>
+    	<Routing name="Routing">
+    		<Routes pattern="$${main:\-log}">
+    			
+    			<!-- This route is chosen if there is no log file specified on the command line -->
+    			<Route key="$${main:\-log}">
+			        <!-- Console Appender -->
+			        <Console name="STDOUT" target="SYSTEM_OUT">
+				              <!--  PatternLayout pattern="%d{dd MMM yyyy HH:mm:ss,SSSZ}[%t] %5p %c: %m%n" />  -->
+							  <PatternLayout pattern="%d{ddMMMyyyy HH:mm:ss,SSS}| %5p: %m%n" />			              
+			        </Console>
+    			</Route>
+    			
+    			<!-- This route is chosen if there is a log file specified -->
+    			<Route>
+			        <!-- File Appender -->
+			        <RollingFile name="${basePath}/${main:\-log}" 
+			        			fileName="${basePath}/${main:\-log}"
+			        			filePattern="${basePath}/${main:\-log}.%i"
+			        			append="false">
+			        	<!-- PatternLayout pattern="%d{dd MMM yyyy HH:mm:ss,SSSZ}[%t] %5p %c: %m%n" />  -->
+			        	<PatternLayout pattern="%d{ddMMMyyyy HH:mm:ss,SSS}| %5p: %m%n" />
+			            <Policies>
+ 							<SizeBasedTriggeringPolicy size="50000000" />
+						</Policies>
+						<DefaultRolloverStrategy max="10" />
+			        </RollingFile>
+    			</Route>
+    		</Routes>
+    	</Routing>
+    </Appenders>
+    <Loggers>
+		<Logger name="com.ibm.team.repository.common" level="OFF" />
+    </Loggers>
+</Configuration>

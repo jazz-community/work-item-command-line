@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2023 IBM Corporation
+ * Copyright (c) 2015-2024 IBM Corporation
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -20,8 +20,9 @@ import java.util.HashMap;
 import java.util.Set;
 
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
-import org.apache.logging.log4j.core.config.DefaultConfiguration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
@@ -60,6 +61,8 @@ import com.ibm.team.repository.common.TeamRepositoryException;
 @SuppressWarnings("deprecation")
 public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteWorkItemOperationCall {
 
+	private static Logger fgLogger = LogManager.getLogger(IWorkItemCommandLineConstants.GLOBAL_COMMAND_LOGGER);
+	
 	/**
 	 * Serialisation for RMI
 	 */
@@ -184,16 +187,16 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	 * @throws RemoteException
 	 */
 	public static void main(String[] args) {
-		// The next two lines are needed to prevent error message from API
-		// This was ported from Log4j1 to Log4j2
-		Configurator.initialize(new DefaultConfiguration() );
-		Configurator.setRootLevel(Level.FATAL);
+		Configurator.initialize(null, "./resources/log4j2.xml");
+		//initialize the logger to INFO to get the initial messages out.
+		Configurator.setLevel(IWorkItemCommandLineConstants.WORK_ITEM_COMMAND_LOGGER, Level.INFO);
+		Configurator.setRootLevel(Level.ERROR);
 		
-		System.out.println("StartTime: " + DateFormat.getDateTimeInstance().format(new Date()));
+		fgLogger.info("StartTime: " + DateFormat.getDateTimeInstance().format(new Date()));
 
 		OperationResult result = new OperationResult();
-		System.out.println("WorkItemCommandLine Version " + IWorkItemCommandLineConstants.VERSIONINFO + "\n");
-		System.out.println("Current JVM version - " + System.getProperty("java.version"));
+		fgLogger.info("WorkItemCommandLine Version " + IWorkItemCommandLineConstants.VERSIONINFO + "\n");
+		fgLogger.info("Current JVM version - " + System.getProperty("java.version"));
 		WorkitemCommandLine commandline;
 		try {
 			commandline = new WorkitemCommandLine();
@@ -202,11 +205,11 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 			result.appendResultString("RemoteException: " + e.getMessage());
 			result.appendResultString(e.getStackTrace().toString());
 		}
-		System.out.println(result.getResultString());
+		fgLogger.info(result.getResultString());
 		if (TeamPlatform.isStarted()) {
 			TeamPlatform.shutdown();
 		}
-		System.out.println("EndTime: " + DateFormat.getDateTimeInstance().format(new Date()));
+		fgLogger.info("EndTime: " + DateFormat.getDateTimeInstance().format(new Date()));
 		if (!isServer()) {
 			// If I am not in server mode, I need to exit and return success or
 			// failure
@@ -233,6 +236,17 @@ public class WorkitemCommandLine extends UnicastRemoteObject implements IRemoteW
 	 */
 	private OperationResult run(String[] args) {
 		ParameterManager parameterManager = new ParameterManager(ParameterParser.parseParameters(args));
+		
+		if (parameterManager.hasSwitch(IWorkItemCommandLineConstants.SWITCH_DEBUG)) {
+			fgLogger.info("Debug enabled.");
+			Configurator.setLevel(IWorkItemCommandLineConstants.WORK_ITEM_COMMAND_LOGGER, Level.DEBUG);
+		} else if (parameterManager.hasSwitch(IWorkItemCommandLineConstants.SWITCH_TRACE)) {
+			fgLogger.info("Trace enabled.");
+			Configurator.setLevel(IWorkItemCommandLineConstants.WORK_ITEM_COMMAND_LOGGER, Level.TRACE);
+		} else {			
+			Configurator.setLevel(IWorkItemCommandLineConstants.WORK_ITEM_COMMAND_LOGGER, Level.ERROR);
+		}
+		
 		if (parameterManager.hasSwitch(IWorkItemCommandLineConstants.SWITCH_RMISERVER)) {
 			// Started as RMI server
 			Parameter rmiInfo = parameterManager.getArguments().getParameter(

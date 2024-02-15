@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2017 IBM Corporation
+ * Copyright (c) 2015-2024 IBM Corporation
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.js.team.workitem.commandline.IWorkItemCommandLineConstants;
@@ -32,6 +34,9 @@ import com.ibm.team.repository.client.TeamPlatform;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient;
 import com.ibm.team.repository.transport.client.ITeamRawRestServiceClient.IRawRestClientConnection;
+import com.ibm.team.workitem.client.IAuditableClient;
+import com.ibm.team.workitem.client.IQueryClient;
+import com.ibm.team.workitem.client.IWorkItemClient;
 import com.ibm.team.workitem.common.IAuditableCommon;
 import com.ibm.team.workitem.common.IWorkItemCommon;
 
@@ -47,6 +52,15 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	private ITeamRepository fTeamRepository;
 	private IExpensiveScenarioService fScenarioService;
 
+	public Logger fLogger = LogManager.getLogger(IWorkItemCommandLineConstants.WORK_ITEM_COMMAND_LOGGER); 
+	
+	public Logger getLogger() {
+		if (fLogger != null) {
+			return fLogger;
+		}
+		return LogManager.getLogger(IWorkItemCommandLineConstants.WORK_ITEM_COMMAND_LOGGER); 
+	}
+	
 	protected AbstractTeamRepositoryCommand(ParameterManager parametermanager) {
 		super(parametermanager);
 	}
@@ -76,7 +90,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 		// I need the team platform to be started here.
 		// To be able to access the aliases
 		if (!TeamPlatform.isStarted()) {
-			System.out.println("Starting Team Platform ...");
+			getLogger().debug("Starting Team Platform ...");
 			TeamPlatform.startup();
 		}
 		super.initialize();
@@ -176,14 +190,25 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 		IWorkItemCommon workItemCommon = (IWorkItemCommon) getTeamRepository().getClientLibrary(IWorkItemCommon.class);
 		return workItemCommon;
 	}
-
+	
+	protected IWorkItemClient getWorkItemClient() {
+		return (IWorkItemClient) getTeamRepository().getClientLibrary(IWorkItemClient.class);
+	}
+	
 	/**
 	 * @return the IAuditableCommon
 	 */
 	public IAuditableCommon getAuditableCommon() {
 		return (IAuditableCommon) getTeamRepository().getClientLibrary(IAuditableCommon.class);
 	}
+	
+	protected IAuditableClient getAuditableClient() {
+		return (IAuditableClient) getTeamRepository().getClientLibrary(IAuditableClient.class);
+	}
 
+	protected IQueryClient getQueryClient() {
+		return (IQueryClient) getTeamRepository().getClientLibrary(IQueryClient.class);
+	}
 	/**
 	 * Log into the teamrepository. Get the parameters from the parameter managers
 	 * list and use the values.
@@ -210,7 +235,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 		for (String line : fileContent) {
 			String[] elements= line.split(" ");
 			if (elements.length< 3) {
-				System.out.println("Invalid password file line: " + line);
+				getLogger().error("Invalid password file line: " + line);
 			} else {
 				key= elements[0];
 			}
@@ -237,7 +262,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 				return new String[] { pwMap.get(key)[1],  pwMap.get(key)[2]};
 			}
 		}		
-		System.out.println("No userid and password found for: " + repositoryUrl);
+		getLogger().error("No userid and password found for: " + repositoryUrl);
 		
 		return null;
 	}
@@ -279,6 +304,7 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 	 * @return
 	 * @throws TeamRepositoryException
 	 */
+	boolean reportedId = false;
 	protected ITeamRepository login(String repositoryUrl) throws TeamRepositoryException {
 		String passwordFile = getParameterManager()
 				.consumeParameter(IWorkItemCommandLineConstants.PARAMETER_PASSWORD_FILE_PROPERTY);
@@ -300,12 +326,17 @@ public abstract class AbstractTeamRepositoryCommand extends AbstractCommand {
 		}
 		
 		if (user == null) {
-			System.out.println("No user specified.");
+			getLogger().error("No user specified.");
 			System.exit(500);
 		}
 		if (password == null) {
-			System.out.println("No password specified.");
+			getLogger().error("No password specified.");
 			System.exit(500);
+		}
+		//If debug is on, log first time user logs in.
+		if (getLogger().isDebugEnabled() && !reportedId) {			
+			fLogger.debug("Logging in as: " + user);
+			reportedId= true;
 		}
 		
 		ITeamRepository teamRepository = TeamPlatform.getTeamRepositoryService().getTeamRepository(repositoryUrl);
