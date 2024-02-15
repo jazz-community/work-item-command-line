@@ -38,11 +38,14 @@ public class WorkItemUtil {
 	 */
 	public static IWorkItem findWorkItemByID(String id, ItemProfile<IWorkItem> profile, IWorkItemCommon workitemCommon,
 			IProgressMonitor monitor) throws TeamRepositoryException {
-		Integer idVal;
+		Integer idVal=null;
 		try {
-			idVal = Integer.getInteger(id);
+			idVal = Integer.valueOf(id);
 		} catch (NumberFormatException e) {
 			throw new WorkItemCommandLineException(" WorkItem ID: Number format exception, ID is not a number: " + id);
+		}
+		if(null==idVal) {
+			throw new WorkItemCommandLineException(" WorkItem ID: not found: " + id);			
 		}
 		return workitemCommon.findWorkItemById(idVal.intValue(), profile, monitor);
 	}
