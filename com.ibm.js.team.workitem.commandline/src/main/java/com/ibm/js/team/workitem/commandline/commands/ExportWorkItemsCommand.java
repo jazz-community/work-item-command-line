@@ -467,6 +467,16 @@ public class ExportWorkItemsCommand extends AbstractTeamRepositoryCommand {
 	}
 
 	/**
+	 * Set the default quote character
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	private void setQuoteChar(char quoteChar) {
+		fCSVDefaultQuoteChar=quoteChar;
+	}
+	
+	/**
 	 * If we want to override the query result set size limit.
 	 * 
 	 * @return

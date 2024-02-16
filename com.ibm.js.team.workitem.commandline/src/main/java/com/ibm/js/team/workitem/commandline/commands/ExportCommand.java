@@ -89,7 +89,6 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	private String fCSVLineEnding = IWorkItemCommandLineConstants.DEFAULT_CSV_LINE_ENDING;
 	// Delimiter to be used for columns
 	private char fCSVDefaultSeparator = IWorkItemCommandLineConstants.DEFAULT_CSV_SEPERATOR_CHAR;
-	private char fCSVDefaultQuoteChar = IWorkItemCommandLineConstants.DEFAULT_CSV_QUOTE_CHAR;
 	// Export headers as ID's?
 	private boolean fHeaderAsIDs = false;
 	// Ignore minor errors?
@@ -99,7 +98,7 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	// Suppress Attribute Not found Exception
 	private boolean fSuppressAttributeErrors = false;
 	private WorkItemExportHelper fWorkItemExportHelper;
-	private char fCSVDefaultQuote=IWorkItemCommandLineConstants.DEFAULT_CSV_QUOTE_CHAR;
+	private char fCSVDefaultQuoteChar=IWorkItemCommandLineConstants.DEFAULT_CSV_QUOTE_CHAR;
 
 	/**
 	 * The constructor
@@ -461,7 +460,17 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 */
 	private char getQuoteChar() {
-		return fCSVDefaultQuote;
+		return fCSVDefaultQuoteChar;
+	}
+
+	/**
+	 * Set the default quote character
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	private void setQuoteChar(char quoteChar) {
+		fCSVDefaultQuoteChar=quoteChar;
 	}
 
 	/**
@@ -566,6 +575,14 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 
 	private char getSeparator() {
 		return fCSVDefaultSeparator;
+	}
+
+	public char getfCSVEscapeChar() {
+		return fCSVEscapeChar;
+	}
+
+	public void setfCSVEscapeChar(char fCSVEscapeChar) {
+		this.fCSVEscapeChar = fCSVEscapeChar;
 	}
 
 }

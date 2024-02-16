@@ -385,6 +385,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 */
+	@SuppressWarnings("resource")
 	private boolean performImport(IProjectArea projectArea, boolean result) throws TeamRepositoryException,
 			WorkItemCommandLineException {
 		try {
