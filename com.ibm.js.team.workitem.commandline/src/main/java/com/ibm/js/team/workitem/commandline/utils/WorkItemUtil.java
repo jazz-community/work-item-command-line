@@ -38,7 +38,7 @@ public class WorkItemUtil {
 	 */
 	public static IWorkItem findWorkItemByID(String id, ItemProfile<IWorkItem> profile, IWorkItemCommon workitemCommon,
 			IProgressMonitor monitor) throws TeamRepositoryException {
-		Integer idVal;
+		Integer idVal=null;
 		try {
 			idVal = Integer.valueOf(id);
 		} catch (NumberFormatException e) {
