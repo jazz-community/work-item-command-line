@@ -50,8 +50,8 @@ All of the following examples use bash multiline syntax for legibility. Leave th
     -   [Attribute ID Aliases](#attribute-id-aliases)
     -   [Link types](#link-types)
     -   [Import/Export](#importexport)
+        -   [Import Modes](#import-modes)
         -   [Export Modes](#export-modes)
-        -   [Import/Export](#importexport)
         -   [Attachments](#attachments-1)
     -   [License](#license)
     
