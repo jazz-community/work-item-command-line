@@ -653,7 +653,7 @@ public class WorkItemUpdateHelper {
 						isEmpty = true;
 					}
 					if (attribType.equals(AttributeTypes.INTEGER)) {
-						return Integer.getInteger(value);
+						return Integer.valueOf(value);
 					}
 					if (attribType.equals(AttributeTypes.LONG)) {
 						return Long.getLong(value);
