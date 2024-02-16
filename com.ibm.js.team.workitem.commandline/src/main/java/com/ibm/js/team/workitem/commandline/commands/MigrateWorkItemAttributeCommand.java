@@ -25,7 +25,6 @@ import com.ibm.js.team.workitem.commandline.utils.WorkItemUtil;
 import com.ibm.team.process.common.IProjectArea;
 import com.ibm.team.repository.common.TeamRepositoryException;
 import com.ibm.team.workitem.client.IQueryClient;
-import com.ibm.team.workitem.client.IWorkItemClient;
 import com.ibm.team.workitem.client.WorkItemOperation;
 import com.ibm.team.workitem.client.WorkItemWorkingCopy;
 import com.ibm.team.workitem.common.expression.AttributeExpression;

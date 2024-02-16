@@ -44,6 +44,9 @@ public class WorkItemUtil {
 		} catch (NumberFormatException e) {
 			throw new WorkItemCommandLineException(" WorkItem ID: Number format exception, ID is not a number: " + id);
 		}
+		if(null==idVal) {
+			throw new WorkItemCommandLineException(" WorkItem ID: not found: " + id);			
+		}
 		return workitemCommon.findWorkItemById(idVal.intValue(), profile, monitor);
 	}
 

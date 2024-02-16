@@ -51,7 +51,6 @@ import com.opencsv.CSVWriter;
  * This command uses opencsv-2.3jar @see http://opencsv.sourceforge.net/ as
  * external library to read the CSV file.
  * 
- * @deprecated
  */
 public class ExportCommand extends AbstractTeamRepositoryCommand {
 
@@ -85,7 +84,11 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	// The encoding to be used when saving the file
 	private String fFileEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_16LE;
 	// Delimiter to be used for columns
-	private char fDelimiter = IWorkItemCommandLineConstants.DEFAULT_DELIMITER;
+	//private char fDelimiter = IWorkItemCommandLineConstants.DEFAULT_DELIMITER;
+	private char fCSVEscapeChar =  CSVWriter.NO_ESCAPE_CHARACTER;
+	private String fCSVLineEnding = IWorkItemCommandLineConstants.DEFAULT_CSV_LINE_ENDING;
+	// Delimiter to be used for columns
+	private char fCSVDefaultSeparator = IWorkItemCommandLineConstants.DEFAULT_CSV_SEPERATOR_CHAR;
 	// Export headers as ID's?
 	private boolean fHeaderAsIDs = false;
 	// Ignore minor errors?
@@ -95,6 +98,7 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	// Suppress Attribute Not found Exception
 	private boolean fSuppressAttributeErrors = false;
 	private WorkItemExportHelper fWorkItemExportHelper;
+	private char fCSVDefaultQuoteChar=IWorkItemCommandLineConstants.DEFAULT_CSV_QUOTE_CHAR;
 
 	/**
 	 * The constructor
@@ -327,7 +331,7 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 			}
 			// @see http://opencsv.sourceforge.net/
 			writer = new CSVWriter(new OutputStreamWriter(new FileOutputStream(outputFile), getFileEncoding()),
-					getDelimiter(), getQuoteChar());
+					getSeparator(), getDelimiter(), getQuoteChar(), getLineEnding());
 		} catch (UnsupportedEncodingException e) {
 			throw new WorkItemCommandLineException("Exception creating CSV output writer: " + filePath, e);
 		} catch (FileNotFoundException e) {
@@ -335,6 +339,7 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 		}
 		return writer;
 	}
+
 
 	/**
 	 * Perform the export
@@ -455,7 +460,17 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 */
 	private char getQuoteChar() {
-		return IWorkItemCommandLineConstants.DEFAULT_QUOTE_CHAR;
+		return fCSVDefaultQuoteChar;
+	}
+
+	/**
+	 * Set the default quote character
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	private void setQuoteChar(char quoteChar) {
+		fCSVDefaultQuoteChar=quoteChar;
 	}
 
 	/**
@@ -496,7 +511,7 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 			throw new WorkItemCommandLineException(
 					"Can not convert delimiter. Delimiter must have size 1 >" + delimiter + "<");
 		}
-		fDelimiter = delimiter.charAt(0);
+		fCSVDefaultSeparator = delimiter.charAt(0);
 	}
 
 	/**
@@ -505,7 +520,7 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	 * @return
 	 */
 	private char getDelimiter() {
-		return fDelimiter;
+		return fCSVDefaultSeparator;
 	}
 
 	/**
@@ -552,6 +567,22 @@ public class ExportCommand extends AbstractTeamRepositoryCommand {
 	 */
 	private void setSuppressAttributeErrors(boolean suppressAttributeErrors) {
 		this.fSuppressAttributeErrors = suppressAttributeErrors;
+	}
+
+	private String getLineEnding() {
+		return fCSVLineEnding ;
+	}
+
+	private char getSeparator() {
+		return fCSVDefaultSeparator;
+	}
+
+	public char getfCSVEscapeChar() {
+		return fCSVEscapeChar;
+	}
+
+	public void setfCSVEscapeChar(char fCSVEscapeChar) {
+		this.fCSVEscapeChar = fCSVEscapeChar;
 	}
 
 }

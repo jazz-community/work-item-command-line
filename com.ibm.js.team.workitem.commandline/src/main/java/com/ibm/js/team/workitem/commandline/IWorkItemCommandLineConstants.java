@@ -128,7 +128,7 @@ public interface IWorkItemCommandLineConstants {
 	public static final String DEFAULT_ENCODING_UTF_16LE = "UTF-16LE";
 
 	// The default Quote character
-	public static final char DEFAULT_QUOTE_CHAR = '"';
+	public static final char DEFAULT_CSV_QUOTE_CHAR = '"';
 
 	// parameter to specify the encoding
 	public static final String PARAMETER_ENCODING = "encoding";
@@ -138,6 +138,14 @@ public interface IWorkItemCommandLineConstants {
 	public static final String PARAMETER_DELIMITER = "delimiter";
 	public static final String PARAMETER_DELIMITER_EXAMPLE = "\",\"";
 
+	// Parameter to specify the separator character
+	public static final String PARAMETER_SEPARATOR = "separator";
+	public static final String PARAMETER_SEPARATOR_EXAMPLE = "\",\"";
+
+	// The default separator character
+	public static final char DEFAULT_CSV_SEPERATOR_CHAR = ';';
+
+	
 	public static final String SWITCH_EXPORT_SUPPRESS_ATTRIBUTE_EXCEPTIONS = "suppressAttributeExceptions";
 	public static final String SWITCH_SUPPRESS_MAIL_NOTIFICATION = "skipEmailNotification";
 
@@ -159,6 +167,7 @@ public interface IWorkItemCommandLineConstants {
 
 	public static final String UNASSIGNED_USER = "Unassigned";
 
+	public static final String DEFAULT_CSV_LINE_ENDING = "\n";
 	//Logging category for the main command initialization.
 	public static final String GLOBAL_COMMAND_LOGGER = "global.command.logger";
 	//Logging category for all commands.

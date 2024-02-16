@@ -50,7 +50,9 @@ import com.ibm.team.workitem.common.model.IAttribute;
 import com.ibm.team.workitem.common.model.IWorkItem;
 import com.ibm.team.workitem.common.model.IWorkItemHandle;
 import com.ibm.team.workitem.common.model.IWorkItemType;
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 
 /**
  * Command to import a set of work items from a CSV file set the provided values
@@ -168,7 +170,9 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 
 	// The default encoding
 	private String fEncoding = IWorkItemCommandLineConstants.DEFAULT_ENCODING_UTF_16LE;
-
+	// The default separator TODO: what is the difference to delimiter?
+	private char fCSVSeparator = IWorkItemCommandLineConstants.DEFAULT_CSV_SEPERATOR_CHAR;
+	
 	// Multi pass mode
 	private boolean fMultipass = false;
 	// Use original ID if no mapping was found
@@ -178,6 +182,10 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	// deleted if this is allowed.
 	private boolean fIgnoreEmptyTargetValues = false;
 	private boolean fSetApprovals = true;
+
+	private char fCSVDefaultQuoteChar=IWorkItemCommandLineConstants.DEFAULT_CSV_QUOTE_CHAR;
+
+
 
 	/**
 	 * The constructor
@@ -377,6 +385,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @throws TeamRepositoryException
 	 * @throws WorkItemCommandLineException
 	 */
+	@SuppressWarnings("resource")
 	private boolean performImport(IProjectArea projectArea, boolean result) throws TeamRepositoryException,
 			WorkItemCommandLineException {
 		try {
@@ -384,10 +393,14 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 			// data.
 			// Try to create or update work items based on the data read
 			// @see http://opencsv.sourceforge.net/
-			@SuppressWarnings("deprecation")
-			CSVReader reader = new CSVReader(
-					new InputStreamReader(new FileInputStream(getImportFile()), getFileEncoding()), getDelimiter(),
-					getQuoteChar());
+
+			CSVReader reader = new CSVReaderBuilder(
+					new InputStreamReader(new FileInputStream(getImportFile()), getFileEncoding()))
+					.withCSVParser(
+							new CSVParserBuilder().withQuoteChar(getQuoteChar())
+							.withSeparator(getCSVSeparator())
+							.withQuoteChar(getQuoteChar()).build())
+					.build();
 
 			ColumnHeaderAttributeNameMapper attributeNameMapper = new ColumnHeaderAttributeNameMapper(projectArea,
 					getWorkItemCommon(), getMonitor());
@@ -1478,7 +1491,7 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	 * @return
 	 */
 	private char getQuoteChar() {
-		return IWorkItemCommandLineConstants.DEFAULT_QUOTE_CHAR;
+		return fCSVDefaultQuoteChar;
 	}
 
 	/**
@@ -1618,6 +1631,15 @@ public class ImportWorkItemsCommand extends AbstractWorkItemModificationCommand 
 	private void setSuppressAttributeWarnings(boolean fSuppressAttributeWarnings) {
 		this.fSuppressAttributeWarnings = fSuppressAttributeWarnings;
 	}
+
+	/**
+	 * TODO:
+	 * @return
+	 */
+	private char getCSVSeparator() {
+		return fCSVSeparator ;
+	}
+
 
 
 }
