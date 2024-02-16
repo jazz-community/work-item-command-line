@@ -795,11 +795,47 @@ The following link types are supported. Please note that some link types might o
 ## Import/Export 
 
 The import and export capabilities of the Work Item Command Line have some special behavior that are not obvious. Here a summary of those topics.
+See [A RTC WorkItem Command Line Version 3.0](https://rsjazz.wordpress.com/2015/11/03/a-rtc-workitem-command-line-version-3-0/) for more details on how export and import works.
+
 
 ### Import Modes
 
-By default, the WCL RTC import expects attribute data in a form that is compatible to the parameter it uses in the command line parameters. The format deviates from the export/import format of the built in CSV operations for EWM. It is possible to use the switch **/asrtceclipse** for the import. WCL tries to mimic importing the built in CSV format. Due to complexity of parsing not all data can be imported.
-	
+By default, the WCL RTC import expects attribute data in a form that is compatible to the parameter it uses in the command line parameters. The format deviates from the export/import format of the built in CSV operations for EWM. It is possible to use the switch **/asrtceclipse** for the import. WCL tries to mimic importing the built in CSV format. Due to complexity of parsing not all data can be imported. 
+Special Flags and behavior
+/ignoreErrors – Ignore minor errors in mapping and value lookup
+
+/importmultipass – Import the work items from the CSV file in a first iteration and build up a mapping for the ID’s provided in the import file and the actual ID’s created and recreate the work item links between the new work items based on that mapping in a second pass; the old work item ID for a work item has to be provided in a special column with header name **com.ibm.js.oldid**.
+
+/forcelinkcreation – if no target work item can be found in the map, use the given ID to create the link
+
+/importdebug – Print more information during import attempts to help with finding issues
+
+/enforceSizeLimits – Attributes such as description and medium strings have size limits, if this switch is set, the importer tries to clip content to avoid exceptions due to the size limits	
+
+Multi-Pass Import
+
+Importing work items and recreating the link relationships between them is problematic, because while importing the work items the link target may not yet exist. To be able to import a set of work items and then recreate the linkage, it is necessary to do the import and then map the ID of the old work item to the ID of the new work item.
+
+When using the RTC CSV importer in the Eclipse client, existing work items are provided with a # in front of the work item ID. To do an import and then recreate the links between the new work items (and not to the old ones in the import), a user would have to run the import without the links, then replace the work item ID’s in the import file by the new work item ID’s and update the work items with a second import. This is very manual and error prone.
+
+The switch importmultipass  enables an import mode, where the WCL tries to create the links between the imported work items, rather to the old ones. It imports the work items in two passes. It creates the work items in the first pass and ignores the link creation. In the second pass it tries to create the links. For links between work items WCL tries to find the work items that were created during the import and tries to match the links to the new work items, where possible.
+
+Note: Only links between work items are handled this way. Links to objects other than work items are recreated using the values provided in the import file.
+
+To be able to do this, the import file has to provide the old work item ID of the work items that are imported. The import requires a special ID for the columns containing the old ID’s. The column header for this column has to be specified with **com.ibm.js.oldid**.
+
+The import file can be created using an export that included the ID of the work item in the export. The old column header for example ID of the column can be replaced by *com.ibm.js.oldid*. The work item links show the ID’s of the linked work items with their old ID’s.
+
+Import Work Items With Links: The import works as follows.
+
+WCL runs the first pass and imports the work items. It stores the mapping between the original work item ID from the column com.ibm.js.oldid and the ID of the newly created work item in a map. Links are not created in this pass.
+
+In the second pass WCL reads the import file again and only handles the columns that represent links. It detects if the link target represents a work item. If not, it tries to recreate the link as it is. If the link is a work item link, WCL tries to calculate if a new work item was created for the target using the map. If the work item was imported and a new ID is available, the new work item ID is used to create the link.
+
+If the ID of the link target can not be found in the mapping, WCL can either ignore the link or it can try to create the link to the original work item. WCL supports these two modes. By default, the link is not created. If the switch forcelinkcreation is specified, the original value of the target work item ID is used as target for the link, if no mapping to a newly imported item was found.
+
+Creating links is not trivial. One special case is importing/creating links. Some links have constraints i.e. parent and especially child links. A work item can not have multiple parents. So setting child links can cause the save to fail if the new child has already a different parent. This can create issues in import scenarios, especially if an export from the same repository is imported and the import causes child links to be created that have already another parent. In this case the import will fail with an error.
+
 ### Export Modes
 
 By default, the WCL RTC Export exports the attribute data in a format that is compatile with the WCL work item operations. The format deviates from the export/import format of the built in CSV operations for EWM. It is possible to use the switch **/asrtceclipse** for the export. This format mimics the built in CSV format. In this mode attachments are not downloaded and the attachment information is provided similar to the built in CSV format.
