@@ -812,7 +812,7 @@ Special Flags and behavior
 
 /enforceSizeLimits – Attributes such as description and medium strings have size limits, if this switch is set, the importer tries to clip content to avoid exceptions due to the size limits	
 
-Multi-Pass Import
+#### Multi-Pass Import
 
 Importing work items and recreating the link relationships between them is problematic, because while importing the work items the link target may not yet exist. To be able to import a set of work items and then recreate the linkage, it is necessary to do the import and then map the ID of the old work item to the ID of the new work item.
 
@@ -826,9 +826,8 @@ To be able to do this, the import file has to provide the old work item ID of th
 
 The import file can be created using an export that included the ID of the work item in the export. The old column header for example ID of the column can be replaced by *com.ibm.js.oldid*. The work item links show the ID’s of the linked work items with their old ID’s.
 
-Import Work Items With Links: The import works as follows.
-
-WCL runs the first pass and imports the work items. It stores the mapping between the original work item ID from the column com.ibm.js.oldid and the ID of the newly created work item in a map. Links are not created in this pass.
+#### Import Work Items With Links
+The import works as follows. WCL runs the first pass and imports the work items. It stores the mapping between the original work item ID from the column com.ibm.js.oldid and the ID of the newly created work item in a map. Links are not created in this pass.
 
 In the second pass WCL reads the import file again and only handles the columns that represent links. It detects if the link target represents a work item. If not, it tries to recreate the link as it is. If the link is a work item link, WCL tries to calculate if a new work item was created for the target using the map. If the work item was imported and a new ID is available, the new work item ID is used to create the link.
 
