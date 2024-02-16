@@ -653,10 +653,10 @@ public class WorkItemUpdateHelper {
 						isEmpty = true;
 					}
 					if (attribType.equals(AttributeTypes.INTEGER)) {
-						return Integer.getInteger(value);
+						return Integer.valueOf(value);
 					}
 					if (attribType.equals(AttributeTypes.LONG)) {
-						return Long.getLong(value);
+						return Long.valueOf(value);
 					}
 					if (attribType.equals(AttributeTypes.FLOAT)) {
 						return Float.parseFloat(value);
@@ -2727,9 +2727,17 @@ public class WorkItemUpdateHelper {
 	 *         representation like "1 hour 3 minutes"
 	 */
 	private long getDurationFromString(String value) {
-		return SimpleDateFormatUtil.convertDurationToMiliseconds(value);
+		long duration;
+		try {
+			duration = SimpleDateFormatUtil.convertDurationToMiliseconds(value);
+		} catch (Exception e) {
+			throw new WorkItemCommandLineException(
+					"can not convert duration, value was: " + value, e);
+		}
+		return duration;
 	}
-
+	
+	
 	/**
 	 * Gets a list of Tags
 	 * 
