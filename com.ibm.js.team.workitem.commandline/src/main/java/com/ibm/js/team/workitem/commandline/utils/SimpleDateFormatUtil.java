@@ -142,7 +142,7 @@ public class SimpleDateFormatUtil {
 
 		long hours = TimeUnit.MILLISECONDS.toHours(milliseconds);
 		long minutesleft = milliseconds - TimeUnit.HOURS.toMillis(hours);
-		long minutes = TimeUnit.MILLISECONDS.toDays(minutesleft);
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(minutesleft);
 		// String result =(days>0)?days + " days ":"";
 		String result = (hours > 0) ? hours + " " + DURATION_HOURS + " " : "";
 		result += (minutes > 0) ? minutes + " " + DURATION_MINUTES : "";
